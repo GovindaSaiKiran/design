@@ -35,8 +35,11 @@ export default function EduVoicePage() {
       {/* 2. University Partner Logo Marquee */}
       <LogoMarquee />
 
-      {/* 3. About Us / Meet Maya with Inline Stickers & Bento Grid */}
-      <AboutSection />
+      {/* 3. About Us / Meet Maya with Arched Cards Fan */}
+      <AboutSection
+        onOpenDemo={() => setDemoOpen(true)}
+        onOpenSimulator={() => setSimulatorOpen(true)}
+      />
 
       {/* 4. Core Capabilities (24/7 Telephony, Institutional RAG, Smart Human Handoff) */}
       <ServicesSection />
