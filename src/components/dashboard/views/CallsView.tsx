@@ -22,31 +22,31 @@ export default function CallsView({
   onExportReport,
 }: CallsViewProps) {
   return (
-    <div className="space-y-6 pb-12">
-      {/* Neo-Brutalist Header */}
+    <div className="space-y-6 pb-12 select-none">
+      {/* Neo-Brutalist Audio Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-3 border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000]">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md bg-black text-[#d6ff38]">
-              Telephony Logs & Transcripts
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-md bg-black text-[#00f0ff] border-2 border-black shadow-[2px_2px_0px_#000000] -rotate-1">
+              🎙️ TELEPHONY LOGS & TRANSCRIPTS
             </span>
-            <span className="px-2.5 py-0.5 rounded-md text-[10px] font-black bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              {liveCalls.length} Active Sessions
+            <span className="px-3 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+              {liveCalls.length} ACTIVE SESSIONS
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-black tracking-tight uppercase">
             Conversations & Audio Archives
           </h1>
           <p className="text-xs font-bold text-black/70 mt-1 max-w-xl">
-            Live acoustic monitoring, conversation transcripts, and automated student qualification intelligence.
+            Live acoustic monitoring, conversation transcripts, neural sentiment tracking, and automated student qualification intelligence.
           </p>
         </div>
 
         <button
           onClick={onExportReport}
-          className="px-5 py-3 rounded-xl bg-[#d6ff38] hover:bg-black hover:text-[#d6ff38] text-black border-3 border-black text-xs font-black uppercase tracking-wider shadow-[4px_4px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all inline-flex items-center gap-2 shrink-0 cursor-pointer"
+          className="px-5 py-3 rounded-xl bg-[#00f0ff] hover:bg-[#38bdf8] text-black text-xs font-black uppercase tracking-wider border-3 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-2 shrink-0 cursor-pointer"
         >
-          <Download className="w-4 h-4 stroke-[2.5]" />
+          <Download className="w-4 h-4 stroke-[3]" />
           <span>Export All Transcripts</span>
         </button>
       </div>

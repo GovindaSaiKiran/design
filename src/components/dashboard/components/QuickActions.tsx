@@ -23,63 +23,67 @@ export default function QuickActions({
   const actions = [
     {
       title: "Create AI Agent",
-      desc: "Configure voice, language & prompts",
-      icon: <Bot className="w-4 h-4 text-blue-600" />,
-      bg: "bg-blue-50/80 hover:bg-blue-100/80 border-blue-200/70",
+      desc: "Configure voice & persona",
+      icon: <Bot className="w-5 h-5 text-black stroke-[2.5]" />,
+      iconBg: "bg-[#c084fc]",
+      cardBg: "bg-[#c084fc]/10 hover:bg-[#c084fc]/20",
       onClick: onCreateAgent,
-      featured: true,
     },
     {
       title: "Start Campaign",
-      desc: "Launch student follow-up dialing",
-      icon: <Send className="w-4 h-4 text-violet-600" />,
-      bg: "bg-violet-50/80 hover:bg-violet-100/80 border-violet-200/70",
+      desc: "Launch student dialing batch",
+      icon: <Send className="w-5 h-5 text-black stroke-[2.5]" />,
+      iconBg: "bg-[#d6ff38]",
+      cardBg: "bg-[#d6ff38]/10 hover:bg-[#d6ff38]/20",
       onClick: onStartCampaign,
-      featured: true,
     },
     {
-      title: "Upload Students & Contacts",
+      title: "Upload Students",
       desc: "Import CSV applicant list",
-      icon: <Upload className="w-4 h-4 text-emerald-600" />,
-      bg: "bg-emerald-50/80 hover:bg-emerald-100/80 border-emerald-200/70",
+      icon: <Upload className="w-5 h-5 text-black stroke-[2.5]" />,
+      iconBg: "bg-[#ffe600]",
+      cardBg: "bg-[#ffe600]/10 hover:bg-[#ffe600]/20",
       onClick: onUploadContacts,
     },
     {
       title: "Upload Knowledge",
-      desc: "Index syllabus, fee & hostel PDFs",
-      icon: <FileText className="w-4 h-4 text-amber-600" />,
-      bg: "bg-amber-50/80 hover:bg-amber-100/80 border-amber-200/70",
+      desc: "Index syllabus & fee PDFs",
+      icon: <FileText className="w-5 h-5 text-black stroke-[2.5]" />,
+      iconBg: "bg-[#00f0ff]",
+      cardBg: "bg-[#00f0ff]/10 hover:bg-[#00f0ff]/20",
       onClick: onUploadKnowledge,
     },
     {
       title: "View Active Calls",
       desc: "Live stream acoustic monitor",
-      icon: <PhoneCall className="w-4 h-4 text-cyan-600" />,
-      bg: "bg-cyan-50/80 hover:bg-cyan-100/80 border-cyan-200/70",
+      icon: <PhoneCall className="w-5 h-5 text-black stroke-[2.5]" />,
+      iconBg: "bg-[#ff8080]",
+      cardBg: "bg-[#ff8080]/10 hover:bg-[#ff8080]/20",
       onClick: onViewCalls,
     },
     {
       title: "Export Report",
-      desc: "Download CSV admissions audit",
-      icon: <Download className="w-4 h-4 text-slate-700" />,
-      bg: "bg-slate-50/90 hover:bg-slate-100 border-slate-200/70",
+      desc: "Download admissions audit",
+      icon: <Download className="w-5 h-5 text-black stroke-[2.5]" />,
+      iconBg: "bg-white",
+      cardBg: "bg-white hover:bg-slate-50",
       onClick: onExportReport,
     },
   ];
 
   return (
     <div className="bg-white rounded-2xl p-6 border-3 border-black shadow-[6px_6px_0px_#000000] select-none">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b-2 border-black">
+      <div className="flex items-center justify-between mb-5 pb-3 border-b-2 border-black">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black uppercase tracking-wider text-black">
+            <span className="text-xs font-black uppercase tracking-wider text-black/70">
               Operations Shortcuts
             </span>
-            <span className="px-2 py-0.5 rounded-lg text-xs font-black bg-[#d6ff38] text-black border border-black shadow-[1.5px_1.5px_0px_#000000]">
-              6 WORKFLOWS
+            <span className="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+              6 Workflows
             </span>
           </div>
-          <h3 className="text-lg font-black text-black tracking-tight mt-1 uppercase">
+          <h3 className="text-xl font-black text-black tracking-tight uppercase mt-1">
             Quick Actions
           </h3>
         </div>
@@ -90,17 +94,17 @@ export default function QuickActions({
           <button
             key={act.title}
             onClick={act.onClick}
-            className="p-3.5 rounded-xl border-2 border-black bg-white hover:bg-[#fcffe0] text-left transition-all duration-150 hover:-translate-y-1 hover:shadow-[4px_4px_0px_#000000] shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 flex flex-col justify-between group cursor-pointer"
+            className={`p-4 rounded-xl border-2 border-black ${act.cardBg} text-left transition-all duration-150 shadow-[3px_3px_0px_#000000] hover:shadow-[5px_5px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] flex flex-col justify-between group cursor-pointer`}
           >
-            <div className="w-9 h-9 rounded-lg bg-[#d6ff38] border-2 border-black shadow-[1.5px_1.5px_0px_#000000] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform text-black">
+            <div className={`w-10 h-10 rounded-xl ${act.iconBg} border-2 border-black flex items-center justify-center mb-3 group-hover:-rotate-3 transition-transform shadow-[2px_2px_0px_#000000]`}>
               {act.icon}
             </div>
 
             <div>
-              <div className="text-xs font-black text-black leading-tight mb-1 uppercase">
+              <div className="text-xs font-black text-black leading-tight uppercase mb-1">
                 {act.title}
               </div>
-              <div className="text-[10px] font-bold text-black/60 line-clamp-1">
+              <div className="text-[10px] font-bold text-black/70 line-clamp-1">
                 {act.desc}
               </div>
             </div>

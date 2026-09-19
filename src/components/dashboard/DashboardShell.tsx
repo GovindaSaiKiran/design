@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import DashboardHeader from "./DashboardHeader";
+import DashboardHeader, { DashboardTheme } from "./DashboardHeader";
 import { TabKey } from "./DashboardSidebar";
 import OverviewView from "./views/OverviewView";
 import AIAgentsView from "./views/AIAgentsView";
@@ -45,6 +45,7 @@ import {
 
 export default function DashboardShell() {
   // State
+  const [theme, setTheme] = useState<DashboardTheme>("indigo");
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [currentOrg, setCurrentOrg] = useState<OrganizationInfo>(mockOrganizations[0]);
   const [organizations] = useState<OrganizationInfo[]>(mockOrganizations);
@@ -163,13 +164,13 @@ export default function DashboardShell() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] py-4 px-3 sm:px-6 lg:px-8 selection:bg-black selection:text-[#d6ff38]">
+    <div className="min-h-screen py-4 sm:py-6 px-2 sm:px-4 lg:px-6 dashboard-neo-frame font-sans select-none">
       {/* ========================================================================= */}
-      {/* REFINED, LIGHTWEIGHT NEO-BRUTALIST CANVAS                                */}
+      {/* AUTHENTIC NEO-BRUTALIST WORKSPACE CONTAINER                              */}
       {/* ========================================================================= */}
-      <div className="w-full max-w-[1440px] mx-auto min-h-[92vh] bg-white border-[1.5px] border-black rounded-2xl p-4 sm:p-6 lg:p-7 shadow-[4px_4px_0px_#000000] flex flex-col justify-between relative">
+      <div className="w-full max-w-[1500px] mx-auto min-h-[92vh] rounded-3xl p-5 sm:p-6 lg:p-8 flex flex-col justify-between relative bg-white border-3 border-black shadow-[8px_8px_0px_#000000]">
         <div>
-          {/* Top Sculpted Header with Pill Navigation */}
+          {/* Top Neo Header with Tactile Pill Navigation */}
           <DashboardHeader
             currentOrg={currentOrg}
             organizations={organizations}
@@ -179,10 +180,75 @@ export default function DashboardShell() {
             activeTab={activeTab}
             onSelectTab={setActiveTab}
             onOpenSearch={() => setActiveTab("calls")}
+            theme={theme}
+            onThemeChange={setTheme}
           />
 
+          {/* Signature Neo-Brutalist Electric Admissions Ticker */}
+          <div className="w-full bg-[#ffe600] border-2.5 border-black rounded-2xl px-3.5 py-2 mb-6 shadow-[4px_4px_0px_#000000] overflow-hidden flex items-center gap-3 font-sans select-none">
+            <div className="inline-flex items-center gap-1.5 bg-black text-[#d6ff38] px-3 py-1 rounded-xl text-[11px] font-black shrink-0 border-2 border-black shadow-[2px_2px_0px_#000000] -rotate-1">
+              <span className="w-2 h-2 rounded-full bg-[#d6ff38] inline-block animate-ping" />
+              <span className="tracking-wider uppercase text-[10px]">LIVE TELEMETRY</span>
+            </div>
+
+            <div className="overflow-hidden whitespace-nowrap flex-1 relative">
+              <div className="animate-ticker flex items-center gap-8 text-xs font-black text-black">
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#c084fc] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">⚡ Maya AI</span>
+                  <span>pre-approved <strong className="underline decoration-2">35% Chancellor Scholarship</strong> for Rahul (CBSE 94%)</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#00f0ff] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🚀 Vikram AI</span>
+                  <span>explained tuition fee 3-part installment to Sneha (BBA Intake)</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#d6ff38] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">📞 Priya AI</span>
+                  <span>confirmed Campus Tour visit pass for Ananya (Saturday 11 AM)</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-white px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🟢 Zero Wait Time</span>
+                  <span>3 SIP Trunks Operating • 382ms Latency</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#fb923c] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🏆 Today&apos;s Activity</span>
+                  <span>842 Calls Dialed • 342 Qualified Leads</span>
+                </span>
+                {/* Seamless Loop Duplicate */}
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#c084fc] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">⚡ Maya AI</span>
+                  <span>pre-approved <strong className="underline decoration-2">35% Chancellor Scholarship</strong> for Rahul (CBSE 94%)</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#00f0ff] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🚀 Vikram AI</span>
+                  <span>explained tuition fee 3-part installment to Sneha (BBA Intake)</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#d6ff38] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">📞 Priya AI</span>
+                  <span>confirmed Campus Tour visit pass for Ananya (Saturday 11 AM)</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-white px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🟢 Zero Wait Time</span>
+                  <span>3 SIP Trunks Operating • 382ms Latency</span>
+                </span>
+                <span className="text-black font-black">•</span>
+                <span className="flex items-center gap-2">
+                  <span className="bg-black text-[#fb923c] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🏆 Today&apos;s Activity</span>
+                  <span>842 Calls Dialed • 342 Qualified Leads</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Main Dynamic Viewport */}
-          <main className="w-full mt-4">
+          <main className="w-full mt-2">
             {activeTab === "overview" && (
               <OverviewView
                 currentOrg={currentOrg}
@@ -271,18 +337,6 @@ export default function DashboardShell() {
               <SettingsView currentOrg={currentOrg} />
             )}
           </main>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* BOTTOM TIMELINE SCRUBBER DOCK (Exact Match to Reference Image)            */}
-        {/* ========================================================================= */}
-        <div className="mt-8 pt-4 border-t border-neutral-200">
-          <TimelineScrubberDock
-            onSelectPeriod={(period) => {
-              // Interactive timeline period selection
-            }}
-            onOpenExportModal={() => setExportReportOpen(true)}
-          />
         </div>
       </div>
 

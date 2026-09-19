@@ -119,7 +119,7 @@ export default function ApplicantVitalsHeader({
               sizes="72px"
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
-            <span className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-[#d6ff38] border-2 border-white" />
+            <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow-xs" />
           </div>
 
           <div className="flex flex-col">

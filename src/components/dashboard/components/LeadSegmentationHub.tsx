@@ -301,8 +301,12 @@ export default function LeadSegmentationHub({
 
   const handleOpenAudio = (lead: StudentLeadItem, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSelectedLeadForAudio(lead);
-    setAudioModalOpen(true);
+    if (onInspectCall) {
+      onInspectCall(lead);
+    } else {
+      setSelectedLeadForAudio(lead);
+      setAudioModalOpen(true);
+    }
   };
 
   const handleQuickDownloadCSV = () => {
@@ -312,7 +316,7 @@ export default function LeadSegmentationHub({
         particleCount: 75,
         spread: 70,
         origin: { y: 0.8 },
-        colors: ["#d6ff38", "#10b981", "#0284c7"]
+        colors: ["#6366f1", "#06b6d4", "#10b981", "#f59e0b"]
       });
     } catch (e) {}
 
@@ -342,161 +346,79 @@ export default function LeadSegmentationHub({
     document.body.removeChild(link);
 
     setDownloadSuccess(true);
-    setTimeout(() => setDownloadSuccess(false), 3500);
+    setTimeout(() => setDownloadSuccess(false), 3000);
   };
 
   return (
-    <div className="w-full bg-white rounded-xl p-4 sm:p-6 border-[1.5px] border-black shadow-[3px_3px_0px_#000000] select-none">
-      {/* Top Header: Title + Instant Download Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-4 border-b border-neutral-200">
+    <div className="w-full bg-white rounded-2xl p-5 sm:p-6 border-[2.5px] border-black shadow-[6px_6px_0px_#000000] font-sans select-none">
+      {/* Top Header: Title + Active Filter Status */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-4 border-b-2 border-black">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#d6ff38] border border-black inline-block animate-pulse" />
-            <h2 className="text-lg sm:text-xl font-black text-black tracking-tight uppercase">
-              AI Calling & Lead Categorization Hub
+          <div className="flex items-center gap-2.5 mb-1">
+            <h2 className="text-lg sm:text-xl font-black text-black tracking-tight flex items-center gap-2">
+              <span className="w-3 h-3 bg-[#d6ff38] border-2 border-black rounded-full inline-block" />
+              Admissions Call Registry & Leads
             </h2>
+            <span className="px-3 py-0.5 rounded-full text-xs font-black bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+              {filteredLeads.length} Records
+            </span>
           </div>
-          <p className="text-xs text-neutral-600 font-medium">
-            AI voice agents dialing student lists and answering helpline calls 24/7, categorized by intent with 1-click export.
+          <p className="text-xs text-black/70 font-bold">
+            Real-time verified student communications, AI synthesized summaries & 1-click recordings.
           </p>
         </div>
 
-        {/* Action Buttons: Instant CSV Download + Complete Export Report */}
+        {/* Quick Filter Reset / Active Pill */}
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={handleQuickDownloadCSV}
-            className="px-3.5 py-2 rounded-xl bg-[#d6ff38] hover:bg-[#cbf72e] text-black text-xs font-bold border-[1.5px] border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer"
-            title="Download this segmented list as CSV"
-          >
-            <Download className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Download CSV ({filteredLeads.length})</span>
-          </button>
-
-          <button
-            onClick={onOpenExportModal}
-            className="px-3.5 py-2 rounded-xl bg-white hover:bg-neutral-50 text-black text-xs font-bold border-[1.5px] border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer"
-            title="Export complete admissions dossier & compliance audit"
-          >
-            <FileSpreadsheet className="w-3.5 h-3.5 stroke-[2]" />
-            <span>Full Export</span>
-          </button>
+          <span className="text-xs text-black font-black uppercase">Active Filter:</span>
+          <span className="px-3 py-1.5 rounded-xl text-xs font-black capitalize bg-[#00f0ff] text-black border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-black animate-pulse" />
+            {activeTab === "all" ? "All Records" : activeTab.replace("_", " ")}
+          </span>
+          {activeTab !== "all" && (
+            <button
+              onClick={() => handleTabClick("all")}
+              className="text-xs bg-black text-[#d6ff38] hover:bg-[#ffe600] hover:text-black border-2 border-black px-2.5 py-1 rounded-lg font-black cursor-pointer ml-1 shadow-[2px_2px_0px_#000000] hover:shadow-[3px_3px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all"
+            >
+              Reset
+            </button>
+          )}
         </div>
       </div>
 
       {/* Download Toast Notification */}
       {downloadSuccess && (
-        <div className="mb-4 p-3 bg-[#fcffe0] border border-black rounded-xl shadow-[2px_2px_0px_#000000] flex items-center justify-between text-xs font-bold text-black animate-in fade-in duration-150">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 stroke-[2.5] text-black" />
-            <span>Exported {filteredLeads.length} student leads to your downloads!</span>
+        <div className="mb-4 p-3.5 bg-[#d6ff38] border-2.5 border-black rounded-xl shadow-[4px_4px_0px_#000000] flex items-center justify-between text-xs font-black text-black animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-full bg-black text-[#d6ff38] flex items-center justify-center border-2 border-black">
+              <CheckCircle2 className="w-4 h-4 stroke-[3]" />
+            </div>
+            <span>Exported {filteredLeads.length} student leads successfully with CSV report!</span>
           </div>
-          <span className="text-[11px] font-mono bg-[#d6ff38] px-2 py-0.5 border border-black rounded font-bold">CSV Saved</span>
+          <span className="text-[11px] font-mono bg-black text-[#d6ff38] px-2.5 py-1 rounded-md font-black border-2 border-black shadow-[2px_2px_0px_#ffffff]">CSV Saved</span>
         </div>
       )}
 
-      {/* Main Category Segmentation Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none">
-        {/* Tab 1: Interested */}
-        <button
-          onClick={() => handleTabClick("interested")}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer border-[1.5px] border-black ${
-            activeTab === "interested"
-              ? "bg-[#d6ff38] text-black shadow-[2px_2px_0px_#000000] -translate-y-0.5"
-              : "bg-white text-neutral-800 shadow-[1.5px_1.5px_0px_#000000] hover:bg-neutral-50"
-          }`}
-        >
-          <span className="w-2 h-2 rounded-full bg-black" />
-          <span>⭐ Interested</span>
-          <span className="px-1.5 py-0.2 rounded bg-black text-[#d6ff38] text-[10px] font-mono font-bold">
-            {countInterested}
-          </span>
-        </button>
-
-        {/* Tab 2: Call Later */}
-        <button
-          onClick={() => handleTabClick("call_later")}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer border-[1.5px] border-black ${
-            activeTab === "call_later"
-              ? "bg-amber-200 text-black shadow-[2px_2px_0px_#000000] -translate-y-0.5"
-              : "bg-white text-neutral-800 shadow-[1.5px_1.5px_0px_#000000] hover:bg-neutral-50"
-          }`}
-        >
-          <Clock className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>⏰ Call Later</span>
-          <span className="px-1.5 py-0.2 rounded bg-black text-amber-200 text-[10px] font-mono font-bold">
-            {countCallLater}
-          </span>
-        </button>
-
-        {/* Tab 3: Not Interested */}
-        <button
-          onClick={() => handleTabClick("not_interested")}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer border-[1.5px] border-black ${
-            activeTab === "not_interested"
-              ? "bg-rose-200 text-black shadow-[2px_2px_0px_#000000] -translate-y-0.5"
-              : "bg-white text-neutral-800 shadow-[1.5px_1.5px_0px_#000000] hover:bg-neutral-50"
-          }`}
-        >
-          <XCircle className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>🚫 Not Interested</span>
-          <span className="px-1.5 py-0.2 rounded bg-black text-rose-200 text-[10px] font-mono font-bold">
-            {countNotInterested}
-          </span>
-        </button>
-
-        {/* Tab 4: Inbound Inquiries */}
-        <button
-          onClick={() => handleTabClick("inbound")}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer border-[1.5px] border-black ${
-            activeTab === "inbound"
-              ? "bg-[#d6ff38] text-black shadow-[2px_2px_0px_#000000] -translate-y-0.5"
-              : "bg-white text-neutral-800 shadow-[1.5px_1.5px_0px_#000000] hover:bg-neutral-50"
-          }`}
-        >
-          <PhoneIncoming className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>📞 Inbound</span>
-          <span className="px-1.5 py-0.2 rounded bg-black text-[#d6ff38] text-[10px] font-mono font-bold">
-            {countInbound}
-          </span>
-        </button>
-
-        {/* Tab 5: All Calls */}
-        <button
-          onClick={() => handleTabClick("all")}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer border-[1.5px] border-black ${
-            activeTab === "all"
-              ? "bg-black text-[#d6ff38] shadow-[2px_2px_0px_#d6ff38] -translate-y-0.5"
-              : "bg-white text-neutral-800 shadow-[1.5px_1.5px_0px_#000000] hover:bg-neutral-50"
-          }`}
-        >
-          <span>Complete History</span>
-          <span className="px-1.5 py-0.2 rounded bg-[#d6ff38] text-black text-[10px] font-mono font-bold">
-            {countAll}
-          </span>
-        </button>
-      </div>
-
-      {/* Search & Course Filter Controls */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-3.5">
-        {/* Search */}
+      {/* Unified Search, Course Filter & Vibrant Export Toolbar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-5">
+        {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-neutral-600 stroke-[2.5] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-black absolute left-3.5 top-1/2 -translate-y-1/2 stroke-[2.5]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search student name, phone number, or intent..."
-            className="w-full pl-9 pr-3 py-2 bg-white border-[1.5px] border-black rounded-xl text-xs font-medium text-neutral-900 placeholder-neutral-400 shadow-[2px_2px_0px_#000000] focus:bg-[#fcffe0]/40 focus:outline-none transition-all"
+            className="w-full pl-10 pr-3.5 py-2.5 bg-white hover:bg-neutral-50 border-2.5 border-black rounded-xl text-xs font-bold text-black placeholder-neutral-500 shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#d6ff38] focus:bg-white focus:outline-none transition-all"
           />
         </div>
 
-        {/* Course Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-neutral-700 uppercase">Program:</span>
+        {/* Program Filter & Single Vibrant CSV Export Button */}
+        <div className="flex items-center gap-2.5 shrink-0">
           <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
-            className="px-3 py-2 bg-white border-[1.5px] border-black rounded-xl text-xs font-bold text-neutral-900 shadow-[2px_2px_0px_#000000] focus:outline-none cursor-pointer"
+            className="px-3.5 py-2.5 bg-white hover:bg-[#ffe600]/20 border-2.5 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_#000000] focus:outline-none cursor-pointer transition-all"
           >
             <option value="all">All Academic Programs</option>
             <option value="computer science">B.Tech Computer Science</option>
@@ -505,112 +427,128 @@ export default function LeadSegmentationHub({
             <option value="design">B.Des Design</option>
             <option value="mechanical">B.Tech Mechanical</option>
           </select>
+
+          <button
+            onClick={handleQuickDownloadCSV}
+            className="px-4 py-2.5 rounded-xl bg-[#d6ff38] hover:bg-[#c2f820] text-black text-xs font-black border-2.5 border-black shadow-[3px_3px_0px_#000000] hover:shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all flex items-center gap-2 cursor-pointer"
+            title="Download this filtered list as CSV"
+          >
+            <Download className="w-4 h-4 stroke-[3]" />
+            <span>Export CSV</span>
+          </button>
         </div>
       </div>
 
-      {/* Main Leads Table */}
-      <div className="overflow-x-auto border-[1.5px] border-black rounded-xl shadow-[2.5px_2.5px_0px_#000000]">
+      {/* Main Leads Table with Neo-Brutalist Headers & Rows */}
+      <div className="overflow-x-auto border-2.5 border-black rounded-xl shadow-[4px_4px_0px_#000000]">
         <table className="w-full text-left text-xs">
-          <thead className="bg-neutral-50 text-neutral-900 font-bold border-b border-black uppercase tracking-wider text-[10px]">
+          <thead className="bg-black text-[#d6ff38] font-black uppercase tracking-wider text-[11px] border-b-2.5 border-black">
             <tr>
-              <th className="py-2.5 px-3.5">Student Prospect</th>
-              <th className="py-2.5 px-3.5">Program of Interest</th>
-              <th className="py-2.5 px-3.5">
+              <th className="py-3.5 px-4">Student Prospect</th>
+              <th className="py-3.5 px-4">Program of Interest</th>
+              <th className="py-3.5 px-4">
                 {activeTab === "interested" ? "Merit / Score" : activeTab === "call_later" ? "Callback Scheduled" : activeTab === "not_interested" ? "Opt-Out Reason" : "Intent Status"}
               </th>
-              <th className="py-2.5 px-3.5">AI Summary</th>
-              <th className="py-2.5 px-3.5">Duration</th>
-              <th className="py-2.5 px-3.5">Action Taken</th>
-              <th className="py-2.5 px-3.5 text-right">Voice Call</th>
+              <th className="py-3.5 px-4">AI Summary</th>
+              <th className="py-3.5 px-4">Duration</th>
+              <th className="py-3.5 px-4">Action Taken</th>
+              <th className="py-3.5 px-4 text-right">Voice Call</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-200 bg-white">
+          <tbody className="divide-y-2 divide-black/20 bg-white">
             {filteredLeads.map((lead) => (
               <tr
                 key={lead.id}
                 onClick={() => onInspectCall?.(lead)}
-                className="hover:bg-[#d6ff38]/10 transition-colors cursor-pointer group"
+                className="hover:bg-[#d6ff38]/15 transition-all duration-150 cursor-pointer group"
               >
                 {/* Student */}
-                <td className="py-3 px-3.5">
-                  <div className="font-bold text-neutral-950 group-hover:text-black transition-colors text-xs sm:text-sm">
+                <td className="py-3.5 px-4">
+                  <div className="font-black text-black group-hover:text-black transition-colors text-xs sm:text-sm flex items-center gap-1.5">
                     {lead.name}
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-black text-black">→</span>
                   </div>
-                  <div className="text-[11px] font-mono text-neutral-500 flex items-center gap-1 font-medium mt-0.5">
-                    <PhoneCall className="w-3 h-3 text-neutral-600 stroke-[2]" />
+                  <div className="text-[11px] font-mono text-black/70 flex items-center gap-1 font-bold mt-0.5">
+                    <PhoneCall className="w-3 h-3 text-black stroke-[2.5]" />
                     {lead.phone}
                   </div>
                 </td>
 
                 {/* Course */}
-                <td className="py-3 px-3.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-neutral-50 text-neutral-800 border border-neutral-300">
-                    <GraduationCap className="w-3 h-3 stroke-[2]" />
+                <td className="py-3.5 px-4">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white text-black border-2 border-black shadow-[2px_2px_0px_#000000] group-hover:bg-[#ffe600] transition-colors">
+                    <GraduationCap className="w-3.5 h-3.5 text-black stroke-[2.5]" />
                     {lead.course}
                   </span>
                 </td>
 
-                {/* Status / Detail Column */}
-                <td className="py-3 px-3.5">
+                {/* Status / Detail Column with Neo-Brutalist Badges */}
+                <td className="py-3.5 px-4">
                   {lead.category === "interested" && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#d6ff38] text-black border border-black shadow-[1px_1px_0px_#000000]">
-                      <CheckCircle2 className="w-3 h-3 stroke-[2.5]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-black stroke-[3]" />
                       {lead.meritScore}
                     </span>
                   )}
                   {lead.category === "call_later" && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-400 shadow-[1px_1px_0px_#000000]">
-                      <Clock className="w-3 h-3 stroke-[2.5]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+                      <Clock className="w-3.5 h-3.5 text-black stroke-[3]" />
                       {lead.callbackTime}
                     </span>
                   )}
                   {lead.category === "not_interested" && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 shadow-[1px_1px_0px_#000000]">
-                      <XCircle className="w-3 h-3 stroke-[2.5]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#c084fc] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+                      <XCircle className="w-3.5 h-3.5 text-black stroke-[3]" />
                       {lead.disqualifiedReason}
                     </span>
                   )}
                   {lead.category === "inbound_inquiry" && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#d6ff38] text-black border border-black shadow-[1px_1px_0px_#000000]">
-                      <PhoneIncoming className="w-3 h-3 stroke-[2.5]" />
-                      Inbound Helpline Query
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+                      <PhoneIncoming className="w-3.5 h-3.5 text-black stroke-[3]" />
+                      Inbound Query
                     </span>
                   )}
                 </td>
 
                 {/* Summary */}
-                <td className="py-3 px-3.5 max-w-xs">
-                  <p className="line-clamp-2 text-xs text-neutral-700 leading-relaxed font-normal">
+                <td className="py-3.5 px-4 max-w-xs">
+                  <p className="line-clamp-2 text-xs text-black/80 font-bold leading-relaxed group-hover:text-black transition-colors">
                     {lead.summary}
                   </p>
                 </td>
 
                 {/* Duration & Time */}
-                <td className="py-3 px-3.5 whitespace-nowrap">
-                  <div className="font-mono font-bold text-neutral-800 text-xs">
+                <td className="py-3.5 px-4 whitespace-nowrap">
+                  <div className="font-mono font-black text-black text-xs">
                     {lead.callDuration}
                   </div>
-                  <div className="text-[10px] text-neutral-500 font-medium">
+                  <div className="text-[10px] text-black/70 font-bold">
                     {lead.timeAgo} ({lead.agentName.split(" ")[0]})
                   </div>
                 </td>
 
                 {/* Action Taken */}
-                <td className="py-3 px-3.5 max-w-[170px]">
-                  <span className="text-[11px] font-medium text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200 block truncate">
+                <td className="py-3.5 px-4 max-w-[190px]">
+                  <span className="text-[11px] font-bold text-black bg-neutral-100 group-hover:bg-white px-2.5 py-1 rounded-md border-2 border-black block truncate transition-colors shadow-[1px_1px_0px_#000000]">
                     {lead.actionTaken}
                   </span>
                 </td>
 
-                {/* Action Button: Play Audio Dialogue */}
-                <td className="py-3 px-3.5 text-right">
+                {/* Action Button: Play Audio Dialogue with Neo-Brutalist Play Button */}
+                <td className="py-3.5 px-4 text-right">
                   <button
                     onClick={(e) => handleOpenAudio(lead, e)}
-                    className="px-3 py-1.5 rounded-lg bg-[#d6ff38] hover:bg-[#cbf72e] text-black text-xs font-bold border border-black shadow-[1.5px_1.5px_0px_#000000] inline-flex items-center gap-1 cursor-pointer active:translate-x-0.5 active:translate-y-0.5 transition-all"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#d6ff38] hover:bg-[#ffe600] text-black text-xs font-black inline-flex items-center gap-1.5 cursor-pointer border-2 border-black shadow-[2.5px_2.5px_0px_#000000] hover:shadow-[3.5px_3.5px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all group/btn"
                     title="Play full AI call audio recording & transcript"
                   >
-                    <Play className="w-3 h-3 fill-current stroke-[2]" />
-                    <span>Play Call</span>
+                    <Play className="w-3 h-3 fill-black text-black group-hover/btn:scale-110 transition-transform stroke-[2.5]" />
+                    <span>Play</span>
+                    {/* Mini animated audio bars on hover */}
+                    <span className="hidden group-hover/btn:inline-flex items-end gap-0.5 h-3 ml-0.5">
+                      <span className="w-0.5 h-2 bg-black animate-pulse" />
+                      <span className="w-0.5 h-3 bg-black animate-bounce" />
+                      <span className="w-0.5 h-1.5 bg-black animate-pulse" />
+                    </span>
                   </button>
                 </td>
               </tr>
@@ -619,9 +557,9 @@ export default function LeadSegmentationHub({
         </table>
 
         {filteredLeads.length === 0 && (
-          <div className="text-center py-10 text-neutral-600">
-            <p className="font-bold text-sm">No student leads found matching this filter.</p>
-            <p className="text-xs text-neutral-400 mt-1">Try resetting your search query or choosing another category tab.</p>
+          <div className="text-center py-10 text-black">
+            <p className="font-black text-sm">No student leads found matching this filter.</p>
+            <p className="text-xs text-black/60 font-bold mt-1">Try resetting your search query or choosing another category card above.</p>
           </div>
         )}
       </div>

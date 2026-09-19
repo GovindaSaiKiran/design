@@ -17,29 +17,29 @@ export default function CampaignsView({
   onExportResults,
 }: CampaignsViewProps) {
   return (
-    <div className="space-y-6 pb-12">
-      {/* Neo-Brutalist Header */}
+    <div className="space-y-6 pb-12 select-none">
+      {/* Neo-Brutalist Campaigns Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-3 border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000]">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md bg-black text-[#d6ff38]">
-              Outbound Calling Automation
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-md bg-black text-[#d6ff38] border-2 border-black shadow-[2px_2px_0px_#000000] -rotate-1">
+              🚀 HIGH-THROUGHPUT OUTBOUND
             </span>
-            <span className="px-2.5 py-0.5 rounded-md text-[10px] font-black bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              {campaigns.length} Batches Active
+            <span className="px-3 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+              {campaigns.length} BATCHES RUNNING
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-black tracking-tight uppercase">
             Outbound Calling Campaigns
           </h1>
           <p className="text-xs font-bold text-black/70 mt-1 max-w-xl">
-            Schedule high-throughput batch outreach, entrance exam reminders, and fee payment verification calls.
+            Schedule high-throughput batch outreach, entrance exam notifications, merit scholarship qualification, and fee payment verification.
           </p>
         </div>
 
         <button
           onClick={onStartCampaign}
-          className="px-5 py-3 rounded-xl bg-[#d6ff38] hover:bg-black hover:text-[#d6ff38] text-black border-3 border-black text-xs font-black uppercase tracking-wider shadow-[4px_4px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all inline-flex items-center gap-2 shrink-0 cursor-pointer"
+          className="px-5 py-3 rounded-xl bg-[#d6ff38] hover:bg-[#bbf01b] text-black text-xs font-black uppercase tracking-wider border-3 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-2 shrink-0 cursor-pointer"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>Launch New Batch</span>

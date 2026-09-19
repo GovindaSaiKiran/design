@@ -41,12 +41,14 @@ export default function KPIStrip({ metrics }: KPIStripProps) {
       })
       .join(" ");
 
+    const strokeColor = isGreen ? "#10b981" : "#f43f5e";
+
     return (
       <svg width={width} height={height} className="overflow-visible shrink-0">
         <polyline
           fill="none"
-          stroke="#000000"
-          strokeWidth="2.5"
+          stroke={strokeColor}
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           points={points}
@@ -56,49 +58,89 @@ export default function KPIStrip({ metrics }: KPIStripProps) {
           <circle
             cx={(width).toFixed(1)}
             cy={(height - ((data[data.length - 1] - min) / range) * (height - 6) - 3).toFixed(1)}
-            r="3.5"
-            fill="#d6ff38"
-            stroke="#000000"
-            strokeWidth="2"
+            r="3"
+            fill={strokeColor}
+            stroke="#ffffff"
+            strokeWidth="1.5"
           />
         )}
       </svg>
     );
   };
 
+  // Neo-Brutalist colorful themes for each card
+  const cardThemes = [
+    {
+      iconBg: "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
+      explainer: "Calls dialed by Maya & Vikram today",
+      metricDetail: "All Inbound + Outbound attempts",
+    },
+    {
+      iconBg: "bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
+      explainer: "Answered & held > 15 seconds",
+      metricDetail: "Live voice connection success",
+    },
+    {
+      iconBg: "bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
+      explainer: "Interested leads enrolled / token paid",
+      metricDetail: "Direct AI admissions conversion",
+    },
+    {
+      iconBg: "bg-[#c084fc] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
+      explainer: "Transferred to Dean / Counselor",
+      metricDetail: "Complex questions escalated",
+    },
+    {
+      iconBg: "bg-[#ff8080] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
+      explainer: "Time AI takes to process & reply",
+      metricDetail: "Ultra-fast conversational latency",
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 font-sans select-none">
       {metrics.map((metric, idx) => {
         const isUp = metric.trend === "up";
         const icon = icons[idx % icons.length];
+        const theme = cardThemes[idx % cardThemes.length];
 
         return (
           <div
             key={metric.label}
-            className="bg-white border-3 border-black rounded-2xl p-4 shadow-[4px_4px_0px_#000000] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[6px_6px_0px_#000000] transition-all group"
+            className="bg-white border-[2.5px] border-black rounded-2xl p-4 shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group cursor-default"
           >
-            <div className="flex items-center justify-between gap-2 mb-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#d6ff38] border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_#000000] text-black">
-                {icon}
-              </div>
-              {renderMiniSparkline(metric.sparkline, isUp)}
-            </div>
-
             <div>
-              <div className="text-[10px] font-black tracking-wider text-black/70 uppercase mb-0.5">
-                {metric.label}
+              {/* Header: Icon + Sparkline */}
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <div className={`w-9 h-9 rounded-xl ${theme.iconBg} flex items-center justify-center font-bold group-hover:scale-105 transition-transform`}>
+                  {icon}
+                </div>
+                {renderMiniSparkline(metric.sparkline, isUp)}
               </div>
-              <div className="text-2xl font-black tracking-tight text-black font-mono">
-                {metric.value}
+
+              {/* Metric Title & Value */}
+              <div>
+                <div className="text-[11px] font-black tracking-wider text-black/60 uppercase mb-0.5">
+                  {metric.label}
+                </div>
+                <div className="text-2xl sm:text-3xl font-black tracking-tight text-black font-mono">
+                  {metric.value}
+                </div>
+              </div>
+
+              {/* Explainer */}
+              <div className="mt-1 text-[11px] font-bold text-black/70 leading-tight">
+                {theme.explainer}
               </div>
             </div>
 
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-bold">
+            {/* Bottom: Trend Pill + Detail */}
+            <div className="mt-3.5 pt-2.5 border-t-2 border-black/15 flex items-center justify-between gap-1 text-xs">
               <span
-                className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border border-black ${
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-black border-2 border-black shadow-[1.5px_1.5px_0px_#000000] ${
                   isUp
-                    ? "bg-[#d6ff38] text-black shadow-[1px_1px_0px_#000000]"
-                    : "bg-white text-black shadow-[1px_1px_0px_#000000]"
+                    ? "bg-[#d6ff38] text-black"
+                    : "bg-[#ff8080] text-black"
                 }`}
               >
                 {isUp ? (
@@ -108,7 +150,8 @@ export default function KPIStrip({ metrics }: KPIStripProps) {
                 )}
                 {metric.trendLabel.split(" ")[0]}
               </span>
-              <span className="text-black/60 truncate text-[10px] font-bold">
+
+              <span className="text-[11px] font-bold text-black/60 truncate">
                 {metric.trendLabel.split(" ").slice(1).join(" ")}
               </span>
             </div>

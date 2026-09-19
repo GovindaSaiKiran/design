@@ -76,7 +76,7 @@ export default function AdmissionsDynamicsCanvas({
               </div>
               <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center overflow-hidden relative group cursor-pointer">
                 <div className="absolute inset-0 bg-gradient-to-tr from-slate-900 via-slate-800 to-sky-900 opacity-90" />
-                <PhoneCall className="w-4 h-4 text-[#d6ff38] relative z-10 animate-bounce" />
+                <PhoneCall className="w-4 h-4 text-cyan-400 relative z-10 animate-bounce" />
               </div>
               <div className="text-[9px] font-extrabold text-slate-500 text-center uppercase tracking-tighter">
                 3 Lines
@@ -88,10 +88,10 @@ export default function AdmissionsDynamicsCanvas({
           {/* STAGE 1 (Aug - Peak Admissions Inquiry & Inbound Helpline)                */}
           {/* ========================================================================= */}
           <div className="col-span-5 relative pl-4">
-            {/* Top Milestone Yellow-Lime Badge */}
+            {/* Top Milestone Badge */}
             <div className="flex items-center gap-3.5 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-[#d6ff38] border-2 border-white text-slate-950 flex items-center justify-center shadow-md relative z-10 shrink-0 hover:scale-110 transition-transform">
-                <PhoneIncoming className="w-4 h-4 text-slate-950 stroke-[2.5]" />
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 border-2 border-white text-white flex items-center justify-center shadow-md relative z-10 shrink-0 hover:scale-110 transition-transform">
+                <PhoneIncoming className="w-4 h-4 text-white stroke-[2.5]" />
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
@@ -111,21 +111,21 @@ export default function AdmissionsDynamicsCanvas({
             >
               <path
                 d="M 20 0 Q 20 50, 70 65 L 100 65"
-                stroke={hoveredNode === "card-1" ? "#a3e635" : "#cbd5e1"}
+                stroke={hoveredNode === "card-1" ? "#6366f1" : "#cbd5e1"}
                 strokeWidth={hoveredNode === "card-1" ? "3" : "2"}
                 className="transition-all duration-300"
                 fill="none"
               />
               <path
                 d="M 20 0 Q 20 130, 80 155 L 100 155"
-                stroke={hoveredNode === "card-1" ? "#a3e635" : "#cbd5e1"}
+                stroke={hoveredNode === "card-1" ? "#6366f1" : "#cbd5e1"}
                 strokeWidth={hoveredNode === "card-1" ? "3" : "2"}
                 className="transition-all duration-300"
                 fill="none"
               />
               <path
                 d="M 20 0 Q 20 340, 80 375 L 100 375"
-                stroke={hoveredNode === "card-2" ? "#a3e635" : "#cbd5e1"}
+                stroke={hoveredNode === "card-2" ? "#6366f1" : "#cbd5e1"}
                 strokeWidth={hoveredNode === "card-2" ? "3" : "2"}
                 className="transition-all duration-300"
                 fill="none"
@@ -161,13 +161,13 @@ export default function AdmissionsDynamicsCanvas({
                 onMouseLeave={() => setHoveredNode(null)}
                 className="inline-flex items-center gap-3 bg-slate-900 text-white px-4 py-2.5 rounded-full shadow-sm hover:scale-105 transition-transform cursor-pointer"
               >
-                <div className="w-6 h-6 rounded-full bg-[#d6ff38] text-black flex items-center justify-center shrink-0">
-                  <PhoneIncoming className="w-3 h-3 text-black" />
+                <div className="w-6 h-6 rounded-full bg-indigo-500 text-white flex items-center justify-center shrink-0">
+                  <PhoneIncoming className="w-3 h-3 text-white" />
                 </div>
                 <span className="text-xs font-semibold tracking-wide">
                   Inbound Helpline Queue
                 </span>
-                <span className="text-[11px] font-black text-[#d6ff38]">
+                <span className="text-[11px] font-black text-cyan-300">
                   0s Hold Time
                 </span>
               </div>
@@ -215,7 +215,7 @@ export default function AdmissionsDynamicsCanvas({
                   {/* Play Audio Call Trigger */}
                   <button
                     onClick={() => onOpenLiveCallModal?.(currentLead)}
-                    className="w-8 h-8 rounded-full bg-slate-900 hover:bg-[#d6ff38] text-white hover:text-black flex items-center justify-center transition-all shadow-xs cursor-pointer active:scale-95"
+                    className="w-8 h-8 rounded-full bg-slate-900 hover:bg-indigo-600 text-white flex items-center justify-center transition-all shadow-xs cursor-pointer active:scale-95"
                     title="Listen to AI call recording"
                   >
                     <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
@@ -227,8 +227,8 @@ export default function AdmissionsDynamicsCanvas({
                   <svg className="w-full h-full overflow-visible" viewBox="0 0 240 60">
                     <defs>
                       <linearGradient id="limeWaveGrad2" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#d6ff38" stopOpacity="0.85" />
-                        <stop offset="100%" stopColor="#d6ff38" stopOpacity="0.15" />
+                        <stop offset="0%" stopColor="#6366f1" stopOpacity="0.85" />
+                        <stop offset="100%" stopColor="#6366f1" stopOpacity="0.15" />
                       </linearGradient>
                       <linearGradient id="slateWaveGrad2" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.4" />
@@ -246,7 +246,7 @@ export default function AdmissionsDynamicsCanvas({
                     />
                     <path
                       d="M 0 35 Q 40 10, 80 25 T 160 15 T 240 28"
-                      stroke="#a3e635"
+                      stroke="#6366f1"
                       strokeWidth="2"
                       fill="none"
                     />
@@ -309,15 +309,15 @@ export default function AdmissionsDynamicsCanvas({
           {/* STAGE 2 (Sep - Outbound Merit Follow-Up & Call Later Scheduling)          */}
           {/* ========================================================================= */}
           <div className="col-span-6 relative pl-4">
-            {/* Top Milestone Yellow-Lime Badge */}
+            {/* Top Milestone Cyan Badge */}
             <div className="flex items-center gap-3.5 mb-6">
-              <div className="w-10 h-10 rounded-2xl bg-[#d6ff38] border-2 border-white text-slate-950 flex items-center justify-center shadow-md relative z-10 shrink-0 hover:scale-110 transition-transform">
-                <PhoneOutgoing className="w-4 h-4 text-slate-950 stroke-[2.5]" />
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 border-2 border-white text-white flex items-center justify-center shadow-md relative z-10 shrink-0 hover:scale-110 transition-transform">
+                <PhoneOutgoing className="w-4 h-4 text-white stroke-[2.5]" />
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
                   Sep Counseling
-                  <span className="px-2 py-0.2 rounded-full text-[10px] font-black bg-[#d6ff38] text-black">
+                  <span className="px-2 py-0.2 rounded-full text-[10px] font-black bg-cyan-100 text-cyan-800 border border-cyan-200">
                     Active Outbound Dialer
                   </span>
                 </span>
@@ -334,21 +334,21 @@ export default function AdmissionsDynamicsCanvas({
             >
               <path
                 d="M 20 0 Q 20 50, 70 65 L 100 65"
-                stroke={hoveredNode === "card-3" ? "#a3e635" : "#cbd5e1"}
+                stroke={hoveredNode === "card-3" ? "#06b6d4" : "#cbd5e1"}
                 strokeWidth={hoveredNode === "card-3" ? "3" : "2"}
                 className="transition-all duration-300"
                 fill="none"
               />
               <path
                 d="M 20 0 Q 20 145, 80 170 L 100 170"
-                stroke={hoveredNode === "card-3" ? "#a3e635" : "#cbd5e1"}
+                stroke={hoveredNode === "card-3" ? "#06b6d4" : "#cbd5e1"}
                 strokeWidth={hoveredNode === "card-3" ? "3" : "2"}
                 className="transition-all duration-300"
                 fill="none"
               />
               <path
                 d="M 20 0 Q 20 340, 80 375 L 100 375"
-                stroke={hoveredNode === "card-4" ? "#a3e635" : "#cbd5e1"}
+                stroke={hoveredNode === "card-4" ? "#06b6d4" : "#cbd5e1"}
                 strokeWidth={hoveredNode === "card-4" ? "3" : "2"}
                 className="transition-all duration-300"
                 fill="none"
@@ -377,7 +377,7 @@ export default function AdmissionsDynamicsCanvas({
                 </div>
 
                 <div className="inline-flex items-center gap-2 bg-emerald-800 text-white px-4 py-2 rounded-full shadow-sm hover:scale-105 transition-transform cursor-pointer">
-                  <Award className="w-3.5 h-3.5 text-[#d6ff38]" />
+                  <Award className="w-3.5 h-3.5 text-emerald-300" />
                   <span className="text-xs font-semibold">
                     428 Token Offers Sent
                   </span>

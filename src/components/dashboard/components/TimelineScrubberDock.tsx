@@ -63,7 +63,7 @@ export default function TimelineScrubberDock({
         particleCount: 80,
         spread: 80,
         origin: { y: 0.9 },
-        colors: ["#d6ff38", "#10b981", "#38bdf8"]
+        colors: ["#6366f1", "#10b981", "#38bdf8", "#f59e0b"]
       });
     } catch (e) {}
     onOpenExportModal?.();
@@ -71,31 +71,31 @@ export default function TimelineScrubberDock({
 
   return (
     <div className="w-full flex items-center justify-center select-none">
-      {/* Light & Refined Neo-Brutalist Dock Container */}
-      <div className="bg-white border-[1.5px] border-black rounded-xl px-3 py-1.5 shadow-[2px_2px_0px_#000000] flex items-center gap-2 max-w-full overflow-x-auto scrollbar-none">
+      {/* Authentic Neo-Brutalist Dock Container */}
+      <div className="bg-white border-3 border-black rounded-2xl px-3.5 py-2 shadow-[5px_5px_0px_#000000] flex items-center gap-2.5 max-w-full overflow-x-auto select-none">
         {/* Left: Academic Calendar Year Selector */}
-        <button className="flex items-center gap-1.5 bg-black text-[#d6ff38] border border-black px-2.5 py-1 rounded-lg text-xs font-bold shrink-0 shadow-[1px_1px_0px_#000000] hover:bg-neutral-800 transition-colors cursor-pointer">
-          <Calendar className="w-3 h-3 stroke-[2]" />
+        <button className="flex items-center gap-1.5 bg-black text-[#d6ff38] border-2 border-black px-3 py-1 rounded-xl text-xs font-black shrink-0 shadow-[2px_2px_0px_#000000] -rotate-1 cursor-pointer">
+          <Calendar className="w-3.5 h-3.5 stroke-[2.5] text-[#d6ff38]" />
           <span className="text-[10px] uppercase tracking-wider">2026 Intake</span>
         </button>
 
         {/* Milestone Icon Pill 1 */}
-        <div className="w-7 h-7 rounded-lg bg-neutral-50 border border-neutral-300 flex items-center justify-center text-neutral-800 shrink-0" title="Prospectus Downloads">
-          <FileText className="w-3.5 h-3.5 stroke-[2]" />
+        <div className="w-8 h-8 rounded-xl bg-[#00f0ff] border-2 border-black flex items-center justify-center text-black shrink-0 shadow-[2px_2px_0px_#000000]" title="Prospectus Downloads">
+          <FileText className="w-4 h-4 stroke-[2.5]" />
         </div>
 
         {/* Milestone Icon Pill 2 */}
         <div className="relative shrink-0" title="Active Dialed Helplines">
-          <div className="w-7 h-7 rounded-lg bg-neutral-50 border border-neutral-300 flex items-center justify-center text-neutral-800">
-            <PhoneCall className="w-3.5 h-3.5 stroke-[2]" />
+          <div className="w-8 h-8 rounded-xl bg-[#ffe600] border-2 border-black flex items-center justify-center text-black shadow-[2px_2px_0px_#000000]">
+            <PhoneCall className="w-4 h-4 stroke-[2.5]" />
           </div>
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#d6ff38] text-black border border-black text-[8px] font-bold flex items-center justify-center">
+          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-black text-[#d6ff38] border border-black text-[9px] font-black flex items-center justify-center">
             6
           </span>
         </div>
 
         {/* Months Scrubber Sequence */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
           {timelineData.map((item) => {
             const isSelected = selectedRange.includes(item.id);
 
@@ -103,21 +103,21 @@ export default function TimelineScrubberDock({
               <div
                 key={item.id}
                 onClick={() => toggleMonth(item.id)}
-                className={`relative px-2.5 py-0.5 rounded-lg text-xs transition-all duration-120 cursor-pointer flex items-center gap-1 border ${
+                className={`relative px-2.5 py-1 rounded-xl text-xs transition-all duration-120 cursor-pointer flex items-center gap-1.5 border-2 ${
                   isSelected
-                    ? "bg-[#d6ff38] text-black font-bold border-black shadow-[1px_1px_0px_#000000]"
-                    : "bg-white text-neutral-700 border-transparent hover:border-neutral-300 hover:bg-neutral-50 font-medium"
+                    ? "bg-[#d6ff38] text-black font-black border-black shadow-[2px_2px_0px_#000000] -translate-y-0.5"
+                    : "bg-white text-black border-transparent hover:border-black hover:bg-slate-100 font-bold"
                 }`}
                 title={item.stageLabel}
               >
-                <span className="text-[11px]">{item.name}</span>
+                <span className="text-[11px] uppercase tracking-tight">{item.name}</span>
 
                 {item.count && (
                   <span
-                    className={`w-3.5 h-3.5 rounded flex items-center justify-center text-[8px] font-bold shrink-0 border ${
+                    className={`w-4 h-4 rounded flex items-center justify-center text-[9px] font-mono font-black shrink-0 ${
                       isSelected
-                        ? "bg-black text-[#d6ff38] border-black"
-                        : "bg-neutral-100 text-neutral-700 border-neutral-300"
+                        ? "bg-black text-[#d6ff38]"
+                        : "bg-slate-200 text-black border border-black/30"
                     }`}
                   >
                     {item.count}
@@ -132,10 +132,10 @@ export default function TimelineScrubberDock({
         <div className="pl-1 shrink-0">
           <button
             onClick={handleDownloadAll}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#d6ff38] hover:bg-[#cbf72e] text-black border border-black text-xs font-bold shadow-[1px_1px_0px_#000000] active:translate-x-0.5 cursor-pointer transition-all"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#00f0ff] hover:bg-[#00ddf0] text-black text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer transition-all"
             title="Export complete institutional archive and call logs"
           >
-            <Download className="w-3 h-3 stroke-[2]" />
+            <Download className="w-3.5 h-3.5 stroke-[2.5]" />
             <span className="text-[11px] uppercase tracking-wider">Export</span>
           </button>
         </div>

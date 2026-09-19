@@ -79,47 +79,47 @@ export default function CreateAgentModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl border-4 border-black shadow-[12px_12px_0px_#000000] p-6 sm:p-8 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
+      <div className="relative w-full max-w-2xl bg-white rounded-3xl border-4 border-black shadow-[10px_10px_0px_#000000] p-6 sm:p-8 overflow-hidden">
         {/* Modal Header */}
-        <div className="flex items-center justify-between pb-4 border-b-2 border-black">
+        <div className="flex items-center justify-between pb-4 border-b-3 border-black">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-[#d6ff38] text-black border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_#000000]">
+            <div className="w-12 h-12 rounded-xl bg-[#d6ff38] text-black border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_#000000]">
               <Bot className="w-6 h-6 stroke-[2.5]" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-black uppercase">
+              <h3 className="text-xl font-black text-black uppercase tracking-tight">
                 Create AI Voice Agent
               </h3>
               <p className="text-xs font-bold text-black/70">
-                Step {step} of 3 • Voice & Personality Studio
+                Step {step} of 3 • Voice & Acoustic Persona Studio
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-white hover:bg-[#fcffe0] text-black border-2 border-black flex items-center justify-center transition-all shadow-[2px_2px_0px_#000000] active:translate-x-0.5 cursor-pointer"
+            className="p-2 rounded-xl bg-white hover:bg-[#ff8080] text-black border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
           >
-            <X className="w-4 h-4 stroke-[3]" />
+            <X className="w-5 h-5 stroke-[2.5]" />
           </button>
         </div>
 
         {/* Step Tabs Indicator */}
         <div className="grid grid-cols-3 gap-2 my-5">
           <div
-            className={`h-2 rounded-full border-2 border-black transition-all ${
-              step >= 1 ? "bg-[#d6ff38]" : "bg-neutral-200"
+            className={`h-2.5 rounded-full border-2 border-black transition-all duration-300 shadow-[1px_1px_0px_#000000] ${
+              step >= 1 ? "bg-[#d6ff38]" : "bg-slate-200"
             }`}
           />
           <div
-            className={`h-2 rounded-full border-2 border-black transition-all ${
-              step >= 2 ? "bg-[#d6ff38]" : "bg-neutral-200"
+            className={`h-2.5 rounded-full border-2 border-black transition-all duration-300 shadow-[1px_1px_0px_#000000] ${
+              step >= 2 ? "bg-[#d6ff38]" : "bg-slate-200"
             }`}
           />
           <div
-            className={`h-2 rounded-full border-2 border-black transition-all ${
-              step >= 3 ? "bg-[#d6ff38]" : "bg-neutral-200"
+            className={`h-2.5 rounded-full border-2 border-black transition-all duration-300 shadow-[1px_1px_0px_#000000] ${
+              step >= 3 ? "bg-[#d6ff38]" : "bg-slate-200"
             }`}
           />
         </div>
@@ -136,7 +136,7 @@ export default function CreateAgentModal({
                 placeholder="e.g. Maya AI (Senior Admissions Counselor)"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-white border-2 border-black text-black placeholder-black/50 shadow-[3px_3px_0px_#000000] focus:bg-[#fcffe0] focus:outline-none"
+                className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-white border-2 border-black text-black placeholder-black/50 shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
               />
             </div>
 
@@ -150,7 +150,7 @@ export default function CreateAgentModal({
                   placeholder="e.g. B.Tech Admissions Counseling"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-white border-2 border-black text-black placeholder-black/50 shadow-[3px_3px_0px_#000000] focus:bg-[#fcffe0] focus:outline-none"
+                  className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-white border-2 border-black text-black placeholder-black/50 shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
                 />
               </div>
 
@@ -161,7 +161,7 @@ export default function CreateAgentModal({
                 <select
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-white border-2 border-black text-black shadow-[3px_3px_0px_#000000] focus:outline-none cursor-pointer"
+                  className="w-full px-4 py-2.5 rounded-xl text-xs font-black bg-white border-2 border-black text-black shadow-[3px_3px_0px_#000000] focus:outline-none cursor-pointer transition-all uppercase"
                 >
                   <option value="Admissions & Outreach">Admissions & Outreach</option>
                   <option value="Student Affairs & Hostels">Student Affairs & Hostels</option>
@@ -181,10 +181,10 @@ export default function CreateAgentModal({
                     key={lang}
                     type="button"
                     onClick={() => setSelectedLanguage(lang)}
-                    className={`p-2.5 rounded-xl text-xs font-black border-2 border-black text-left transition-all cursor-pointer ${
+                    className={`p-2.5 rounded-xl text-xs text-left transition-all cursor-pointer border-2 border-black shadow-[2px_2px_0px_#000000] ${
                       selectedLanguage === lang
-                        ? "bg-[#d6ff38] text-black shadow-[3px_3px_0px_#000000] -translate-y-0.5"
-                        : "bg-white text-black shadow-[2px_2px_0px_#000000] hover:bg-[#fcffe0]"
+                        ? "bg-[#d6ff38] text-black font-black"
+                        : "bg-white text-black hover:bg-[#ffe600] font-bold"
                     }`}
                   >
                     {lang}
@@ -208,15 +208,17 @@ export default function CreateAgentModal({
                   <div
                     key={v.name}
                     onClick={() => setSelectedVoice(v.name)}
-                    className={`p-3.5 rounded-xl border-2 border-black cursor-pointer transition-all ${
+                    className={`p-3.5 rounded-2xl border-2 border-black cursor-pointer transition-all ${
                       selectedVoice === v.name
-                        ? "bg-[#d6ff38] text-black shadow-[3px_3px_0px_#000000] -translate-y-0.5"
-                        : "bg-white text-black shadow-[2px_2px_0px_#000000] hover:bg-[#fcffe0]"
+                        ? "bg-[#d6ff38] shadow-[4px_4px_0px_#000000] -translate-y-0.5"
+                        : "bg-white shadow-[2px_2px_0px_#000000] hover:bg-[#00f0ff]/20"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-black text-[#d6ff38] border border-black flex items-center justify-center font-black text-xs">
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs border-2 border-black ${
+                          selectedVoice === v.name ? "bg-black text-[#d6ff38]" : "bg-slate-200 text-black"
+                        }`}>
                           {v.gender === "Female" ? "F" : "M"}
                         </div>
                         <div>
@@ -230,14 +232,14 @@ export default function CreateAgentModal({
                       </div>
 
                       {selectedVoice === v.name && (
-                        <div className="w-5 h-5 rounded-full bg-black text-[#d6ff38] flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        <div className="w-6 h-6 rounded-md bg-black text-[#d6ff38] flex items-center justify-center border border-black shadow-[1px_1px_0px_#000000]">
+                          <Check className="w-4 h-4 stroke-[3]" />
                         </div>
                       )}
                     </div>
 
-                    <div className="mt-2.5 pt-2 border-t border-black/20 flex items-center justify-between text-xs font-bold">
-                      <span className="text-[11px] text-black/80">
+                    <div className="mt-2.5 pt-2 border-t-2 border-black flex items-center justify-between text-xs">
+                      <span className="text-[11px] font-bold text-black/80">
                         {v.tone}
                       </span>
                       <button
@@ -246,7 +248,7 @@ export default function CreateAgentModal({
                           e.stopPropagation();
                           setIsPlayingVoice(!isPlayingVoice);
                         }}
-                        className="inline-flex items-center gap-1 text-[11px] font-black text-black underline"
+                        className="inline-flex items-center gap-1 text-[11px] font-black text-black underline hover:text-black/70"
                       >
                         <Play className="w-3 h-3 fill-current" />
                         <span>Preview Voice</span>
@@ -257,12 +259,12 @@ export default function CreateAgentModal({
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#fcffe0] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center justify-between text-xs text-black">
-              <span className="flex items-center gap-1.5 font-bold">
+            <div className="p-3.5 rounded-xl bg-[#00f0ff] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center justify-between text-xs text-black">
+              <span className="flex items-center gap-1.5 font-black uppercase">
                 <Sparkles className="w-4 h-4 text-black stroke-[2.5]" />
                 Adaptive Voice Activity Detection (VAD) Enabled
               </span>
-              <span className="font-mono text-xs font-black bg-black text-[#d6ff38] px-2 py-0.5 rounded">
+              <span className="font-mono text-xs font-black bg-black text-[#d6ff38] px-2.5 py-0.5 rounded-md border border-black">
                 120ms latency
               </span>
             </div>
@@ -280,19 +282,19 @@ export default function CreateAgentModal({
                 rows={5}
                 value={systemPrompt}
                 onChange={(e) => setSystemPrompt(e.target.value)}
-                className="w-full p-3.5 rounded-xl text-xs bg-white border-2 border-black text-black font-mono font-bold leading-relaxed shadow-[3px_3px_0px_#000000] focus:bg-[#fcffe0] focus:outline-none"
-                placeholder="Define role guidelines, clinical guardrails, escalation triggers..."
+                className="w-full p-3.5 rounded-xl text-xs bg-white border-2 border-black text-black font-mono font-bold leading-relaxed shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
+                placeholder="Define role guidelines, admissions guardrails, escalation triggers..."
               />
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#d6ff38] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-start gap-3 text-xs text-black">
-              <Sparkles className="w-4 h-4 text-black shrink-0 mt-0.5 stroke-[3]" />
+            <div className="p-3.5 rounded-xl bg-[#ffe600] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-start gap-3 text-xs text-black">
+              <Sparkles className="w-5 h-5 text-black shrink-0 mt-0.5 stroke-[2.5]" />
               <div>
-                <strong className="font-black block mb-0.5 uppercase">
+                <strong className="font-black text-black uppercase block mb-0.5">
                   Auto-grounded with University Prospectus
                 </strong>
                 <span className="font-bold text-black/80">
-                  This agent will have real-time access to tuition fee slabs, syllabus, hostel rules, and merit cutoffs.
+                  This agent will have zero-latency access to tuition fee slabs, course syllabus, hostel rules, and merit cutoffs.
                 </span>
               </div>
             </div>
@@ -304,7 +306,7 @@ export default function CreateAgentModal({
           {step > 1 ? (
             <button
               onClick={() => setStep((prev) => (prev - 1) as 1 | 2 | 3)}
-              className="px-4 py-2 rounded-xl text-xs font-black text-black bg-white hover:bg-neutral-100 border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 transition-all inline-flex items-center gap-1 cursor-pointer"
+              className="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-white hover:bg-slate-100 border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all inline-flex items-center gap-1 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4 stroke-[3]" />
               Back
@@ -316,18 +318,18 @@ export default function CreateAgentModal({
           {step < 3 ? (
             <button
               onClick={() => setStep((prev) => (prev + 1) as 1 | 2 | 3)}
-              className="px-5 py-2.5 rounded-xl text-xs font-black text-black bg-[#d6ff38] hover:bg-[#cbf72e] border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 transition-all inline-flex items-center gap-1 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-[#00f0ff] hover:bg-[#38bdf8] border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-1 cursor-pointer"
             >
-              Next Step
+              <span>Next Step</span>
               <ChevronRight className="w-4 h-4 stroke-[3]" />
             </button>
           ) : (
             <button
               onClick={handleSave}
-              className="px-6 py-2.5 rounded-xl text-xs font-black text-black bg-[#d6ff38] hover:bg-[#cbf72e] border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 transition-all inline-flex items-center gap-1.5 cursor-pointer"
+              className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-[#d6ff38] hover:bg-[#bbf01b] border-2 border-black shadow-[4px_4px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-1.5 cursor-pointer"
             >
               <Check className="w-4 h-4 stroke-[3]" />
-              Deploy AI Agent
+              <span>Deploy AI Agent</span>
             </button>
           )}
         </div>

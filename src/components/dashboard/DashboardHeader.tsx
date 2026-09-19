@@ -22,6 +22,9 @@ import {
 import { OrganizationInfo, NotificationItem } from "@/types/dashboard";
 import NotificationsPanel from "./components/NotificationsPanel";
 import { TabKey } from "./DashboardSidebar";
+import { Palette } from "lucide-react";
+
+export type DashboardTheme = "indigo" | "ocean" | "sunset" | "midnight";
 
 interface DashboardHeaderProps {
   currentOrg: OrganizationInfo;
@@ -32,6 +35,8 @@ interface DashboardHeaderProps {
   activeTab: TabKey;
   onSelectTab: (tab: TabKey) => void;
   onOpenSearch?: () => void;
+  theme?: DashboardTheme;
+  onThemeChange?: (theme: DashboardTheme) => void;
 }
 
 export default function DashboardHeader({
@@ -42,12 +47,22 @@ export default function DashboardHeader({
   onMarkAllNotificationsRead,
   activeTab,
   onSelectTab,
-  onOpenSearch
+  onOpenSearch,
+  theme = "indigo",
+  onThemeChange
 }: DashboardHeaderProps) {
   const [orgDropdownOpen, setOrgDropdownOpen] = useState(false);
   const [notifPanelOpen, setNotifPanelOpen] = useState(false);
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const themesList: { id: DashboardTheme; label: string; primaryDot: string; accentDot: string }[] = [
+    { id: "indigo", label: "Electric Indigo", primaryDot: "bg-indigo-600", accentDot: "bg-cyan-400" },
+    { id: "ocean", label: "Ocean & Mint", primaryDot: "bg-sky-600", accentDot: "bg-emerald-400" },
+    { id: "sunset", label: "Sunset Violet", primaryDot: "bg-purple-600", accentDot: "bg-amber-400" },
+    { id: "midnight", label: "Midnight Luxe", primaryDot: "bg-slate-900", accentDot: "bg-emerald-400" },
+  ];
 
   // Floating pill tabs tailored for Higher Ed Admissions Head & AI Voice Operations
   const navPills: { id: TabKey; label: string; icon: any }[] = [
@@ -60,37 +75,37 @@ export default function DashboardHeader({
   ];
 
   return (
-    <header className="w-full pt-4 pb-2 px-2 sm:px-4 z-30 select-none">
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+    <header className="w-full pb-4 px-1 z-30 select-none border-b-2.5 border-black mb-5 font-sans">
+      <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
         {/* ========================================================================= */}
         {/* LEFT: ACTION BUTTON + UNIVERSITY HEAD MODULE HEADER                      */}
         {/* ========================================================================= */}
         <div className="flex items-center gap-3">
-          {/* Circular Home / Exit Action Button */}
+          {/* Home / Exit Action Button */}
           <Link
             href="/"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#d6ff38] hover:bg-[#cbf72e] border-[1.5px] border-black text-black flex items-center justify-center shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-transform cursor-pointer shrink-0"
+            className="w-10 h-10 rounded-xl bg-black hover:bg-[#d6ff38] text-white hover:text-black flex items-center justify-center border-2.5 border-black shadow-[3px_3px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all cursor-pointer shrink-0 font-black"
             title="Return to Home Portal"
           >
-            <X className="w-4 h-4 stroke-[2.5]" />
+            <X className="w-5 h-5 stroke-[3]" />
           </Link>
 
           {/* Module Title */}
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-lg sm:text-xl font-black text-black tracking-tight font-sans uppercase">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-black uppercase">
               Admissions Intelligence
             </h1>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-[#d6ff38] text-black border border-black shadow-[1px_1px_0px_#000000]">
-              <span className="w-2 h-2 rounded-full bg-black inline-block animate-pulse" />
-              APEX UNIVERSITY • 24/7 AI
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black uppercase tracking-wider bg-[#d6ff38] text-black border-2 border-black shadow-[2.5px_2.5px_0px_#000000] -rotate-1">
+              <span className="w-2 h-2 rounded-full bg-black inline-block animate-ping" />
+              Apex University • 24/7 AI
             </span>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* RIGHT: NEO-BRUTALIST PILL NAVIGATION TABS                                */}
+        {/* RIGHT: NEO PILL NAVIGATION + CONTROLS                                    */}
         {/* ========================================================================= */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2.5 overflow-x-auto pb-1.5 xl:pb-0 scrollbar-none">
           {navPills.map((pill) => {
             const Icon = pill.icon;
             const isActive = activeTab === pill.id;
@@ -99,28 +114,30 @@ export default function DashboardHeader({
               <button
                 key={pill.id}
                 onClick={() => onSelectTab(pill.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold tracking-tight transition-all duration-120 cursor-pointer flex items-center gap-1.5 whitespace-nowrap border-[1.5px] ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-150 cursor-pointer flex items-center gap-2 whitespace-nowrap border-2.5 border-black ${
                   isActive
-                    ? "bg-[#d6ff38] text-black border-black shadow-[2px_2px_0px_#000000] -translate-y-0.5"
-                    : "bg-white text-neutral-800 border-black shadow-[1px_1px_0px_#000000] hover:bg-neutral-50"
+                    ? "bg-[#d6ff38] text-black shadow-[3px_3px_0px_#000000] -translate-y-0.5"
+                    : "bg-white text-black hover:bg-[#00f0ff] shadow-[3px_3px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000]"
                 }`}
               >
-                <Icon className="w-3.5 h-3.5 stroke-[2] text-black" />
+                <Icon className="w-4 h-4 stroke-[2.5]" />
                 <span>{pill.label}</span>
               </button>
             );
           })}
 
           {/* Notifications Drawer */}
-          <div className="relative shrink-0">
+          <div className="relative shrink-0 ml-1">
             <button
               onClick={() => setNotifPanelOpen(!notifPanelOpen)}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white hover:bg-neutral-50 border-[1.5px] border-black text-black flex items-center justify-center shadow-[1.5px_1.5px_0px_#000000] cursor-pointer transition-all active:translate-x-0.5 active:translate-y-0.5 relative"
+              className="w-10 h-10 rounded-xl bg-white hover:bg-[#ffe600] border-2.5 border-black text-black flex items-center justify-center shadow-[3px_3px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] cursor-pointer transition-all relative font-black"
               title="Admissions Alerts & Telephony Notifications"
             >
-              <Bell className="w-3.5 h-3.5 stroke-[2]" />
+              <Bell className="w-4 h-4 stroke-[2.5]" />
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#d6ff38] border border-black" />
+                <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-black text-[#d6ff38] font-black text-[10px] flex items-center justify-center border border-black shadow-[1px_1px_0px_#ffffff]">
+                  {unreadCount}
+                </span>
               )}
             </button>
 

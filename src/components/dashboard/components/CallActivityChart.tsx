@@ -58,53 +58,56 @@ export default function CallActivityChart() {
   const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${(height - paddingY).toFixed(1)} L ${points[0].x.toFixed(1)} ${(height - paddingY).toFixed(1)} Z`;
 
   return (
-    <div className="bg-white border-3 border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000]">
+    <div className="bg-white border-[2.5px] border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000] font-sans select-none">
       {/* Top Controls Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b-2 border-black">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b-2 border-black">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md bg-black text-[#d6ff38]">
-              Operations Telemetry
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+            <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+              ⚡ Operations Telemetry
             </span>
-            <span className="text-[10px] font-black px-2.5 py-0.5 rounded-md bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              Peak Traffic: 12:00 - 16:00
+            <span className="text-[11px] font-black px-2.5 py-1 rounded-lg bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
+              Peak: 12:00 - 16:00
             </span>
           </div>
-          <h3 className="text-xl font-black text-black uppercase tracking-tight">
-            CALL ACTIVITY DYNAMICS
+          <h3 className="text-lg sm:text-xl font-black text-black tracking-tight">
+            Call Activity Dynamics & Lead Flow
           </h3>
+          <p className="text-xs text-black/70 font-bold mt-0.5">
+            Real-time breakdown of automated student queries and voice counseling conversations
+          </p>
         </div>
 
         {/* View Toggles & Filters */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           {/* Metric View Switcher */}
-          <div className="flex items-center bg-white p-1 rounded-xl border-2 border-black shadow-[2px_2px_0px_#000000] text-xs font-black">
+          <div className="flex items-center bg-white p-1 rounded-xl border-2 border-black shadow-[2px_2px_0px_#000000] text-xs gap-1">
             <button
               onClick={() => setMetricView("calls")}
-              className={`px-3 py-1 rounded-lg transition-all ${
+              className={`px-3 py-1.5 rounded-lg transition-all font-black cursor-pointer ${
                 metricView === "calls"
-                  ? "bg-[#d6ff38] text-black border border-black"
-                  : "text-black/70 hover:text-black"
+                  ? "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]"
+                  : "text-black hover:bg-neutral-100 border-2 border-transparent"
               }`}
             >
-              Calls
+              Calls Dialed
             </button>
             <button
               onClick={() => setMetricView("minutes")}
-              className={`px-3 py-1 rounded-lg transition-all ${
+              className={`px-3 py-1.5 rounded-lg transition-all font-black cursor-pointer ${
                 metricView === "minutes"
-                  ? "bg-[#d6ff38] text-black border border-black"
-                  : "text-black/70 hover:text-black"
+                  ? "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]"
+                  : "text-black hover:bg-neutral-100 border-2 border-transparent"
               }`}
             >
               Minutes
             </button>
             <button
               onClick={() => setMetricView("outcomes")}
-              className={`px-3 py-1 rounded-lg transition-all ${
+              className={`px-3 py-1.5 rounded-lg transition-all font-black cursor-pointer ${
                 metricView === "outcomes"
-                  ? "bg-[#d6ff38] text-black border border-black"
-                  : "text-black/70 hover:text-black"
+                  ? "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]"
+                  : "text-black hover:bg-neutral-100 border-2 border-transparent"
               }`}
             >
               Interested Leads
@@ -115,9 +118,9 @@ export default function CallActivityChart() {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value as any)}
-            className="px-3 py-1.5 rounded-xl text-xs font-black bg-white border-2 border-black shadow-[2px_2px_0px_#000000] focus:outline-none focus:bg-[#fcffe0] cursor-pointer"
+            className="px-3.5 py-2 rounded-xl text-xs font-black bg-white hover:bg-[#ffe600]/20 border-2 border-black text-black focus:outline-none cursor-pointer transition-all shadow-[2px_2px_0px_#000000]"
           >
-            <option value="today">Today</option>
+            <option value="today">Today (Hourly)</option>
             <option value="sevenDays">Past 7 Days</option>
             <option value="thirtyDays">Past 30 Days</option>
           </select>
@@ -125,11 +128,18 @@ export default function CallActivityChart() {
       </div>
 
       {/* SVG Chart Area */}
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full overflow-hidden bg-[#fbfbf8] rounded-xl p-3.5 border-2 border-black shadow-[3px_3px_0px_#000000]">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-48 sm:h-64 overflow-visible"
+          className="w-full h-48 sm:h-56 overflow-visible"
         >
+          <defs>
+            <linearGradient id="vibrantChartAreaGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#d6ff38" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#d6ff38" stopOpacity="0.05" />
+            </linearGradient>
+          </defs>
+
           {/* Grid lines */}
           <line
             x1={paddingX}
@@ -139,7 +149,7 @@ export default function CallActivityChart() {
             stroke="#000000"
             strokeWidth="1"
             strokeDasharray="4 4"
-            opacity="0.2"
+            opacity="0.25"
           />
           <line
             x1={paddingX}
@@ -149,7 +159,7 @@ export default function CallActivityChart() {
             stroke="#000000"
             strokeWidth="1"
             strokeDasharray="4 4"
-            opacity="0.2"
+            opacity="0.25"
           />
           <line
             x1={paddingX}
@@ -163,8 +173,7 @@ export default function CallActivityChart() {
           {/* Area under curve */}
           <path
             d={areaPath}
-            fill="#d6ff38"
-            opacity="0.45"
+            fill="url(#vibrantChartAreaGradient)"
           />
 
           {/* Line curve */}
@@ -177,7 +186,7 @@ export default function CallActivityChart() {
             strokeLinejoin="round"
           />
 
-          {/* Points */}
+          {/* Points with Neo Brutalist dots */}
           {points.map((p, idx) => (
             <g
               key={idx}
@@ -188,11 +197,11 @@ export default function CallActivityChart() {
               <circle
                 cx={p.x}
                 cy={p.y}
-                r={hoveredPoint === idx ? 7 : 4.5}
-                fill={hoveredPoint === idx ? "#000000" : "#d6ff38"}
+                r={hoveredPoint === idx ? 8 : 5}
+                fill={hoveredPoint === idx ? "#ffe600" : "#d6ff38"}
                 stroke="#000000"
-                strokeWidth="2.5"
-                className="transition-all"
+                strokeWidth={2.5}
+                className="transition-all duration-150"
               />
             </g>
           ))}
@@ -201,15 +210,21 @@ export default function CallActivityChart() {
         {/* Hovered Tooltip */}
         {hoveredPoint !== null && (
           <div
-            className="absolute top-2 left-1/2 -translate-x-1/2 bg-black text-[#d6ff38] px-3.5 py-1.5 rounded-lg border-2 border-black shadow-[3px_3px_0px_#d6ff38] text-xs font-black uppercase pointer-events-none"
+            className="absolute top-4 left-1/2 -translate-x-1/2 bg-black text-[#d6ff38] px-4 py-2 rounded-xl border-2 border-black shadow-[3px_3px_0px_#ffffff] text-xs pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex items-center gap-2 font-black"
           >
-            {chartData[hoveredPoint].label}: {chartData[hoveredPoint].val} {metricView} ({chartData[hoveredPoint].interested} interested)
+            <span className="text-white font-bold">{chartData[hoveredPoint].label}:</span>{" "}
+            <span className="text-[#d6ff38] font-mono font-black">
+              {chartData[hoveredPoint].val} {metricView}
+            </span>{" "}
+            <span className="text-neutral-300 font-medium">
+              ({chartData[hoveredPoint].interested} interested)
+            </span>
           </div>
         )}
       </div>
 
       {/* Bottom Time Labels */}
-      <div className="flex justify-between text-[11px] font-black text-black font-mono pt-2 px-6">
+      <div className="flex justify-between text-xs text-black font-mono font-black pt-3 px-6">
         {chartData.map((d, i) => (
           <span key={i}>{d.label}</span>
         ))}
