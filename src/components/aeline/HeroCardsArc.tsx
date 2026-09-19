@@ -243,7 +243,7 @@ export default function HeroCardsArc() {
               <div className="flex items-center justify-between py-1 px-1.5 bg-slate-50 rounded-lg">
                 <span className="text-slate-600 font-medium text-[10px]">B.Tech Fee Slabs</span>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-slate-800 font-semibold text-[10px]">$100</span>
+                  <span className="text-slate-800 font-semibold text-[10px]">₹8.4k</span>
                   <div className="w-5 h-3 bg-sky-500 rounded-full relative p-0.5">
                     <div className="w-2 h-2 bg-white rounded-full ml-auto" />
                   </div>
@@ -253,7 +253,7 @@ export default function HeroCardsArc() {
               <div className="flex items-center justify-between py-1 px-1.5 bg-slate-50 rounded-lg">
                 <span className="text-slate-600 font-medium text-[10px]">Hostel AC Booking</span>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-slate-800 font-semibold text-[10px]">$80</span>
+                  <span className="text-slate-800 font-semibold text-[10px]">₹6.7k</span>
                   <div className="w-5 h-3 bg-sky-500 rounded-full relative p-0.5">
                     <div className="w-2 h-2 bg-white rounded-full ml-auto" />
                   </div>
@@ -263,7 +263,7 @@ export default function HeroCardsArc() {
               <div className="flex items-center justify-between py-1 px-1.5 bg-slate-50 rounded-lg">
                 <span className="text-slate-600 font-medium text-[10px]">NRI Quota Policy</span>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-slate-800 font-semibold text-[10px]">$20</span>
+                  <span className="text-slate-800 font-semibold text-[10px]">₹1.7k</span>
                   <div className="w-5 h-3 bg-slate-200 rounded-full relative p-0.5">
                     <div className="w-2 h-2 bg-white rounded-full" />
                   </div>
@@ -684,7 +684,7 @@ export default function HeroCardsArc() {
             </div>
             <div className="flex items-baseline justify-between pt-0.5">
               <span className="text-[10px] text-slate-500">Matched Grant</span>
-              <span className="text-sm font-black text-amber-600">$14,500 / yr</span>
+              <span className="text-sm font-black text-amber-600">₹1.22L / yr</span>
             </div>
             <div className="w-full h-1 bg-amber-200 rounded-full overflow-hidden mt-1">
               <div className="w-[88%] h-full bg-amber-500 rounded-full" />

@@ -20,10 +20,20 @@ export default function InnovationShowcase() {
 
   // Dynamic calculations based on university admissions parameters
   const hoursSavedPerYear = Math.round((callVolume * 0.18) * (automationFocus === "peak-telephony" ? 1.3 : automationFocus === "rag" ? 1.15 : 1.4));
-  // Est tuition revenue protected assuming 4% of unanswered calls lead to an enrolled student paying $15,000 avg annual tuition
+  // Est tuition revenue protected assuming 3.5% of recovered calls lead to an enrolled student paying ₹7.98L avg annual tuition
   const missedCallsRecovered = Math.round(callVolume * 0.12);
-  const protectedTuitionRevenue = Math.round(missedCallsRecovered * 0.035 * 18000);
+  const protectedTuitionRevenue = Math.round(missedCallsRecovered * 0.035 * 798000);
   const conversionMultiplier = automationFocus === "peak-telephony" ? "3.8x" : automationFocus === "rag" ? "4.2x" : "3.4x";
+
+  const formatRupees = (val: number) => {
+    if (val >= 10000000) {
+      return `₹${(val / 10000000).toFixed(2)} Cr`;
+    }
+    if (val >= 100000) {
+      return `₹${(val / 100000).toFixed(1)}L`;
+    }
+    return `₹${val.toLocaleString("en-IN")}`;
+  };
 
   return (
     <section id="calculator" className="w-full bg-white py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-t border-slate-100">
@@ -204,7 +214,7 @@ export default function InnovationShowcase() {
                     Tuition Revenue Retained
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-[#cdfb56] tracking-tight">
-                    ${protectedTuitionRevenue.toLocaleString("en-US")}
+                    {formatRupees(protectedTuitionRevenue)}
                   </div>
                   <div className="text-[10px] text-slate-400 font-semibold mt-1">
                     From previously dropped calls

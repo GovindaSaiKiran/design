@@ -33,7 +33,7 @@ export default function Footer() {
                 </svg>
               </div>
               <span className="text-slate-950 font-bold text-xl tracking-tight flex items-center gap-1">
-                EduVoice <span className="text-sky-600 text-xs font-black">AI</span>
+                VoicePilot <span className="text-sky-600 text-xs font-black">AI</span>
               </span>
             </Link>
 
@@ -95,7 +95,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs text-slate-500 font-medium">
               <li>
                 <a href="#about" className="hover:text-slate-950 transition-colors">
-                  About Edu-Voice-Ai
+                  About Voice Pilot
                 </a>
               </li>
               <li>
@@ -158,7 +158,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>© 2026 Edu-Voice-Ai Inc. All rights reserved.</p>
+          <p>© 2026 Voice Pilot Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <span className="hover:text-slate-600 transition-colors cursor-pointer">
               Student Privacy

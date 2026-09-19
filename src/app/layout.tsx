@@ -56,26 +56,26 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Edu-Voice-Ai — Spatial AI Admission Counselor for Higher Education",
+  title: "Voice Pilot — AI Voice Agents for Every Business",
   description:
-    "Edu-Voice-Ai answers admission calls 24/7, understands prospective student inquiries, grounds answers in institutional knowledge, and connects prospects with your team.",
+    "Voice Pilot creates AI voice agents for businesses, institutions, hospitals, and service teams. Handle calls at scale with zero hold times.",
   keywords: [
-    "Edu-Voice-Ai",
-    "AI Admission Counselor",
-    "Maya Voice AI",
-    "University Telephony",
-    "Higher Education Admissions",
-    "Institutional RAG",
+    "Voice Pilot",
+    "AI Voice Agent",
+    "Voice AI",
+    "Business Telephony",
+    "AI Phone Agent",
+    "Automated Calls",
     "Zero Hold Times"
   ],
-  authors: [{ name: "Edu-Voice-Ai Inc." }],
+  authors: [{ name: "Voice Pilot Inc." }],
   openGraph: {
-    title: "Edu-Voice-Ai — Spatial AI Admission Counselor",
+    title: "Voice Pilot — AI Voice Agents for Every Business",
     description:
-      "Edu-Voice-Ai answers admission calls 24/7, understands prospective student inquiries, and connects prospects with your team.",
+      "Voice Pilot creates AI voice agents that handle calls 24/7, answer questions, and connect customers with your team when needed.",
     type: "website",
-    locale: "en_US",
-    siteName: "Edu-Voice-Ai"
+    locale: "en_IN",
+    siteName: "Voice Pilot"
   }
 };
 

@@ -144,9 +144,9 @@ export default function InstitutionalDemoModal({
                     }
                     className="w-full px-3 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-900 cursor-pointer"
                   >
-                    <option value="Starter Campus Plan">Starter ($2,500/mo)</option>
-                    <option value="Collegiate Growth Plan">Growth ($8,500/mo)</option>
-                    <option value="University System Enterprise">Enterprise ($10,500/mo)</option>
+                    <option value="Starter Campus Plan">Starter (₹2,10,000/mo)</option>
+                    <option value="Collegiate Growth Plan">Growth (₹7,14,000/mo)</option>
+                    <option value="University System Enterprise">Enterprise (₹8,82,000/mo)</option>
                   </select>
                 </div>
               </div>

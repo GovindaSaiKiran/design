@@ -77,7 +77,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
                   isScrolled ? "text-slate-950" : "text-white"
                 }`}
               >
-                EduVoice
+                VoicePilot
                 <span className="text-[#0d5926] bg-[#cdfb56] text-[9px] sm:text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded-md shadow-xs">
                   AI
                 </span>
@@ -201,7 +201,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
                   : "text-white hover:text-white hover:bg-white/20"
               }`}
             >
-              MEET MAYA
+            HOW IT WORKS
             </a>
 
             {/* SOLUTIONS Dropdown */}
@@ -215,7 +215,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
                     : "text-white hover:text-white hover:bg-white/20"
                 }`}
               >
-                SOLUTIONS
+                USE CASES
                 <ChevronDown
                   className={`w-3 h-3 transition-transform duration-200 ${
                     dropdownOpen ? "rotate-180 text-emerald-400" : ""
@@ -314,6 +314,16 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
               <span>BOOK DEMO</span>
               <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
             </button>
+            <a
+              href="/dashboard"
+              className={`text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border transition-all duration-150 cursor-pointer flex items-center gap-1.5 shadow-xs active:scale-95 ${
+                isScrolled
+                  ? "bg-slate-900/5 hover:bg-slate-900/10 text-slate-800 border-slate-900/15"
+                  : "bg-white/15 hover:bg-white/25 text-white border-white/30"
+              }`}
+            >
+              DASHBOARD
+            </a>
           </div>
 
           {/* Mobile Island Action Buttons */}
@@ -372,7 +382,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2 px-3.5 rounded-xl hover:bg-white/20 text-white transition-colors"
               >
-                MEET MAYA
+                HOW IT WORKS
               </a>
               <a
                 href="#calculator"

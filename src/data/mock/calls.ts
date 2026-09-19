@@ -80,11 +80,11 @@ export const mockCalls: CallLog[] = [
 ];
 
 export const simulatedMissedCalls = [
-  { time: "21:32 Yesterday", phone: "+91 97110 •••••", course: "B.Tech CSE", status: "Missed (Pre-AI)", lostValue: "Est. $18,000 Tuition" },
-  { time: "22:14 Yesterday", phone: "+91 98402 •••••", course: "MBA FinTech", status: "Missed (Pre-AI)", lostValue: "Est. $24,000 Tuition" },
-  { time: "23:02 Yesterday", phone: "+91 80561 •••••", course: "B.Des Product", status: "Missed (Pre-AI)", lostValue: "Est. $16,500 Tuition" },
-  { time: "01:47 Midnight", phone: "+91 94452 •••••", course: "B.Sc Biotech", status: "Missed (Pre-AI)", lostValue: "Est. $14,000 Tuition" },
-  { time: "06:13 Morning", phone: "+91 70192 •••••", course: "B.Tech AI/ML", status: "Missed (Pre-AI)", lostValue: "Est. $18,000 Tuition" }
+  { time: "21:32 Yesterday", phone: "+91 97110 •••••", course: "B.Tech CSE", status: "Missed (Pre-AI)", lostValue: "Est. ₹15.2L Tuition" },
+  { time: "22:14 Yesterday", phone: "+91 98402 •••••", course: "MBA FinTech", status: "Missed (Pre-AI)", lostValue: "Est. ₹20.2L Tuition" },
+  { time: "23:02 Yesterday", phone: "+91 80561 •••••", course: "B.Des Product", status: "Missed (Pre-AI)", lostValue: "Est. ₹13.9L Tuition" },
+  { time: "01:47 Midnight", phone: "+91 94452 •••••", course: "B.Sc Biotech", status: "Missed (Pre-AI)", lostValue: "Est. ₹11.8L Tuition" },
+  { time: "06:13 Morning", phone: "+91 70192 •••••", course: "B.Tech AI/ML", status: "Missed (Pre-AI)", lostValue: "Est. ₹15.2L Tuition" }
 ];
 
 export const sampleTranscriptDialogue = [
@@ -108,7 +108,7 @@ export const sampleTranscriptDialogue = [
     id: 3,
     speaker: "MAYA",
     timestamp: "00:16",
-    text: "Congratulations on your 94% score, Rahul! For B.Tech CSE, the annual tuition is $9,500. With 94% in CBSE, you qualify for our Chancellor's Merit Scholarship, which gives a 35% tuition waiver for all four years.",
+    text: "Congratulations on your 94% score, Rahul! For B.Tech CSE, the annual tuition is ₹7.98L. With 94% in CBSE, you qualify for our Chancellor's Merit Scholarship, which gives a 35% tuition waiver for all four years.",
     intent: "Grounding: Fee Matrix & Scholarship Policy 2026",
     sentiment: "positive"
   },
@@ -124,7 +124,7 @@ export const sampleTranscriptDialogue = [
     id: 5,
     speaker: "MAYA",
     timestamp: "00:32",
-    text: "Hostel accommodation is separate. AC twin-sharing is $2,200 per year including meal plans and high-speed campus WiFi. Would you like me to WhatsApp you the detailed brochure and fee breakdown?",
+    text: "Hostel accommodation is separate. AC twin-sharing is ₹1.85L per year including meal plans and high-speed campus WiFi. Would you like me to WhatsApp you the detailed brochure and fee breakdown?",
     intent: "Proactive Lead Enrichment",
     sentiment: "positive"
   },

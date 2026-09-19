@@ -85,11 +85,11 @@ export default function AboutSection({ onOpenDemo, onOpenSimulator }: AboutSecti
     {
       id: 5,
       title: "Scholarship Match",
-      subtitle: "$18.4k Average Award",
+      subtitle: "₹15.5L Average Award",
       type: "scholarship",
       image: "/images/woman-portrait.jpg",
       pill: "Admitted '28",
-      metric: "$18.4k",
+      metric: "₹15.5L",
       sub: "Grant Qualified",
       color: "text-white"
     },

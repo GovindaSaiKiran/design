@@ -11,7 +11,7 @@ export const institutionalDocuments: InstitutionalDocument[] = [
     sampleQuestions: [
       {
         question: "What is the per-semester fee for B.Tech Computer Science?",
-        answer: "B.Tech CSE tuition is $4,750 per semester ($9,500 annually) payable in two equal installments due in July and January.",
+        answer: "B.Tech CSE tuition is ₹3.99L per semester (₹7.98L annually) payable in two equal installments due in July and January.",
         citation: "Section 2.1 • Page 4 (Tuition Schedules)"
       },
       {
@@ -61,7 +61,7 @@ export const institutionalDocuments: InstitutionalDocument[] = [
     sampleQuestions: [
       {
         question: "What are the hostel room options and curfews for 1st year students?",
-        answer: "Twin-sharing AC ($2,200/yr) and Triple-sharing Non-AC ($1,500/yr). First-year campus entry curfew is 9:30 PM with biometric check-in.",
+        answer: "Twin-sharing AC (₹1.85L/yr) and Triple-sharing Non-AC (₹1.26L/yr). First-year campus entry curfew is 9:30 PM with biometric check-in.",
         citation: "Section 5.3 • Page 12 (Residential Rules)"
       }
     ]

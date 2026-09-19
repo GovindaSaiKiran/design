@@ -14,7 +14,7 @@ export default function PricingSection({ onSelectPlan }: PricingSectionProps) {
     {
       name: "Starter Campus Plan",
       description: "Ideal for individual colleges or departments beginning with 24/7 AI admissions.",
-      monthlyPrice: 2500,
+      monthlyPrice: 210000,
       popular: false,
       features: [
         "Up to 5,000 monthly voice call minutes",
@@ -30,7 +30,7 @@ export default function PricingSection({ onSelectPlan }: PricingSectionProps) {
     {
       name: "Collegiate Growth Plan",
       description: "Designed for universities needing robust peak enrollment deadline coverage.",
-      monthlyPrice: 8500,
+      monthlyPrice: 714000,
       popular: true,
       features: [
         "Up to 25,000 monthly voice call minutes",
@@ -46,7 +46,7 @@ export default function PricingSection({ onSelectPlan }: PricingSectionProps) {
     {
       name: "University System Enterprise",
       description: "Custom-built for multi-campus university systems and statewide collegiate networks.",
-      monthlyPrice: 10500,
+      monthlyPrice: 882000,
       popular: false,
       features: [
         "Unlimited monthly voice minutes & concurrent trunks",
@@ -140,7 +140,7 @@ export default function PricingSection({ onSelectPlan }: PricingSectionProps) {
                   {/* Price */}
                   <div className="flex items-baseline gap-1 mb-8 pb-6 border-b border-slate-100">
                     <span className="text-4xl sm:text-5xl font-black text-slate-950 tracking-tight">
-                      ${price.toLocaleString("en-US")}.00
+                      ₹{price.toLocaleString("en-IN")}
                     </span>
                     <span className="text-xs font-semibold text-slate-400">
                       /month

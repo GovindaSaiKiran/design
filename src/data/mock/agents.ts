@@ -14,7 +14,7 @@ export const mayaCapabilities: MayaCapability[] = [
       "Ultra-low latency streaming voice engine powered by state-of-the-art neural speech synthesis."
     ],
     sampleAudioPrompt: "Wait, sorry to interrupt—what did you say the tuition was again?",
-    sampleMayaResponse: "No problem at all! For B.Tech CSE, the annual tuition is $9,500, and with your 94% board score, you receive a 35% scholarship bringing it down to $6,175."
+    sampleMayaResponse: "No problem at all! For B.Tech CSE, the annual tuition is \u20b97.98L, and with your 94% board score, you receive a 35% scholarship bringing it down to \u20b95.19L."
   },
   {
     id: "multilingual",

@@ -14,7 +14,7 @@ const PRESET_QUERIES = [
     id: "fees",
     title: "B.Tech CSE Fee Structure",
     studentPrompt: "What is the total fee for 4-year B.Tech CSE, and can I pay in installments?",
-    mayaResponse: "The B.Tech CSE annual tuition is $9,500 ($4,750 per semester). You can pay in two equal semester installments. There are no additional laboratory or library charges.",
+    mayaResponse: "The B.Tech CSE annual tuition is ₹7.98L (₹3.99L per semester). You can pay in two equal semester installments. There are no additional laboratory or library charges.",
     citation: "Official Fee Matrix 2026-27 • Page 4",
     qualification: "Qualified • High Intent",
     color: "bg-[#ffe600]"
@@ -41,7 +41,7 @@ const PRESET_QUERIES = [
     id: "hostel",
     title: "Hostel & AC Accommodation",
     studentPrompt: "What are the hostel room options, and is AC available for first-year students?",
-    mayaResponse: "Yes, first-year students have priority access to Twin-Sharing AC rooms ($2,200/yr) and Triple-Sharing Non-AC ($1,500/yr), inclusive of meal plans and WiFi.",
+    mayaResponse: "Yes, first-year students have priority access to Twin-Sharing AC rooms (₹1.85L/yr) and Triple-Sharing Non-AC (₹1.26L/yr), inclusive of meal plans and WiFi.",
     citation: "Hostel & Living Guide • Section 5.2",
     qualification: "Residential Inquiry",
     color: "bg-[#c084fc]"

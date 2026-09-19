@@ -210,7 +210,7 @@ export default function TransformationSection() {
                         Maya (AI Admission Counselor):
                       </div>
                       <p className="text-sm text-black font-semibold">
-                        "Certainly, Rahul! For B.Tech CSE, the annual fee is $9,500. With your 94% score, you qualify for our Chancellor's Tier-1 Merit Scholarship, which gives a 35% tuition waiver."
+                        "Certainly, Rahul! For B.Tech CSE, the annual fee is \u20b97.98L. With your 94% score, you qualify for our Chancellor's Tier-1 Merit Scholarship, which gives a 35% tuition waiver."
                       </p>
                     </div>
                   </div>
