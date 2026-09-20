@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   Play,
   Layers,
+  ShieldCheck,
 } from "lucide-react";
 import { DashboardAgent } from "@/types/dashboard";
 
@@ -31,95 +32,98 @@ export default function CreateAgentModal({
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [department, setDepartment] = useState("Admissions & Outreach");
-  const [selectedVoice, setSelectedVoice] = useState("Priya (Neural)");
-  const [selectedLanguage, setSelectedLanguage] = useState("English + Hindi Bilingual");
+  const [department, setDepartment] = useState("University Admissions Desk");
+  const [selectedVoice, setSelectedVoice] = useState("Ritu (Hindi Expressive)");
+  const [selectedLanguage, setSelectedLanguage] = useState("Hindi + English Bilingual");
   const [systemPrompt, setSystemPrompt] = useState(
-    "You are a senior admissions and student guidance coordinator for Apex Engineering College. Greet prospective students and parents warmly, explain B.Tech specializations (CSE, AI & Data Science, ECE), clarify fee structures and scholarship eligibility, and book campus counseling tours or escalate complex admissions queries to counselors."
+    "You are an admissions specialist for the University. Greet prospective applicants and parents with respectful Indian honorifics (Aap/Namaste/Namaskaram). Explain B.Tech CSE (AI & Robotics) and Data Science programs, calculate merit scholarship fee waivers from PCM percentages, and book campus counseling sessions with zero hallucination."
   );
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
 
   if (!isOpen) return null;
 
   const voices = [
-    { name: "Priya (Neural)", gender: "Female", accent: "Indian English / Hindi", tone: "Empathetic & Warm" },
-    { name: "Rohan (Studio)", gender: "Male", accent: "Indian English Natural", tone: "Calm & Professional" },
-    { name: "Ananya (Warm)", gender: "Female", accent: "Pan-Indian English", tone: "Reassuring & Clear" },
-    { name: "Vikram (Deep)", gender: "Male", accent: "Neutral English", tone: "Authoritative & Direct" },
+    { name: "Ritu (Hindi Expressive)", gender: "Female", lang: "Hindi", style: "Expressive • Emotional", discClass: "sarvam-disc-periwinkle" },
+    { name: "Neha (Telugu Warm)", gender: "Female", lang: "Telugu", style: "Warm • Natural", discClass: "sarvam-disc-peach" },
+    { name: "Ishita (Kannada Academic)", gender: "Female", lang: "Kannada", style: "Clear • Academic", discClass: "sarvam-disc-sage" },
+    { name: "Suhani (Bengali Empathetic)", gender: "Female", lang: "Bengali", style: "Gentle • Empathetic", discClass: "sarvam-disc-rose" },
+    { name: "Shubh (Hindi Formal)", gender: "Male", lang: "Hindi", style: "Deep • Authoritative", discClass: "sarvam-disc-amber" },
+    { name: "Vikram (Global English)", gender: "Male", lang: "Indian English", style: "Direct • Professional", discClass: "sarvam-disc-cyan" },
   ];
 
   const languages = [
-    "English + Hindi Bilingual",
-    "English + Telugu",
-    "English + Tamil",
-    "English + Kannada",
-    "English + Marathi",
-    "Global Neutral English",
+    "Hindi + English Bilingual",
+    "Telugu + English",
+    "Kannada + English",
+    "Bengali + English",
+    "Tamil + English",
+    "Marathi + English",
   ];
 
   const handleSave = () => {
     onAgentCreated?.({
-      name: name || "Event Reminder Agent",
-      role: role || "Campus Event & Orientation Coordinator",
+      name: name || "Maya AI (Admissions Coordinator)",
+      role: role || "B.Tech & Merit Scholarship Counselor",
       department,
       status: "active",
       language: selectedLanguage,
       voice: {
         name: selectedVoice,
-        gender: selectedVoice.includes("Female") || selectedVoice.includes("Priya") || selectedVoice.includes("Ananya") ? "Female" : "Male",
-        accent: "Indian English",
+        gender: selectedVoice.includes("Female") || selectedVoice.includes("Ritu") || selectedVoice.includes("Neha") || selectedVoice.includes("Ishita") || selectedVoice.includes("Suhani") ? "Female" : "Male",
+        accent: "Indian English / Indic Regional",
       },
       systemPromptPreview: systemPrompt,
       callsToday: 0,
-      accuracy: 99.1,
-      assignedNumber: "+91 40 4590 1166",
+      accuracy: 99.4,
+      assignedNumber: "+91 40 4590 1199",
       activeLiveCount: 0,
     });
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl border-4 border-black shadow-[10px_10px_0px_#000000] p-6 sm:p-8 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-in fade-in duration-200 select-none">
+      <div className="relative w-full max-w-2xl bg-white rounded-3xl border border-black/15 shadow-2xl p-6 sm:p-8 overflow-hidden text-neutral-900">
         {/* Modal Header */}
-        <div className="flex items-center justify-between pb-4 border-b-3 border-black">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-[#d6ff38] text-black border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_#000000]">
-              <Bot className="w-6 h-6 stroke-[2.5]" />
+        <div className="flex items-center justify-between pb-5 border-b border-black/10">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-900 text-white flex items-center justify-center shadow-md">
+              <Bot className="w-6 h-6 stroke-[1.8]" />
             </div>
             <div>
-              <h3 className="text-xl font-black text-black uppercase tracking-tight">
-                Create AI Voice Agent
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 font-serif">~ 𑁍 Bulbul V3 Engine 𑁍 ~</div>
+              <h3 className="font-serif-display text-2xl font-normal text-neutral-900 tracking-tight">
+                Create Indic AI Voice Agent
               </h3>
-              <p className="text-xs font-bold text-black/70">
-                Step {step} of 3 • Voice & Acoustic Persona Studio
+              <p className="text-xs text-neutral-500">
+                Step {step} of 3 • Persona, Speech Synthesis & Grounding Guardrails
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white hover:bg-[#ff8080] text-black border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5 stroke-[2.5]" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Step Tabs Indicator */}
-        <div className="grid grid-cols-3 gap-2 my-5">
+        <div className="grid grid-cols-3 gap-2.5 my-6">
           <div
-            className={`h-2.5 rounded-full border-2 border-black transition-all duration-300 shadow-[1px_1px_0px_#000000] ${
-              step >= 1 ? "bg-[#d6ff38]" : "bg-slate-200"
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              step >= 1 ? "bg-neutral-900" : "bg-neutral-200"
             }`}
           />
           <div
-            className={`h-2.5 rounded-full border-2 border-black transition-all duration-300 shadow-[1px_1px_0px_#000000] ${
-              step >= 2 ? "bg-[#d6ff38]" : "bg-slate-200"
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              step >= 2 ? "bg-neutral-900" : "bg-neutral-200"
             }`}
           />
           <div
-            className={`h-2.5 rounded-full border-2 border-black transition-all duration-300 shadow-[1px_1px_0px_#000000] ${
-              step >= 3 ? "bg-[#d6ff38]" : "bg-slate-200"
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              step >= 3 ? "bg-neutral-900" : "bg-neutral-200"
             }`}
           />
         </div>
@@ -128,63 +132,64 @@ export default function CreateAgentModal({
         {step === 1 && (
           <div className="space-y-4 animate-in fade-in duration-150">
             <div>
-              <label className="block text-xs font-black text-black uppercase tracking-wider mb-1.5">
-                Agent Name
+              <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
+                Agent Name & Title
               </label>
               <input
                 type="text"
-                placeholder="e.g. Maya AI (Senior Admissions Counselor)"
+                placeholder="e.g. Maya AI — Senior Admissions & Scholarship Specialist"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-white border-2 border-black text-black placeholder-black/50 shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
+                className="w-full px-4 py-2.5 rounded-xl text-xs bg-[#fbfbfd] border border-black/10 focus:border-black/30 focus:bg-white text-neutral-900 placeholder:text-neutral-400 focus:outline-none transition-all"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-black text-black uppercase tracking-wider mb-1.5">
-                  Primary Role / Intent
+                <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
+                  Admissions Domain / Intent
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. B.Tech Admissions Counseling"
+                  placeholder="e.g. B.Tech Cutoffs & Fee Waivers"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-white border-2 border-black text-black placeholder-black/50 shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl text-xs bg-[#fbfbfd] border border-black/10 focus:border-black/30 focus:bg-white text-neutral-900 placeholder:text-neutral-400 focus:outline-none transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-black text-black uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
                   Department
                 </label>
                 <select
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl text-xs font-black bg-white border-2 border-black text-black shadow-[3px_3px_0px_#000000] focus:outline-none cursor-pointer transition-all uppercase"
+                  className="w-full px-4 py-2.5 rounded-xl text-xs font-medium bg-[#fbfbfd] border border-black/10 text-neutral-800 focus:outline-none focus:border-black cursor-pointer transition-all"
                 >
-                  <option value="Admissions & Outreach">Admissions & Outreach</option>
-                  <option value="Student Affairs & Hostels">Student Affairs & Hostels</option>
-                  <option value="Academics & Examination">Academics & Examination</option>
-                  <option value="Fee & Scholarships Cell">Fee & Scholarships Cell</option>
+                  <option value="University Admissions Desk">University Admissions Desk</option>
+                  <option value="Executive & EdTech Training">Executive & EdTech Training</option>
+                  <option value="Campus Operations & Student Affairs">Campus Operations & Student Affairs</option>
+                  <option value="Tuition Fee Installments & Loan Desk">Tuition Fee Installments & Loan Desk</option>
+                  <option value="Placements & Career Pathways">Placements & Career Pathways</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-black text-black uppercase tracking-wider mb-1.5">
-                Target Language Support
+              <label className="block text-xs font-semibold text-neutral-700 mb-2">
+                Primary Regional Language Pair
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {languages.map((lang) => (
                   <button
                     key={lang}
                     type="button"
                     onClick={() => setSelectedLanguage(lang)}
-                    className={`p-2.5 rounded-xl text-xs text-left transition-all cursor-pointer border-2 border-black shadow-[2px_2px_0px_#000000] ${
+                    className={`p-2.5 rounded-xl text-xs text-left transition-all cursor-pointer border ${
                       selectedLanguage === lang
-                        ? "bg-[#d6ff38] text-black font-black"
-                        : "bg-white text-black hover:bg-[#ffe600] font-bold"
+                        ? "bg-neutral-900 text-white font-semibold border-neutral-900 shadow-xs"
+                        : "bg-[#fbfbfd] text-neutral-700 hover:bg-neutral-100 border-black/10 font-medium"
                     }`}
                   >
                     {lang}
@@ -199,73 +204,54 @@ export default function CreateAgentModal({
         {step === 2 && (
           <div className="space-y-4 animate-in fade-in duration-150">
             <div>
-              <label className="block text-xs font-black text-black uppercase tracking-wider mb-2">
-                Select Neural Voice Persona
+              <label className="block text-xs font-semibold text-neutral-700 mb-2.5">
+                Select Bulbul V3 Neural Voice Persona (3D Acoustic Clay)
               </label>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-h-60 overflow-y-auto pr-1">
                 {voices.map((v) => (
                   <div
                     key={v.name}
                     onClick={() => setSelectedVoice(v.name)}
-                    className={`p-3.5 rounded-2xl border-2 border-black cursor-pointer transition-all ${
+                    className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex items-center justify-between ${
                       selectedVoice === v.name
-                        ? "bg-[#d6ff38] shadow-[4px_4px_0px_#000000] -translate-y-0.5"
-                        : "bg-white shadow-[2px_2px_0px_#000000] hover:bg-[#00f0ff]/20"
+                        ? "bg-neutral-50 border-neutral-900 shadow-sm ring-1 ring-neutral-900"
+                        : "bg-[#fbfbfd] border-black/10 hover:border-black/30 hover:bg-white"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs border-2 border-black ${
-                          selectedVoice === v.name ? "bg-black text-[#d6ff38]" : "bg-slate-200 text-black"
-                        }`}>
-                          {v.gender === "Female" ? "F" : "M"}
-                        </div>
-                        <div>
-                          <div className="font-black text-black text-sm">
-                            {v.name}
-                          </div>
-                          <div className="text-[10px] font-bold text-black/70">
-                            {v.accent}
-                          </div>
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-full ${v.discClass} flex items-center justify-center shrink-0 shadow-xs`}>
+                        <div className="w-4 h-4 rounded-full bg-white/90 flex items-center justify-center">
+                          <Play className="w-2 h-2 fill-current text-neutral-800 ml-0.5" />
                         </div>
                       </div>
-
-                      {selectedVoice === v.name && (
-                        <div className="w-6 h-6 rounded-md bg-black text-[#d6ff38] flex items-center justify-center border border-black shadow-[1px_1px_0px_#000000]">
-                          <Check className="w-4 h-4 stroke-[3]" />
+                      <div>
+                        <div className="font-semibold text-neutral-900 text-xs">
+                          {v.name}
                         </div>
-                      )}
+                        <div className="text-[10px] text-neutral-500 font-mono">
+                          {v.style}
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="mt-2.5 pt-2 border-t-2 border-black flex items-center justify-between text-xs">
-                      <span className="text-[11px] font-bold text-black/80">
-                        {v.tone}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsPlayingVoice(!isPlayingVoice);
-                        }}
-                        className="inline-flex items-center gap-1 text-[11px] font-black text-black underline hover:text-black/70"
-                      >
-                        <Play className="w-3 h-3 fill-current" />
-                        <span>Preview Voice</span>
-                      </button>
-                    </div>
+                    {selectedVoice === v.name && (
+                      <div className="w-5 h-5 rounded-full bg-neutral-900 text-white flex items-center justify-center shrink-0">
+                        <Check className="w-3 h-3 stroke-[2.5]" />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#00f0ff] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center justify-between text-xs text-black">
-              <span className="flex items-center gap-1.5 font-black uppercase">
-                <Sparkles className="w-4 h-4 text-black stroke-[2.5]" />
-                Adaptive Voice Activity Detection (VAD) Enabled
+            <div className="p-4 rounded-2xl bg-[#fbfbfd] border border-black/10 flex items-center justify-between text-xs text-neutral-700">
+              <span className="flex items-center gap-2 font-medium">
+                <Sparkles className="w-4 h-4 text-amber-600" />
+                WebSocket Low-Latency Streaming (~140ms TTFB)
               </span>
-              <span className="font-mono text-xs font-black bg-black text-[#d6ff38] px-2.5 py-0.5 rounded-md border border-black">
-                120ms latency
+              <span className="font-mono text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                Level A STIR/SHAKEN
               </span>
             </div>
           </div>
@@ -275,26 +261,26 @@ export default function CreateAgentModal({
         {step === 3 && (
           <div className="space-y-4 animate-in fade-in duration-150">
             <div>
-              <label className="block text-xs font-black text-black uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-neutral-700 mb-1.5">
                 Agent System Prompt & Instructions
               </label>
               <textarea
                 rows={5}
                 value={systemPrompt}
                 onChange={(e) => setSystemPrompt(e.target.value)}
-                className="w-full p-3.5 rounded-xl text-xs bg-white border-2 border-black text-black font-mono font-bold leading-relaxed shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
+                className="w-full p-4 rounded-xl text-xs bg-[#fbfbfd] border border-black/10 text-neutral-900 font-mono leading-relaxed focus:border-black/30 focus:bg-white focus:outline-none transition-all"
                 placeholder="Define role guidelines, admissions guardrails, escalation triggers..."
               />
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#ffe600] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-start gap-3 text-xs text-black">
-              <Sparkles className="w-5 h-5 text-black shrink-0 mt-0.5 stroke-[2.5]" />
+            <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/60 flex items-start gap-3 text-xs text-emerald-950">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <div>
-                <strong className="font-black text-black uppercase block mb-0.5">
-                  Auto-grounded with University Prospectus
+                <strong className="font-semibold block mb-0.5">
+                  Zero-Hallucination Grounding with Institutional RAG Store
                 </strong>
-                <span className="font-bold text-black/80">
-                  This agent will have zero-latency access to tuition fee slabs, course syllabus, hostel rules, and merit cutoffs.
+                <span className="text-emerald-800 leading-relaxed">
+                  This voice agent is bound to your uploaded admissions brochure, cutoff matrices, and fee schedules with automated citations.
                 </span>
               </div>
             </div>
@@ -302,14 +288,14 @@ export default function CreateAgentModal({
         )}
 
         {/* Modal Footer Controls */}
-        <div className="flex items-center justify-between pt-5 mt-6 border-t-2 border-black">
+        <div className="flex items-center justify-between pt-6 mt-6 border-t border-black/10">
           {step > 1 ? (
             <button
               onClick={() => setStep((prev) => (prev - 1) as 1 | 2 | 3)}
-              className="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-white hover:bg-slate-100 border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all inline-flex items-center gap-1 cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 border border-black/5 transition-all inline-flex items-center gap-1 cursor-pointer"
             >
-              <ChevronLeft className="w-4 h-4 stroke-[3]" />
-              Back
+              <ChevronLeft className="w-4 h-4" />
+              <span>Back</span>
             </button>
           ) : (
             <div />
@@ -318,18 +304,18 @@ export default function CreateAgentModal({
           {step < 3 ? (
             <button
               onClick={() => setStep((prev) => (prev + 1) as 1 | 2 | 3)}
-              className="px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-[#00f0ff] hover:bg-[#38bdf8] border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-1 cursor-pointer"
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-neutral-900 hover:bg-neutral-800 shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <span>Next Step</span>
-              <ChevronRight className="w-4 h-4 stroke-[3]" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           ) : (
             <button
               onClick={handleSave}
-              className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-[#d6ff38] hover:bg-[#bbf01b] border-2 border-black shadow-[4px_4px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-1.5 cursor-pointer"
+              className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white bg-neutral-900 hover:bg-neutral-800 shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
             >
-              <Check className="w-4 h-4 stroke-[3]" />
-              <span>Deploy AI Agent</span>
+              <Check className="w-4 h-4" />
+              <span>Deploy Indic AI Agent</span>
             </button>
           )}
         </div>

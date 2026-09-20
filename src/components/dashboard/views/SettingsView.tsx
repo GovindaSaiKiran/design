@@ -2,7 +2,20 @@
 
 import React, { useState } from "react";
 import { OrganizationInfo } from "@/types/dashboard";
-import { ShieldCheck, Building2, User, Key, Bell, CheckCircle2, Save, CreditCard, ExternalLink } from "lucide-react";
+import {
+  ShieldCheck,
+  Building2,
+  User,
+  Key,
+  Bell,
+  CheckCircle2,
+  Save,
+  CreditCard,
+  ExternalLink,
+  Sparkles,
+  Cpu,
+  Globe2,
+} from "lucide-react";
 
 interface SettingsViewProps {
   currentOrg: OrganizationInfo;
@@ -11,6 +24,8 @@ interface SettingsViewProps {
 export default function SettingsView({ currentOrg }: SettingsViewProps) {
   const [orgName, setOrgName] = useState(currentOrg.name);
   const [manager, setManager] = useState(currentOrg.accountManager);
+  const [defaultLanguage, setDefaultLanguage] = useState("Hindi + English Bilingual");
+  const [defaultModel, setDefaultModel] = useState("Bulbul V3 (Indic Neural HD)");
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
@@ -19,128 +34,176 @@ export default function SettingsView({ currentOrg }: SettingsViewProps) {
   };
 
   return (
-    <div className="space-y-6 pb-12 max-w-4xl select-none">
-      {/* Neo Header */}
-      <div className="bg-white border-3 border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000]">
-        <div className="flex flex-wrap items-center gap-2 mb-2">
-          <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-md bg-black text-[#d6ff38] border-2 border-black shadow-[2px_2px_0px_#000000] -rotate-1">
-            🏛️ ACCOUNT & GOVERNANCE
-          </span>
-          <span className="px-3 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-            ✓ VERIFIED ENTERPRISE INSTITUTION
+    <div className="space-y-10 pb-12 max-w-4xl select-none animate-in fade-in duration-300">
+      {/* ========================================================================= */}
+      {/* 1. SARVAM EDITORIAL HERO & GOVERNANCE HEADER                              */}
+      {/* ========================================================================= */}
+      <div className="liquid-glass-card p-8 sm:p-10 relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-black/10 text-xs font-semibold text-neutral-800">
+              <span className="text-amber-600 font-serif">~ 𑁍 ~</span>
+              <span>Institutional Governance & Engine Configuration</span>
+            </div>
+            <h1 className="font-serif-display text-3xl sm:text-4xl font-normal text-neutral-900 tracking-tight leading-tight">
+              Organization & Speech Engine Settings
+            </h1>
+            <p className="text-sm text-neutral-600 leading-relaxed font-sans">
+              Manage university compliance, default Indic voice models (Bulbul V3), STIR/SHAKEN Level-A telephony routing, and admissions counselor permissions.
+            </p>
+          </div>
+
+          <span className="px-4 py-2 rounded-2xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 self-start lg:self-center inline-flex items-center gap-1.5 shadow-xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            Verified Enterprise Tier
           </span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-black tracking-tight uppercase">
-          Organization Settings
-        </h1>
-        <p className="text-xs font-bold text-black/70 mt-1">
-          Manage university compliance verification, WebRTC carrier gateways, caller ID routing, and staff admissions access privileges.
-        </p>
       </div>
 
-      {/* Verification Badge Showcase */}
-      <div className="p-6 rounded-2xl bg-[#d6ff38] border-3 border-black shadow-[6px_6px_0px_#000000] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-black text-[#d6ff38] border-2 border-black flex items-center justify-center shrink-0 shadow-[3px_3px_0px_#000000]">
-            <ShieldCheck className="w-8 h-8 stroke-[2.5]" />
+      {/* ========================================================================= */}
+      {/* 2. VERIFICATION BADGE SHOWCASE                                             */}
+      {/* ========================================================================= */}
+      <div className="p-8 rounded-3xl bg-neutral-900 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-600/30 to-transparent rounded-full blur-2xl pointer-events-none" />
+        
+        <div className="flex items-start gap-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-6 h-6 text-emerald-400" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-xl font-black text-black">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-xl font-semibold text-white tracking-tight">
                 {currentOrg.name}
               </h3>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-black text-[#d6ff38] border border-black shadow-[1px_1px_0px_#000000]">
-                <CheckCircle2 className="w-3 h-3 stroke-[3]" />
-                VERIFIED
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <CheckCircle2 className="w-3 h-3" />
+                VERIFIED UGC ENTITY
               </span>
             </div>
-            <p className="text-xs font-bold text-black/80 mt-1">
-              Verified for automated higher education & institutional voice outbound calling with full telecom carrier compliance.
+            <p className="text-xs text-neutral-300 max-w-lg leading-relaxed font-sans">
+              Fully authorized for high-volume automated collegiate calling with STIR/SHAKEN Level-A full caller ID attestation across Indian telecom circles.
             </p>
           </div>
         </div>
 
-        <span className="px-3.5 py-1.5 rounded-xl bg-black text-xs font-mono font-black text-white border-2 border-black shadow-[2px_2px_0px_#000000] self-start sm:self-auto">
+        <span className="px-3.5 py-1.5 rounded-xl bg-white/10 text-xs font-mono font-medium text-neutral-300 border border-white/10 self-start sm:self-auto shrink-0 relative z-10">
           Org ID: {currentOrg.id}
         </span>
       </div>
 
       {saved && (
-        <div className="p-4 rounded-xl bg-[#00f0ff] border-3 border-black text-black text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-[4px_4px_0px_#000000] animate-in fade-in">
-          <CheckCircle2 className="w-5 h-5 text-black stroke-[3]" />
-          Organization settings and calling routing preferences saved successfully!
+        <div className="p-4 rounded-2xl bg-emerald-50/80 backdrop-blur-md border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2 shadow-xs animate-in fade-in duration-200">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>Organization settings and speech engine preferences saved successfully.</span>
         </div>
       )}
 
-      {/* General Settings Form */}
-      <div className="bg-white border-3 border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000] space-y-4 text-xs">
-        <h3 className="text-base font-black text-black uppercase tracking-wide pb-2 border-b-2 border-black">
-          Institutional Governance & Account Details
+      {/* ========================================================================= */}
+      {/* 3. GENERAL SETTINGS FORM                                                  */}
+      {/* ========================================================================= */}
+      <div className="liquid-glass-card p-8 sm:p-10 space-y-6 text-xs">
+        <h3 className="font-serif-display text-xl font-normal text-neutral-900 pb-3 border-b border-black/10">
+          Institutional Governance & Speech Configuration
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="block font-black text-black uppercase tracking-wider mb-1.5 text-[11px]">
+            <label className="block font-semibold text-neutral-700 mb-2 text-xs">
               Organization / University Name
             </label>
             <input
               type="text"
               value={orgName}
               onChange={(e) => setOrgName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-black font-bold text-black shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-white/80 backdrop-blur-md border border-black/10 focus:border-black/30 focus:bg-white text-xs text-neutral-900 focus:outline-none transition-all shadow-2xs"
             />
           </div>
 
           <div>
-            <label className="block font-black text-black uppercase tracking-wider mb-1.5 text-[11px]">
+            <label className="block font-semibold text-neutral-700 mb-2 text-xs">
               Institution Type
             </label>
             <input
               type="text"
               disabled
               value={currentOrg.type}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 border-2 border-black font-bold text-black/60 cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-xl bg-neutral-100 border border-black/5 text-xs text-neutral-500 cursor-not-allowed"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="block font-black text-black uppercase tracking-wider mb-1.5 text-[11px]">
+            <label className="block font-semibold text-neutral-700 mb-2 text-xs">
+              Default Indic Neural Voice Engine
+            </label>
+            <select
+              value={defaultModel}
+              onChange={(e) => setDefaultModel(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl bg-[#fbfbfd] border border-black/10 focus:border-black/30 focus:bg-white text-xs text-neutral-900 focus:outline-none transition-all font-mono"
+            >
+              <option value="Bulbul V3 (Indic Neural HD)">Bulbul V3 (Indic Neural HD • ~140ms TTFB)</option>
+              <option value="Bulbul V2.5 (Fast Flash)">Bulbul V2.5 (Fast Flash • ~110ms TTFB)</option>
+              <option value="Bulbul Custom Fine-Tuned">Bulbul Custom Institutional Fine-Tuned</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block font-semibold text-neutral-700 mb-2 text-xs">
+              Primary Regional Language Locale
+            </label>
+            <select
+              value={defaultLanguage}
+              onChange={(e) => setDefaultLanguage(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl bg-[#fbfbfd] border border-black/10 focus:border-black/30 focus:bg-white text-xs text-neutral-900 focus:outline-none transition-all"
+            >
+              <option value="Hindi + English Bilingual">Hindi + English Bilingual (Maya / Shubh)</option>
+              <option value="Telugu + English Bilingual">Telugu + English Bilingual (Neha)</option>
+              <option value="Kannada + English Bilingual">Kannada + English Bilingual (Ishita)</option>
+              <option value="Bengali + English Bilingual">Bengali + English Bilingual (Suhani)</option>
+              <option value="Tamil + English Bilingual">Tamil + English Bilingual (Ananya)</option>
+              <option value="Marathi + English Bilingual">Marathi + English Bilingual (Arjun)</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label className="block font-semibold text-neutral-700 mb-2 text-xs">
               Admissions Director / Lead Administrator
             </label>
             <input
               type="text"
               value={manager}
               onChange={(e) => setManager(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-black font-bold text-black shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#000000] focus:outline-none transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-[#fbfbfd] border border-black/10 focus:border-black/30 focus:bg-white text-xs text-neutral-900 focus:outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block font-black text-black uppercase tracking-wider mb-1.5 text-[11px]">
+            <label className="block font-semibold text-neutral-700 mb-2 text-xs">
               Telephony Voice Capacity Tier
             </label>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <input
                 type="text"
                 disabled
                 value={currentOrg.plan}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-100 border-2 border-black text-black font-black uppercase text-xs"
+                className="w-full px-4 py-3 rounded-xl bg-neutral-100 border border-black/5 text-neutral-700 font-semibold text-xs"
               />
-              <button className="px-4 py-2.5 rounded-xl bg-[#00f0ff] hover:bg-[#38bdf8] text-black border-2 border-black font-black uppercase text-xs shrink-0 cursor-pointer shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[0px_0px_0px_#000000] transition-all">
+              <button className="px-5 py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white font-semibold text-xs shrink-0 cursor-pointer shadow-xs transition-all active:scale-95">
                 Upgrade
               </button>
             </div>
           </div>
         </div>
 
-        <div className="pt-4 border-t-2 border-black flex justify-end">
+        <div className="pt-6 border-t border-black/10 flex justify-end">
           <button
             onClick={handleSave}
-            className="px-6 py-3 rounded-xl bg-[#d6ff38] hover:bg-[#bbf01b] text-black font-black uppercase text-xs tracking-wider border-3 border-black shadow-[4px_4px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] inline-flex items-center gap-2 cursor-pointer transition-all"
+            className="px-7 py-3 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white font-semibold text-xs shadow-md hover:shadow-lg inline-flex items-center gap-2 cursor-pointer transition-all active:scale-95"
           >
-            <Save className="w-4 h-4 stroke-[3]" />
+            <Save className="w-4 h-4" />
             <span>Save Preferences</span>
           </button>
         </div>

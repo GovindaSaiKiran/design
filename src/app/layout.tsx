@@ -89,7 +89,7 @@ export default function RootLayout({
       lang="en"
       className={`${bricolage.variable} ${syne.variable} ${instrumentSerif.variable} ${spaceGrotesk.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} scroll-smooth`}
     >
-      <body className="min-h-screen flex flex-col font-sans bg-[#fbfbfb] text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
+      <body className="min-h-screen flex flex-col font-sans dot-pattern-bg text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
         {children}
       </body>
     </html>

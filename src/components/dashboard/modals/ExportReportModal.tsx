@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Download, FileSpreadsheet, Check, Calendar, Filter } from "lucide-react";
+import { X, Download, FileSpreadsheet, Check, Calendar, Filter, Sparkles } from "lucide-react";
 
 interface ExportReportModalProps {
   isOpen: boolean;
@@ -23,64 +23,65 @@ export default function ExportReportModal({ isOpen, onClose }: ExportReportModal
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-md bg-white rounded-3xl border-4 border-black shadow-[10px_10px_0px_#000000] p-6 sm:p-7 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-in fade-in duration-200 select-none">
+      <div className="relative w-full max-w-md bg-white rounded-3xl border border-black/15 shadow-2xl p-6 sm:p-8 overflow-hidden text-neutral-900">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b-3 border-black">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-[#d6ff38] text-black border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_#000000]">
-              <Download className="w-6 h-6 stroke-[2.5]" />
+        <div className="flex items-center justify-between pb-5 border-b border-black/10">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-900 text-white flex items-center justify-center shadow-md">
+              <Download className="w-6 h-6 stroke-[1.8]" />
             </div>
             <div>
-              <h3 className="text-xl font-black text-black uppercase tracking-tight">
-                Export Telephony Audit
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 font-serif">~ 𑁍 Telemetry Export 𑁍 ~</div>
+              <h3 className="font-serif-display text-2xl font-normal text-neutral-900 tracking-tight">
+                Export Voice Logs & Data
               </h3>
-              <p className="text-xs font-bold text-black/70">
-                Download call logs, audio index & outcomes
+              <p className="text-xs text-neutral-500">
+                Download Indic conversation logs, transcripts & WER scores
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white hover:bg-[#ff8080] text-black border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5 stroke-[2.5]" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Form */}
-        <div className="my-5 space-y-4 text-xs">
+        <div className="my-6 space-y-4 text-xs">
           <div>
-            <label className="block font-black text-black uppercase tracking-wider mb-1.5 text-[11px]">
-              Date Range
+            <label className="block font-semibold text-neutral-700 mb-1.5 text-xs">
+              Date Range & Call Dataset
             </label>
             <select
               value={range}
               onChange={(e) => setRange(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0px_#000000] focus:outline-none transition-all cursor-pointer"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#fbfbfd] border border-black/10 text-neutral-800 font-medium focus:border-black focus:outline-none transition-all cursor-pointer"
             >
-              <option value="Today (128 Calls)">Today (128 Calls)</option>
-              <option value="Past 7 Days (842 Calls)">Past 7 Days (842 Calls)</option>
-              <option value="Past 30 Days (3,450 Calls)">Past 30 Days (3,450 Calls)</option>
-              <option value="All Time Complete Archive">All Time Complete Archive</option>
+              <option value="Today (128 Calls • 340K Chars)">Today (128 Calls • 340K Chars)</option>
+              <option value="Past 7 Days (842 Calls • 2.4M Chars)">Past 7 Days (842 Calls • 2.4M Chars)</option>
+              <option value="Past 30 Days (3,450 Calls • 9.8M Chars)">Past 30 Days (3,450 Calls • 9.8M Chars)</option>
+              <option value="All Time Complete Collegiate Archive">All Time Complete Collegiate Archive</option>
             </select>
           </div>
 
           <div>
-            <label className="block font-black text-black uppercase tracking-wider mb-1.5 text-[11px]">
-              Export Format
+            <label className="block font-semibold text-neutral-700 mb-2 text-xs">
+              Dataset Format
             </label>
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-3 gap-2">
               {(["csv", "xlsx", "pdf"] as const).map((f) => (
                 <button
                   key={f}
                   type="button"
                   onClick={() => setFormat(f)}
-                  className={`py-2.5 rounded-xl text-xs font-black uppercase transition-all cursor-pointer border-2 border-black shadow-[2px_2px_0px_#000000] ${
+                  className={`py-2.5 rounded-xl text-xs uppercase font-semibold transition-all cursor-pointer border ${
                     format === f
-                      ? "bg-[#d6ff38] text-black"
-                      : "bg-white text-black hover:bg-[#ffe600]"
+                      ? "bg-neutral-900 text-white border-neutral-900 shadow-xs"
+                      : "bg-[#fbfbfd] text-neutral-700 hover:bg-neutral-100 border-black/10"
                   }`}
                 >
                   {f}
@@ -89,29 +90,29 @@ export default function ExportReportModal({ isOpen, onClose }: ExportReportModal
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-[#00f0ff] border-2 border-black text-black shadow-[3px_3px_0px_#000000]">
-            <span className="font-black block mb-0.5 uppercase text-[11px]">Included In Export:</span>
-            <span className="text-xs font-bold text-black/80">
-              Caller phone, Agent name, Call Duration, Outcome classification, Sentiment scores, Qualification status, and Hand-off annotations.
+          <div className="p-4 rounded-2xl bg-[#fbfbfd] border border-black/10 text-neutral-700">
+            <span className="font-semibold block mb-1 text-xs text-neutral-900">Included In Dataset:</span>
+            <span className="text-xs text-neutral-500 leading-relaxed">
+              Candidate phone (+91), Indic dialect locale, Bulbul V3 voice persona, First-byte latency (ms), PCM Score triage, and sentiment classification.
             </span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t-2 border-black">
+        <div className="flex items-center justify-between pt-5 border-t border-black/10">
           <button
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-white hover:bg-slate-100 border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl text-xs font-medium text-neutral-700 bg-neutral-100 hover:bg-neutral-200 border border-black/5 transition-all cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             onClick={handleDownload}
-            className="px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-[#d6ff38] hover:bg-[#bbf01b] border-3 border-black shadow-[4px_4px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] inline-flex items-center gap-1.5 cursor-pointer transition-all"
+            className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white bg-neutral-900 hover:bg-neutral-800 shadow-md inline-flex items-center gap-2 cursor-pointer transition-all active:scale-95"
           >
-            <Check className="w-4 h-4 stroke-[3]" />
-            <span>{downloaded ? "Report Generated!" : "Download Report"}</span>
+            <Check className="w-4 h-4" />
+            <span>{downloaded ? "Dataset Ready!" : "Download Archive"}</span>
           </button>
         </div>
       </div>

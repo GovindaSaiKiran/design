@@ -164,13 +164,13 @@ export default function DashboardShell() {
   };
 
   return (
-    <div className="min-h-screen py-4 sm:py-6 px-2 sm:px-4 lg:px-6 dashboard-neo-frame font-sans select-none">
+    <div className="min-h-screen dot-pattern-canvas font-sans select-none antialiased">
       {/* ========================================================================= */}
-      {/* AUTHENTIC NEO-BRUTALIST WORKSPACE CONTAINER                              */}
+      {/* MAIN UNIFIED DASHBOARD CANVAS (SINGLE SEAMLESS DOTTED BACKGROUND)         */}
       {/* ========================================================================= */}
-      <div className="w-full max-w-[1500px] mx-auto min-h-[92vh] rounded-3xl p-5 sm:p-6 lg:p-8 flex flex-col justify-between relative bg-white border-3 border-black shadow-[8px_8px_0px_#000000]">
+      <div className="w-full max-w-[1560px] mx-auto py-5 sm:py-7 lg:py-8 px-4 sm:px-6 lg:px-8 flex flex-col justify-between relative">
         <div>
-          {/* Top Neo Header with Tactile Pill Navigation */}
+          {/* Header with Clean Pill Navigation */}
           <DashboardHeader
             currentOrg={currentOrg}
             organizations={organizations}
@@ -184,71 +184,56 @@ export default function DashboardShell() {
             onThemeChange={setTheme}
           />
 
-          {/* Signature Neo-Brutalist Electric Admissions Ticker */}
-          <div className="w-full bg-[#ffe600] border-2.5 border-black rounded-2xl px-3.5 py-2 mb-6 shadow-[4px_4px_0px_#000000] overflow-hidden flex items-center gap-3 font-sans select-none">
-            <div className="inline-flex items-center gap-1.5 bg-black text-[#d6ff38] px-3 py-1 rounded-xl text-[11px] font-black shrink-0 border-2 border-black shadow-[2px_2px_0px_#000000] -rotate-1">
-              <span className="w-2 h-2 rounded-full bg-[#d6ff38] inline-block animate-ping" />
-              <span className="tracking-wider uppercase text-[10px]">LIVE TELEMETRY</span>
+          {/* Sarvam AI Inspired Live Activity / Dynamic Capsule Telemetry Bar */}
+          <div className="w-full liquid-glass-subtle rounded-2xl px-5 py-3.5 mb-8 overflow-hidden flex items-center gap-3.5 font-sans select-none">
+            <div className="inline-flex items-center gap-2 bg-neutral-900 text-emerald-400 px-3 py-1.5 rounded-xl text-[11px] font-semibold shrink-0 border border-black/20 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse" />
+              <span className="tracking-wider uppercase text-[10px]">INDIC LIVE STREAM</span>
             </div>
 
             <div className="overflow-hidden whitespace-nowrap flex-1 relative">
-              <div className="animate-ticker flex items-center gap-8 text-xs font-black text-black">
+              <div className="animate-ticker flex items-center gap-8 text-xs font-medium text-neutral-700">
                 <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#c084fc] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">⚡ Maya AI</span>
-                  <span>pre-approved <strong className="underline decoration-2">35% Chancellor Scholarship</strong> for Rahul (CBSE 94%)</span>
+                  <span className="bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-purple-100">🇮🇳 Ritu (Hindi)</span>
+                  <span>'प्रवेश पात्रता एवं छात्रवृत्ति की पूरी जानकारी' pre-approved for Rahul Verma (94.2% PCM)</span>
                 </span>
-                <span className="text-black font-black">•</span>
+                <span className="text-neutral-300 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#00f0ff] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🚀 Vikram AI</span>
-                  <span>explained tuition fee 3-part installment to Sneha (BBA Intake)</span>
+                  <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-blue-100">🇮🇳 Neha (Telugu)</span>
+                  <span>'క్యాంపస్ హాస్టల్ AC రూమ్స్ వివరాలు' sent via WhatsApp to Suresh (Vijayawada)</span>
                 </span>
-                <span className="text-black font-black">•</span>
+                <span className="text-neutral-300 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#d6ff38] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">📞 Priya AI</span>
-                  <span>confirmed Campus Tour visit pass for Ananya (Saturday 11 AM)</span>
+                  <span className="bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-emerald-100">🇮🇳 Ishita (Kannada)</span>
+                  <span>'ಇಂಜಿನಿಯರಿಂಗ್ ಸೀಟ್ ಬುಕಿಂಗ್ ದೃಢಪಡಿಸಲಾಗಿದೆ' verified for Priya Rao (Bengaluru)</span>
                 </span>
-                <span className="text-black font-black">•</span>
+                <span className="text-neutral-300 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-black text-white px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🟢 Zero Wait Time</span>
-                  <span>3 SIP Trunks Operating • 382ms Latency</span>
+                  <span className="bg-amber-50 text-amber-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-amber-100">⚡ 140ms Latency</span>
+                  <span>WebSocket Full-Duplex • Zero interruption delay • Bulbul V3 Active</span>
                 </span>
-                <span className="text-black font-black">•</span>
+                <span className="text-neutral-300 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#fb923c] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🏆 Today&apos;s Activity</span>
-                  <span>842 Calls Dialed • 342 Qualified Leads</span>
+                  <span className="bg-neutral-100 text-neutral-800 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-black/5">🏆 2.4M Chars</span>
+                  <span>Synthesized Today across 11 Indian Languages • 96.7% Autonomous Yield</span>
                 </span>
                 {/* Seamless Loop Duplicate */}
-                <span className="text-black font-black">•</span>
+                <span className="text-neutral-300 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#c084fc] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">⚡ Maya AI</span>
-                  <span>pre-approved <strong className="underline decoration-2">35% Chancellor Scholarship</strong> for Rahul (CBSE 94%)</span>
+                  <span className="bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-purple-100">🇮🇳 Ritu (Hindi)</span>
+                  <span>'प्रवेश पात्रता एवं छात्रवृत्ति की पूरी जानकारी' pre-approved for Rahul Verma (94.2% PCM)</span>
                 </span>
-                <span className="text-black font-black">•</span>
+                <span className="text-neutral-300 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#00f0ff] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🚀 Vikram AI</span>
-                  <span>explained tuition fee 3-part installment to Sneha (BBA Intake)</span>
-                </span>
-                <span className="text-black font-black">•</span>
-                <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#d6ff38] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">📞 Priya AI</span>
-                  <span>confirmed Campus Tour visit pass for Ananya (Saturday 11 AM)</span>
-                </span>
-                <span className="text-black font-black">•</span>
-                <span className="flex items-center gap-2">
-                  <span className="bg-black text-white px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🟢 Zero Wait Time</span>
-                  <span>3 SIP Trunks Operating • 382ms Latency</span>
-                </span>
-                <span className="text-black font-black">•</span>
-                <span className="flex items-center gap-2">
-                  <span className="bg-black text-[#fb923c] px-2 py-0.5 rounded-md text-[11px] border border-black shadow-[1px_1px_0px_#000000]">🏆 Today&apos;s Activity</span>
-                  <span>842 Calls Dialed • 342 Qualified Leads</span>
+                  <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-blue-100">🇮🇳 Neha (Telugu)</span>
+                  <span>'క్యాంపస్ హాస్టల్ AC రూమ్స్ వివరాలు' sent via WhatsApp to Suresh (Vijayawada)</span>
                 </span>
               </div>
             </div>
           </div>
 
           {/* Main Dynamic Viewport */}
-          <main className="w-full mt-2">
+          <main className="w-full mt-3">
             {activeTab === "overview" && (
               <OverviewView
                 currentOrg={currentOrg}

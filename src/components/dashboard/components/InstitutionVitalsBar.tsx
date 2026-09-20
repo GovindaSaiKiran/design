@@ -40,170 +40,170 @@ export default function InstitutionVitalsBar({
   onFilterCategory
 }: InstitutionVitalsBarProps) {
   return (
-    <div className="w-full mb-6 select-none font-sans">
-      {/* Sleek Subtitle Context Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 px-1">
-        <div className="flex items-center gap-2">
+    <div className="w-full mb-8 select-none font-sans">
+      {/* Subtitle Context Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 px-1">
+        <div className="flex items-center gap-2.5">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          <h2 className="text-sm font-bold text-slate-900 tracking-tight">
+          <h2 className="text-sm font-semibold text-neutral-900 tracking-tight font-serif-display">
             {currentOrg.name}
           </h2>
-          <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-300">
-            Verified Campus
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-white/80 backdrop-blur-md text-neutral-600 border border-black/10 shadow-xs">
+            Verified Indic Telephony Gateway
           </span>
         </div>
-        <p className="text-xs text-slate-500 font-medium">
-          Click any card below to filter the student lead registry in real time
+        <p className="text-xs text-neutral-500 font-normal">
+          Click any segment card to filter candidate admissions transcripts & recordings
         </p>
       </div>
 
-      {/* 4 Authentic Neo-Brutalist 1-Click Interactive Filter Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Interested Leads (Electric Lime) */}
+      {/* 4 Sarvam-Inspired Liquid Glass Filter Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Card 1: Interested Leads (Sage / Emerald) */}
         <div
           onClick={() => onFilterCategory?.("interested")}
-          className={`rounded-2xl p-4.5 transition-all duration-150 cursor-pointer border-2.5 border-black bg-[#d6ff38] ${
+          className={`rounded-3xl p-6 transition-all duration-300 cursor-pointer ${
             activeCategory === "interested"
-              ? "shadow-[7px_7px_0px_#000000] -translate-y-1.5 ring-3 ring-black"
-              : "shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] hover:-translate-y-1 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000000]"
+              ? "liquid-glass-card ring-2 ring-emerald-500/30 border-emerald-500/40 shadow-xl -translate-y-1"
+              : "liquid-glass-card hover:-translate-y-1"
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-black text-black uppercase tracking-wider flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-black inline-block animate-ping" />
-              Interested Leads
+          <div className="flex items-center justify-between mb-3.5">
+            <span className="text-xs font-semibold text-neutral-800 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+              Interested Enrollees
             </span>
-            <span className="text-[10px] font-black uppercase tracking-wider bg-black text-[#d6ff38] px-2.5 py-0.5 rounded-lg border border-black shadow-[1.5px_1.5px_0px_#ffffff] flex items-center gap-1">
-              <TrendingUp className="w-3 h-3 stroke-[3]" /> 51% Yield
+            <span className="text-[10px] font-semibold uppercase tracking-wider bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+              <TrendingUp className="w-3 h-3 stroke-[2.5]" /> 51% Yield
             </span>
           </div>
 
-          <div className="flex items-baseline justify-between mb-1">
-            <div className="text-3xl sm:text-4xl font-black text-black font-mono tracking-tight">
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="text-3xl sm:text-4xl font-semibold text-neutral-900 font-mono tracking-tight font-serif-display">
               428
             </div>
-            <span className="text-[10px] font-black uppercase bg-black text-white px-2 py-0.5 rounded-md">
+            <span className="text-[10px] font-semibold bg-emerald-100/70 text-emerald-800 px-2 py-0.5 rounded-full">
               +38 today
             </span>
           </div>
 
-          <p className="text-xs text-black/90 font-bold line-clamp-1">
-            Campus visits booked, counseling & token fees
+          <p className="text-xs text-neutral-500 line-clamp-1">
+            Campus visits booked, scholarship pre-approvals & token fees
           </p>
 
-          <div className="w-full bg-black/20 rounded-full h-2 mt-3 overflow-hidden border border-black/40">
-            <div className="bg-black h-full rounded-full" style={{ width: "68%" }} />
+          <div className="w-full bg-black/5 rounded-full h-1.5 mt-4 overflow-hidden border border-black/5">
+            <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: "68%" }} />
           </div>
         </div>
 
-        {/* Card 2: Call Later / Follow-Up (Solar Yellow) */}
+        {/* Card 2: Call Later / Follow-Up (Peach / Amber) */}
         <div
           onClick={() => onFilterCategory?.("call_later")}
-          className={`rounded-2xl p-4.5 transition-all duration-150 cursor-pointer border-2.5 border-black bg-[#ffe600] ${
+          className={`rounded-3xl p-6 transition-all duration-300 cursor-pointer ${
             activeCategory === "call_later"
-              ? "shadow-[7px_7px_0px_#000000] -translate-y-1.5 ring-3 ring-black"
-              : "shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] hover:-translate-y-1 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000000]"
+              ? "liquid-glass-card ring-2 ring-amber-500/30 border-amber-500/40 shadow-xl -translate-y-1"
+              : "liquid-glass-card hover:-translate-y-1"
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-black text-black uppercase tracking-wider flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-black inline-block animate-ping" />
-              Call Later / Queue
+          <div className="flex items-center justify-between mb-3.5">
+            <span className="text-xs font-semibold text-neutral-800 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse" />
+              Follow-Up Queue
             </span>
-            <span className="text-[10px] font-black uppercase tracking-wider bg-black text-[#ffe600] px-2.5 py-0.5 rounded-lg border border-black shadow-[1.5px_1.5px_0px_#ffffff] flex items-center gap-1">
-              <Clock className="w-3 h-3 stroke-[3]" /> 23% Queue
+            <span className="text-[10px] font-semibold uppercase tracking-wider bg-amber-50 text-amber-700 px-2.5 py-0.5 rounded-full border border-amber-200 flex items-center gap-1">
+              <Clock className="w-3 h-3 stroke-[2.5]" /> 23% Queue
             </span>
           </div>
 
-          <div className="flex items-baseline justify-between mb-1">
-            <div className="text-3xl sm:text-4xl font-black text-black font-mono tracking-tight">
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="text-3xl sm:text-4xl font-semibold text-neutral-900 font-mono tracking-tight font-serif-display">
               194
             </div>
-            <span className="text-[10px] font-black uppercase bg-black text-white px-2 py-0.5 rounded-md">
+            <span className="text-[10px] font-semibold bg-amber-100/70 text-amber-800 px-2 py-0.5 rounded-full">
               Avg 4.2h
             </span>
           </div>
 
-          <p className="text-xs text-black/90 font-bold line-clamp-1">
-            Parents at office / scheduled callbacks queued
+          <p className="text-xs text-neutral-500 line-clamp-1">
+            Parents at office meetings / evening callbacks requested
           </p>
 
-          <div className="w-full bg-black/20 rounded-full h-2 mt-3 overflow-hidden border border-black/40">
-            <div className="bg-black h-full rounded-full" style={{ width: "38%" }} />
+          <div className="w-full bg-black/5 rounded-full h-1.5 mt-4 overflow-hidden border border-black/5">
+            <div className="bg-amber-500 h-full rounded-full transition-all duration-500" style={{ width: "38%" }} />
           </div>
         </div>
 
-        {/* Card 3: Not Interested (Cyber Cyan) */}
+        {/* Card 3: Not Interested / Disqualified (Sky / Cyan) */}
         <div
           onClick={() => onFilterCategory?.("not_interested")}
-          className={`rounded-2xl p-4.5 transition-all duration-150 cursor-pointer border-2.5 border-black bg-[#00f0ff] ${
+          className={`rounded-3xl p-6 transition-all duration-300 cursor-pointer ${
             activeCategory === "not_interested"
-              ? "shadow-[7px_7px_0px_#000000] -translate-y-1.5 ring-3 ring-black"
-              : "shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] hover:-translate-y-1 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000000]"
+              ? "liquid-glass-card ring-2 ring-blue-500/30 border-blue-500/40 shadow-xl -translate-y-1"
+              : "liquid-glass-card hover:-translate-y-1"
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-black text-black uppercase tracking-wider flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-black inline-block animate-ping" />
-              Not Interested
+          <div className="flex items-center justify-between mb-3.5">
+            <span className="text-xs font-semibold text-neutral-800 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500 inline-block animate-pulse" />
+              Not Interested / Opt-Out
             </span>
-            <span className="text-[10px] font-black uppercase tracking-wider bg-black text-[#00f0ff] px-2.5 py-0.5 rounded-lg border border-black shadow-[1.5px_1.5px_0px_#ffffff] flex items-center gap-1">
-              <XCircle className="w-3 h-3 stroke-[3]" /> 16% Opted
+            <span className="text-[10px] font-semibold uppercase tracking-wider bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full border border-blue-200 flex items-center gap-1">
+              <XCircle className="w-3 h-3 stroke-[2.5]" /> 16% Opted
             </span>
           </div>
 
-          <div className="flex items-baseline justify-between mb-1">
-            <div className="text-3xl sm:text-4xl font-black text-black font-mono tracking-tight">
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="text-3xl sm:text-4xl font-semibold text-neutral-900 font-mono tracking-tight font-serif-display">
               132
             </div>
-            <span className="text-[10px] font-black uppercase bg-black text-white px-2 py-0.5 rounded-md">
-              Low Intent
+            <span className="text-[10px] font-semibold bg-blue-100/70 text-blue-800 px-2 py-0.5 rounded-full">
+              JoSAA NIT / NEET
             </span>
           </div>
 
-          <p className="text-xs text-black/90 font-bold line-clamp-1">
-            Admitted elsewhere / location constraints
+          <p className="text-xs text-neutral-500 line-clamp-1">
+            Admitted into IITs/NITs or shifted to medical track
           </p>
 
-          <div className="w-full bg-black/20 rounded-full h-2 mt-3 overflow-hidden border border-black/40">
-            <div className="bg-black h-full rounded-full" style={{ width: "22%" }} />
+          <div className="w-full bg-black/5 rounded-full h-1.5 mt-4 overflow-hidden border border-black/5">
+            <div className="bg-blue-500 h-full rounded-full transition-all duration-500" style={{ width: "22%" }} />
           </div>
         </div>
 
-        {/* Card 4: Inbound Helpline (Pastel Lilac) */}
+        {/* Card 4: Inbound Helpline (Periwinkle / Indigo) */}
         <div
           onClick={() => onFilterCategory?.("inbound")}
-          className={`rounded-2xl p-4.5 transition-all duration-150 cursor-pointer border-2.5 border-black bg-[#c084fc] ${
+          className={`rounded-3xl p-6 transition-all duration-300 cursor-pointer ${
             activeCategory === "inbound"
-              ? "shadow-[7px_7px_0px_#000000] -translate-y-1.5 ring-3 ring-black"
-              : "shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] hover:-translate-y-1 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_#000000]"
+              ? "liquid-glass-card ring-2 ring-purple-500/30 border-purple-500/40 shadow-xl -translate-y-1"
+              : "liquid-glass-card hover:-translate-y-1"
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-black text-black uppercase tracking-wider flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-black inline-block animate-ping" />
+          <div className="flex items-center justify-between mb-3.5">
+            <span className="text-xs font-semibold text-neutral-800 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-purple-500 inline-block animate-pulse" />
               Inbound Helpline
             </span>
-            <span className="text-[10px] font-black uppercase tracking-wider bg-black text-[#c084fc] px-2.5 py-0.5 rounded-lg border border-black shadow-[1.5px_1.5px_0px_#ffffff] flex items-center gap-1">
-              <Zap className="w-3 h-3 stroke-[3]" /> 0s Hold
+            <span className="text-[10px] font-semibold uppercase tracking-wider bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-full border border-purple-200 flex items-center gap-1">
+              <Zap className="w-3 h-3 stroke-[2.5]" /> 0s Wait
             </span>
           </div>
 
-          <div className="flex items-baseline justify-between mb-1">
-            <div className="text-3xl sm:text-4xl font-black text-black font-mono tracking-tight">
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="text-3xl sm:text-4xl font-semibold text-neutral-900 font-mono tracking-tight font-serif-display">
               342
             </div>
-            <span className="text-[10px] font-black uppercase bg-black text-white px-2 py-0.5 rounded-md">
-              100% AI
+            <span className="text-[10px] font-semibold bg-purple-100/70 text-purple-800 px-2 py-0.5 rounded-full">
+              100% Autonomous
             </span>
           </div>
 
-          <p className="text-xs text-black/90 font-bold line-clamp-1">
-            Instant admission counseling & helpline resolution
+          <p className="text-xs text-neutral-500 line-clamp-1">
+            24/7 Prospectus RAG answering & lateral entry inquiries
           </p>
 
-          <div className="w-full bg-black/20 rounded-full h-2 mt-3 overflow-hidden border border-black/40">
-            <div className="bg-black h-full rounded-full" style={{ width: "55%" }} />
+          <div className="w-full bg-neutral-100 rounded-full h-1.5 mt-4 overflow-hidden border border-black/5">
+            <div className="bg-purple-600 h-full rounded-full transition-all duration-500" style={{ width: "55%" }} />
           </div>
         </div>
       </div>

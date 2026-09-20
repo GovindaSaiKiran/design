@@ -4,7 +4,7 @@ import React from "react";
 import { LiveCallItem, RecentCallRecord } from "@/types/dashboard";
 import LiveCallsFeed from "../components/LiveCallsFeed";
 import RecentCallsTable from "../components/RecentCallsTable";
-import { PhoneCall, Radio, Filter, Download } from "lucide-react";
+import { PhoneCall, Radio, Filter, Download, Sparkles } from "lucide-react";
 
 interface CallsViewProps {
   liveCalls: LiveCallItem[];
@@ -22,33 +22,39 @@ export default function CallsView({
   onExportReport,
 }: CallsViewProps) {
   return (
-    <div className="space-y-6 pb-12 select-none">
-      {/* Neo-Brutalist Audio Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border-3 border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000]">
-        <div>
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-md bg-black text-[#00f0ff] border-2 border-black shadow-[2px_2px_0px_#000000] -rotate-1">
-              🎙️ TELEPHONY LOGS & TRANSCRIPTS
-            </span>
-            <span className="px-3 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              {liveCalls.length} ACTIVE SESSIONS
-            </span>
+    <div className="space-y-10 pb-12 select-none font-sans animate-in fade-in duration-300">
+      {/* ========================================================================= */}
+      {/* 1. SARVAM EDITORIAL HERO & ACOUSTIC LOGS HEADER                           */}
+      {/* ========================================================================= */}
+      <div className="liquid-glass-card p-8 sm:p-10 relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-black/10 text-xs font-semibold text-neutral-800">
+              <span className="text-amber-600 font-serif">~ 𑁍 ~</span>
+              <span>Acoustic Monitoring & Verbatim Archives</span>
+            </div>
+            <h1 className="font-serif-display text-3xl sm:text-4xl font-normal text-neutral-900 tracking-tight leading-tight">
+              Live Calls & Telephony Transcripts
+            </h1>
+            <p className="text-sm text-neutral-600 leading-relaxed font-sans">
+              Real-time acoustic stream monitoring, dual-channel audio waveform visualizers, sentiment analysis, and verbatim Indic language transcripts.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-black tracking-tight uppercase">
-            Conversations & Audio Archives
-          </h1>
-          <p className="text-xs font-bold text-black/70 mt-1 max-w-xl">
-            Live acoustic monitoring, conversation transcripts, neural sentiment tracking, and automated student qualification intelligence.
-          </p>
-        </div>
 
-        <button
-          onClick={onExportReport}
-          className="px-5 py-3 rounded-xl bg-[#00f0ff] hover:bg-[#38bdf8] text-black text-xs font-black uppercase tracking-wider border-3 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-2 shrink-0 cursor-pointer"
-        >
-          <Download className="w-4 h-4 stroke-[3]" />
-          <span>Export All Transcripts</span>
-        </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2 liquid-glass-subtle px-4 py-2.5 rounded-2xl border border-black/10 text-xs font-semibold text-neutral-800 shadow-xs">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>{liveCalls.length} Active SIP Sessions</span>
+            </div>
+            <button
+              onClick={onExportReport}
+              className="px-6 py-3 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2 shrink-0 cursor-pointer active:scale-95"
+            >
+              <Download className="w-4 h-4 stroke-[2.2]" />
+              <span>Export Call Transcripts</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Live Stream Panel */}

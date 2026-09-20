@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { CampaignData } from "@/types/dashboard";
-import { Send, Pause, Play, Download, ExternalLink, Users, PhoneOff, AlertTriangle, CheckCircle2, Plus } from "lucide-react";
+import { Send, Pause, Play, Download, ExternalLink, Users, PhoneOff, AlertTriangle, CheckCircle2, Plus, Clock, ArrowUpRight } from "lucide-react";
 
 interface CampaignProgressProps {
   campaign: CampaignData;
@@ -25,81 +25,77 @@ export default function CampaignProgress({
   const remainingPct = 100 - (completedPct + noAnswerPct + failedPct);
 
   return (
-    <div className="bg-white border-3 border-black rounded-2xl p-5 shadow-[6px_6px_0px_#000000] hover:shadow-[8px_8px_0px_#000000] hover:-translate-y-0.5 transition-all flex flex-col justify-between select-none">
+    <div className="liquid-glass-card p-7 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative">
       {/* Header */}
       <div>
-        <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center justify-between gap-2 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-black text-[#d6ff38] border border-black shadow-[2px_2px_0px_#000000] -rotate-1">
-              OUTBOUND BATCH
+            <span className="text-[10px] font-semibold tracking-wide uppercase px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-700 border border-black/5">
+              Outbound Batch
             </span>
             <span
-              className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center gap-1.5 ${
+              className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border flex items-center gap-1.5 ${
                 isPaused
-                  ? "bg-[#ffe600] text-black"
-                  : "bg-[#d6ff38] text-black"
+                  ? "bg-amber-50 text-amber-700 border-amber-200"
+                  : "bg-emerald-50 text-emerald-700 border-emerald-200"
               }`}
             >
               <span
-                className={`w-2 h-2 rounded-full border border-black ${
-                  isPaused ? "bg-black" : "bg-black animate-pulse"
+                className={`w-1.5 h-1.5 rounded-full ${
+                  isPaused ? "bg-amber-500" : "bg-emerald-500 animate-pulse"
                 }`}
               />
               {isPaused ? "PAUSED" : "DIALING"}
             </span>
           </div>
 
-          <button
-            onClick={onNewCampaign}
-            className="text-[10px] font-black uppercase tracking-wider text-black bg-white hover:bg-[#ffe600] px-2.5 py-1 rounded-md border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all inline-flex items-center gap-1 cursor-pointer"
-          >
-            <Plus className="w-3 h-3 stroke-[3]" />
-            New
-          </button>
-        </div>
-
-        <h3 className="text-lg font-black text-black tracking-tight uppercase">
-          {campaign.title}
-        </h3>
-        <p className="text-xs font-bold text-black/70 mt-0.5">
-          Target: <span className="text-black font-black">{campaign.targetAudience}</span>
-        </p>
-      </div>
-
-      {/* Main Numbers & Progress Section */}
-      <div className="my-4">
-        <div className="flex items-baseline justify-between mb-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-black font-mono text-black">
-              {campaign.progressPercent}%
-            </span>
-            <span className="text-xs text-black/70 font-bold">
-              ({campaign.completedCount.toLocaleString()} / {campaign.totalContacts.toLocaleString()} calls)
-            </span>
-          </div>
-          <span className="text-[11px] font-mono font-black bg-black text-[#00f0ff] px-2.5 py-0.5 rounded-md border-2 border-black shadow-[2px_2px_0px_#000000]">
+          <span className="text-[11px] font-mono text-neutral-500 bg-neutral-100/80 px-2.5 py-0.5 rounded-lg border border-black/5">
             {campaign.estTimeRemaining} left
           </span>
         </div>
 
-        {/* Multi-segmented Progress Bar */}
-        <div className="w-full h-4 rounded-full bg-slate-200 overflow-hidden flex border-2 border-black shadow-[2px_2px_0px_#000000]">
-          {/* Completed Segment (Electric Lime) */}
+        <h3 className="text-lg font-semibold text-neutral-900 tracking-tight group-hover:text-blue-600 transition-colors">
+          {campaign.title}
+        </h3>
+        <p className="text-xs text-neutral-500 mt-1">
+          Target: <span className="text-neutral-800 font-medium">{campaign.targetAudience}</span>
+        </p>
+      </div>
+
+      {/* Main Numbers & Progress Section */}
+      <div className="my-5">
+        <div className="flex items-baseline justify-between mb-2.5">
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-semibold font-mono text-neutral-900 tracking-tight">
+              {campaign.progressPercent}%
+            </span>
+            <span className="text-xs text-neutral-500 font-medium">
+              ({campaign.completedCount.toLocaleString()} / {campaign.totalContacts.toLocaleString()})
+            </span>
+          </div>
+          <span className="text-xs text-neutral-400 font-medium">
+            Progress
+          </span>
+        </div>
+
+        {/* Multi-segmented Apple Style Progress Bar */}
+        <div className="w-full h-3 rounded-full bg-neutral-100 border border-black/5 overflow-hidden flex p-0.5">
+          {/* Completed Segment (Emerald) */}
           <div
             style={{ width: `${completedPct}%` }}
-            className="h-full bg-[#d6ff38] border-r-2 border-black transition-all duration-500"
+            className="h-full bg-emerald-500 rounded-l-full transition-all duration-500"
             title={`Completed: ${campaign.completedCount}`}
           />
-          {/* No Answer Segment (Sunny Yellow) */}
+          {/* No Answer Segment (Amber) */}
           <div
             style={{ width: `${noAnswerPct}%` }}
-            className="h-full bg-[#ffe600] border-r-2 border-black transition-all duration-500"
+            className="h-full bg-amber-400 transition-all duration-500"
             title={`No Answer: ${campaign.noAnswerCount}`}
           />
-          {/* Failed Segment (Coral Red) */}
+          {/* Failed Segment (Rose) */}
           <div
             style={{ width: `${failedPct}%` }}
-            className="h-full bg-[#ff8080] border-r-2 border-black transition-all duration-500"
+            className="h-full bg-rose-400 rounded-r-full transition-all duration-500"
             title={`Failed: ${campaign.failedCount}`}
           />
           {/* Remaining in queue */}
@@ -109,34 +105,34 @@ export default function CampaignProgress({
           />
         </div>
 
-        {/* Sub-breakdown Stats */}
-        <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t-2 border-black text-center">
-          <div className="p-2.5 rounded-xl bg-[#d6ff38] border-2 border-black shadow-[2px_2px_0px_#000000]">
-            <div className="flex items-center justify-center gap-1 text-[10px] font-black uppercase text-black mb-0.5">
-              <CheckCircle2 className="w-3 h-3 stroke-[3]" />
+        {/* Sub-breakdown Stats Cards with Thin Black Borders */}
+        <div className="grid grid-cols-3 gap-2.5 mt-4 text-center">
+          <div className="p-3 rounded-2xl bg-neutral-50 border border-black/5 hover:border-black/15 transition-colors">
+            <div className="flex items-center justify-center gap-1 text-[10px] font-semibold text-neutral-500 mb-1">
+              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
               <span>Done</span>
             </div>
-            <div className="text-base font-black text-black font-mono">
+            <div className="text-base font-semibold text-neutral-900 font-mono">
               {campaign.completedCount}
             </div>
           </div>
 
-          <div className="p-2.5 rounded-xl bg-[#ffe600] border-2 border-black shadow-[2px_2px_0px_#000000]">
-            <div className="flex items-center justify-center gap-1 text-[10px] font-black uppercase text-black mb-0.5">
-              <PhoneOff className="w-3 h-3 stroke-[3]" />
+          <div className="p-3 rounded-2xl bg-neutral-50 border border-black/5 hover:border-black/15 transition-colors">
+            <div className="flex items-center justify-center gap-1 text-[10px] font-semibold text-neutral-500 mb-1">
+              <PhoneOff className="w-3 h-3 text-amber-600" />
               <span>No Ans</span>
             </div>
-            <div className="text-base font-black text-black font-mono">
+            <div className="text-base font-semibold text-neutral-900 font-mono">
               {campaign.noAnswerCount}
             </div>
           </div>
 
-          <div className="p-2.5 rounded-xl bg-[#ff8080] border-2 border-black shadow-[2px_2px_0px_#000000]">
-            <div className="flex items-center justify-center gap-1 text-[10px] font-black uppercase text-black mb-0.5">
-              <AlertTriangle className="w-3 h-3 stroke-[3]" />
+          <div className="p-3 rounded-2xl bg-neutral-50 border border-black/5 hover:border-black/15 transition-colors">
+            <div className="flex items-center justify-center gap-1 text-[10px] font-semibold text-neutral-500 mb-1">
+              <AlertTriangle className="w-3 h-3 text-rose-600" />
               <span>Retry</span>
             </div>
-            <div className="text-base font-black text-black font-mono">
+            <div className="text-base font-semibold text-neutral-900 font-mono">
               {campaign.failedCount}
             </div>
           </div>
@@ -144,27 +140,27 @@ export default function CampaignProgress({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-2 pt-3 border-t-2 border-black">
+      <div className="flex items-center gap-2 pt-4 border-t border-black/10">
         <button
           onClick={() => onViewCampaign?.(campaign)}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#00f0ff] hover:bg-[#38bdf8] text-black text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all cursor-pointer"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
         >
-          <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>Inspect</span>
+          <span>Inspect Batch</span>
+          <ArrowUpRight className="w-3.5 h-3.5" />
         </button>
 
         <button
           onClick={() => setIsPaused(!isPaused)}
-          className="px-3 py-2 rounded-xl text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all inline-flex items-center gap-1.5 cursor-pointer bg-white text-black hover:bg-[#ffe600]"
+          className="px-3.5 py-2 rounded-xl text-xs font-semibold border border-black/10 hover:border-black/30 transition-all inline-flex items-center gap-1.5 cursor-pointer bg-white text-neutral-800 hover:bg-neutral-50 active:scale-95"
         >
           {isPaused ? (
             <>
-              <Play className="w-3.5 h-3.5 fill-current text-black" />
+              <Play className="w-3.5 h-3.5 fill-current text-neutral-800" />
               <span>Resume</span>
             </>
           ) : (
             <>
-              <Pause className="w-3.5 h-3.5 stroke-[3] text-black" />
+              <Pause className="w-3.5 h-3.5 text-neutral-800" />
               <span>Pause</span>
             </>
           )}
@@ -172,10 +168,10 @@ export default function CampaignProgress({
 
         <button
           onClick={onExportResults}
-          className="p-2 rounded-xl bg-[#d6ff38] text-black border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] hover:bg-[#bbf01b] transition-all cursor-pointer"
+          className="p-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-black/5 text-neutral-700 hover:text-neutral-900 transition-colors cursor-pointer active:scale-95"
           title="Export CSV Results"
         >
-          <Download className="w-4 h-4 stroke-[2.5]" />
+          <Download className="w-4 h-4" />
         </button>
       </div>
     </div>

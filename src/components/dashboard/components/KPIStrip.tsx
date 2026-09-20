@@ -19,11 +19,11 @@ export default function KPIStrip({ metrics }: KPIStripProps) {
   }, []);
 
   const icons = [
-    <PhoneCall key="0" className="w-4 h-4 stroke-[2.5]" />,
-    <Clock key="1" className="w-4 h-4 stroke-[2.5]" />,
-    <UserCheck key="2" className="w-4 h-4 stroke-[2.5]" />,
-    <PhoneForwarded key="3" className="w-4 h-4 stroke-[2.5]" />,
-    <Timer key="4" className="w-4 h-4 stroke-[2.5]" />,
+    <PhoneCall key="0" className="w-4 h-4 stroke-[2]" />,
+    <Clock key="1" className="w-4 h-4 stroke-[2]" />,
+    <UserCheck key="2" className="w-4 h-4 stroke-[2]" />,
+    <PhoneForwarded key="3" className="w-4 h-4 stroke-[2]" />,
+    <Timer key="4" className="w-4 h-4 stroke-[2]" />,
   ];
 
   const renderMiniSparkline = (data: number[], isGreen: boolean) => {
@@ -58,61 +58,40 @@ export default function KPIStrip({ metrics }: KPIStripProps) {
           <circle
             cx={(width).toFixed(1)}
             cy={(height - ((data[data.length - 1] - min) / range) * (height - 6) - 3).toFixed(1)}
-            r="3"
+            r="2.5"
             fill={strokeColor}
             stroke="#ffffff"
-            strokeWidth="1.5"
+            strokeWidth="1"
           />
         )}
       </svg>
     );
   };
 
-  // Neo-Brutalist colorful themes for each card
-  const cardThemes = [
-    {
-      iconBg: "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
-      explainer: "Calls dialed by Maya & Vikram today",
-      metricDetail: "All Inbound + Outbound attempts",
-    },
-    {
-      iconBg: "bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
-      explainer: "Answered & held > 15 seconds",
-      metricDetail: "Live voice connection success",
-    },
-    {
-      iconBg: "bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
-      explainer: "Interested leads enrolled / token paid",
-      metricDetail: "Direct AI admissions conversion",
-    },
-    {
-      iconBg: "bg-[#c084fc] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
-      explainer: "Transferred to Dean / Counselor",
-      metricDetail: "Complex questions escalated",
-    },
-    {
-      iconBg: "bg-[#ff8080] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
-      explainer: "Time AI takes to process & reply",
-      metricDetail: "Ultra-fast conversational latency",
-    },
+  const cardExplainers = [
+    "Calls dialed today",
+    "Answered & held > 15s",
+    "Enrolled / token paid",
+    "Transferred to Counselor",
+    "AI response turnaround",
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 font-sans select-none">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 font-sans select-none">
       {metrics.map((metric, idx) => {
         const isUp = metric.trend === "up";
         const icon = icons[idx % icons.length];
-        const theme = cardThemes[idx % cardThemes.length];
+        const explainer = cardExplainers[idx % cardExplainers.length];
 
         return (
           <div
             key={metric.label}
-            className="bg-white border-[2.5px] border-black rounded-2xl p-4 shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group cursor-default"
+            className="liquid-glass-card p-6 flex flex-col justify-between group cursor-default hover:-translate-y-1 transition-all duration-300"
           >
             <div>
               {/* Header: Icon + Sparkline */}
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <div className={`w-9 h-9 rounded-xl ${theme.iconBg} flex items-center justify-center font-bold group-hover:scale-105 transition-transform`}>
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <div className="w-10 h-10 rounded-2xl bg-neutral-100 text-neutral-800 border border-black/5 flex items-center justify-center font-medium group-hover:bg-neutral-900 group-hover:text-white transition-all shadow-xs">
                   {icon}
                 </div>
                 {renderMiniSparkline(metric.sparkline, isUp)}
@@ -120,38 +99,38 @@ export default function KPIStrip({ metrics }: KPIStripProps) {
 
               {/* Metric Title & Value */}
               <div>
-                <div className="text-[11px] font-black tracking-wider text-black/60 uppercase mb-0.5">
+                <div className="text-[11px] font-semibold tracking-wider text-neutral-400 uppercase mb-1">
                   {metric.label}
                 </div>
-                <div className="text-2xl sm:text-3xl font-black tracking-tight text-black font-mono">
+                <div className="text-2xl font-semibold tracking-tight text-neutral-900 font-mono">
                   {metric.value}
                 </div>
               </div>
 
               {/* Explainer */}
-              <div className="mt-1 text-[11px] font-bold text-black/70 leading-tight">
-                {theme.explainer}
+              <div className="mt-1.5 text-xs text-neutral-500 leading-tight">
+                {explainer}
               </div>
             </div>
 
             {/* Bottom: Trend Pill + Detail */}
-            <div className="mt-3.5 pt-2.5 border-t-2 border-black/15 flex items-center justify-between gap-1 text-xs">
+            <div className="mt-4 pt-3 border-t border-black/5 flex items-center justify-between gap-1 text-xs">
               <span
-                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-black border-2 border-black shadow-[1.5px_1.5px_0px_#000000] ${
+                className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
                   isUp
-                    ? "bg-[#d6ff38] text-black"
-                    : "bg-[#ff8080] text-black"
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                    : "bg-rose-50 text-rose-800 border-rose-200"
                 }`}
               >
                 {isUp ? (
-                  <TrendingUp className="w-3 h-3 stroke-[3]" />
+                  <TrendingUp className="w-3 h-3 stroke-[2.5]" />
                 ) : (
-                  <TrendingDown className="w-3 h-3 stroke-[3]" />
+                  <TrendingDown className="w-3 h-3 stroke-[2.5]" />
                 )}
                 {metric.trendLabel.split(" ")[0]}
               </span>
 
-              <span className="text-[11px] font-bold text-black/60 truncate">
+              <span className="text-[11px] text-neutral-400 truncate font-normal">
                 {metric.trendLabel.split(" ").slice(1).join(" ")}
               </span>
             </div>

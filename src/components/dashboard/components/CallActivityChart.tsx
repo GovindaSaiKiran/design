@@ -58,56 +58,56 @@ export default function CallActivityChart() {
   const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${(height - paddingY).toFixed(1)} L ${points[0].x.toFixed(1)} ${(height - paddingY).toFixed(1)} Z`;
 
   return (
-    <div className="bg-white border-[2.5px] border-black rounded-2xl p-5 sm:p-6 shadow-[6px_6px_0px_#000000] font-sans select-none">
+    <div className="liquid-glass-card p-7 transition-all duration-300 select-none">
       {/* Top Controls Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b-2 border-black">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-black/10">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1.5">
-            <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              ⚡ Operations Telemetry
+            <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-700 border border-black/5">
+              Operations Telemetry
             </span>
-            <span className="text-[11px] font-black px-2.5 py-1 rounded-lg bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              Peak: 12:00 - 16:00
+            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+              Peak Traffic: 12:00 - 16:00
             </span>
           </div>
-          <h3 className="text-lg sm:text-xl font-black text-black tracking-tight">
-            Call Activity Dynamics & Lead Flow
+          <h3 className="text-lg font-semibold text-neutral-900 tracking-tight">
+            Call Activity Dynamics & Candidate Flow
           </h3>
-          <p className="text-xs text-black/70 font-bold mt-0.5">
-            Real-time breakdown of automated student queries and voice counseling conversations
+          <p className="text-xs text-neutral-500 mt-0.5">
+            Real-time breakdown of automated admissions queries, counseling durations, and conversion yields
           </p>
         </div>
 
         {/* View Toggles & Filters */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Metric View Switcher */}
-          <div className="flex items-center bg-white p-1 rounded-xl border-2 border-black shadow-[2px_2px_0px_#000000] text-xs gap-1">
+          <div className="flex items-center bg-neutral-100 p-1 rounded-xl border border-black/5 text-xs gap-1">
             <button
               onClick={() => setMetricView("calls")}
-              className={`px-3 py-1.5 rounded-lg transition-all font-black cursor-pointer ${
+              className={`px-3 py-1 rounded-lg transition-all font-medium cursor-pointer ${
                 metricView === "calls"
-                  ? "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]"
-                  : "text-black hover:bg-neutral-100 border-2 border-transparent"
+                  ? "bg-white text-neutral-900 shadow-xs font-semibold"
+                  : "text-neutral-500 hover:text-neutral-900"
               }`}
             >
-              Calls Dialed
+              Calls
             </button>
             <button
               onClick={() => setMetricView("minutes")}
-              className={`px-3 py-1.5 rounded-lg transition-all font-black cursor-pointer ${
+              className={`px-3 py-1 rounded-lg transition-all font-medium cursor-pointer ${
                 metricView === "minutes"
-                  ? "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]"
-                  : "text-black hover:bg-neutral-100 border-2 border-transparent"
+                  ? "bg-white text-neutral-900 shadow-xs font-semibold"
+                  : "text-neutral-500 hover:text-neutral-900"
               }`}
             >
               Minutes
             </button>
             <button
               onClick={() => setMetricView("outcomes")}
-              className={`px-3 py-1.5 rounded-lg transition-all font-black cursor-pointer ${
+              className={`px-3 py-1 rounded-lg transition-all font-medium cursor-pointer ${
                 metricView === "outcomes"
-                  ? "bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]"
-                  : "text-black hover:bg-neutral-100 border-2 border-transparent"
+                  ? "bg-white text-neutral-900 shadow-xs font-semibold"
+                  : "text-neutral-500 hover:text-neutral-900"
               }`}
             >
               Interested Leads
@@ -118,7 +118,7 @@ export default function CallActivityChart() {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value as any)}
-            className="px-3.5 py-2 rounded-xl text-xs font-black bg-white hover:bg-[#ffe600]/20 border-2 border-black text-black focus:outline-none cursor-pointer transition-all shadow-[2px_2px_0px_#000000]"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-medium bg-neutral-50 hover:bg-white border border-black/10 text-neutral-700 focus:outline-none focus:border-black cursor-pointer transition-all shadow-xs"
           >
             <option value="today">Today (Hourly)</option>
             <option value="sevenDays">Past 7 Days</option>
@@ -128,15 +128,15 @@ export default function CallActivityChart() {
       </div>
 
       {/* SVG Chart Area */}
-      <div className="relative w-full overflow-hidden bg-[#fbfbf8] rounded-xl p-3.5 border-2 border-black shadow-[3px_3px_0px_#000000]">
+      <div className="relative w-full overflow-hidden bg-neutral-50/70 rounded-2xl p-4 border border-black/5">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-48 sm:h-56 overflow-visible"
+          className="w-full h-52 sm:h-60 overflow-visible"
         >
           <defs>
-            <linearGradient id="vibrantChartAreaGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#d6ff38" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#d6ff38" stopOpacity="0.05" />
+            <linearGradient id="appleChartAreaGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -146,47 +146,45 @@ export default function CallActivityChart() {
             y1={paddingY}
             x2={width - paddingX}
             y2={paddingY}
-            stroke="#000000"
+            stroke="#e5e7eb"
             strokeWidth="1"
             strokeDasharray="4 4"
-            opacity="0.25"
           />
           <line
             x1={paddingX}
             y1={height / 2}
             x2={width - paddingX}
             y2={height / 2}
-            stroke="#000000"
+            stroke="#e5e7eb"
             strokeWidth="1"
             strokeDasharray="4 4"
-            opacity="0.25"
           />
           <line
             x1={paddingX}
             y1={height - paddingY}
             x2={width - paddingX}
             y2={height - paddingY}
-            stroke="#000000"
-            strokeWidth="2"
+            stroke="#d1d5db"
+            strokeWidth="1"
           />
 
           {/* Area under curve */}
           <path
             d={areaPath}
-            fill="url(#vibrantChartAreaGradient)"
+            fill="url(#appleChartAreaGradient)"
           />
 
           {/* Line curve */}
           <path
             d={linePath}
             fill="none"
-            stroke="#000000"
-            strokeWidth="3.5"
+            stroke="#2563eb"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
 
-          {/* Points with Neo Brutalist dots */}
+          {/* Points */}
           {points.map((p, idx) => (
             <g
               key={idx}
@@ -197,10 +195,10 @@ export default function CallActivityChart() {
               <circle
                 cx={p.x}
                 cy={p.y}
-                r={hoveredPoint === idx ? 8 : 5}
-                fill={hoveredPoint === idx ? "#ffe600" : "#d6ff38"}
-                stroke="#000000"
-                strokeWidth={2.5}
+                r={hoveredPoint === idx ? 6 : 3.5}
+                fill={hoveredPoint === idx ? "#2563eb" : "#ffffff"}
+                stroke="#2563eb"
+                strokeWidth={2}
                 className="transition-all duration-150"
               />
             </g>
@@ -210,13 +208,13 @@ export default function CallActivityChart() {
         {/* Hovered Tooltip */}
         {hoveredPoint !== null && (
           <div
-            className="absolute top-4 left-1/2 -translate-x-1/2 bg-black text-[#d6ff38] px-4 py-2 rounded-xl border-2 border-black shadow-[3px_3px_0px_#ffffff] text-xs pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex items-center gap-2 font-black"
+            className="absolute top-4 left-1/2 -translate-x-1/2 bg-neutral-900 text-white px-4 py-2 rounded-xl border border-black/20 shadow-xl text-xs pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex items-center gap-2 font-medium"
           >
-            <span className="text-white font-bold">{chartData[hoveredPoint].label}:</span>{" "}
-            <span className="text-[#d6ff38] font-mono font-black">
+            <span className="text-neutral-400">{chartData[hoveredPoint].label}:</span>{" "}
+            <span className="text-blue-400 font-mono font-semibold">
               {chartData[hoveredPoint].val} {metricView}
             </span>{" "}
-            <span className="text-neutral-300 font-medium">
+            <span className="text-neutral-400 text-[11px]">
               ({chartData[hoveredPoint].interested} interested)
             </span>
           </div>
@@ -224,7 +222,7 @@ export default function CallActivityChart() {
       </div>
 
       {/* Bottom Time Labels */}
-      <div className="flex justify-between text-xs text-black font-mono font-black pt-3 px-6">
+      <div className="flex justify-between text-xs text-neutral-400 font-mono pt-3 px-6">
         {chartData.map((d, i) => (
           <span key={i}>{d.label}</span>
         ))}

@@ -28,23 +28,23 @@ export default function LiveCallsFeed({ liveCalls, onViewCall }: LiveCallsFeedPr
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 sm:p-6 border-3 border-black shadow-[6px_6px_0px_#000000] flex flex-col justify-between select-none">
-      {/* Neo Header */}
-      <div className="flex items-center justify-between gap-3 mb-5 pb-4 border-b-2 border-black">
+    <div className="bg-white/80 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col justify-between select-none font-sans">
+      {/* Apple Header */}
+      <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-black/10">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-[#d6ff38] border-2 border-black inline-block animate-ping" />
-            <span className="text-xs font-black uppercase tracking-wider text-black">
-              LIVE AUDIO FEED
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-ping" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Live Audio Feed
             </span>
-            <span className="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              {liveCalls.length} CONCURRENT SESSIONS
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-black/10 shadow-xs">
+              {liveCalls.length} Concurrent Sessions
             </span>
           </div>
-          <h3 className="text-xl font-black text-black tracking-tight mt-1 uppercase">
+          <h3 className="text-xl font-bold text-slate-900 tracking-tight mt-1">
             Active Admissions Calls
           </h3>
-          <p className="text-xs font-bold text-black/70">
+          <p className="text-xs text-slate-500 font-normal">
             Real-time acoustic streaming, sub-second latency, and live student dialogue
           </p>
         </div>
@@ -52,68 +52,68 @@ export default function LiveCallsFeed({ liveCalls, onViewCall }: LiveCallsFeedPr
 
       {/* Live Calls List */}
       <div className="space-y-4">
-        {liveCalls.map((call, idx) => {
+        {liveCalls.map((call) => {
           const currentDuration = formatTimer(call.durationSeconds, secondsElapsed);
 
           return (
             <div
               key={call.id}
-              className="group p-4 rounded-xl bg-[#f8fafc] border-2 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#000000] transition-all"
+              className="group p-5 rounded-2xl bg-white/90 border border-black/10 hover:border-black/30 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all"
             >
               {/* Top Row: Caller + Agent + Live Duration */}
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#d6ff38] border border-black inline-block animate-pulse" />
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                   <div>
-                    <span className="font-mono text-sm font-black text-black">
+                    <span className="font-mono text-sm font-bold text-slate-900">
                       {call.callerNumber}
                     </span>
-                    <span className="text-xs font-bold text-black/60 ml-1.5">
+                    <span className="text-xs text-slate-500 font-medium ml-2">
                       ({call.callerName || "Verified Caller"})
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-md bg-[#c084fc] text-black border-2 border-black text-xs font-mono font-black shadow-[2px_2px_0px_#000000]">
+                  <span className="px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 border border-black/5 text-xs font-mono font-semibold">
                     {call.agentName}
                   </span>
-                  <span className="font-mono text-xs font-black text-black bg-[#ffe600] px-2 py-0.5 rounded-md border-2 border-black shadow-[2px_2px_0px_#000000]">
+                  <span className="font-mono text-xs font-semibold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-lg border border-black/5">
                     {currentDuration}
                   </span>
                 </div>
               </div>
 
               {/* Live Quotation Snippet */}
-              <div className="my-2.5 p-3 rounded-xl bg-white border-2 border-black flex items-start gap-2 text-xs text-black shadow-[2px_2px_0px_#000000]">
-                <MessageSquareQuote className="w-4 h-4 text-black shrink-0 mt-0.5 stroke-[2.5]" />
-                <span className="line-clamp-2 font-semibold italic">
+              <div className="my-3 p-3.5 rounded-xl bg-slate-50/90 border border-black/5 flex items-start gap-2.5 text-xs text-slate-800">
+                <MessageSquareQuote className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5 stroke-[2]" />
+                <span className="line-clamp-2 font-normal italic leading-relaxed">
                   &ldquo;{call.latestSnippet}&rdquo;
                 </span>
               </div>
 
               {/* Animated Audio Waveform + View Button */}
-              <div className="flex items-center justify-between gap-3 pt-2 mt-2 border-t-2 border-black">
-                <div className="flex items-center gap-2">
-                  <Volume2 className="w-4 h-4 text-black stroke-[2.5]" />
+              <div className="flex items-center justify-between gap-3 pt-3 mt-3 border-t border-black/5">
+                <div className="flex items-center gap-2.5">
+                  <Volume2 className="w-4 h-4 text-slate-500 stroke-[2]" />
                   {/* Waveform Bars */}
                   <div className="flex items-center gap-1 h-5 px-1">
-                    <span className="w-1.5 bg-black border border-black rounded-t h-2 animate-wave-1" />
-                    <span className="w-1.5 bg-[#00f0ff] border border-black rounded-t h-4 animate-wave-2" />
-                    <span className="w-1.5 bg-[#d6ff38] border border-black rounded-t h-5 animate-wave-3" />
-                    <span className="w-1.5 bg-[#ffe600] border border-black rounded-t h-3 animate-wave-4" />
-                    <span className="w-1.5 bg-black border border-black rounded-t h-4 animate-wave-5" />
+                    <span className="w-1.5 bg-indigo-500 rounded-t h-2 animate-wave-1" />
+                    <span className="w-1.5 bg-sky-500 rounded-t h-4 animate-wave-2" />
+                    <span className="w-1.5 bg-emerald-500 rounded-t h-5 animate-wave-3" />
+                    <span className="w-1.5 bg-amber-500 rounded-t h-3 animate-wave-4" />
+                    <span className="w-1.5 bg-indigo-600 rounded-t h-4 animate-wave-5" />
                   </div>
-                  <span className="text-[11px] font-mono font-bold text-black/70 ml-1">
+                  <span className="text-[11px] font-mono font-medium text-slate-500 ml-1.5">
                     {call.latencyMs}ms latency
                   </span>
                 </div>
 
                 <button
                   onClick={() => onViewCall(call)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#d6ff38] hover:bg-[#bbf01b] text-black text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-semibold border border-black shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
                 >
-                  <Eye className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <Eye className="w-3.5 h-3.5 stroke-[2]" />
                   <span>View Live</span>
                 </button>
               </div>
@@ -123,12 +123,12 @@ export default function LiveCallsFeed({ liveCalls, onViewCall }: LiveCallsFeedPr
       </div>
 
       {/* Bottom Telemetry */}
-      <div className="mt-4 pt-3 border-t-2 border-black flex items-center justify-between text-xs font-bold text-black">
-        <span className="flex items-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-black stroke-[2.5]" />
+      <div className="mt-5 pt-4 border-t border-black/10 flex items-center justify-between text-xs font-medium text-slate-500">
+        <span className="flex items-center gap-1.5 text-slate-700">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 stroke-[2]" />
           SRTP Encrypted 24/7 Helpline Stream
         </span>
-        <span className="font-mono text-[11px] bg-black text-[#d6ff38] px-2.5 py-0.5 rounded-md border-2 border-black font-black">
+        <span className="font-mono text-[11px] bg-slate-100 text-slate-800 px-2.5 py-0.5 rounded-lg border border-black/5 font-semibold">
           OPUS 48kHz HD
         </span>
       </div>

@@ -18,7 +18,8 @@ import {
   Phone,
   Volume2,
   ExternalLink,
-  ShieldCheck
+  ShieldCheck,
+  Globe
 } from "lucide-react";
 import { DashboardAgent, LiveCallItem } from "@/types/dashboard";
 
@@ -63,66 +64,62 @@ export default function LiveOperationsCompactCard({
     return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
-  const handleTestCall = () => {
-    setTestCallSent(true);
-    setTimeout(() => setTestCallSent(false), 3000);
-  };
-
   return (
-    <div className="w-full space-y-5 select-none font-sans">
-      {/* 1. REAL-TIME LIVE CALLING MONITOR & DANCING AUDIO EQUALIZER */}
-      <div className="bg-black text-white rounded-2xl p-5 border-[2.5px] border-black shadow-[6px_6px_0px_#000000] relative overflow-hidden group">
-        {/* Header: Live Status Badge + Mode */}
-        <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b-2 border-neutral-800 relative z-10">
+    <div className="w-full space-y-6 select-none font-sans">
+      {/* 1. REAL-TIME LIVE CALLING MONITOR WITH SARVAM 3D CLAY DISC */}
+      <div className="bg-neutral-900 text-white rounded-3xl p-6 border border-black/20 shadow-xl relative overflow-hidden group">
+        {/* Header: Live Status Badge + Timer */}
+        <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-white/10 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#ffffff]">
-              <span className="w-2 h-2 rounded-full bg-black inline-block animate-ping" />
-              Live Line 1
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping" />
+              Live Indic Channel 1
             </span>
-            <span className="text-xs text-neutral-300 font-bold">Inbound Session</span>
+            <span className="text-xs text-neutral-400 font-medium">Bilingual Admissions</span>
           </div>
 
-          <span className="text-xs font-mono font-black text-black bg-[#ffe600] px-2.5 py-1 rounded-lg border-2 border-black shadow-[2px_2px_0px_#ffffff]">
+          <span className="text-xs font-mono font-semibold text-neutral-300 bg-white/10 px-3 py-1 rounded-xl border border-white/10">
             ⏱ {formatSeconds(activeCallSeconds)}
           </span>
         </div>
 
-        {/* Current Caller Info */}
-        <div className="flex items-start justify-between gap-3 mb-4 relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00f0ff] text-black flex items-center justify-center font-black text-xs shrink-0 border-2 border-black shadow-[2px_2px_0px_#ffffff]">
-              <PhoneIncoming className="w-5 h-5 stroke-[2.5]" />
+        {/* Current Caller Info with Sarvam 3D Voice Disc */}
+        <div className="flex items-start justify-between gap-3 mb-5 relative z-10">
+          <div className="flex items-center gap-3.5">
+            {/* Sarvam 3D Organic Disc */}
+            <div className="w-12 h-12 rounded-full sarvam-disc-periwinkle flex items-center justify-center shrink-0 shadow-md animate-spin-slow">
+              <div className="w-4 h-4 rounded-full bg-white/90" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <h4 className="font-black text-white text-xs sm:text-sm">
-                  Rahul Sharma
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold text-white text-xs sm:text-sm">
+                  Rahul Verma
                 </h4>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-neutral-800 text-[#d6ff38] border border-neutral-700">
-                  CBSE 94%
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/10 text-blue-300 border border-white/10">
+                  CBSE 94.2% PCM
                 </span>
               </div>
-              <p className="text-[11px] font-mono text-neutral-400 font-bold">
-                +91 98401 77120
+              <p className="text-[11px] font-mono text-neutral-400 mt-0.5">
+                +91 98401 55219 • Delhi NCR
               </p>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-[10px] text-neutral-400 uppercase font-black block">Counselor</span>
-            <span className="text-xs font-black text-black bg-[#d6ff38] px-2 py-0.5 rounded border-2 border-black shadow-[1px_1px_0px_#ffffff]">
-              Maya AI
+            <span className="text-[10px] text-neutral-400 uppercase font-medium block">Voice Model</span>
+            <span className="text-xs font-semibold text-neutral-200 bg-white/10 px-2.5 py-0.5 rounded-lg border border-white/10 inline-block mt-0.5">
+              Ritu (Hindi + Eng)
             </span>
           </div>
         </div>
 
-        {/* Live Audio Frequency Bars with Dynamic Dancing Effect */}
-        <div className="p-3.5 rounded-xl bg-neutral-900 text-white mb-4 border-2 border-neutral-800 shadow-inner relative">
-          <div className="flex items-center justify-between text-[10px] font-black text-neutral-300 uppercase tracking-wider mb-2.5">
-            <span className="flex items-center gap-1.5 text-[#d6ff38]">
-              <Volume2 className="w-3.5 h-3.5 animate-pulse stroke-[2.5]" /> Neural Voice Stream
+        {/* Live Audio Frequency Equalizer */}
+        <div className="p-4 rounded-2xl bg-black/60 text-white mb-4 border border-white/10 relative">
+          <div className="flex items-center justify-between text-[10px] font-semibold text-neutral-400 uppercase tracking-wider mb-2.5">
+            <span className="flex items-center gap-1.5 text-blue-400">
+              <Volume2 className="w-3.5 h-3.5 animate-pulse" /> Bulbul V3 Neural Stream
             </span>
-            <span className="text-black font-mono font-black text-[10px] bg-[#00f0ff] px-2 py-0.5 rounded border border-black">382ms Latency</span>
+            <span className="text-emerald-400 font-mono text-[10px] bg-white/10 px-2 py-0.5 rounded border border-white/10">140ms Latency</span>
           </div>
 
           <div className="flex items-end justify-between gap-1 h-8 px-1">
@@ -130,123 +127,139 @@ export default function LiveOperationsCompactCard({
               <div
                 key={i}
                 style={{ height: `${h}%` }}
-                className="flex-1 rounded-t bg-[#d6ff38] transition-all duration-300 shadow-[0_0_6px_rgba(214,255,56,0.6)]"
+                className="flex-1 rounded-t bg-gradient-to-t from-blue-600 via-indigo-400 to-cyan-300 transition-all duration-300 opacity-90 hover:opacity-100"
               />
             ))}
           </div>
 
-          <p className="text-[11px] text-white font-bold italic truncate mt-2.5 border-t border-neutral-800 pt-2">
-            &ldquo;Rahul, your 35% Chancellor Scholarship is pre-approved for CSE!&rdquo;
+          <p className="text-[11px] text-neutral-300 font-normal italic truncate mt-3 border-t border-white/10 pt-2.5">
+            &ldquo;राहुल जी, आपके 94.2% PCM के आधार पर 35% चांसलर स्कॉलरशिप स्वीकृत है।&rdquo;
           </p>
         </div>
 
-        {/* Inspect Live Call Button */}
+        {/* Listen In Action */}
         <button
           onClick={onOpenLiveCallModal}
-          className="w-full py-2.5 rounded-xl bg-[#d6ff38] hover:bg-[#ffe600] text-black font-black text-xs border-2.5 border-black shadow-[3px_3px_0px_#ffffff] hover:shadow-[4px_4px_0px_#ffffff] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#ffffff] transition-all inline-flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3 rounded-2xl bg-white hover:bg-neutral-100 text-neutral-900 font-semibold text-xs shadow-md transition-all inline-flex items-center justify-center gap-2 cursor-pointer active:scale-95"
         >
-          <Radio className="w-4 h-4 animate-spin stroke-[2.5]" />
+          <Radio className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
           <span>Listen In Live Stream</span>
         </button>
       </div>
 
-      {/* 2. DEDICATED AI CALLING WORKFORCE */}
-      <div className="bg-white rounded-2xl p-4.5 border-[2.5px] border-black shadow-[5px_5px_0px_#000000]">
-        <div className="flex items-center justify-between pb-3 mb-3.5 border-b-2 border-black">
+      {/* 2. SARVAM MULTILINGUAL INDIC VOICE AGENTS FLEET */}
+      <div className="bg-white/80 backdrop-blur-2xl rounded-3xl p-6 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:border-black/30 hover:shadow-lg transition-all duration-200">
+        <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-black/10">
           <div>
-            <h3 className="text-xs font-black text-black uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-black stroke-[2.5]" />
-              Active AI Counselors
+            <h3 className="text-xs font-semibold text-neutral-900 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              Active Indic Personas
             </h3>
-            <p className="text-[11px] text-black/70 font-bold">
-              3 autonomous voice agents online
+            <p className="text-[11px] text-neutral-500">
+              3 autonomous regional voice agents online
             </p>
           </div>
 
           <button
             onClick={onCreateAgent}
-            className="w-8 h-8 rounded-xl bg-[#d6ff38] hover:bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000] hover:shadow-[3px_3px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] flex items-center justify-center cursor-pointer transition-all"
-            title="Create New Agent"
+            className="w-8 h-8 rounded-xl bg-neutral-100 hover:bg-neutral-900 hover:text-white text-neutral-700 border border-black/5 flex items-center justify-center cursor-pointer shadow-xs transition-all active:scale-95"
+            title="Deploy New Persona"
           >
-            <Plus className="w-4 h-4 stroke-[3]" />
+            <Plus className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Agents Mini List with Neo-Brutalist Badges */}
+        {/* Agents Mini List */}
         <div className="space-y-2.5">
-          {agents.slice(0, 3).map((agent, index) => {
-            const avatarBgs = [
-              "bg-[#c084fc] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
-              "bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]",
-              "bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]"
-            ];
-            const colorClass = avatarBgs[index % avatarBgs.length];
-
-            return (
-              <div
-                key={agent.id}
-                className="p-2.5 rounded-xl bg-white hover:bg-[#d6ff38]/20 border-2 border-black shadow-[2.5px_2.5px_0px_#000000] hover:shadow-[3.5px_3.5px_0px_#000000] hover:-translate-y-0.5 flex items-center justify-between gap-2.5 transition-all duration-150 cursor-default group"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className={`w-8 h-8 rounded-lg ${colorClass} flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform`}>
-                    <Bot className="w-4 h-4 stroke-[2.5]" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="font-black text-black text-xs truncate group-hover:text-black">
-                      {agent.name}
-                    </div>
-                    <div className="text-[10px] text-black/70 font-bold truncate">
-                      {agent.role}
-                    </div>
-                  </div>
+          <div className="p-3.5 rounded-2xl bg-neutral-50/80 hover:bg-white border border-black/5 hover:border-black/20 flex items-center justify-between gap-3 shadow-xs transition-all cursor-default">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-full sarvam-disc-periwinkle flex items-center justify-center shrink-0 shadow-xs">
+                <div className="w-2 h-2 rounded-full bg-white" />
+              </div>
+              <div className="min-w-0">
+                <div className="font-semibold text-neutral-900 text-xs truncate">
+                  Ritu • Hindi Admissions
                 </div>
-
-                <div className="text-right shrink-0">
-                  <span className="text-xs font-mono font-black text-black block">
-                    {agent.callsToday}
-                  </span>
-                  <span className="text-[9px] text-black/60 font-black uppercase">calls</span>
+                <div className="text-[10px] text-neutral-500 truncate">
+                  North India & NCR Region • Expressive
                 </div>
               </div>
-            );
-          })}
+            </div>
+            <div className="text-right shrink-0">
+              <span className="text-xs font-mono font-semibold text-neutral-900 block">428</span>
+              <span className="text-[9px] text-neutral-400 uppercase">calls</span>
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-neutral-50/80 hover:bg-white border border-black/5 hover:border-black/20 flex items-center justify-between gap-3 shadow-xs transition-all cursor-default">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-full sarvam-disc-peach flex items-center justify-center shrink-0 shadow-xs">
+                <div className="w-2 h-2 rounded-full bg-white" />
+              </div>
+              <div className="min-w-0">
+                <div className="font-semibold text-neutral-900 text-xs truncate">
+                  Neha • Telugu Counseling
+                </div>
+                <div className="text-[10px] text-neutral-500 truncate">
+                  AP & Telangana • EAMCET Cutoffs
+                </div>
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <span className="text-xs font-mono font-semibold text-neutral-900 block">246</span>
+              <span className="text-[9px] text-neutral-400 uppercase">calls</span>
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-neutral-50/80 hover:bg-white border border-black/5 hover:border-black/20 flex items-center justify-between gap-3 shadow-xs transition-all cursor-default">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-full sarvam-disc-sage flex items-center justify-center shrink-0 shadow-xs">
+                <div className="w-2 h-2 rounded-full bg-white" />
+              </div>
+              <div className="min-w-0">
+                <div className="font-semibold text-neutral-900 text-xs truncate">
+                  Ishita • Kannada Support
+                </div>
+                <div className="text-[10px] text-neutral-500 truncate">
+                  Karnataka Region • Hostel & Bus Routes
+                </div>
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <span className="text-xs font-mono font-semibold text-neutral-900 block">168</span>
+              <span className="text-[9px] text-neutral-400 uppercase">calls</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 3. OPERATOR ACTIONS */}
-      <div className="bg-white rounded-2xl p-4.5 border-[2.5px] border-black shadow-[5px_5px_0px_#000000] space-y-3">
-        <h3 className="text-xs font-black text-black uppercase tracking-wider pb-2 border-b-2 border-black flex items-center gap-1.5">
-          <Zap className="w-3.5 h-3.5 text-black stroke-[2.5]" />
+      {/* 3. OPERATOR QUICK BATCHES */}
+      <div className="bg-white/80 backdrop-blur-2xl rounded-3xl p-6 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:border-black/30 hover:shadow-lg transition-all duration-200 space-y-3">
+        <h3 className="text-xs font-semibold text-neutral-900 uppercase tracking-wider pb-3 border-b border-black/10 flex items-center gap-1.5">
+          <Zap className="w-3.5 h-3.5 text-blue-600" />
           Operator Actions
         </h3>
 
-        {testCallSent && (
-          <div className="p-2.5 rounded-xl bg-[#d6ff38] border-2 border-black text-black text-xs font-black flex items-center gap-2 shadow-[2px_2px_0px_#000000] animate-in fade-in duration-200">
-            <CheckCircle2 className="w-4 h-4 text-black stroke-[3]" />
-            <span>Test call triggered to your phone!</span>
-          </div>
-        )}
-
         <button
           onClick={onStartCampaign}
-          className="w-full py-2.5 px-3.5 rounded-xl bg-black hover:bg-[#ffe600] text-white hover:text-black text-xs font-black border-2.5 border-black shadow-[3px_3px_0px_#000000] hover:shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all flex items-center justify-between cursor-pointer"
+          className="w-full py-3 px-4 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer active:scale-95"
         >
           <span className="flex items-center gap-2">
-            <Zap className="w-3.5 h-3.5 text-[#ffe600] group-hover:text-black stroke-[2.5]" />
-            <span>Start Outbound Batch</span>
+            <Zap className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Launch Outbound Batch</span>
           </span>
-          <span className="text-[10px] font-mono bg-[#d6ff38] text-black px-2 py-0.5 rounded-md font-black border border-black">Queue: 194</span>
+          <span className="text-[10px] font-mono bg-white/10 text-neutral-300 px-2.5 py-0.5 rounded-lg border border-white/10">Queue: 194</span>
         </button>
 
         <button
           onClick={onUploadKnowledge}
-          className="w-full py-2.5 px-3.5 rounded-xl bg-white hover:bg-[#00f0ff] text-black border-2.5 border-black text-xs font-black flex items-center justify-between cursor-pointer shadow-[3px_3px_0px_#000000] hover:shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all"
+          className="w-full py-3 px-4 rounded-2xl bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-black/5 text-xs font-semibold flex items-center justify-between cursor-pointer transition-all active:scale-95"
         >
           <span className="flex items-center gap-2">
-            <Upload className="w-3.5 h-3.5 text-black stroke-[2.5]" />
+            <Upload className="w-3.5 h-3.5 text-neutral-500" />
             <span>Upload Prospectus PDF</span>
           </span>
-          <span className="text-[10px] font-black text-black bg-[#c084fc] px-2 py-0.5 rounded-md border border-black shadow-[1px_1px_0px_#000000]">Vector RAG</span>
+          <span className="text-[10px] font-medium text-neutral-500 bg-white px-2 py-0.5 rounded-md border border-black/5">Vector RAG</span>
         </button>
       </div>
     </div>

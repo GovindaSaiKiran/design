@@ -1,30 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import confetti from "canvas-confetti";
 import {
   Search,
-  Download,
-  Filter,
-  PhoneCall,
-  PhoneIncoming,
-  PhoneOutgoing,
-  Clock,
-  Calendar,
   CheckCircle2,
+  Clock,
   XCircle,
-  AlertCircle,
-  User,
+  PhoneIncoming,
+  Download,
+  Play,
+  PhoneCall,
   GraduationCap,
   Sparkles,
-  ArrowUpDown,
-  FileSpreadsheet,
-  FileText,
   ExternalLink,
-  MessageSquare,
-  ChevronRight,
-  Play,
-  Volume2
+  ChevronDown,
+  Globe
 } from "lucide-react";
 import InteractiveAudioPlayerModal from "./InteractiveAudioPlayerModal";
 
@@ -44,72 +34,77 @@ export interface StudentLeadItem {
   summary: string;
   transcriptSnippet: string;
   actionTaken: string;
+  lang?: string;
 }
 
 export const mockStudentLeads: StudentLeadItem[] = [
-  // 1. INTERESTED LEADS
+  // 1. INTERESTED ENROLLEES
   {
     id: "lead-01",
-    name: "Rahul Sharma",
-    phone: "+91 98401 77120",
-    course: "B.Tech Computer Science & Engg",
+    name: "Rahul Verma",
+    phone: "+91 98401 55219",
+    course: "B.Tech Computer Science (AI & ML)",
     category: "interested",
-    meritScore: "CBSE 94% • High Intent",
-    agentName: "Maya (Admissions AI)",
+    meritScore: "94.2% PCM • CBSE",
+    agentName: "Ritu (Hindi Admissions)",
     callDuration: "3m 42s",
-    timestamp: "2026-09-18 10:45 AM",
-    timeAgo: "15 min ago",
-    summary: "Inquired about CSE (AI & Data Science) cutoffs and hostel fees. Qualified for 35% Chancellor Merit Scholarship. Booked campus visit for Saturday.",
-    transcriptSnippet: "We want to book a campus visit this Saturday to inspect the robotics innovation lab and hostel rooms.",
-    actionTaken: "Campus Visit Confirmed • Brochure Sent via WhatsApp"
+    timestamp: "2026-09-18 11:24 AM",
+    timeAgo: "4 min ago",
+    lang: "Hindi + Eng",
+    summary: "छात्र ने बी.टेक एआई में प्रवेश एवं चांसलर स्कॉलरशिप के लिए पूछताछ की। 35% स्कॉलरशिप हेतु प्री-अप्रूवल दिया गया। शनिवार 11:00 AM पर कैंपस विजिट बुक किया।",
+    transcriptSnippet: "नमस्ते राहुल जी! आपके 12th PCM में 94.2% मार्क्स के आधार पर 35% चांसलर मेरिट स्कॉलरशिप स्वीकृत कर दी गई है।",
+    actionTaken: "Pre-Approved 35% Scholarship • Campus Tour Pass Emailed"
   },
   {
     id: "lead-02",
-    name: "Ananya Iyer",
-    phone: "+91 94450 99812",
-    course: "MBA in FinTech & Business Analytics",
+    name: "Sneha Reddy",
+    phone: "+91 98401 77120",
+    course: "MBA FinTech & Business Analytics",
     category: "interested",
-    meritScore: "CAT 98.2%ile • Qualified",
-    agentName: "Maya (Admissions AI)",
-    callDuration: "4m 12s",
-    timestamp: "2026-09-18 10:20 AM",
-    timeAgo: "40 min ago",
-    summary: "Detailed discussion on average placement packages (highest ₹44 LPA) and corporate recruiters. Ready to pay seat reservation token fee.",
-    transcriptSnippet: "The placement track record for FinTech is excellent. Please send the token payment link to my email.",
-    actionTaken: "Fee Link Generated • Counseling Slot Assigned"
+    meritScore: "CAT 88.5 Percentile",
+    agentName: "Neha (Telugu Counseling)",
+    callDuration: "2m 58s",
+    timestamp: "2026-09-18 11:15 AM",
+    timeAgo: "12 min ago",
+    lang: "Telugu + Eng",
+    summary: "విద్యార్థి ఎంబీఏ ఫిన్‌టెక్ ఫీజు మరియు 3-విడతల సున్నా వడ్డీ ఈఎంఐ ప్లాన్ గురించి ఆరా తీశారు. టోకెన్ అడ్మిషన్ ఫీజు చెల్లించడానికి లింక్ పంపబడింది.",
+    transcriptSnippet: "నమస్కారం స్నేహ గారు! ఎంబీఏ ఫిన్‌టెక్ 3-విడతల ఫీజు వివరాలు మరియు బ్రోచర్ మీ వాట్సాప్‌కు పంపించాము.",
+    actionTaken: "EMI Payment Link Sent • Counseling Slot Booked"
   },
   {
     id: "lead-03",
-    name: "Swati Deshmukh",
-    phone: "+91 91760 88231",
-    course: "B.Tech Electronics & VLSI",
+    name: "Priya Rao",
+    phone: "+91 91760 33412",
+    course: "B.Tech Electronics & VLSI Design",
     category: "interested",
-    meritScore: "State CET Rank 1,420",
-    agentName: "Priya (Admissions AI)",
-    callDuration: "2m 58s",
-    timestamp: "2026-09-18 09:55 AM",
-    timeAgo: "1h 05m ago",
-    summary: "Inquired regarding semiconductor lab facilities and NVIDIA edge computing center. Very satisfied with fee installment breakdown.",
-    transcriptSnippet: "Thank you for explaining the semester fee slabs and scholarship options. We will complete the registration online.",
-    actionTaken: "Prospectus Dispatched • Application In-Progress"
+    meritScore: "KCET Rank 4,210",
+    agentName: "Ishita (Kannada Support)",
+    callDuration: "3m 12s",
+    timestamp: "2026-09-18 10:55 AM",
+    timeAgo: "32 min ago",
+    lang: "Kannada",
+    summary: "ಇಂಜಿನಿಯರಿಂಗ್ ವಿಎಲ್‌ಎಸ್‌ಐ ಸೀಟ್ ಮತ್ತು ಹಾಸ್ಟೆಲ್ ಸಿಂಗಲ್ ಎಸಿ ರೂಮ್ ಲಭ್ಯತೆ ದೃಢಪಡಿಸಲಾಗಿದೆ. ₹10,000 ಟೋಕನ್ ಸೀಟ್ ಕಾಯ್ದಿರಿಸುವಿಕೆ ಪೂರ್ಣಗೊಂಡಿದೆ.",
+    transcriptSnippet: "ನಮಸ್ಕಾರ ಪ್ರಿಯಾ! ವಿಎಲ್‌ಎಸ್‌ಐ ಕೋರ್ಸ್ ಸೀಟ್ ಬುಕಿಂಗ್ ದೃಢಪಡಿಸಲಾಗಿದೆ. ಹಾಸ್ಟೆಲ್ ರೂಮ್ ನಂಬರ್ 302 ನಿಗದಿಪಡಿಸಲಾಗಿದೆ.",
+    actionTaken: "Token Reservation Completed • Hostel Pass Issued"
   },
   {
     id: "lead-04",
-    name: "Arnav Khurana",
-    phone: "+91 97110 54321",
-    course: "B.Des Product & UX Design",
+    name: "Tanushree Das",
+    phone: "+91 98300 44192",
+    course: "B.Des User Experience & Interaction",
     category: "interested",
-    meritScore: "UCEED Rank 380",
-    agentName: "Maya (Admissions AI)",
-    callDuration: "3m 15s",
-    timestamp: "2026-09-18 09:30 AM",
-    timeAgo: "1h 30m ago",
-    summary: "Interested in design studio facilities, portfolio submission deadlines, and hostel accommodation. Scheduled one-on-one portfolio review.",
-    transcriptSnippet: "I have my design portfolio ready and want to know the last date for submitting for the merit waiver.",
-    actionTaken: "Portfolio Review Scheduled • Campus Pass Sent"
+    meritScore: "UCEED Rank 890",
+    agentName: "Suhani (Bengali Advisor)",
+    callDuration: "2m 30s",
+    timestamp: "2026-09-18 10:42 AM",
+    timeAgo: "45 min ago",
+    lang: "Bengali",
+    summary: "ডিজাইন পোর্টফোলিও রিভিউ এবং স্কলারশিপ স্ল্যাব ব্যাখ্যা করা হয়েছে। আগামীকাল প্রধান অধ্যাপকের সাথে অনলাইন পোর্টফোলিও রাউন্ড নির্ধারিত।",
+    transcriptSnippet: "নমস্কার তনুশ্রী! ইউসিড র্যাঙ্ক অনুযায়ী আপনার ২৫% স্কলারশিপ নিশ্চিত হয়েছে। আগামীকাল সকাল ১০টায় পোর্টফোলিও কল হবে।",
+    actionTaken: "Design Portfolio Interview Booked • Catalog Sent"
   },
 
-  // 2. CALL LATER / FOLLOW-UP NEEDED
+  // 2. CALL LATER / FOLLOW-UP
   {
     id: "lead-05",
     name: "Gaurav Joshi",
@@ -117,12 +112,13 @@ export const mockStudentLeads: StudentLeadItem[] = [
     course: "B.Tech Mechanical (Robotics)",
     category: "call_later",
     callbackTime: "Today at 5:30 PM",
-    agentName: "Vikram (Counselor AI)",
+    agentName: "Shubh (Hindi Professional)",
     callDuration: "1m 54s",
     timestamp: "2026-09-18 10:11 AM",
     timeAgo: "49 min ago",
-    summary: "Father answered call while traveling. Requested callback after 5:30 PM to discuss college transport bus routes and hostel mess charges.",
-    transcriptSnippet: "I am in office meetings right now. Please give me a call around 5:30 PM this evening so my daughter can also join.",
+    lang: "Hindi",
+    summary: "पिताजी यात्रा के दौरान कॉल पर थे। शाम 5:30 बजे कॉलेज बस रूट एवं मेस मेनू पर विस्तृत चर्चा हेतु कॉलबैक मांगा।",
+    transcriptSnippet: "मैं अभी मीटिंग में हूँ। कृपया शाम 5:30 बजे कॉल करें ताकि मेरी बेटी भी साथ में बात कर सके।",
     actionTaken: "Callback Queued for 5:30 PM • SMS Reminder Scheduled"
   },
   {
@@ -132,103 +128,78 @@ export const mockStudentLeads: StudentLeadItem[] = [
     course: "M.Tech Data Science & AI",
     category: "call_later",
     callbackTime: "Tomorrow at 11:00 AM",
-    agentName: "Priya (Admissions AI)",
+    agentName: "Ritu (Hindi Admissions)",
     callDuration: "1m 18s",
     timestamp: "2026-09-18 09:15 AM",
     timeAgo: "1h 45m ago",
-    summary: "Working professional inquiring about weekend executive classes. Requested call tomorrow morning after checking with company HR for sponsorship.",
+    lang: "English + Hindi",
+    summary: "वर्किंग प्रोफेशनल छात्र। कंपनी एचआर से स्पॉन्सरशिप लेटर कन्फर्म कर कल सुबह 11 बजे दोबारा बात करने का अनुरोध किया।",
     transcriptSnippet: "I need to confirm company tuition sponsorship with our HR team today. Please ring me tomorrow at 11 AM.",
     actionTaken: "Callback Queued for Tomorrow 11 AM • Brochure Emailed"
   },
+
+  // 3. NOT INTERESTED / OPT-OUT
   {
     id: "lead-07",
-    name: "Karthik Raja",
-    phone: "+91 98402 11984",
-    course: "B.Tech Computer Science",
-    category: "call_later",
-    callbackTime: "Sep 20 at 04:00 PM",
-    agentName: "Maya (Admissions AI)",
-    callDuration: "1m 45s",
-    timestamp: "2026-09-18 08:50 AM",
-    timeAgo: "2h 10m ago",
-    summary: "Student is currently appearing for Board improvement exam. Requested follow-up call on Sep 20th after exam concludes.",
-    transcriptSnippet: "My final physics improvement exam is on Friday. Can you please call me Saturday afternoon at 4 PM?",
-    actionTaken: "Auto-Dialer Queued for Sep 20 • Follow-up Active"
-  },
-
-  // 3. NOT INTERESTED / DISQUALIFIED
-  {
-    id: "lead-08",
     name: "Rohan Varma",
     phone: "+91 97890 22345",
     course: "B.Tech Civil Engineering",
     category: "not_interested",
-    disqualifiedReason: "Admitted into State Govt NIT / IIT",
-    agentName: "Priya (Admissions AI)",
+    disqualifiedReason: "Admitted into NIT Trichy (JoSAA Round 2)",
+    agentName: "Ritu (Hindi Admissions)",
     callDuration: "1m 02s",
     timestamp: "2026-09-18 09:40 AM",
     timeAgo: "1h 20m ago",
-    summary: "Student secured seat in NIT Trichy via JoSAA Round 2 counseling. Polite opt-out. Do not call list updated.",
-    transcriptSnippet: "Thank you for calling, but I have already frozen my seat in NIT Trichy in the 2nd counseling round.",
+    lang: "English + Hindi",
+    summary: "छात्र को जोसा राउंड 2 में एनआईटी त्रिची में सीट आवंटित हो गई है। सादर ऑप-आउट अनुरोध। डू नॉट कॉल लिस्ट अपडेट।",
+    transcriptSnippet: "Thank you for calling, but I have already frozen my seat in NIT Trichy in the 2nd JoSAA counseling round.",
     actionTaken: "Marked Opt-Out • Removed from Active Intake Campaign"
   },
   {
-    id: "lead-09",
+    id: "lead-08",
     name: "Pooja Hegde",
     phone: "+91 94441 55678",
     course: "B.Sc Biotechnology",
     category: "not_interested",
-    disqualifiedReason: "Shifted to Medical / NEET Track",
-    agentName: "Maya (Admissions AI)",
+    disqualifiedReason: "Secured MBBS Seat via NEET Counseling",
+    agentName: "Neha (Telugu Counseling)",
     callDuration: "0m 55s",
     timestamp: "2026-09-18 08:30 AM",
     timeAgo: "2h 30m ago",
-    summary: "Applicant decided to pursue MBBS through NEET counseling. Not taking engineering or biotech degree this academic year.",
+    lang: "Telugu + Eng",
+    summary: "నీట్ మెడికల్ కౌన్సెలింగ్ ద్వారా ఎంబీబీఎస్ సీటు ఖరారు చేసుకున్నారు. ఈ సంవత్సరం ఇంజనీరింగ్ అడ్మిషన్ అవసరం లేదు.",
     transcriptSnippet: "I am joining MBBS through state medical counseling, so I won't be taking admission for B.Sc.",
     actionTaken: "Archived • Not Interested Logged"
-  },
-  {
-    id: "lead-10",
-    name: "Suresh Pillai",
-    phone: "+91 91761 99012",
-    course: "B.Tech Mechanical",
-    category: "not_interested",
-    disqualifiedReason: "Location / Relocation Constraints",
-    agentName: "Vikram (Counselor AI)",
-    callDuration: "1m 20s",
-    timestamp: "2026-09-17 04:15 PM",
-    timeAgo: "Yesterday",
-    summary: "Parents unwilling to send student for outstation hostel. Looking exclusively for local colleges in Delhi NCR.",
-    transcriptSnippet: "We are looking for colleges only within Delhi NCR as we don't want our son to stay in a distant hostel.",
-    actionTaken: "Flagged Location Disqualified • Status Updated"
   },
 
   // 4. INBOUND INQUIRIES & ESCALATIONS
   {
-    id: "lead-11",
+    id: "lead-09",
     name: "Anita Roy",
     phone: "+91 98765 11980",
     course: "Lateral Entry (Direct 2nd Year B.Tech)",
     category: "inbound_inquiry",
-    agentName: "Maya (Admissions AI)",
+    agentName: "Ritu (Hindi Admissions)",
     callDuration: "3m 10s",
     timestamp: "2026-09-18 10:39 AM",
     timeAgo: "21 min ago",
-    summary: "Inquired about 3-year Mechanical Diploma credit conversion for lateral entry. Transferred with warm dossier to Chief Admissions Dean.",
-    transcriptSnippet: "I finished my 3-year Mechanical Diploma with 88% and need urgent guidance on direct 2nd-year B.Tech admission.",
+    lang: "Hindi + Eng",
+    summary: "3-वर्षीय मैकेनिकल डिप्लोमा (88%) क्रेडिट ट्रांसफर एवं सीधे द्वितीय वर्ष में प्रवेश संबंधी तत्काल पूछताछ। चीफ डीन को ट्रांसफर किया गया।",
+    transcriptSnippet: "मैंने 88% के साथ डिप्लोमा पूरा किया है। मुझे डायरेक्ट 2nd-year B.Tech एडमिशन की कटऑफ और प्रक्रिया जाननी है।",
     actionTaken: "Warm Handoff to Dean of Admissions • Dossier Transferred"
   },
   {
-    id: "lead-12",
+    id: "lead-10",
     name: "Deepika Sen",
     phone: "+91 91760 88231",
     course: "B.Tech AI & Robotics",
     category: "inbound_inquiry",
-    agentName: "Priya (Admissions AI)",
+    agentName: "Suhani (Bengali Advisor)",
     callDuration: "2m 45s",
     timestamp: "2026-09-18 10:05 AM",
     timeAgo: "55 min ago",
-    summary: "Parent called inquiring about NRI quota fee structure, hostel single AC occupancy, and international exchange programs.",
+    lang: "Bengali + Eng",
+    summary: "এনআরআই কোটা ফি কাঠামো, সিঙ্গেল এসি হোস্টেল এবং আন্তর্জাতিক এক্সচেঞ্জ প্রোগ্রাম সম্পর্কে অভিভাবকের বিশদ অনুসন্ধান।",
     transcriptSnippet: "Is there any additional deposit for the single AC hostel room, and can we pay tuition in US Dollars or INR?",
     actionTaken: "NRI Fee Catalog Sent • Callback Scheduled with Dean"
   }
@@ -268,13 +239,6 @@ export default function LeadSegmentationHub({
     onCategoryChange?.(tab);
   };
 
-  // Counts
-  const countInterested = mockStudentLeads.filter((l) => l.category === "interested").length;
-  const countCallLater = mockStudentLeads.filter((l) => l.category === "call_later").length;
-  const countNotInterested = mockStudentLeads.filter((l) => l.category === "not_interested").length;
-  const countInbound = mockStudentLeads.filter((l) => l.category === "inbound_inquiry").length;
-  const countAll = mockStudentLeads.length;
-
   // Filtered Leads
   const filteredLeads = mockStudentLeads.filter((lead) => {
     if (activeTab === "interested" && lead.category !== "interested") return false;
@@ -292,7 +256,8 @@ export default function LeadSegmentationHub({
         lead.name.toLowerCase().includes(q) ||
         lead.phone.includes(q) ||
         lead.course.toLowerCase().includes(q) ||
-        lead.summary.toLowerCase().includes(q)
+        lead.summary.toLowerCase().includes(q) ||
+        (lead.lang && lead.lang.toLowerCase().includes(q))
       );
     }
 
@@ -310,18 +275,7 @@ export default function LeadSegmentationHub({
   };
 
   const handleQuickDownloadCSV = () => {
-    // Confetti celebration
-    try {
-      confetti({
-        particleCount: 75,
-        spread: 70,
-        origin: { y: 0.8 },
-        colors: ["#6366f1", "#06b6d4", "#10b981", "#f59e0b"]
-      });
-    } catch (e) {}
-
-    // Generate CSV string from filtered list
-    const headers = ["ID", "Student Name", "Phone", "Target Course", "Category", "Merit / Details", "Agent", "Duration", "Summary", "Action Taken"];
+    const headers = ["ID", "Candidate Name", "Phone", "Target Program", "Category", "Merit / Score", "Language", "Voice Agent", "Duration", "AI Summary", "Action Taken"];
     const rows = filteredLeads.map((l) => [
       l.id,
       `"${l.name}"`,
@@ -329,6 +283,7 @@ export default function LeadSegmentationHub({
       `"${l.course}"`,
       l.category,
       `"${l.meritScore || l.callbackTime || l.disqualifiedReason || ''}"`,
+      `"${l.lang || 'Indic'}"`,
       `"${l.agentName}"`,
       l.callDuration,
       `"${l.summary.replace(/"/g, '""')}"`,
@@ -340,7 +295,7 @@ export default function LeadSegmentationHub({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `apex_admissions_${activeTab}_leads_${Date.now()}.csv`);
+    link.setAttribute("download", `apex_indic_${activeTab}_candidates_${Date.now()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -350,37 +305,36 @@ export default function LeadSegmentationHub({
   };
 
   return (
-    <div className="w-full bg-white rounded-2xl p-5 sm:p-6 border-[2.5px] border-black shadow-[6px_6px_0px_#000000] font-sans select-none">
+    <div className="w-full liquid-glass-card rounded-3xl p-6 sm:p-8 font-sans select-none">
       {/* Top Header: Title + Active Filter Status */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-4 border-b-2 border-black">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-black/10">
         <div>
           <div className="flex items-center gap-2.5 mb-1">
-            <h2 className="text-lg sm:text-xl font-black text-black tracking-tight flex items-center gap-2">
-              <span className="w-3 h-3 bg-[#d6ff38] border-2 border-black rounded-full inline-block" />
-              Admissions Call Registry & Leads
+            <h2 className="text-lg sm:text-xl font-semibold text-neutral-900 tracking-tight font-serif-display">
+              Candidate Ingestion & Multilingual Registry
             </h2>
-            <span className="px-3 py-0.5 rounded-full text-xs font-black bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-              {filteredLeads.length} Records
+            <span className="px-3 py-0.5 rounded-full text-[11px] font-semibold bg-neutral-100 text-neutral-700 border border-black/5">
+              {filteredLeads.length} Candidates
             </span>
           </div>
-          <p className="text-xs text-black/70 font-bold">
-            Real-time verified student communications, AI synthesized summaries & 1-click recordings.
+          <p className="text-xs text-neutral-500 font-normal">
+            Real-time Indic voice interactions synthesized in regional dialects with instant audio playback.
           </p>
         </div>
 
-        {/* Quick Filter Reset / Active Pill */}
+        {/* Quick Filter Reset */}
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-black font-black uppercase">Active Filter:</span>
-          <span className="px-3 py-1.5 rounded-xl text-xs font-black capitalize bg-[#00f0ff] text-black border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-black animate-pulse" />
-            {activeTab === "all" ? "All Records" : activeTab.replace("_", " ")}
+          <span className="text-xs text-neutral-400 font-medium">Segment:</span>
+          <span className="px-3 py-1 rounded-full text-xs font-medium capitalize bg-neutral-900 text-white shadow-xs flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            {activeTab === "all" ? "All Candidates" : activeTab.replace("_", " ")}
           </span>
           {activeTab !== "all" && (
             <button
               onClick={() => handleTabClick("all")}
-              className="text-xs bg-black text-[#d6ff38] hover:bg-[#ffe600] hover:text-black border-2 border-black px-2.5 py-1 rounded-lg font-black cursor-pointer ml-1 shadow-[2px_2px_0px_#000000] hover:shadow-[3px_3px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all"
+              className="text-xs text-blue-600 hover:underline font-semibold cursor-pointer ml-1.5"
             >
-              Reset
+              Reset to All
             </button>
           )}
         </div>
@@ -388,167 +342,164 @@ export default function LeadSegmentationHub({
 
       {/* Download Toast Notification */}
       {downloadSuccess && (
-        <div className="mb-4 p-3.5 bg-[#d6ff38] border-2.5 border-black rounded-xl shadow-[4px_4px_0px_#000000] flex items-center justify-between text-xs font-black text-black animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="mb-5 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl shadow-xs flex items-center justify-between text-xs font-semibold text-emerald-900 animate-in fade-in duration-200">
           <div className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-full bg-black text-[#d6ff38] flex items-center justify-center border-2 border-black">
-              <CheckCircle2 className="w-4 h-4 stroke-[3]" />
-            </div>
-            <span>Exported {filteredLeads.length} student leads successfully with CSV report!</span>
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <span>Exported {filteredLeads.length} candidate dossiers successfully with Indic voice logs!</span>
           </div>
-          <span className="text-[11px] font-mono bg-black text-[#d6ff38] px-2.5 py-1 rounded-md font-black border-2 border-black shadow-[2px_2px_0px_#ffffff]">CSV Saved</span>
+          <span className="text-[11px] font-mono bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-md">CSV Saved</span>
         </div>
       )}
 
-      {/* Unified Search, Course Filter & Vibrant Export Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-5">
+      {/* Unified Search, Course Filter & Export Toolbar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-black absolute left-3.5 top-1/2 -translate-y-1/2 stroke-[2.5]" />
+          <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search student name, phone number, or intent..."
-            className="w-full pl-10 pr-3.5 py-2.5 bg-white hover:bg-neutral-50 border-2.5 border-black rounded-xl text-xs font-bold text-black placeholder-neutral-500 shadow-[3px_3px_0px_#000000] focus:shadow-[4px_4px_0px_#d6ff38] focus:bg-white focus:outline-none transition-all"
+            placeholder="Search candidate name, phone, dialect, or query..."
+            className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 hover:bg-white border border-black/10 hover:border-black/25 rounded-xl text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-black focus:outline-none transition-all"
           />
         </div>
 
-        {/* Program Filter & Single Vibrant CSV Export Button */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        {/* Program Filter & Single CSV Export Button */}
+        <div className="flex items-center gap-3 shrink-0">
           <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
-            className="px-3.5 py-2.5 bg-white hover:bg-[#ffe600]/20 border-2.5 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_#000000] focus:outline-none cursor-pointer transition-all"
+            className="px-3.5 py-2.5 bg-neutral-50 hover:bg-white border border-black/10 hover:border-black/25 rounded-xl text-xs font-medium text-neutral-800 focus:outline-none cursor-pointer transition-all"
           >
             <option value="all">All Academic Programs</option>
-            <option value="computer science">B.Tech Computer Science</option>
+            <option value="computer science">B.Tech Computer Science (AI & ML)</option>
             <option value="fintech">MBA FinTech</option>
             <option value="electronics">B.Tech Electronics & VLSI</option>
-            <option value="design">B.Des Design</option>
+            <option value="design">B.Des Interaction Design</option>
             <option value="mechanical">B.Tech Mechanical</option>
           </select>
 
           <button
             onClick={handleQuickDownloadCSV}
-            className="px-4 py-2.5 rounded-xl bg-[#d6ff38] hover:bg-[#c2f820] text-black text-xs font-black border-2.5 border-black shadow-[3px_3px_0px_#000000] hover:shadow-[4px_4px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-xs hover:shadow-md transition-all flex items-center gap-2 cursor-pointer active:scale-95"
             title="Download this filtered list as CSV"
           >
-            <Download className="w-4 h-4 stroke-[3]" />
+            <Download className="w-4 h-4" />
             <span>Export CSV</span>
           </button>
         </div>
       </div>
 
-      {/* Main Leads Table with Neo-Brutalist Headers & Rows */}
-      <div className="overflow-x-auto border-2.5 border-black rounded-xl shadow-[4px_4px_0px_#000000]">
+      {/* Main Leads Table with Clean Modern Borders & Row Highlights */}
+      <div className="overflow-x-auto border border-black/10 rounded-2xl shadow-xs bg-white">
         <table className="w-full text-left text-xs">
-          <thead className="bg-black text-[#d6ff38] font-black uppercase tracking-wider text-[11px] border-b-2.5 border-black">
+          <thead className="bg-neutral-50/90 text-neutral-500 font-semibold border-b border-black/10 uppercase tracking-wider text-[11px]">
             <tr>
-              <th className="py-3.5 px-4">Student Prospect</th>
-              <th className="py-3.5 px-4">Program of Interest</th>
-              <th className="py-3.5 px-4">
+              <th className="py-4 px-5">Candidate Prospect</th>
+              <th className="py-4 px-5">Program & Dialect</th>
+              <th className="py-4 px-5">
                 {activeTab === "interested" ? "Merit / Score" : activeTab === "call_later" ? "Callback Scheduled" : activeTab === "not_interested" ? "Opt-Out Reason" : "Intent Status"}
               </th>
-              <th className="py-3.5 px-4">AI Summary</th>
-              <th className="py-3.5 px-4">Duration</th>
-              <th className="py-3.5 px-4">Action Taken</th>
-              <th className="py-3.5 px-4 text-right">Voice Call</th>
+              <th className="py-4 px-5">AI Synthesis & Transcript</th>
+              <th className="py-4 px-5">Duration</th>
+              <th className="py-4 px-5">Action Taken</th>
+              <th className="py-4 px-5 text-right">Indic Audio</th>
             </tr>
           </thead>
-          <tbody className="divide-y-2 divide-black/20 bg-white">
+          <tbody className="divide-y divide-black/5 bg-transparent">
             {filteredLeads.map((lead) => (
               <tr
                 key={lead.id}
                 onClick={() => onInspectCall?.(lead)}
-                className="hover:bg-[#d6ff38]/15 transition-all duration-150 cursor-pointer group"
+                className="hover:bg-neutral-50/80 transition-all duration-150 cursor-pointer group"
               >
                 {/* Student */}
-                <td className="py-3.5 px-4">
-                  <div className="font-black text-black group-hover:text-black transition-colors text-xs sm:text-sm flex items-center gap-1.5">
+                <td className="py-4 px-5">
+                  <div className="font-semibold text-neutral-900 group-hover:text-blue-600 transition-colors text-xs sm:text-sm flex items-center gap-1.5">
                     {lead.name}
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-black text-black">→</span>
                   </div>
-                  <div className="text-[11px] font-mono text-black/70 flex items-center gap-1 font-bold mt-0.5">
-                    <PhoneCall className="w-3 h-3 text-black stroke-[2.5]" />
+                  <div className="text-[11px] font-mono text-neutral-500 flex items-center gap-1 font-medium mt-0.5">
+                    <PhoneCall className="w-3 h-3 text-neutral-400" />
                     {lead.phone}
                   </div>
                 </td>
 
-                {/* Course */}
-                <td className="py-3.5 px-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white text-black border-2 border-black shadow-[2px_2px_0px_#000000] group-hover:bg-[#ffe600] transition-colors">
-                    <GraduationCap className="w-3.5 h-3.5 text-black stroke-[2.5]" />
+                {/* Course & Dialect */}
+                <td className="py-4 px-5">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-neutral-100 text-neutral-800 border border-black/5">
+                    <GraduationCap className="w-3.5 h-3.5 text-neutral-500" />
                     {lead.course}
                   </span>
+                  {lead.lang && (
+                    <div className="text-[10px] font-medium text-neutral-500 flex items-center gap-1 mt-1">
+                      <Globe className="w-3 h-3 text-blue-500" />
+                      <span>{lead.lang}</span>
+                    </div>
+                  )}
                 </td>
 
-                {/* Status / Detail Column with Neo-Brutalist Badges */}
-                <td className="py-3.5 px-4">
+                {/* Status / Detail Column */}
+                <td className="py-4 px-5">
                   {lead.category === "interested" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-black stroke-[3]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                       {lead.meritScore}
                     </span>
                   )}
                   {lead.category === "call_later" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#ffe600] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-                      <Clock className="w-3.5 h-3.5 text-black stroke-[3]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+                      <Clock className="w-3 h-3 text-amber-600" />
                       {lead.callbackTime}
                     </span>
                   )}
                   {lead.category === "not_interested" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#c084fc] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-                      <XCircle className="w-3.5 h-3.5 text-black stroke-[3]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200">
+                      <XCircle className="w-3 h-3 text-blue-600" />
                       {lead.disqualifiedReason}
                     </span>
                   )}
                   {lead.category === "inbound_inquiry" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-black bg-[#00f0ff] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-                      <PhoneIncoming className="w-3.5 h-3.5 text-black stroke-[3]" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-purple-50 text-purple-800 border border-purple-200">
+                      <PhoneIncoming className="w-3 h-3 text-purple-600" />
                       Inbound Query
                     </span>
                   )}
                 </td>
 
                 {/* Summary */}
-                <td className="py-3.5 px-4 max-w-xs">
-                  <p className="line-clamp-2 text-xs text-black/80 font-bold leading-relaxed group-hover:text-black transition-colors">
+                <td className="py-4 px-5 max-w-xs">
+                  <p className="line-clamp-2 text-xs text-neutral-600 font-normal leading-relaxed group-hover:text-neutral-900 transition-colors">
                     {lead.summary}
                   </p>
                 </td>
 
                 {/* Duration & Time */}
-                <td className="py-3.5 px-4 whitespace-nowrap">
-                  <div className="font-mono font-black text-black text-xs">
+                <td className="py-4 px-5 whitespace-nowrap">
+                  <div className="font-mono font-semibold text-neutral-900 text-xs">
                     {lead.callDuration}
                   </div>
-                  <div className="text-[10px] text-black/70 font-bold">
+                  <div className="text-[10px] text-neutral-400 font-medium">
                     {lead.timeAgo} ({lead.agentName.split(" ")[0]})
                   </div>
                 </td>
 
                 {/* Action Taken */}
-                <td className="py-3.5 px-4 max-w-[190px]">
-                  <span className="text-[11px] font-bold text-black bg-neutral-100 group-hover:bg-white px-2.5 py-1 rounded-md border-2 border-black block truncate transition-colors shadow-[1px_1px_0px_#000000]">
+                <td className="py-4 px-5 max-w-[190px]">
+                  <span className="text-[11px] font-medium text-neutral-700 bg-neutral-100 px-2.5 py-1 rounded-md border border-black/5 block truncate">
                     {lead.actionTaken}
                   </span>
                 </td>
 
-                {/* Action Button: Play Audio Dialogue with Neo-Brutalist Play Button */}
-                <td className="py-3.5 px-4 text-right">
+                {/* Audio Button */}
+                <td className="py-4 px-5 text-right">
                   <button
                     onClick={(e) => handleOpenAudio(lead, e)}
-                    className="px-3.5 py-1.5 rounded-lg bg-[#d6ff38] hover:bg-[#ffe600] text-black text-xs font-black inline-flex items-center gap-1.5 cursor-pointer border-2 border-black shadow-[2.5px_2.5px_0px_#000000] hover:shadow-[3.5px_3.5px_0px_#000000] hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all group/btn"
-                    title="Play full AI call audio recording & transcript"
+                    className="px-3.5 py-1.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-medium inline-flex items-center gap-1.5 cursor-pointer shadow-xs transition-all active:scale-95"
+                    title="Play Indic AI audio recording & transcript"
                   >
-                    <Play className="w-3 h-3 fill-black text-black group-hover/btn:scale-110 transition-transform stroke-[2.5]" />
+                    <Play className="w-3 h-3 fill-white" />
                     <span>Play</span>
-                    {/* Mini animated audio bars on hover */}
-                    <span className="hidden group-hover/btn:inline-flex items-end gap-0.5 h-3 ml-0.5">
-                      <span className="w-0.5 h-2 bg-black animate-pulse" />
-                      <span className="w-0.5 h-3 bg-black animate-bounce" />
-                      <span className="w-0.5 h-1.5 bg-black animate-pulse" />
-                    </span>
                   </button>
                 </td>
               </tr>
@@ -557,9 +508,9 @@ export default function LeadSegmentationHub({
         </table>
 
         {filteredLeads.length === 0 && (
-          <div className="text-center py-10 text-black">
-            <p className="font-black text-sm">No student leads found matching this filter.</p>
-            <p className="text-xs text-black/60 font-bold mt-1">Try resetting your search query or choosing another category card above.</p>
+          <div className="text-center py-12 text-neutral-500">
+            <p className="font-semibold text-sm">No candidate records found matching this filter.</p>
+            <p className="text-xs text-neutral-400 mt-1">Try resetting your search query or choosing another segment card above.</p>
           </div>
         )}
       </div>

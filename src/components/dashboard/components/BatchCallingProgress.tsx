@@ -35,19 +35,19 @@ export default function BatchCallingProgress({
   const remainingCount = campaign.totalContacts - campaign.completedCount;
 
   return (
-    <div className="w-full bg-white rounded-2xl p-5 sm:p-6 border-3 border-black shadow-[6px_6px_0px_#000000] select-none">
+    <div className="w-full bg-white/80 backdrop-blur-2xl rounded-3xl p-7 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:border-black/20 transition-all duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b-2 border-black">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-black/10">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-3 h-3 rounded-full bg-[#d6ff38] border-2 border-black inline-block animate-ping" />
-            <h3 className="text-base sm:text-lg font-black text-black tracking-tight uppercase">
-              Active Outbound Batch Calling Campaign
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-ping" />
+            <h3 className="text-lg font-semibold text-neutral-900 tracking-tight">
+              Active Outbound Batch Telephony
             </h3>
           </div>
-          <p className="text-xs text-black/70">
-            <strong className="bg-[#d6ff38] text-black px-2 py-0.5 rounded border border-black font-black mr-1.5">{campaign.title}</strong>
-            Target Audience: <span className="text-black font-black">{campaign.targetAudience}</span>
+          <p className="text-xs text-neutral-500">
+            <strong className="bg-neutral-100 text-neutral-800 px-2 py-0.5 rounded-md border border-black/5 font-semibold mr-1.5">{campaign.title}</strong>
+            Target Segment: <span className="text-neutral-800 font-medium">{campaign.targetAudience}</span>
           </p>
         </div>
 
@@ -55,124 +55,121 @@ export default function BatchCallingProgress({
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setIsRunning(!isRunning)}
-            className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] flex items-center gap-1.5 cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all border shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 ${
               isRunning
-                ? "bg-[#ffe600] text-black"
-                : "bg-[#d6ff38] text-black"
+                ? "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100"
+                : "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
             }`}
           >
             {isRunning ? (
               <>
-                <Pause className="w-4 h-4 stroke-[3]" />
+                <Pause className="w-3.5 h-3.5 text-amber-700" />
                 <span>Pause Batch</span>
               </>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-current stroke-[3]" />
-                <span>Resume Calling</span>
+                <Play className="w-3.5 h-3.5 fill-current text-emerald-700" />
+                <span>Resume Dialing</span>
               </>
             )}
           </button>
 
           <button
             onClick={onUploadNewBatch}
-            className="px-4 py-2 rounded-xl bg-[#00f0ff] hover:bg-[#38bdf8] text-black text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
           >
-            <Upload className="w-4 h-4 stroke-[3]" />
+            <Upload className="w-3.5 h-3.5" />
             <span>Upload Next List</span>
           </button>
         </div>
       </div>
 
       {/* Progress Bar & Breakdown */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between text-xs font-bold mb-2">
-          <span className="text-black font-black">
-            Calling Progress: {campaign.completedCount.toLocaleString()} / {campaign.totalContacts.toLocaleString()} Contacts Dialed
+      <div className="mb-7">
+        <div className="flex items-center justify-between text-xs font-medium mb-2.5">
+          <span className="text-neutral-700">
+            Calling Progress: <span className="font-semibold text-neutral-900">{campaign.completedCount.toLocaleString()}</span> / {campaign.totalContacts.toLocaleString()} Contacts Dialed
           </span>
-          <span className="text-black bg-[#d6ff38] px-3 py-0.5 rounded-md border-2 border-black font-black shadow-[2px_2px_0px_#000000]">
-            {completedPct}% COMPLETED
+          <span className="text-emerald-700 bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-200 text-xs font-semibold">
+            {completedPct}% Completed
           </span>
         </div>
 
         {/* Multi-Segment Color Progress Bar */}
-        <div className="w-full h-4 bg-slate-200 border-2 border-black rounded-full overflow-hidden flex shadow-[2px_2px_0px_#000000]">
-          {/* Interested / Completed */}
+        <div className="w-full h-3 bg-neutral-100 border border-black/5 rounded-full overflow-hidden flex p-0.5">
           <div
             style={{ width: `${completedPct * 0.65}%` }}
-            className="h-full bg-[#d6ff38] border-r-2 border-black transition-all duration-500"
+            className="h-full bg-emerald-500 rounded-l-full transition-all duration-500"
             title="Interested Students"
           />
-          {/* Call Later */}
           <div
             style={{ width: `${completedPct * 0.23}%` }}
-            className="h-full bg-[#ffe600] border-r-2 border-black transition-all duration-500"
-            title="Call Later Scheduled"
+            className="h-full bg-amber-400 transition-all duration-500"
+            title="Callbacks Scheduled"
           />
-          {/* Not Interested */}
           <div
             style={{ width: `${completedPct * 0.12}%` }}
-            className="h-full bg-[#ff8080] border-r-2 border-black transition-all duration-500"
+            className="h-full bg-rose-400 rounded-r-full transition-all duration-500"
             title="Not Interested / Opt-Out"
           />
         </div>
 
         {/* Progress Legend */}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-bold text-black mt-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-neutral-600 mt-4 pt-2">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#d6ff38] border border-black inline-block" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
             <span>Interested & Enrolling (428)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#ffe600] border border-black inline-block" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" />
             <span>Callbacks Scheduled (194)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#ff8080] border border-black inline-block" />
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block" />
             <span>Not Interested (132)</span>
           </div>
-          <div className="flex items-center gap-1.5 text-black font-mono text-[11px] font-black">
-            <span>Remaining: {remainingCount}</span>
+          <div className="flex items-center gap-1.5 text-neutral-700 font-mono text-xs font-medium">
+            <span>Remaining in Queue: {remainingCount}</span>
           </div>
         </div>
       </div>
 
       {/* Concurrent AI Agents Telephony Status */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-        <div className="flex items-center gap-3 bg-[#f8fafc] p-3.5 rounded-xl border-2 border-black shadow-[3px_3px_0px_#000000]">
-          <div className="w-10 h-10 rounded-xl bg-[#c084fc] border-2 border-black flex items-center justify-center font-black text-black shrink-0 shadow-[2px_2px_0px_#000000]">
-            <Bot className="w-5 h-5 stroke-[2.5]" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="flex items-center gap-3 bg-neutral-50/80 p-4 rounded-2xl border border-black/5 hover:border-black/15 transition-all">
+          <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 border border-purple-200 flex items-center justify-center font-semibold shrink-0">
+            <Bot className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs font-black text-black">Maya AI (Line 1)</div>
-            <div className="text-[11px] text-black font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#d6ff38] border border-black animate-pulse" />
+            <div className="text-xs font-semibold text-neutral-900">Maya AI (Line 1)</div>
+            <div className="text-[11px] text-neutral-500 flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               On Call: B.Tech CSE Lead
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-[#f8fafc] p-3.5 rounded-xl border-2 border-black shadow-[3px_3px_0px_#000000]">
-          <div className="w-10 h-10 rounded-xl bg-[#00f0ff] border-2 border-black flex items-center justify-center font-black text-black shrink-0 shadow-[2px_2px_0px_#000000]">
-            <Bot className="w-5 h-5 stroke-[2.5]" />
+        <div className="flex items-center gap-3 bg-neutral-50/80 p-4 rounded-2xl border border-black/5 hover:border-black/15 transition-all">
+          <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 border border-blue-200 flex items-center justify-center font-semibold shrink-0">
+            <Bot className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs font-black text-black">Priya AI (Line 2)</div>
-            <div className="text-[11px] text-black font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#d6ff38] border border-black animate-pulse" />
+            <div className="text-xs font-semibold text-neutral-900">Priya AI (Line 2)</div>
+            <div className="text-[11px] text-neutral-500 flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               On Call: MBA FinTech Inquiry
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 bg-[#f8fafc] p-3.5 rounded-xl border-2 border-black shadow-[3px_3px_0px_#000000]">
-          <div className="w-10 h-10 rounded-xl bg-[#ffe600] border-2 border-black flex items-center justify-center font-black text-black shrink-0 shadow-[2px_2px_0px_#000000]">
-            <Bot className="w-5 h-5 stroke-[2.5]" />
+        <div className="flex items-center gap-3 bg-neutral-50/80 p-4 rounded-2xl border border-black/5 hover:border-black/15 transition-all">
+          <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 border border-amber-200 flex items-center justify-center font-semibold shrink-0">
+            <Bot className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-xs font-black text-black">Vikram AI (Line 3)</div>
-            <div className="text-[11px] text-black font-bold flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#00f0ff] border border-black" />
+            <div className="text-xs font-semibold text-neutral-900">Vikram AI (Line 3)</div>
+            <div className="text-[11px] text-neutral-500 flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
               Dialing Next Number in Queue
             </div>
           </div>

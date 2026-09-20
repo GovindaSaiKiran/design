@@ -11,5 +11,5 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="min-h-screen bg-[#f6f8fc]">{children}</div>;
+  return <div className="min-h-screen bg-[#fbfbfd] text-slate-900 antialiased selection:bg-slate-900 selection:text-white">{children}</div>;
 }

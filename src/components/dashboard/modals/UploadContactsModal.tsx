@@ -14,7 +14,7 @@ export default function UploadContactsModal({
   onClose,
   onContactsUploaded,
 }: UploadContactsModalProps) {
-  const [fileName, setFileName] = useState("College_Applicants_And_Inquiries_Q3.csv");
+  const [fileName, setFileName] = useState("JoSAA_High_Percentile_Applicants_2026.csv");
   const [isUploaded, setIsUploaded] = useState(false);
 
   if (!isOpen) return null;
@@ -28,60 +28,61 @@ export default function UploadContactsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-md bg-white rounded-3xl border-4 border-black shadow-[10px_10px_0px_#000000] p-6 sm:p-7 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-in fade-in duration-200 select-none">
+      <div className="relative w-full max-w-md bg-white rounded-3xl border border-black/15 shadow-2xl p-6 sm:p-8 overflow-hidden text-neutral-900">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b-3 border-black">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-[#d6ff38] text-black border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_#000000]">
-              <Upload className="w-6 h-6 stroke-[2.5]" />
+        <div className="flex items-center justify-between pb-5 border-b border-black/10">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-900 text-white flex items-center justify-center shadow-md">
+              <Upload className="w-6 h-6 stroke-[1.8]" />
             </div>
             <div>
-              <h3 className="text-xl font-black text-black uppercase tracking-tight">
-                Upload Student List
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 font-serif">~ 𑁍 Candidate Ingestion 𑁍 ~</div>
+              <h3 className="font-serif-display text-2xl font-normal text-neutral-900 tracking-tight">
+                Import Candidate Register
               </h3>
-              <p className="text-xs font-bold text-black/70">
-                Import CSV, XLSX student inquiry records
+              <p className="text-xs text-neutral-500">
+                Import CSV / Excel applicant files with Indic phoneme tags
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-white hover:bg-[#ff8080] text-black border-2 border-black shadow-[2px_2px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5 stroke-[2.5]" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Dropzone */}
-        <div className="my-5 p-6 rounded-2xl border-3 border-dashed border-black bg-[#ffe600]/20 text-center cursor-pointer shadow-[4px_4px_0px_#000000]">
-          <FileSpreadsheet className="w-10 h-10 text-black mx-auto mb-2 animate-bounce stroke-[2]" />
-          <div className="font-black text-black text-sm">
+        <div className="my-6 p-6 rounded-2xl border-2 border-dashed border-black/20 bg-[#fbfbfd] hover:bg-neutral-100/70 text-center cursor-pointer transition-all">
+          <FileSpreadsheet className="w-10 h-10 text-neutral-400 mx-auto mb-2.5 stroke-[1.5]" />
+          <div className="font-semibold text-neutral-900 text-sm font-mono">
             {fileName}
           </div>
-          <p className="text-xs font-bold text-black/70 mt-1">
-            450 valid student phone numbers detected with names, target courses & PCM scores
+          <p className="text-xs text-neutral-500 mt-1">
+            450 valid Indian phone numbers detected with PCM Board scores, target branches & parent contacts
           </p>
-          <span className="inline-block mt-3 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-[#d6ff38] text-black border-2 border-black shadow-[2px_2px_0px_#000000]">
-            Auto Mapping: Phone, Name, Target Course
+          <span className="inline-block mt-3 px-3 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            Auto-Mapped: Phone (+91), Candidate Name, PCM %, Language Preference
           </span>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t-2 border-black">
+        <div className="flex items-center justify-between pt-5 border-t border-black/10">
           <button
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-white hover:bg-slate-100 border-2 border-black shadow-[3px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl text-xs font-medium text-neutral-700 bg-neutral-100 hover:bg-neutral-200 border border-black/5 transition-all cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             onClick={handleUpload}
-            className="px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-black bg-[#d6ff38] hover:bg-[#bbf01b] border-3 border-black shadow-[4px_4px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#000000] inline-flex items-center gap-1.5 cursor-pointer transition-all"
+            className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white bg-neutral-900 hover:bg-neutral-800 shadow-md inline-flex items-center gap-2 cursor-pointer transition-all active:scale-95"
           >
-            <Check className="w-4 h-4 stroke-[3]" />
+            <Check className="w-4 h-4" />
             <span>{isUploaded ? "Importing..." : "Confirm & Import 450 Leads"}</span>
           </button>
         </div>
