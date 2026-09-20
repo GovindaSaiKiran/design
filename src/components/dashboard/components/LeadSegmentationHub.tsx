@@ -392,9 +392,9 @@ export default function LeadSegmentationHub({
       </div>
 
       {/* Main Leads Table with Clean Modern Borders & Row Highlights */}
-      <div className="overflow-x-auto border border-black/10 rounded-2xl shadow-xs bg-white">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-neutral-50/90 text-neutral-500 font-semibold border-b border-black/10 uppercase tracking-wider text-[11px]">
+      <div className="overflow-x-auto border border-black/10 rounded-2xl shadow-sm liquid-glass-subtle mt-4">
+        <table className="w-full text-left text-xs whitespace-nowrap">
+          <thead className="bg-white/40 text-neutral-500 font-semibold border-b border-black/10 uppercase tracking-wider text-[11px] backdrop-blur-sm">
             <tr>
               <th className="py-4 px-5">Candidate Prospect</th>
               <th className="py-4 px-5">Program & Dialect</th>
@@ -468,7 +468,7 @@ export default function LeadSegmentationHub({
                 </td>
 
                 {/* Summary */}
-                <td className="py-4 px-5 max-w-xs">
+                <td className="py-4 px-5 min-w-[250px] whitespace-normal">
                   <p className="line-clamp-2 text-xs text-neutral-600 font-normal leading-relaxed group-hover:text-neutral-900 transition-colors">
                     {lead.summary}
                   </p>

@@ -148,7 +148,7 @@ export default function LiveOperationsCompactCard({
       </div>
 
       {/* 2. SARVAM MULTILINGUAL INDIC VOICE AGENTS FLEET */}
-      <div className="bg-white/80 backdrop-blur-2xl rounded-3xl p-6 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:border-black/30 hover:shadow-lg transition-all duration-200">
+      <div className="liquid-glass-card rounded-3xl p-6 hover:shadow-lg transition-all duration-200">
         <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-black/10">
           <div>
             <h3 className="text-xs font-semibold text-neutral-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -234,7 +234,7 @@ export default function LiveOperationsCompactCard({
       </div>
 
       {/* 3. OPERATOR QUICK BATCHES */}
-      <div className="bg-white/80 backdrop-blur-2xl rounded-3xl p-6 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:border-black/30 hover:shadow-lg transition-all duration-200 space-y-3">
+      <div className="liquid-glass-card rounded-3xl p-6 hover:shadow-lg transition-all duration-200 space-y-3 mt-6">
         <h3 className="text-xs font-semibold text-neutral-900 uppercase tracking-wider pb-3 border-b border-black/10 flex items-center gap-1.5">
           <Zap className="w-3.5 h-3.5 text-blue-600" />
           Operator Actions
