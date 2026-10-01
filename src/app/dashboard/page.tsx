@@ -1,5 +1,6 @@
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import NeoBrutalistDashboard from "@/components/dashboard/NeoBrutalistDashboard";
 
 export default function DashboardPage() {
-  return <DashboardShell />;
+  return <NeoBrutalistDashboard />;
 }
+

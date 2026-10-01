@@ -214,35 +214,101 @@
   transform: translateY(-2px);
 }
 
-/* Authentic Complete Frosted Crystal Glassmorphism */
+/* Authentic Complete Frosted Crystal Glassmorphism matching Landing Page */
 .dynamic-island-glass {
   background: rgba(255, 255, 255, 0.22);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   border: 1px solid rgba(255, 255, 255, 0.42);
   box-shadow: 
-    0 16px 36px -10px rgba(0, 15, 40, 0.18),
-    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 16px 36px -10px rgba(0, 20, 60, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.18),
     inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.75),
     inset 0 -1px 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-width 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: max-width, background-color, border-color, box-shadow, transform;
+  transform: translateZ(0);
 }
 
-.dynamic-island-glass:hover {
-  background: rgba(255, 255, 255, 0.32);
-  border-color: rgba(255, 255, 255, 0.6);
+.dynamic-island-shell {
+  transition: max-width 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: max-width, background-color, border-color, box-shadow, transform;
+  transform: translateZ(0);
+}
+
+.dynamic-island-hero {
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow: 
-    0 22px 45px -10px rgba(0, 15, 40, 0.24),
-    0 0 25px 2px rgba(255, 255, 255, 0.3),
-    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.25);
+    0 16px 36px -10px rgba(0, 25, 75, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(0);
+}
+
+.dynamic-island-hero:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 
+    0 20px 42px -10px rgba(0, 25, 75, 0.28),
+    0 0 25px 2px rgba(255, 255, 255, 0.25),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.9);
+}
+
+.dynamic-island-scrolled {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(36px) saturate(210%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 
+    0 22px 50px -8px rgba(15, 23, 42, 0.16),
+    0 8px 20px -4px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(15, 23, 42, 0.06),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 1px 0 rgba(15, 23, 42, 0.04);
+  transform: translateY(-16px);
+}
+
+@media (min-width: 640px) {
+  .dynamic-island-scrolled {
+    transform: translateY(-24px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .dynamic-island-scrolled {
+    transform: translateY(-34px);
+  }
+}
+
+.dynamic-island-scrolled:hover {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(15, 23, 42, 0.18);
+  box-shadow: 
+    0 26px 58px -8px rgba(15, 23, 42, 0.20),
+    0 10px 24px -4px rgba(15, 23, 42, 0.10),
+    0 0 0 1px rgba(15, 23, 42, 0.09),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1);
 }
 
 /* Apple Dynamic Island Glassmorphism */
 .apple-dynamic-island {
-  background: rgba(13, 15, 20, 0.92);
-  backdrop-filter: blur(36px) saturate(220%);
-  -webkit-backdrop-filter: blur(36px) saturate(220%);
+  background: rgba(10, 14, 26, 0.88);
+  backdrop-filter: blur(32px) saturate(220%);
+  -webkit-backdrop-filter: blur(32px) saturate(220%);
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 
     0 20px 48px -8px rgba(0, 0, 0, 0.45),
@@ -846,6 +912,179 @@
 .font-serif-display {
   font-family: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   letter-spacing: -0.02em;
+}
+
+/* ========================================================================= */
+/* GEMINI / APPLE INTELLIGENCE FLUID AURA ANIMATIONS FOR VOICE CARDS         */
+/* ========================================================================= */
+
+@keyframes liquidAuraSway {
+  0% {
+    transform: translate3d(-10%, 3px, 0) scaleX(0.94) scaleY(0.92);
+    opacity: 0.75;
+  }
+  25% {
+    transform: translate3d(8%, -2px, 0) scaleX(1.15) scaleY(1.1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translate3d(12%, 1px, 0) scaleX(1.04) scaleY(1.02);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translate3d(-5%, -2px, 0) scaleX(1.18) scaleY(1.14);
+    opacity: 0.98;
+  }
+  100% {
+    transform: translate3d(-10%, 3px, 0) scaleX(0.94) scaleY(0.92);
+    opacity: 0.75;
+  }
+}
+
+@keyframes liquidCorePulse {
+  0% {
+    transform: translate3d(-6%, 1px, 0) scaleX(0.95) scaleY(0.95);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(8%, -2px, 0) scaleX(1.22) scaleY(1.2);
+    opacity: 1;
+    filter: brightness(1.25);
+  }
+  100% {
+    transform: translate3d(-6%, 1px, 0) scaleX(0.95) scaleY(0.95);
+    opacity: 0.85;
+  }
+}
+
+@keyframes specularRimSweep {
+  0% {
+    transform: scaleX(0.75) translate3d(-15%, 0, 0);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleX(1.1) translate3d(10%, 0, 0);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scaleX(0.75) translate3d(-15%, 0, 0);
+    opacity: 0.45;
+  }
+}
+
+@keyframes activeVoiceGlow {
+  0%, 100% {
+    filter: brightness(1.2) drop-shadow(0 -4px 16px currentColor);
+    transform: scaleY(1.1) scaleX(1.05);
+  }
+  50% {
+    filter: brightness(1.5) drop-shadow(0 -8px 24px currentColor);
+    transform: scaleY(1.3) scaleX(1.15);
+  }
+}
+
+.animate-liquid-aura {
+  animation: liquidAuraSway 4.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform, opacity;
+}
+
+.animate-liquid-core {
+  animation: liquidCorePulse 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform, opacity, filter;
+}
+
+.animate-specular-sweep {
+  animation: specularRimSweep 3.8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-voice-active-glow {
+  animation: activeVoiceGlow 1.8s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+/* ========================================================================= */
+/* HANGING CLOTHESLINE CARD SWAY ANIMATIONS (IMAGE 1 TEMPLATE)               */
+/* ========================================================================= */
+
+@keyframes hangSwayLeft {
+  0%, 100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(-3.5deg);
+  }
+}
+
+@keyframes hangSwayRight {
+  0%, 100% {
+    transform: rotate(6deg);
+  }
+  50% {
+    transform: rotate(3.5deg);
+  }
+}
+
+@keyframes hangSwayCenter {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0px);
+  }
+  50% {
+    transform: rotate(0.8deg) translateY(-2px);
+  }
+}
+
+.animate-sway-left {
+  transform-origin: top center;
+  animation: hangSwayLeft 6.5s ease-in-out infinite;
+}
+
+.animate-sway-right {
+  transform-origin: top center;
+  animation: hangSwayRight 7s ease-in-out infinite;
+}
+
+.animate-sway-center {
+  transform-origin: top center;
+  animation: hangSwayCenter 6s ease-in-out infinite;
+}
+
+@keyframes hangSwayLeftStrong {
+  0%, 100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(-9deg);
+  }
+}
+
+@keyframes hangSwayRightStrong {
+  0%, 100% {
+    transform: rotate(12deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
+.animate-sway-left-strong {
+  transform-origin: top center;
+  animation: hangSwayLeftStrong 7s ease-in-out infinite;
+}
+
+.animate-sway-right-strong {
+  transform-origin: top center;
+  animation: hangSwayRightStrong 7.2s ease-in-out infinite;
+}
+
+.animate-sway-left:hover,
+.animate-sway-right:hover,
+.animate-sway-center:hover,
+.animate-sway-left-strong:hover,
+.animate-sway-right-strong:hover {
+  animation-play-state: paused;
+  transform: rotate(0deg);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 

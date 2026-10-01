@@ -46,6 +46,15 @@ interface VoiceDiscItem {
   rate: number;
   auraClass: string;
   plaqueClass: string;
+  themeColor: "blue" | "orange" | "emerald" | "rose";
+  plaqueBgClass: string;
+  auraGlowClass: string;
+  coreGlowClass: string;
+  rimStreakClass: string;
+  cardBottomGlowClass: string;
+  waveBarColor: string;
+  playRingColor: string;
+  tagColor: string;
 }
 
 interface PresetGoal {
@@ -119,8 +128,21 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
         "Hello! I am Ritu. My voice delivers an expressive and empathetic tone with natural warmth, intuitive pacing, and emotional resonance.",
       pitch: 1.05,
       rate: 0.96,
-      auraClass: "from-[#f8f9ff] via-[#eef2ff] to-[#dfe7fd]",
+      auraClass: "from-[#f8faff] via-[#eef4ff] to-[#dfeaff]",
       plaqueClass: "bg-gradient-to-r from-[#4f46e5] to-[#3730a3] text-white",
+      themeColor: "blue",
+      plaqueBgClass:
+        "bg-gradient-to-b from-[#0b172e] via-[#071022] to-[#030611] border border-blue-400/25 shadow-[0_14px_35px_-8px_rgba(37,99,235,0.45)] text-white",
+      auraGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-blue-400 via-blue-600 to-transparent",
+      coreGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-sky-200 via-blue-400 to-blue-600",
+      rimStreakClass:
+        "bg-gradient-to-r from-transparent via-sky-300 to-transparent shadow-[0_0_12px_#60a5fa]",
+      cardBottomGlowClass: "bg-blue-500/25",
+      waveBarColor: "bg-blue-500",
+      playRingColor: "border-blue-400",
+      tagColor: "text-blue-300",
     },
     {
       id: "neha",
@@ -138,6 +160,19 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
       rate: 1.04,
       auraClass: "from-[#fffaf5] via-[#fff1e6] to-[#fed7aa]/50",
       plaqueClass: "bg-gradient-to-r from-[#f97316] to-[#ea580c] text-white",
+      themeColor: "orange",
+      plaqueBgClass:
+        "bg-gradient-to-b from-[#2b1406] via-[#1a0c04] to-[#0d0502] border border-orange-400/25 shadow-[0_14px_35px_-8px_rgba(234,88,12,0.45)] text-white",
+      auraGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-400 via-orange-500 to-transparent",
+      coreGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-200 via-orange-400 to-orange-600",
+      rimStreakClass:
+        "bg-gradient-to-r from-transparent via-amber-300 to-transparent shadow-[0_0_12px_#fb923c]",
+      cardBottomGlowClass: "bg-orange-500/25",
+      waveBarColor: "bg-orange-500",
+      playRingColor: "border-orange-400",
+      tagColor: "text-orange-300",
     },
     {
       id: "ishita",
@@ -155,6 +190,19 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
       rate: 0.98,
       auraClass: "from-[#f6fdf8] via-[#ecfdf5] to-[#a7f3d0]/50",
       plaqueClass: "bg-gradient-to-r from-[#10b981] to-[#059669] text-white",
+      themeColor: "emerald",
+      plaqueBgClass:
+        "bg-gradient-to-b from-[#06241a] via-[#041811] to-[#020d09] border border-emerald-400/25 shadow-[0_14px_35px_-8px_rgba(16,185,129,0.45)] text-white",
+      auraGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-emerald-400 via-emerald-600 to-transparent",
+      coreGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-emerald-200 via-emerald-400 to-teal-600",
+      rimStreakClass:
+        "bg-gradient-to-r from-transparent via-emerald-300 to-transparent shadow-[0_0_12px_#34d399]",
+      cardBottomGlowClass: "bg-emerald-500/25",
+      waveBarColor: "bg-emerald-500",
+      playRingColor: "border-emerald-400",
+      tagColor: "text-emerald-300",
     },
     {
       id: "suhani",
@@ -172,6 +220,19 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
       rate: 1.0,
       auraClass: "from-[#fff5f8] via-[#fff1f2] to-[#fecdd3]/50",
       plaqueClass: "bg-gradient-to-r from-[#f43f5e] to-[#e11d48] text-white",
+      themeColor: "rose",
+      plaqueBgClass:
+        "bg-gradient-to-b from-[#2a0817] via-[#1a050f] to-[#0d0208] border border-rose-400/25 shadow-[0_14px_35px_-8px_rgba(244,63,94,0.45)] text-white",
+      auraGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-rose-400 via-rose-600 to-transparent",
+      coreGlowClass:
+        "bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-rose-200 via-rose-400 to-pink-600",
+      rimStreakClass:
+        "bg-gradient-to-r from-transparent via-rose-300 to-transparent shadow-[0_0_12px_#fb7185]",
+      cardBottomGlowClass: "bg-rose-500/25",
+      waveBarColor: "bg-rose-500",
+      playRingColor: "border-rose-400",
+      tagColor: "text-rose-300",
     },
   ];
 
@@ -929,10 +990,19 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 <div
                   key={disc.id}
                   onClick={() => (isSelected ? handleStopVoice() : handlePlayVoice(disc))}
-                  className={`relative rounded-[32px] p-6 flex flex-col justify-between group cursor-pointer border border-white/80 shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 transition-all duration-300 min-h-[390px] overflow-hidden select-none bg-gradient-to-b ${disc.auraClass}`}
+                  className={`relative rounded-[32px] p-6 flex flex-col justify-between group cursor-pointer border border-white/80 shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.14)] hover:-translate-y-1.5 transition-all duration-300 min-h-[390px] overflow-hidden select-none bg-gradient-to-b ${disc.auraClass}`}
                 >
                   {/* Subtle glossy glass reflection overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-white/50 pointer-events-none rounded-[32px]" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/40 via-transparent to-white/55 pointer-events-none rounded-[32px]" />
+
+                  {/* Ambient Outer Card Bottom Glow Halo (Matches Voice Color) */}
+                  <div className="absolute inset-x-0 -bottom-8 h-28 pointer-events-none overflow-hidden rounded-b-[32px] opacity-65 group-hover:opacity-100 transition-opacity duration-500">
+                    <div
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-20 rounded-full blur-2xl transition-all duration-700 ${
+                        isSelected ? "opacity-100 scale-125" : "animate-liquid-aura opacity-75"
+                      } ${disc.cardBottomGlowClass}`}
+                    />
+                  </div>
 
                   {/* Top Row: Voice Tone Badge & Tone Pill */}
                   <div className="flex items-center justify-between z-10 relative">
@@ -945,7 +1015,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                           Voice Tone
                         </div>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className={`w-1.5 h-1.5 rounded-full ${disc.waveBarColor} animate-pulse`} />
                           <span className="text-xs font-semibold text-slate-700">
                             {disc.toneTag}
                           </span>
@@ -974,7 +1044,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                       )}
                       {/* Animated radar rings when playing */}
                       {isSelected && (
-                        <span className="absolute inset-0 rounded-full border-2 border-indigo-400 animate-ping opacity-75 pointer-events-none" />
+                        <span className={`absolute inset-0 rounded-full border-2 ${disc.playRingColor} animate-ping opacity-75 pointer-events-none`} />
                       )}
                     </div>
 
@@ -985,7 +1055,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                           key={i}
                           className={`w-1 rounded-full transition-all duration-300 ${
                             isSelected
-                              ? "bg-slate-800 animate-pulse"
+                              ? `${disc.waveBarColor} animate-pulse`
                               : "bg-slate-400/40 group-hover:bg-slate-500/60"
                           }`}
                           style={{
@@ -1004,28 +1074,57 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                     </span>
                   </div>
 
-                  {/* Bottom Colored Plaque: Voice Name, Tone Profile & Cadence */}
-                  <div className={`mt-auto rounded-2xl p-4 shadow-sm transition-all z-10 relative ${disc.plaqueClass}`}>
-                    <div className="flex items-center justify-between gap-2">
+                  {/* Bottom Dark Capsule Plaque with Image 1 Liquid Aurora Animation */}
+                  <div
+                    className={`mt-auto rounded-2xl p-4 transition-all duration-500 z-10 relative overflow-hidden backdrop-blur-md ${disc.plaqueBgClass}`}
+                  >
+                    {/* Fluid Ambient Aurora Glow (Image 1 Style Animation) */}
+                    <div className="absolute inset-x-0 bottom-0 h-22 pointer-events-none overflow-hidden rounded-b-2xl">
+                      {/* Deep diffuse bloom */}
+                      <div
+                        className={`absolute -bottom-7 left-1/2 -translate-x-1/2 w-52 h-22 rounded-full blur-xl transition-all duration-700 ${
+                          isSelected
+                            ? "opacity-100 scale-125 animate-voice-active-glow"
+                            : "opacity-85 animate-liquid-aura group-hover:opacity-100 group-hover:scale-110"
+                        } ${disc.auraGlowClass}`}
+                      />
+
+                      {/* Concentrated bright core beam (just like the blue light in Image 1) */}
+                      <div
+                        className={`absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-36 h-12 rounded-full blur-md transition-all duration-500 ${
+                          isSelected
+                            ? "opacity-100 scale-135"
+                            : "opacity-90 animate-liquid-core group-hover:opacity-100"
+                        } ${disc.coreGlowClass}`}
+                      />
+
+                      {/* Specular bottom rim streak */}
+                      <div
+                        className={`absolute bottom-0 inset-x-3 h-[1.5px] rounded-full animate-specular-sweep ${disc.rimStreakClass}`}
+                      />
+                    </div>
+
+                    {/* Plaque Content (Voice Persona, Tone, Cadence) */}
+                    <div className="flex items-center justify-between gap-2 relative z-10">
                       <div className="min-w-0">
-                        <div className="text-[10px] uppercase tracking-wider opacity-80 font-bold font-mono">
+                        <div className={`text-[10px] uppercase tracking-wider font-bold font-mono ${disc.tagColor}`}>
                           Voice Persona
                         </div>
-                        <h4 className="font-bold text-lg tracking-tight leading-tight mt-0.5 truncate">
+                        <h4 className="font-bold text-lg tracking-tight leading-tight mt-0.5 truncate text-white drop-shadow-xs">
                           {disc.name}
                         </h4>
-                        <div className="text-xs opacity-90 font-medium mt-0.5 truncate">
+                        <div className="text-xs text-white/80 font-medium mt-0.5 truncate">
                           {disc.tone}
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <div className="text-[10px] uppercase tracking-wider opacity-80 font-bold font-mono">
+                        <div className={`text-[10px] uppercase tracking-wider font-bold font-mono ${disc.tagColor}`}>
                           Cadence
                         </div>
-                        <div className="text-sm font-bold mt-0.5 tracking-tight">
+                        <div className="text-sm font-bold mt-0.5 tracking-tight text-white drop-shadow-xs">
                           {disc.cadence}
                         </div>
-                        <div className="text-[10px] opacity-80 font-mono mt-0.5">
+                        <div className="text-[10px] text-white/75 font-mono mt-0.5">
                           {disc.inflection}
                         </div>
                       </div>

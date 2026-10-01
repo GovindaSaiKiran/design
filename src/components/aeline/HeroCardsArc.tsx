@@ -163,7 +163,7 @@ export default function HeroCardsArc() {
   };
 
   return (
-    <div className="w-full relative pt-6 pb-6 flex flex-col items-center justify-center select-none overflow-hidden">
+    <div className="w-full relative pt-1 sm:pt-2 pb-6 flex flex-col items-center justify-center select-none overflow-hidden">
       {/* Interactive 3D Cylindrical Stage */}
       <div
         ref={containerRef}
