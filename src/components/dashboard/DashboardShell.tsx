@@ -164,13 +164,13 @@ export default function DashboardShell() {
   };
 
   return (
-    <div className="min-h-screen dot-pattern-canvas font-sans select-none antialiased">
+    <div className="min-h-screen bg-[#ffffff] dot-pattern-subtle font-sans select-none antialiased">
       {/* ========================================================================= */}
       {/* MAIN UNIFIED DASHBOARD CANVAS (SINGLE SEAMLESS DOTTED BACKGROUND)         */}
       {/* ========================================================================= */}
-      <div className="w-full max-w-[1560px] mx-auto py-5 sm:py-7 lg:py-8 px-4 sm:px-6 lg:px-8 flex flex-col justify-between relative">
+      <div className="w-full max-w-[1560px] mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8 flex flex-col justify-between relative">
         <div>
-          {/* Header with Clean Pill Navigation */}
+          {/* Header with Front Page Dynamic Island Navigation */}
           <DashboardHeader
             currentOrg={currentOrg}
             organizations={organizations}
@@ -180,6 +180,7 @@ export default function DashboardShell() {
             activeTab={activeTab}
             onSelectTab={setActiveTab}
             onOpenSearch={() => setActiveTab("calls")}
+            onCreateAgent={() => setCreateAgentOpen(true)}
             theme={theme}
             onThemeChange={setTheme}
           />

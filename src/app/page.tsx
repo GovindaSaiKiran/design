@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Hero from "@/components/aeline/Hero";
 import LogoMarquee from "@/components/aeline/LogoMarquee";
+import IndicVoiceSection from "@/components/aeline/IndicVoiceSection";
+import WorkAgentsShowcase from "@/components/aeline/WorkAgentsShowcase";
 import AboutSection from "@/components/aeline/AboutSection";
 import ServicesSection from "@/components/aeline/ServicesSection";
 import InnovationShowcase from "@/components/aeline/InnovationShowcase";
@@ -35,7 +37,16 @@ export default function EduVoicePage() {
       {/* 2. University Partner Logo Marquee */}
       <LogoMarquee />
 
-      {/* 3. About Us / Meet Maya with Arched Cards Fan */}
+      {/* 3. Indic Text to Speech Playground (Natural Voices Across India's Languages) */}
+      <IndicVoiceSection
+        onOpenDemo={() => setDemoOpen(true)}
+        onOpenSimulator={() => setSimulatorOpen(true)}
+      />
+
+      {/* 4. Work Agents: Goal Handoff, 3D Voice Discs, Big Numbers & Connectors */}
+      <WorkAgentsShowcase onOpenDemo={() => setDemoOpen(true)} />
+
+      {/* 5. About Us / Meet Maya with Arched Cards Fan */}
       <AboutSection
         onOpenDemo={() => setDemoOpen(true)}
         onOpenSimulator={() => setSimulatorOpen(true)}

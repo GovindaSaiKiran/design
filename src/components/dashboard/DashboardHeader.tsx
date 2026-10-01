@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  X,
   Search,
   Bot,
   FlaskConical,
@@ -15,10 +14,12 @@ import {
   Bell,
   Sparkles,
   Radio,
-  Globe,
   Sliders,
+  ArrowUpRight,
+  ArrowLeft,
+  Activity,
   Layers,
-  ArrowUpRight
+  PhoneForwarded,
 } from "lucide-react";
 import { OrganizationInfo, NotificationItem } from "@/types/dashboard";
 import NotificationsPanel from "./components/NotificationsPanel";
@@ -35,6 +36,7 @@ interface DashboardHeaderProps {
   activeTab: TabKey;
   onSelectTab: (tab: TabKey) => void;
   onOpenSearch?: () => void;
+  onCreateAgent?: () => void;
   theme?: DashboardTheme;
   onThemeChange?: (theme: DashboardTheme) => void;
 }
@@ -48,120 +50,226 @@ export default function DashboardHeader({
   activeTab,
   onSelectTab,
   onOpenSearch,
+  onCreateAgent,
 }: DashboardHeaderProps) {
   const [orgDropdownOpen, setOrgDropdownOpen] = useState(false);
   const [notifPanelOpen, setNotifPanelOpen] = useState(false);
+  const [showTelemetryPopup, setShowTelemetryPopup] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  // Sarvam-styled navigation pill tabs - complete Indic suite
-  const navPills: { id: TabKey; label: string; icon: any; tag?: string; live?: boolean }[] = [
-    { id: "overview", label: "Overview", icon: Search },
-    { id: "calls", label: "Voice Streams", icon: PhoneCall, tag: "Live", live: true },
-    { id: "agents", label: "Indic Fleet", icon: Bot, tag: "V3" },
-    { id: "campaigns", label: "Outbound", icon: Radio },
-    { id: "contacts", label: "Candidates", icon: Building2 },
-    { id: "knowledge", label: "Knowledge", icon: FlaskConical },
-    { id: "analytics", label: "Telemetry", icon: TrendingUp },
-    { id: "telephony", label: "SIP Trunk", icon: PhoneCall },
-    { id: "settings", label: "Settings", icon: Sliders },
+  // Front Page styled navigation tabs
+  const navTabs: { id: TabKey; label: string; tag?: string; live?: boolean }[] = [
+    { id: "overview", label: "OVERVIEW" },
+    { id: "calls", label: "VOICE STREAMS", tag: "LIVE", live: true },
+    { id: "agents", label: "INDIC FLEET", tag: "V3" },
+    { id: "campaigns", label: "OUTBOUND" },
+    { id: "contacts", label: "CANDIDATES" },
+    { id: "knowledge", label: "KNOWLEDGE" },
+    { id: "analytics", label: "TELEMETRY" },
+    { id: "telephony", label: "SIP TRUNK" },
+    { id: "settings", label: "SETTINGS" },
   ];
 
   return (
-    <header className="w-full pb-5 px-1 z-30 select-none border-b border-black/10 mb-7 font-sans space-y-5">
+    <header className="w-full mb-6 font-sans select-none relative z-40">
       {/* ========================================================================= */}
-      {/* ROW 1: BRAND EMBLEM & INSTITUTION / CAMPUS CONTROLLER                     */}
+      {/* FLOATING FRONT-PAGE DYNAMIC ISLAND HEADER BAR                             */}
       {/* ========================================================================= */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        {/* Left: Brand Emblem & Institution */}
-        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-          {/* Home / Exit Action Button */}
+      <div className="w-full dynamic-island-glass rounded-full px-3 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4 shadow-[0_8px_32px_rgba(0,0,0,0.06)] border border-white/80 bg-white/85 backdrop-blur-2xl">
+        
+        {/* ========================================================================= */}
+        {/* 1. LEFT WING: Origami Soundwave Logo + Live Voice Pill + Org Selector     */}
+        {/* ========================================================================= */}
+        <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+          {/* Origami Logo & Brand Mark */}
           <Link
             href="/"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white flex items-center justify-center border border-black/20 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer shrink-0"
-            title="Return to Voice Simulator"
+            className="flex items-center gap-2 focus:outline-none group/logo"
+            title="Return to VoicePilot Front Page"
           >
-            <X className="w-4 h-4 stroke-[2]" />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 relative flex items-center justify-center shrink-0">
+              <svg
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-xs transition-transform group-hover/logo:scale-105 duration-200"
+              >
+                <path d="M5 26L16 6L21 15.5L13 22L5 26Z" fill="#0f172a" fillOpacity="0.95" />
+                <path d="M16 6L27 26L19 23L16 16.5L16 6Z" fill="#0284c7" fillOpacity="1" />
+                <path d="M13 22L19 23L16 26L13 22Z" fill="#38bdf8" fillOpacity="1" />
+              </svg>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-neutral-900">
+                VoicePilot
+              </span>
+              <span className="text-[#0d5926] bg-[#cdfb56] text-[9px] sm:text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded-md shadow-xs">
+                AI
+              </span>
+            </div>
           </Link>
 
-          {/* Model & Institution Title */}
-          <div>
-            <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
-                Indic Voice Operations Console
+          {/* Vertical Divider */}
+          <div className="hidden sm:block w-px h-5 bg-neutral-200" />
+
+          {/* Live Voice Indicator with 4-Bar Dancing Equalizer (Front-Page Style) */}
+          <div
+            className="relative cursor-pointer"
+            onMouseEnter={() => setShowTelemetryPopup(true)}
+            onMouseLeave={() => setShowTelemetryPopup(false)}
+            onClick={() => setShowTelemetryPopup(!showTelemetryPopup)}
+          >
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold bg-emerald-500/10 border border-emerald-500/25 text-emerald-800 shadow-2xs hover:bg-emerald-500/15 transition-all">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_#34d399]" />
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Bulbul V3 • 140ms Latency
-              </span>
-            </div>
+              <span className="hidden md:inline tracking-wide font-medium">Live Voice</span>
 
-            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <h1 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-neutral-900 font-serif-display">
-                Apex Institute of Technology
-              </h1>
-
-              {/* Organization Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setOrgDropdownOpen(!orgDropdownOpen)}
-                  className="px-2.5 py-1 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-black/5 text-neutral-700 text-xs font-medium inline-flex items-center gap-1.5 transition-all cursor-pointer"
-                >
-                  <span className="max-w-[140px] truncate">{currentOrg.name}</span>
-                  <ChevronDown className="w-3 h-3 text-neutral-400 shrink-0" />
-                </button>
-
-                {orgDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-64 bg-white/95 backdrop-blur-2xl rounded-2xl border border-black/10 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="text-[10px] font-semibold text-neutral-400 uppercase px-3 py-1.5">
-                      Switch Organization / Campus
-                    </div>
-                    {organizations.map((org) => (
-                      <button
-                        key={org.id}
-                        onClick={() => {
-                          onSwitchOrg(org);
-                          setOrgDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors ${
-                          currentOrg.id === org.id
-                            ? "bg-neutral-900 text-white font-semibold"
-                            : "text-neutral-700 hover:bg-neutral-100 font-medium"
-                        }`}
-                      >
-                        <span className="truncate">{org.name}</span>
-                        {currentOrg.id === org.id && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
-                      </button>
-                    ))}
-                  </div>
-                )}
+              {/* 4-Bar Audio Equalizer Waveform */}
+              <div className="flex items-end gap-0.5 h-3 ml-0.5" title="Sub-140ms Voice Telephony Active">
+                <span className="w-0.5 h-1.5 rounded-full bg-emerald-600 animate-[pulse_0.8s_ease-in-out_infinite]" />
+                <span className="w-0.5 h-3 rounded-full bg-emerald-600 animate-[pulse_1.2s_ease-in-out_infinite]" />
+                <span className="w-0.5 h-2.5 rounded-full bg-emerald-600 animate-[pulse_0.9s_ease-in-out_infinite]" />
+                <span className="w-0.5 h-1.5 rounded-full bg-emerald-600 animate-[pulse_1.4s_ease-in-out_infinite]" />
               </div>
             </div>
+
+            {/* Hover Telemetry Popup (Front Page style) */}
+            {showTelemetryPopup && (
+              <div className="absolute top-full left-0 mt-2.5 w-72 bg-white/98 backdrop-blur-2xl rounded-2xl p-4 shadow-2xl border border-neutral-200/90 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-center justify-between border-b border-neutral-100 pb-2 mb-2.5">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-900">
+                    <Activity className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Maya Voice Telemetry</span>
+                  </div>
+                  <span className="text-[10px] bg-emerald-50 text-emerald-700 font-mono px-2 py-0.5 rounded-full border border-emerald-200 font-bold">
+                    99.98% Uptime
+                  </span>
+                </div>
+                <div className="space-y-2 text-[11px]">
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">First-Byte Turn Latency</span>
+                    <span className="font-mono font-bold text-emerald-600">140 ms</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">Concurrent SIP Trunks</span>
+                    <span className="font-semibold text-neutral-800">14 Active Channels</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-neutral-500">FERPA Grounding</span>
+                    <span className="text-emerald-600 flex items-center gap-1 font-semibold">
+                      <CheckCircle2 className="w-3 h-3" /> Enforced
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Campus Organization Selector Dropdown */}
+          <div className="relative hidden lg:block">
+            <button
+              onClick={() => setOrgDropdownOpen(!orgDropdownOpen)}
+              className="px-3 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200 text-neutral-800 text-[11px] font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+            >
+              <Building2 className="w-3 h-3 text-neutral-500 shrink-0" />
+              <span className="max-w-[140px] truncate">{currentOrg.name}</span>
+              <ChevronDown className="w-3 h-3 text-neutral-400 shrink-0" />
+            </button>
+
+            {orgDropdownOpen && (
+              <div className="absolute left-0 mt-2 w-64 bg-white/95 backdrop-blur-2xl rounded-2xl border border-neutral-200 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="text-[10px] font-semibold text-neutral-400 uppercase px-3 py-1.5">
+                  Select Campus / Institution
+                </div>
+                {organizations.map((org) => (
+                  <button
+                    key={org.id}
+                    onClick={() => {
+                      onSwitchOrg(org);
+                      setOrgDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors ${
+                      currentOrg.id === org.id
+                        ? "bg-neutral-900 text-white font-semibold"
+                        : "text-neutral-700 hover:bg-neutral-100 font-medium"
+                    }`}
+                  >
+                    <span className="truncate">{org.name}</span>
+                    {currentOrg.id === org.id && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right: Quick Search Pill & Notification Bell */}
-        <div className="flex items-center gap-2.5 self-end sm:self-center">
-          {/* Quick Search trigger */}
+        {/* ========================================================================= */}
+        {/* 2. CENTER CAPSULE: Front-Page Style Capsule Navigation Menu               */}
+        {/* ========================================================================= */}
+        <nav className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none py-0.5 max-w-full">
+          {navTabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onSelectTab(tab.id)}
+                className={`text-[11px] lg:text-xs font-semibold tracking-wider uppercase px-3 sm:px-3.5 py-1.5 rounded-full transition-all duration-150 cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95 ${
+                  isActive
+                    ? "bg-neutral-900 text-white shadow-xs"
+                    : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/80"
+                }`}
+              >
+                <span>{tab.label}</span>
+                {tab.tag && (
+                  <span
+                    className={`px-1.5 py-0.2 rounded-md text-[9px] font-bold uppercase tracking-wider ${
+                      isActive
+                        ? "bg-white/20 text-[#cdfb56]"
+                        : tab.live
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-black/5 text-neutral-600"
+                    }`}
+                  >
+                    {tab.live && <span className="inline-block w-1 h-1 rounded-full bg-emerald-500 mr-1 animate-pulse" />}
+                    {tab.tag}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* ========================================================================= */}
+        {/* 3. RIGHT WING: Search, Notifications & Front-Page CTA Buttons             */}
+        {/* ========================================================================= */}
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {/* Quick Search Trigger */}
           <button
             onClick={onOpenSearch}
-            className="hidden md:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/80 hover:bg-white border border-black/10 hover:border-black/25 text-neutral-500 hover:text-neutral-900 text-xs font-medium shadow-xs transition-all cursor-pointer"
+            className="hidden xl:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200 text-neutral-600 hover:text-neutral-900 text-xs font-medium transition-all cursor-pointer shadow-2xs"
+            title="Search transcripts, candidates..."
           >
             <Search className="w-3.5 h-3.5 text-neutral-400" />
-            <span>Search transcripts, leads...</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 text-[10px] font-mono text-neutral-400 border border-black/5">⌘K</kbd>
+            <span className="text-[11px]">Search</span>
+            <kbd className="px-1.5 py-0.5 rounded bg-white text-[9px] font-mono text-neutral-500 border border-neutral-200">
+              ⌘K
+            </kbd>
           </button>
 
-          {/* Notifications Drawer Button */}
+          {/* Notifications Bell */}
           <div className="relative shrink-0">
             <button
               onClick={() => setNotifPanelOpen(!notifPanelOpen)}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/80 backdrop-blur-xl hover:bg-white border border-black/10 hover:border-black/30 text-neutral-700 hover:text-neutral-900 flex items-center justify-center shadow-xs hover:-translate-y-0.5 cursor-pointer transition-all relative"
-              title="Admissions Alerts & Telephony Notifications"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-700 hover:text-neutral-900 flex items-center justify-center cursor-pointer transition-all shadow-2xs relative"
+              title="Notifications & Admissions Alerts"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-blue-600 text-white font-bold text-[9px] flex items-center justify-center border-2 border-white shadow-xs">
+                <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-blue-600 text-white font-bold text-[8px] flex items-center justify-center border border-white shadow-2xs">
                   {unreadCount}
                 </span>
               )}
@@ -178,76 +286,25 @@ export default function DashboardHeader({
               </div>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* ========================================================================= */}
-      {/* ROW 2: UI-FRIENDLY APPLE DYNAMIC ISLAND TASKBAR WITH TRUE GLASSMORPHISM   */}
-      {/* ========================================================================= */}
-      <div className="w-full apple-island-frosted rounded-full p-1.5 sm:p-2 px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-4 relative z-20">
-        {/* Left Wing: Dynamic Live Audio Visualizer Pill */}
-        <div className="flex items-center gap-2 bg-neutral-900/90 text-white px-3 py-1.5 rounded-full shadow-xs shrink-0 backdrop-blur-md">
-          {/* Animated 4-Bar Dancing Equalizer */}
-          <div className="flex items-end gap-1 h-3.5 w-4 px-0.5 shrink-0">
-            <span className="w-0.5 bg-emerald-400 rounded-full animate-audio-bar-1" />
-            <span className="w-0.5 bg-emerald-400 rounded-full animate-audio-bar-2" />
-            <span className="w-0.5 bg-emerald-400 rounded-full animate-audio-bar-3" />
-            <span className="w-0.5 bg-emerald-400 rounded-full animate-audio-bar-4" />
-          </div>
+          {/* Front-Page Style Lime CTA Button (matches BOOK DEMO ↗) */}
+          <button
+            onClick={onCreateAgent}
+            className="hidden sm:inline-flex bg-[#cdfb56] hover:bg-[#bef03f] active:scale-95 text-black text-xs font-black uppercase tracking-wider px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-[0_0_20px_rgba(205,251,86,0.35)] hover:shadow-[0_0_26px_rgba(205,251,86,0.55)] transition-all duration-200 cursor-pointer items-center gap-1.5 shrink-0"
+          >
+            <span>NEW AGENT</span>
+            <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          </button>
 
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
-            <span className="text-[10px] font-semibold tracking-wider uppercase text-emerald-300 font-mono">
-              LIVE
-            </span>
-            <span className="text-white/40 text-[10px]">•</span>
-            <span className="text-[10px] text-white/85 font-mono">
-              140ms
-            </span>
-          </div>
-        </div>
-
-        {/* Center: Frosted Glassmorphic Navigation Tabs on ONE UNBROKEN HORIZONTAL LINE */}
-        <nav className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none py-0.5 max-w-full">
-          {navPills.map((pill) => {
-            const Icon = pill.icon;
-            const isActive = activeTab === pill.id;
-
-            return (
-              <button
-                key={pill.id}
-                onClick={() => onSelectTab(pill.id)}
-                className={`px-3 py-1.5 rounded-full text-xs transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
-                  isActive
-                    ? "apple-pill-active-frosted"
-                    : "apple-pill-inactive-frosted"
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-400" : "text-neutral-500"}`} />
-                <span className="font-medium">{pill.label}</span>
-                {pill.tag && (
-                  <span
-                    className={`px-1.5 py-0.2 rounded-md text-[9px] font-semibold uppercase tracking-wider ${
-                      isActive
-                        ? "bg-white/20 text-emerald-300"
-                        : pill.live
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200/80"
-                        : "bg-black/5 text-neutral-600 border border-black/5"
-                    }`}
-                  >
-                    {pill.live && <span className="inline-block w-1 h-1 rounded-full bg-emerald-500 mr-1 animate-pulse" />}
-                    {pill.tag}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Right Wing: Dynamic Island Status Telemetry */}
-        <div className="hidden xl:flex items-center gap-2 bg-white/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/60 text-[11px] text-neutral-700 font-medium shrink-0 shadow-2xs">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
-          <span>99.98% Gateway SLA</span>
+          {/* Exit / Return to Front Page Link */}
+          <Link
+            href="/"
+            className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-300 text-neutral-700 hover:text-neutral-950 bg-neutral-100/60 hover:bg-neutral-200/60 transition-all cursor-pointer flex items-center gap-1 shrink-0"
+            title="Return to VoicePilot Front Page"
+          >
+            <ArrowLeft className="w-3 h-3" />
+            <span className="hidden md:inline">FRONT PAGE</span>
+          </Link>
         </div>
       </div>
     </header>

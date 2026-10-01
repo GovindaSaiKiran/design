@@ -173,11 +173,11 @@ export default function AIAgentsView({
         </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-neutral-900 font-serif-display leading-[1.15]">
-          Text to Speech that feels natural across India&apos;s languages
+          AI Voice Agents &amp; Personas
         </h1>
 
         <p className="text-sm sm:text-base text-neutral-500 font-normal max-w-2xl mx-auto leading-relaxed">
-          Turn text into voices that feel human, carry emotion, and sound natural in every admissions interaction.
+          Configure, test, and deploy natural Indic voice personas for admissions counseling and student engagement.
         </p>
 
         <div className="flex items-center justify-center gap-3 pt-2">

@@ -184,6 +184,16 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
               OVERVIEW
             </Link>
             <a
+              href="#indic-tts"
+              className={`text-[11px] lg:text-xs font-semibold tracking-wider uppercase px-3.5 py-1.5 rounded-full transition-all duration-150 active:scale-95 ${
+                isScrolled
+                  ? "text-slate-700 hover:text-slate-950 hover:bg-slate-900/5"
+                  : "text-white hover:text-white hover:bg-white/20"
+              }`}
+            >
+              INDIC TTS
+            </a>
+            <a
               href="#capabilities"
               className={`text-[11px] lg:text-xs font-semibold tracking-wider uppercase px-3.5 py-1.5 rounded-full transition-all duration-150 active:scale-95 ${
                 isScrolled
@@ -370,6 +380,13 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
               >
                 OVERVIEW
               </Link>
+              <a
+                href="#indic-tts"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3.5 rounded-xl hover:bg-white/20 text-white transition-colors"
+              >
+                INDIC TTS
+              </a>
               <a
                 href="#capabilities"
                 onClick={() => setMobileMenuOpen(false)}
