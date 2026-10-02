@@ -13,6 +13,7 @@ import {
   Volume2,
   Database,
   ArrowRight,
+  ArrowUpRight,
   ShieldCheck,
   Zap,
   Check,
@@ -238,11 +239,51 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
   ];
 
   const enterpriseConnectors = [
-    { name: "Google Drive", type: "Collegiate Docs", status: "Synced", image: "/images/connectors/google-drive.png" },
-    { name: "Notion", type: "Admissions SOPs", status: "Synced", image: "/images/connectors/notion.png" },
-    { name: "Slack", type: "Counselor Desk", status: "Active", image: "/images/connectors/slack.png" },
-    { name: "Microsoft Excel", type: "Applicant Rosters", status: "Live Sync", image: "/images/connectors/excel.png" },
-    { name: "GitHub", type: "Campus SIS & API", status: "Connected", image: "/images/connectors/github.png" },
+    {
+      name: "Google Drive",
+      type: "Collegiate Docs",
+      status: "Synced",
+      rotation: "rotate-[-4deg] hover:rotate-0 hover:-translate-y-3",
+      stackedEdge: "shadow-[0_1px_0_#bbf7d0,0_2px_0_#bbf7d0,0_3px_0_#86efac,0_4px_0_#86efac,0_5px_0_#4ade80,0_6px_0_#22c55e,0_16px_32px_-6px_rgba(22,101,52,0.18)] hover:shadow-[0_1px_0_#bbf7d0,0_3px_0_#86efac,0_5px_0_#4ade80,0_8px_0_#22c55e,0_24px_40px_-8px_rgba(22,101,52,0.25)]",
+      logo2D: "/images/connectors/google-drive.png",
+      logo3D: "/images/connectors/google-drive-3d.png",
+    },
+    {
+      name: "Microsoft Excel",
+      type: "Applicant Rosters",
+      status: "Live Sync",
+      rotation: "rotate-[-3deg] hover:rotate-0 hover:-translate-y-3",
+      stackedEdge: "shadow-[0_1px_0_#bbf7d0,0_2px_0_#bbf7d0,0_3px_0_#86efac,0_4px_0_#86efac,0_5px_0_#4ade80,0_6px_0_#16a34a,0_16px_32px_-6px_rgba(22,101,52,0.18)] hover:shadow-[0_1px_0_#bbf7d0,0_3px_0_#86efac,0_5px_0_#4ade80,0_8px_0_#16a34a,0_24px_40px_-8px_rgba(22,101,52,0.25)]",
+      logo2D: "/images/connectors/excel.png",
+      logo3D: "/images/connectors/excel-3d.png",
+    },
+    {
+      name: "Notion",
+      type: "Admissions SOPs",
+      status: "Synced",
+      rotation: "rotate-[-1.5deg] hover:rotate-0 hover:-translate-y-3",
+      stackedEdge: "shadow-[0_1px_0_#f1f5f9,0_2px_0_#e2e8f0,0_3px_0_#cbd5e1,0_4px_0_#cbd5e1,0_5px_0_#94a3b8,0_6px_0_#64748b,0_16px_32px_-6px_rgba(15,23,42,0.14)] hover:shadow-[0_1px_0_#f1f5f9,0_3px_0_#cbd5e1,0_5px_0_#94a3b8,0_8px_0_#64748b,0_24px_40px_-8px_rgba(15,23,42,0.22)]",
+      logo2D: "/images/connectors/notion.png",
+      logo3D: "/images/connectors/notion-3d.png",
+    },
+    {
+      name: "Slack",
+      type: "Counselor Desk",
+      status: "Active",
+      rotation: "rotate-[2.5deg] hover:rotate-0 hover:-translate-y-3",
+      stackedEdge: "shadow-[0_1px_0_#f3e8ff,0_2px_0_#f3e8ff,0_3px_0_#e9d5ff,0_4px_0_#e9d5ff,0_5px_0_#d8b4fe,0_6px_0_#c084fc,0_16px_32px_-6px_rgba(107,33,168,0.18)] hover:shadow-[0_1px_0_#f3e8ff,0_3px_0_#e9d5ff,0_5px_0_#d8b4fe,0_8px_0_#c084fc,0_24px_40px_-8px_rgba(107,33,168,0.25)]",
+      logo2D: "/images/connectors/slack.png",
+      logo3D: "/images/connectors/slack-3d.png",
+    },
+    {
+      name: "GitHub",
+      type: "Campus SIS & API",
+      status: "Connected",
+      rotation: "rotate-[3.5deg] hover:rotate-0 hover:-translate-y-3",
+      stackedEdge: "shadow-[0_1px_0_#f1f5f9,0_2px_0_#e2e8f0,0_3px_0_#cbd5e1,0_4px_0_#cbd5e1,0_5px_0_#94a3b8,0_6px_0_#64748b,0_16px_32px_-6px_rgba(15,23,42,0.14)] hover:shadow-[0_1px_0_#f1f5f9,0_3px_0_#cbd5e1,0_5px_0_#94a3b8,0_8px_0_#64748b,0_24px_40px_-8px_rgba(15,23,42,0.22)]",
+      logo2D: "/images/connectors/github.png",
+      logo3D: "/images/connectors/github-3d.png",
+    },
   ];
 
   const handlePlayVoice = (disc: VoiceDiscItem) => {
@@ -1137,92 +1178,234 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
         </div>
 
         {/* ========================================================================= */}
-        {/* 4. EDITORIAL BIG NUMBERS                                                  */}
+        {/* 4. PERFORMANCE & UNIT ECONOMICS (LabAcademy-Inspired Visual Showcase)     */}
         {/* ========================================================================= */}
-        <div className="bg-white rounded-[32px] p-8 sm:p-10 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left border border-slate-200/80 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.06)]">
-          <div className="space-y-1 sm:border-r border-black/10 sm:pr-6">
-            <div className="font-serif-display text-4xl sm:text-5xl font-normal text-neutral-900">
-              2.4M+
+        <div className="bg-white rounded-[36px] sm:rounded-[44px] p-6 sm:p-10 lg:p-12 border border-slate-200/90 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] relative overflow-hidden select-none">
+          {/* Decorative fluid doodle line in background behind heading (Image 2 style) */}
+          <svg
+            className="absolute top-4 right-10 sm:right-24 w-64 sm:w-96 h-48 sm:h-64 pointer-events-none opacity-40 text-[#c8f292]"
+            viewBox="0 0 350 220"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 180 C80 60, 200 -20, 260 80 C320 180, 210 220, 160 160 C110 100, 230 20, 340 120"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          {/* Section Header: Left Badge + Context, Right/Center Bold Heading */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end mb-10 sm:mb-12 relative z-10">
+            {/* Left Column: Dark green asterisk badge & descriptive paragraph */}
+            <div className="lg:col-span-5 space-y-3">
+              <div className="w-8 h-8 rounded-full bg-[#1e4a38] text-[#d2f397] flex items-center justify-center font-serif text-base font-bold shadow-2xs">
+                ✦
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed max-w-sm">
+                At collegiate scale, VoicePilot AI delivers ultra-low latency voice synthesis across Indian languages, empowering seamless inbound and outbound admissions counseling.
+              </p>
             </div>
-            <div className="text-xs font-semibold text-neutral-700 uppercase tracking-wider">
-              Characters Streamed Daily
+
+            {/* Right Column: Giant modern display heading (Image 2 style) */}
+            <div className="lg:col-span-7 lg:pl-6">
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-normal text-slate-900 tracking-tight leading-[1.08] font-serif">
+                Scale &amp; Unit <br />
+                <span className="font-sans font-extrabold tracking-tight">Economics</span>
+              </h2>
             </div>
-            <p className="text-[11px] text-neutral-500 leading-snug">
-              Real-time synthesis across 11 native Indic languages with 99.98% carrier uptime.
-            </p>
           </div>
 
-          <div className="space-y-1 sm:border-r border-black/10 sm:pr-6">
-            <div className="font-serif-display text-4xl sm:text-5xl font-normal text-neutral-900">
-              11
+          {/* 3 Bold Pastel Visual Cards (Directly Replicating Image 2 Language) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+            {/* Card 1: Fresh Meadow Lime (Image 2 Left Card) */}
+            <div
+              onClick={() => onOpenDemo?.()}
+              className="bg-[#d2f397] rounded-[32px] p-6 sm:p-7 flex flex-col justify-between min-h-[320px] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group relative overflow-hidden"
+            >
+              {/* Top Row: Arrow Button on Left & Nested Photo on Right */}
+              <div className="flex items-start justify-between gap-3 mb-6">
+                <div className="w-11 h-11 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:rotate-45 transition-all duration-300 shrink-0">
+                  <ArrowUpRight className="w-5 h-5 text-slate-900" />
+                </div>
+
+                <div className="w-36 h-40 sm:w-44 sm:h-44 rounded-[24px] overflow-hidden shadow-sm border border-white/90 bg-white p-1 flex items-center justify-center relative shrink-0">
+                  <Image
+                    src="/images/stats/throughput-stream.gif"
+                    alt="Throughput Stream Animation - 2.4M+ Characters Streamed Daily"
+                    fill
+                    unoptimized
+                    className="object-cover rounded-[20px] group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Info: Pill Tag + Big Value + Subtitle */}
+              <div className="mt-auto">
+                <div className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold border border-black/20 text-slate-900 bg-black/5 mb-2.5">
+                  Throughput
+                </div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
+                  2.4M+
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight mt-1">
+                  Characters Streamed Daily
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-800/80 font-medium mt-1 leading-snug max-w-[210px]">
+                  Real-time synthesis across 11 native Indic languages with 99.98% carrier uptime.
+                </p>
+              </div>
             </div>
-            <div className="text-xs font-semibold text-neutral-700 uppercase tracking-wider">
-              Supported Indian Languages
+
+            {/* Card 2: Warm Pastel Coral / Orange (Image 2 Middle Card - Inverted layout) */}
+            <div
+              onClick={() => onOpenDemo?.()}
+              className="bg-[#fca166] rounded-[32px] p-6 sm:p-7 flex flex-col justify-between min-h-[320px] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group relative overflow-hidden"
+            >
+              {/* Top Row: Pill Tag + Titles on Left, Nested Photo on Right */}
+              <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="flex-1 min-w-[130px]">
+                  <div className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold border border-black/20 text-slate-900 bg-black/5 mb-2.5">
+                    Native Dialects
+                  </div>
+                  <div className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
+                    11
+                  </div>
+                  <div className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight mt-1">
+                    Indian Languages
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-900/80 font-medium mt-1 leading-snug">
+                    Hindi, Telugu, Kannada, Tamil, Bengali, Marathi, Punjabi, Gujarati, etc.
+                  </p>
+                </div>
+
+                <div className="w-36 h-40 sm:w-44 sm:h-44 rounded-[24px] overflow-hidden shadow-sm border border-white/90 bg-white p-1.5 flex items-center justify-center relative shrink-0">
+                  <Image
+                    src="/images/stats/indian-languages-cloud-tight.png"
+                    alt="11 Supported Indian Languages Cloud - Hindi, Telugu, Tamil, Bengali, Kannada, Marathi, Gujarati, Punjabi"
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+
+              {/* Bottom: Arrow Button on Bottom-Left (matches Card 2 in Image 2) */}
+              <div className="w-11 h-11 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:rotate-45 transition-all duration-300 shrink-0 mt-2">
+                <ArrowUpRight className="w-5 h-5 text-slate-900" />
+              </div>
             </div>
-            <p className="text-[11px] text-neutral-500 leading-snug">
-              Hindi, Telugu, Kannada, Bengali, Tamil, Marathi, Gujarati, Punjabi, Odia, Malayalam, Assamese.
-            </p>
+
+            {/* Card 3: Soft Powder Blue / Periwinkle (Image 2 Right Card) */}
+            <div
+              onClick={() => onOpenDemo?.()}
+              className="bg-[#b0d2f8] rounded-[32px] p-6 sm:p-7 flex flex-col justify-between min-h-[320px] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group relative overflow-hidden"
+            >
+              {/* Top Row: Arrow Button on Left & Nested Photo on Right */}
+              <div className="flex items-start justify-between gap-3 mb-6">
+                <div className="w-11 h-11 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:rotate-45 transition-all duration-300 shrink-0">
+                  <ArrowUpRight className="w-5 h-5 text-slate-900" />
+                </div>
+
+                <div className="w-36 h-40 sm:w-44 sm:h-44 rounded-[24px] overflow-hidden shadow-sm border border-white/90 bg-white p-1.5 flex items-center justify-center relative shrink-0">
+                  <Image
+                    src="/images/stats/unit-economics-money.png"
+                    alt="Unit Economics - Indian Rupee ₹30 per 10,000 Characters"
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Info: Pill Tag + Big Value + Subtitle */}
+              <div className="mt-auto">
+                <div className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold border border-black/20 text-slate-900 bg-black/5 mb-2.5">
+                  Unit Economics
+                </div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
+                  ₹ 30
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight mt-1">
+                  Cost / 10,000 Characters
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-800/80 font-medium mt-1 leading-snug max-w-[210px]">
+                  High efficiency speech synthesis designed for collegiate admissions scale.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <div className="font-serif-display text-4xl sm:text-5xl font-normal text-neutral-900">
-              ₹ 30
+          {/* Bottom Slider Indicator (Direct from Image 2) */}
+          <div className="flex justify-center mt-10 sm:mt-12 relative z-10">
+            <div className="w-48 sm:w-56 h-1.5 bg-slate-100 rounded-full overflow-hidden flex">
+              <div className="w-16 sm:w-20 h-full bg-[#1e4a38] rounded-full mx-auto" />
             </div>
-            <div className="text-xs font-semibold text-neutral-700 uppercase tracking-wider">
-              Unit Cost / 10,000 Characters
-            </div>
-            <p className="text-[11px] text-neutral-500 leading-snug">
-              High efficiency speech synthesis designed for collegiate admissions scale.
-            </p>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* 5. ENTERPRISE APP CONNECTORS                                              */}
+        {/* 5. ENTERPRISE APP CONNECTORS (3D Voxel Showcase Card)                     */}
         {/* ========================================================================= */}
-        <div className="bg-white rounded-[32px] p-8 space-y-6 border border-slate-200/80 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.06)]">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/10">
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 font-serif">
-                INTEGRATED CONNECTORS
-              </div>
-              <h3 className="font-serif-display text-2xl font-normal text-neutral-900">
-                Connectors &amp; Campus ERPs
-              </h3>
-              <p className="text-xs text-neutral-600 mt-0.5">
-                Connect Google Drive, Notion, Slack, Microsoft Excel, and GitHub. Agents read updated records in real-time.
-              </p>
-            </div>
-            <span className="text-xs font-mono text-neutral-600 bg-neutral-100 px-3 py-1 rounded-xl border border-black/5 self-start sm:self-center">
-              5 Connected Apps
-            </span>
+        <div className="bg-white rounded-[32px] sm:rounded-[40px] border border-slate-200/90 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] overflow-hidden transition-all duration-300 hover:shadow-[0_28px_60px_-12px_rgba(0,0,0,0.1)] relative group select-none">
+          {/* Top Subtle Gloss Accent Highlight */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500/0 via-emerald-500/40 to-emerald-500/0 z-20 pointer-events-none" />
+
+          {/* 3D Voxel Artwork Banner Frame (Clickable for live demo preview) */}
+          <div
+            onClick={() => onOpenDemo?.()}
+            className="relative cursor-pointer overflow-hidden bg-gradient-to-b from-[#f8fafc] via-[#fafbfc] to-white flex items-center justify-center p-2 sm:p-5 lg:p-8"
+            title="Click to preview enterprise campus integrations"
+          >
+            <Image
+              src="/images/connectors/connectors-showcase-3d.png"
+              alt="VoicePilot AI Connectors & Campus ERPs - Google Drive, Notion, Slack, Microsoft Excel, GitHub"
+              width={1024}
+              height={365}
+              priority
+              className="w-full h-auto object-contain max-h-[480px] drop-shadow-xs transition-transform duration-500 group-hover:scale-[1.01]"
+            />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {enterpriseConnectors.map((conn, idx) => (
-              <div
-                key={idx}
-                className="p-4 rounded-2xl bg-neutral-50/80 hover:bg-neutral-100/90 border border-black/5 text-center flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 shadow-2xs group"
+          {/* Bottom Interactive Feature Bar: Active Grounding Chips & Demo Trigger */}
+          <div className="border-t border-slate-200/80 bg-white/95 px-6 sm:px-8 py-4 sm:py-5 flex flex-wrap items-center justify-between gap-4 relative z-10">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mr-1">
+                Active Grounding:
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-50 border border-slate-200/80 text-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Google Drive (148 Docs)
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-50 border border-slate-200/80 text-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Notion SOPs (42 Pages)
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-50 border border-slate-200/80 text-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Slack Desks (12 Channels)
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-50 border border-slate-200/80 text-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Microsoft Excel (36 Rosters)
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-50 border border-slate-200/80 text-slate-700 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                GitHub SIS Webhooks
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-400 font-mono hidden md:inline">
+                Live bi-directional sync • Zero code setup
+              </span>
+              <button
+                onClick={() => onOpenDemo?.()}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-2xs hover:shadow-md transition-all cursor-pointer group/btn"
               >
-                <div className="w-13 h-13 p-2 rounded-2xl bg-white border border-black/5 flex items-center justify-center mb-2 shadow-2xs group-hover:shadow-xs transition-shadow">
-                  <Image
-                    src={conn.image}
-                    alt={conn.name}
-                    width={36}
-                    height={36}
-                    className="w-8 h-8 object-contain"
-                  />
-                </div>
-                <div>
-                  <div className="font-semibold text-neutral-900 text-xs">{conn.name}</div>
-                  <div className="text-[10px] text-neutral-500 mt-0.5">{conn.type}</div>
-                </div>
-                <div className="mt-3 pt-2 border-t border-black/5 w-full flex items-center justify-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span className="text-[10px] font-semibold text-emerald-800">{conn.status}</span>
-                </div>
-              </div>
-            ))}
+                <span>Preview All Integrations</span>
+                <ArrowRight className="w-3.5 h-3.5 transform group-hover/btn:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
           </div>
         </div>
 

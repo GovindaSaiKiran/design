@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { LiveCallItem } from "@/types/dashboard";
 import WorkspaceCard from "../WorkspaceCard";
+import ConnectorsGridSection from "../components/ConnectorsGridSection";
 
 // Modals
 import LiveCallModal from "../modals/LiveCallModal";
@@ -493,6 +494,9 @@ export default function OverviewPageView() {
           />
         </div>
       </div>
+
+      {/* Integrated Connectors & ERPs (3D Digital Folder Cards) */}
+      <ConnectorsGridSection />
 
       {/* ======================================================================= */}
       {/* 5. RECENT ACTIVITY & ATTENTION DOCKET                                   */}
