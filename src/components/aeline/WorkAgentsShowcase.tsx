@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   Send,
   Play,
@@ -237,12 +238,11 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
   ];
 
   const enterpriseConnectors = [
-    { name: "Google Drive", type: "Collegiate Docs", status: "Synced", icon: "📁" },
-    { name: "Notion", type: "Admissions SOPs", status: "Synced", icon: "📑" },
-    { name: "Slack", type: "Counselor Desk", status: "Active", icon: "💬" },
-    { name: "Linear", type: "Escalations", status: "Connected", icon: "⚡" },
-    { name: "GitHub", type: "Campus API", status: "Connected", icon: "🐙" },
-    { name: "Zoho CRM", type: "Applicant Leads", status: "Live Sync", icon: "👥" },
+    { name: "Google Drive", type: "Collegiate Docs", status: "Synced", image: "/images/connectors/google-drive.png" },
+    { name: "Notion", type: "Admissions SOPs", status: "Synced", image: "/images/connectors/notion.png" },
+    { name: "Slack", type: "Counselor Desk", status: "Active", image: "/images/connectors/slack.png" },
+    { name: "Microsoft Excel", type: "Applicant Rosters", status: "Live Sync", image: "/images/connectors/excel.png" },
+    { name: "GitHub", type: "Campus SIS & API", status: "Connected", image: "/images/connectors/github.png" },
   ];
 
   const handlePlayVoice = (disc: VoiceDiscItem) => {
@@ -1190,22 +1190,28 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 Connectors &amp; Campus ERPs
               </h3>
               <p className="text-xs text-neutral-600 mt-0.5">
-                Connect Notion, Slack, Google Drive, Linear, GitHub, and Zoho CRM. Agents read updated records in real-time.
+                Connect Google Drive, Notion, Slack, Microsoft Excel, and GitHub. Agents read updated records in real-time.
               </p>
             </div>
             <span className="text-xs font-mono text-neutral-600 bg-neutral-100 px-3 py-1 rounded-xl border border-black/5 self-start sm:self-center">
-              6 Connected Apps
+              5 Connected Apps
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {enterpriseConnectors.map((conn, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-2xl bg-neutral-50/80 hover:bg-neutral-100/90 border border-black/5 text-center flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 shadow-2xs"
+                className="p-4 rounded-2xl bg-neutral-50/80 hover:bg-neutral-100/90 border border-black/5 text-center flex flex-col items-center justify-between cursor-pointer transition-all hover:scale-105 shadow-2xs group"
               >
-                <div className="w-12 h-12 rounded-2xl bg-white border border-black/5 flex items-center justify-center text-xl mb-2 shadow-2xs">
-                  {conn.icon}
+                <div className="w-13 h-13 p-2 rounded-2xl bg-white border border-black/5 flex items-center justify-center mb-2 shadow-2xs group-hover:shadow-xs transition-shadow">
+                  <Image
+                    src={conn.image}
+                    alt={conn.name}
+                    width={36}
+                    height={36}
+                    className="w-8 h-8 object-contain"
+                  />
                 </div>
                 <div>
                   <div className="font-semibold text-neutral-900 text-xs">{conn.name}</div>

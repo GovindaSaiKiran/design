@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { KnowledgeDocument } from "@/types/dashboard";
 import {
   BookOpen,
@@ -34,12 +35,11 @@ export default function KnowledgeView({
   const [selectedConnector, setSelectedConnector] = useState<string | null>(null);
 
   const enterpriseConnectors = [
-    { name: "Google Drive", type: "Collegiate Records", count: "148 Docs", status: "Synced", color: "bg-amber-500", icon: "📁" },
-    { name: "Notion", type: "Admissions SOPs", count: "42 Pages", status: "Synced", color: "bg-slate-900", icon: "📑" },
-    { name: "Slack", type: "Counselor Channels", count: "12 Channels", status: "Active", color: "bg-purple-600", icon: "💬" },
-    { name: "Linear", type: "Student Escalations", count: "28 Issues", status: "Connected", color: "bg-indigo-600", icon: "⚡" },
-    { name: "GitHub", type: "Campus API & Portals", count: "6 Repos", status: "Connected", color: "bg-neutral-800", icon: "🐙" },
-    { name: "Zoho CRM", type: "Applicant Leads", count: "1,240 Records", status: "Live Sync", color: "bg-emerald-600", icon: "👥" },
+    { name: "Google Drive", type: "Collegiate Records", count: "148 Docs", status: "Synced", image: "/images/connectors/google-drive.png" },
+    { name: "Notion", type: "Admissions SOPs", count: "42 Pages", status: "Synced", image: "/images/connectors/notion.png" },
+    { name: "Slack", type: "Counselor Channels", count: "12 Channels", status: "Active", image: "/images/connectors/slack.png" },
+    { name: "Microsoft Excel", type: "Applicant Rosters", count: "36 Sheets", status: "Live Sync", image: "/images/connectors/excel.png" },
+    { name: "GitHub", type: "Campus API & Webhooks", count: "6 Repos", status: "Connected", image: "/images/connectors/github.png" },
   ];
 
   const agentSkills = [
@@ -106,22 +106,28 @@ export default function KnowledgeView({
               Enterprise Data Connectors
             </h3>
             <p className="text-xs text-neutral-600 mt-0.5">
-              Connect Notion, Slack, Google Drive, Linear, GitHub, and Zoho CRM. Agents read updated records in real-time.
+              Connect Google Drive, Notion, Slack, Microsoft Excel, and GitHub. Agents read updated records in real-time.
             </p>
           </div>
           <span className="text-xs font-mono text-neutral-500 bg-neutral-100 px-3 py-1 rounded-xl border border-black/5">
-            6 Connectors Active
+            5 Connectors Active
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {enterpriseConnectors.map((conn, idx) => (
             <div
               key={idx}
               className="liquid-glass-interactive p-4 rounded-2xl text-center flex flex-col items-center justify-between group cursor-pointer"
             >
-              <div className="w-12 h-12 rounded-2xl bg-white/70 backdrop-blur-md border border-black/5 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform shadow-2xs">
-                {conn.icon}
+              <div className="w-13 h-13 p-2 rounded-2xl bg-white/90 backdrop-blur-md border border-black/5 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-2xs">
+                <Image
+                  src={conn.image}
+                  alt={conn.name}
+                  width={36}
+                  height={36}
+                  className="w-8 h-8 object-contain"
+                />
               </div>
               <div>
                 <div className="font-semibold text-neutral-900 text-xs">{conn.name}</div>

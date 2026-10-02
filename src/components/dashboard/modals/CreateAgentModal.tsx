@@ -82,20 +82,20 @@ export default function CreateAgentModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl border border-black/15 shadow-2xl p-6 sm:p-8 overflow-hidden text-neutral-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-200 select-none">
+      <div className="relative w-full max-w-2xl bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 sm:p-8 overflow-hidden text-slate-900">
         {/* Modal Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-black/10">
+        <div className="flex items-center justify-between pb-5 border-b border-slate-100">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-neutral-900 text-white flex items-center justify-center shadow-md">
-              <Bot className="w-6 h-6 stroke-[1.8]" />
+            <div className="w-12 h-12 rounded-2xl bg-[#cdfb56] text-slate-950 border border-[#bceb42] flex items-center justify-center shadow-xs">
+              <Bot className="w-6 h-6 stroke-[2]" />
             </div>
             <div>
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 font-serif">~ 𑁍 Bulbul V3 Engine 𑁍 ~</div>
-              <h3 className="font-serif-display text-2xl font-normal text-neutral-900 tracking-tight">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#8ac926]">VOICE ENGINE WORKFORCE</div>
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                 Create Indic AI Voice Agent
               </h3>
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-slate-500">
                 Step {step} of 3 • Persona, Speech Synthesis & Grounding Guardrails
               </p>
             </div>
@@ -103,7 +103,7 @@ export default function CreateAgentModal({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer"
+            className="p-2 rounded-full bg-slate-100 hover:bg-[#cdfb56] text-slate-600 hover:text-slate-950 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -113,17 +113,17 @@ export default function CreateAgentModal({
         <div className="grid grid-cols-3 gap-2.5 my-6">
           <div
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              step >= 1 ? "bg-neutral-900" : "bg-neutral-200"
+              step >= 1 ? "bg-[#8ac926]" : "bg-slate-200"
             }`}
           />
           <div
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              step >= 2 ? "bg-neutral-900" : "bg-neutral-200"
+              step >= 2 ? "bg-[#8ac926]" : "bg-slate-200"
             }`}
           />
           <div
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              step >= 3 ? "bg-neutral-900" : "bg-neutral-200"
+              step >= 3 ? "bg-[#8ac926]" : "bg-slate-200"
             }`}
           />
         </div>
@@ -268,18 +268,18 @@ export default function CreateAgentModal({
                 rows={5}
                 value={systemPrompt}
                 onChange={(e) => setSystemPrompt(e.target.value)}
-                className="w-full p-4 rounded-xl text-xs bg-[#fbfbfd] border border-black/10 text-neutral-900 font-mono leading-relaxed focus:border-black/30 focus:bg-white focus:outline-none transition-all"
+                className="w-full p-4 rounded-xl text-xs bg-white border border-slate-200 text-slate-900 font-mono leading-relaxed focus:border-[#cdfb56] focus:bg-[#f7fee7]/10 focus:outline-none transition-all shadow-2xs"
                 placeholder="Define role guidelines, admissions guardrails, escalation triggers..."
               />
             </div>
 
-            <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/60 flex items-start gap-3 text-xs text-emerald-950">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="p-4 rounded-2xl bg-[#f7fee7] border border-[#cdfb56]/60 flex items-start gap-3 text-xs text-slate-900 shadow-2xs">
+              <ShieldCheck className="w-4 h-4 text-[#8ac926] shrink-0 mt-0.5" />
               <div>
-                <strong className="font-semibold block mb-0.5">
+                <strong className="font-bold block mb-0.5">
                   Zero-Hallucination Grounding with Institutional RAG Store
                 </strong>
-                <span className="text-emerald-800 leading-relaxed">
+                <span className="text-slate-600 leading-relaxed">
                   This voice agent is bound to your uploaded admissions brochure, cutoff matrices, and fee schedules with automated citations.
                 </span>
               </div>
@@ -288,11 +288,11 @@ export default function CreateAgentModal({
         )}
 
         {/* Modal Footer Controls */}
-        <div className="flex items-center justify-between pt-6 mt-6 border-t border-black/10">
+        <div className="flex items-center justify-between pt-6 mt-6 border-t border-slate-100">
           {step > 1 ? (
             <button
               onClick={() => setStep((prev) => (prev - 1) as 1 | 2 | 3)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 border border-black/5 transition-all inline-flex items-center gap-1 cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-950 bg-white hover:bg-[#f7fee7] border border-slate-200 hover:border-[#cdfb56] transition-all inline-flex items-center gap-1 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Back</span>
@@ -304,7 +304,7 @@ export default function CreateAgentModal({
           {step < 3 ? (
             <button
               onClick={() => setStep((prev) => (prev + 1) as 1 | 2 | 3)}
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-neutral-900 hover:bg-neutral-800 shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer active:scale-95"
+              className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-[#cdfb56] hover:bg-[#bef03f] border border-[#bceb42] shadow-xs transition-all inline-flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <span>Next Step</span>
               <ChevronRight className="w-4 h-4" />
@@ -312,7 +312,7 @@ export default function CreateAgentModal({
           ) : (
             <button
               onClick={handleSave}
-              className="px-6 py-2.5 rounded-xl text-xs font-semibold text-white bg-neutral-900 hover:bg-neutral-800 shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
+              className="px-6 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-[#cdfb56] hover:bg-[#bef03f] border border-[#bceb42] shadow-xs transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
             >
               <Check className="w-4 h-4" />
               <span>Deploy Indic AI Agent</span>

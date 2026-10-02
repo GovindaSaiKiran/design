@@ -185,13 +185,13 @@ export default function NeoBrutalistDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-[#cdfb56] selection:text-slate-950 p-3 sm:p-5 lg:p-7">
+    <div className="min-h-screen stitch-dot-grid text-slate-900 font-sans antialiased selection:bg-[#cdfb56] selection:text-slate-950 p-3 sm:p-5 lg:p-7">
       <div className="max-w-[1520px] mx-auto space-y-5">
         
         {/* ======================================================================= */}
-        {/* 1. TOP MASTER HEADER (REFINED 2PX LIGHT-GREEN DEPTH & CRISP OBSIDIAN)   */}
+        {/* 1. TOP MASTER HEADER (GLASSMORPHIC WITH CRISP ACCENTS)                 */}
         {/* ======================================================================= */}
-        <header className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-4 sm:p-5 shadow-[2px_2px_0px_0px_#cdfb56] space-y-3.5">
+        <header className="bg-white/80 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-4 sm:p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-3.5">
           
           {/* Top Row: Brand & Campus Workspace (Left) + Actions & Alerts (Right) */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5">
@@ -199,7 +199,7 @@ export default function NeoBrutalistDashboard() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/"
-                className="flex items-center gap-2.5 bg-[#0f172a] text-white px-3.5 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#cdfb56] hover:translate-x-[-0.5px] hover:translate-y-[-0.5px] hover:shadow-[2px_2px_0px_0px_#cdfb56] transition-all"
+                className="flex items-center gap-2.5 bg-[#0f172a]/95 backdrop-blur-md text-white px-3.5 py-2 rounded-xl border border-slate-900/20 shadow-xs hover:bg-[#0f172a] hover:-translate-y-0.5 transition-all"
                 title="Return to VoicePilot Front Page"
               >
                 <div className="w-5 h-5 bg-[#cdfb56] rounded flex items-center justify-center font-black text-slate-950 text-xs">
@@ -218,7 +218,7 @@ export default function NeoBrutalistDashboard() {
                 <select
                   value={activeOrgIndex}
                   onChange={(e) => setActiveOrgIndex(Number(e.target.value))}
-                  className="bg-white text-slate-900 font-bold text-xs px-3.5 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#cdfb56] cursor-pointer outline-none hover:bg-slate-50 transition-all appearance-none pr-8"
+                  className="bg-white/70 backdrop-blur-md text-slate-900 font-bold text-xs px-3.5 py-2 rounded-xl border border-slate-900/15 shadow-xs cursor-pointer outline-none hover:bg-white/90 transition-all appearance-none pr-8"
                 >
                   {mockOrganizations.map((org, idx) => (
                     <option key={org.id} value={idx}>
@@ -232,7 +232,7 @@ export default function NeoBrutalistDashboard() {
               {/* Live Telemetry Pill */}
               <button
                 onClick={() => handleOpenLiveCall()}
-                className="flex items-center gap-1.5 bg-[#cdfb56] text-slate-950 text-xs font-bold px-3 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a] hover:translate-x-[-0.5px] hover:translate-y-[-0.5px] active:translate-x-[0.5px] active:translate-y-[0.5px] active:shadow-[1px_1px_0px_0px_#0f172a] cursor-pointer transition-all"
+                className="flex items-center gap-1.5 bg-[#cdfb56]/90 hover:bg-[#cdfb56] backdrop-blur-md text-slate-950 text-xs font-bold px-3 py-2 rounded-xl border border-[#0f172a]/30 shadow-xs hover:-translate-y-0.5 active:translate-y-0 cursor-pointer transition-all"
               >
                 <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
                 <span>LIVE CALL SESSION</span>
@@ -244,7 +244,7 @@ export default function NeoBrutalistDashboard() {
               {/* Deploy New Agent Button */}
               <button
                 onClick={() => setCreateAgentOpen(true)}
-                className="bg-[#cdfb56] hover:bg-[#bef03f] active:translate-x-[0.5px] active:translate-y-[0.5px] text-slate-950 font-bold uppercase text-xs px-3.5 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a] flex items-center gap-1.5 transition-all cursor-pointer"
+                className="bg-[#cdfb56] hover:bg-[#bef03f] backdrop-blur-md text-slate-950 font-bold uppercase text-xs px-3.5 py-2 rounded-xl border border-[#0f172a]/30 shadow-xs hover:-translate-y-0.5 flex items-center gap-1.5 transition-all cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[3]" />
                 <span>Deploy Agent</span>
@@ -253,7 +253,7 @@ export default function NeoBrutalistDashboard() {
               {/* Export Report Button */}
               <button
                 onClick={() => setExportOpen(true)}
-                className="bg-white hover:bg-slate-50 active:translate-x-[0.5px] active:translate-y-[0.5px] text-slate-800 font-bold text-xs px-3.5 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#cdfb56] flex items-center gap-1.5 transition-all cursor-pointer"
+                className="bg-white/70 hover:bg-white/90 backdrop-blur-md text-slate-800 font-bold text-xs px-3.5 py-2 rounded-xl border border-slate-900/15 shadow-xs hover:-translate-y-0.5 flex items-center gap-1.5 transition-all cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5 stroke-[2.2]" />
                 <span>Export</span>
@@ -263,22 +263,22 @@ export default function NeoBrutalistDashboard() {
               <div className="relative">
                 <button
                   onClick={() => setNotificationsOpen(!notificationsOpen)}
-                  className="w-9 h-9 bg-white border-[1.5px] border-[#0f172a] rounded-xl shadow-[1.5px_1.5px_0px_0px_#cdfb56] flex items-center justify-center text-slate-800 hover:bg-[#cdfb56] transition-colors cursor-pointer"
+                  className="w-9 h-9 bg-white/70 backdrop-blur-md border border-slate-900/15 rounded-xl shadow-xs flex items-center justify-center text-slate-800 hover:bg-[#cdfb56] transition-colors cursor-pointer"
                   title="Telemetry Notifications"
                 >
                   <Bell className="w-4 h-4 stroke-[2]" />
                 </button>
 
                 {notificationsOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white border-[1.5px] border-[#0f172a] rounded-2xl shadow-[2px_2px_0px_0px_#cdfb56] p-4 z-50 text-xs space-y-2.5 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute right-0 mt-2 w-80 bg-white/95 backdrop-blur-2xl border border-slate-900/15 rounded-2xl shadow-xl p-4 z-50 text-xs space-y-2.5 animate-in fade-in zoom-in-95 duration-150">
                     <div className="flex items-center justify-between border-b border-slate-200 pb-2 font-bold uppercase">
                       <span>Acoustic Alerts</span>
-                      <span className="bg-[#cdfb56] text-slate-950 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold border border-[#0f172a]">
+                      <span className="bg-[#cdfb56] text-slate-950 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold border border-[#0f172a]/30">
                         {mockNotifications.length} New
                       </span>
                     </div>
                     {mockNotifications.slice(0, 4).map((n) => (
-                      <div key={n.id} className="p-2.5 border border-slate-200 rounded-xl bg-slate-50 hover:bg-[#cdfb56]/15 transition-colors">
+                      <div key={n.id} className="p-2.5 border border-slate-200/80 rounded-xl bg-white/60 hover:bg-[#cdfb56]/15 transition-colors">
                         <div className="font-bold text-slate-900">{n.title}</div>
                         <div className="text-[11px] text-slate-600 mt-0.5">{n.message}</div>
                       </div>
@@ -289,15 +289,15 @@ export default function NeoBrutalistDashboard() {
             </div>
           </div>
 
-          {/* Bottom Row: Fully Expanded Features Navigation Tabs Bar (No Horizontal Scrollbar!) */}
-          <div className="pt-3 border-t border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          {/* Bottom Row: Navigation Tabs Bar */}
+          <div className="pt-3 border-t border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <nav className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
               <button
                 onClick={() => setActiveTab("overview")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer ${
                   activeTab === "overview"
-                    ? "bg-[#cdfb56] text-slate-950 border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a]"
-                    : "bg-white text-slate-700 hover:bg-slate-100 border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56]"
+                    ? "bg-[#cdfb56] text-slate-950 border border-[#0f172a] shadow-xs"
+                    : "bg-white/60 text-slate-700 hover:bg-white/90 border border-slate-900/10 shadow-xs"
                 }`}
               >
                 Overview
@@ -305,10 +305,10 @@ export default function NeoBrutalistDashboard() {
 
               <button
                 onClick={() => setActiveTab("agents")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer ${
                   activeTab === "agents"
-                    ? "bg-[#cdfb56] text-slate-950 border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a]"
-                    : "bg-white text-slate-700 hover:bg-slate-100 border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56]"
+                    ? "bg-[#cdfb56] text-slate-950 border border-[#0f172a] shadow-xs"
+                    : "bg-white/60 text-slate-700 hover:bg-white/90 border border-slate-900/10 shadow-xs"
                 }`}
               >
                 AI Fleet ({agentsList.length})
@@ -316,10 +316,10 @@ export default function NeoBrutalistDashboard() {
 
               <button
                 onClick={() => setActiveTab("calls")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer ${
                   activeTab === "calls"
-                    ? "bg-[#cdfb56] text-slate-950 border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a]"
-                    : "bg-white text-slate-700 hover:bg-slate-100 border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56]"
+                    ? "bg-[#cdfb56] text-slate-950 border border-[#0f172a] shadow-xs"
+                    : "bg-white/60 text-slate-700 hover:bg-white/90 border border-slate-900/10 shadow-xs"
                 }`}
               >
                 Call Logs ({mockRecentCalls.length})
@@ -327,10 +327,10 @@ export default function NeoBrutalistDashboard() {
 
               <button
                 onClick={() => setActiveTab("leads")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer ${
                   activeTab === "leads"
-                    ? "bg-[#cdfb56] text-slate-950 border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a]"
-                    : "bg-white text-slate-700 hover:bg-slate-100 border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56]"
+                    ? "bg-[#cdfb56] text-slate-950 border border-[#0f172a] shadow-xs"
+                    : "bg-white/60 text-slate-700 hover:bg-white/90 border border-slate-900/10 shadow-xs"
                 }`}
               >
                 Candidates ({leadsList.length})
@@ -338,18 +338,18 @@ export default function NeoBrutalistDashboard() {
 
               <button
                 onClick={() => setActiveTab("telemetry")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer ${
                   activeTab === "telemetry"
-                    ? "bg-[#cdfb56] text-slate-950 border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a]"
-                    : "bg-white text-slate-700 hover:bg-slate-100 border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56]"
+                    ? "bg-[#cdfb56] text-slate-950 border border-[#0f172a] shadow-xs"
+                    : "bg-white/60 text-slate-700 hover:bg-white/90 border border-slate-900/10 shadow-xs"
                 }`}
               >
                 Telemetry
               </button>
             </nav>
 
-            {/* Right Status Indicator using the extra space */}
-            <div className="hidden lg:flex items-center gap-2 text-xs font-mono font-semibold text-slate-800 bg-slate-50 border-[1.5px] border-[#0f172a] px-3 py-1.5 rounded-xl shadow-[1.5px_1.5px_0px_0px_#cdfb56]">
+            {/* Right Status Indicator */}
+            <div className="hidden lg:flex items-center gap-2 text-xs font-mono font-semibold text-slate-800 bg-white/60 backdrop-blur-md border border-slate-900/10 px-3 py-1.5 rounded-xl shadow-xs">
               <span className="w-2 h-2 rounded-full bg-[#cdfb56] border border-[#0f172a] animate-pulse" />
               <span>14 SIP Trunks Active • 99.98% High QoS</span>
             </div>
@@ -357,10 +357,10 @@ export default function NeoBrutalistDashboard() {
         </header>
 
         {/* ======================================================================= */}
-        {/* 2. REAL-TIME TICKER (OBSIDIAN STRIP WITH TIGHT 2PX LIME OFFSET SHADOW) */}
+        {/* 2. REAL-TIME TICKER (DARK GLASSMORPHIC STRIP WITH LIME ACCENTS)         */}
         {/* ======================================================================= */}
-        <div className="w-full bg-[#0f172a] text-[#cdfb56] border-[1.5px] border-[#0f172a] rounded-2xl px-4 py-2.5 shadow-[2px_2px_0px_0px_#cdfb56] flex items-center gap-3 overflow-hidden text-xs font-mono select-none">
-          <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded font-bold shrink-0 tracking-wider border border-[#0f172a]">
+        <div className="w-full bg-[#0f172a]/90 backdrop-blur-xl text-[#cdfb56] border border-white/10 rounded-2xl px-4 py-2.5 shadow-[0_8px_24px_rgba(15,23,42,0.12)] flex items-center gap-3 overflow-hidden text-xs font-mono select-none">
+          <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded font-bold shrink-0 tracking-wider border border-[#0f172a]/30">
             VOICE STREAM
           </span>
           <div className="overflow-hidden whitespace-nowrap flex-1">
@@ -379,16 +379,16 @@ export default function NeoBrutalistDashboard() {
         </div>
 
         {/* ======================================================================= */}
-        {/* 3. VITALS METRICS STRIP (4 CARDS WITH 2PX LIGHT-GREEN DEPTH)             */}
+        {/* 3. VITALS METRICS STRIP (4 GLASSMORPHIC CARDS)                          */}
         {/* ======================================================================= */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {/* Card 1: Inbound Calls Handled */}
-          <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 shadow-[2px_2px_0px_0px_#cdfb56] hover:shadow-[2.5px_2.5px_0px_0px_#cdfb56] hover:translate-x-[-0.5px] hover:translate-y-[-0.5px] flex flex-col justify-between transition-all">
+          <div className="bg-white/75 hover:bg-white/90 backdrop-blur-xl border border-slate-900/10 hover:border-slate-900/20 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] hover:-translate-y-0.5 flex flex-col justify-between transition-all">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
                 Calls Handled
               </span>
-              <div className="w-8 h-8 rounded-xl bg-[#0f172a] text-[#cdfb56] border border-[#0f172a] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-xl bg-[#0f172a] text-[#cdfb56] border border-[#0f172a]/30 flex items-center justify-center font-bold">
                 <Rocket className="w-4 h-4" />
               </div>
             </div>
@@ -397,7 +397,7 @@ export default function NeoBrutalistDashboard() {
                 842
               </div>
               <div className="mt-2.5 flex items-center justify-between text-xs">
-                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a] font-bold text-[10px]">
+                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a]/30 font-bold text-[10px]">
                   +18.4% vs last week
                 </span>
                 <span className="text-slate-500 font-medium">99.2% Resolved</span>
@@ -406,12 +406,12 @@ export default function NeoBrutalistDashboard() {
           </div>
 
           {/* Card 2: Turn Latency */}
-          <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 shadow-[2px_2px_0px_0px_#cdfb56] hover:shadow-[2.5px_2.5px_0px_0px_#cdfb56] hover:translate-x-[-0.5px] hover:translate-y-[-0.5px] flex flex-col justify-between transition-all">
+          <div className="bg-white/75 hover:bg-white/90 backdrop-blur-xl border border-slate-900/10 hover:border-slate-900/20 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] hover:-translate-y-0.5 flex flex-col justify-between transition-all">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
                 Turn Latency
               </span>
-              <div className="w-8 h-8 rounded-xl bg-[#cdfb56] text-slate-950 border border-[#0f172a] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-xl bg-[#cdfb56] text-slate-950 border border-[#0f172a]/30 flex items-center justify-center font-bold">
                 <Zap className="w-4 h-4 fill-current" />
               </div>
             </div>
@@ -423,7 +423,7 @@ export default function NeoBrutalistDashboard() {
                 <span className="bg-[#0f172a] text-white px-2 py-0.5 rounded font-bold text-[10px]">
                   -14s vs Human Desk
                 </span>
-                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a] font-bold text-[10px]">
+                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a]/30 font-bold text-[10px]">
                   Zero Lag Audio
                 </span>
               </div>
@@ -431,12 +431,12 @@ export default function NeoBrutalistDashboard() {
           </div>
 
           {/* Card 3: Qualified Candidates */}
-          <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 shadow-[2px_2px_0px_0px_#cdfb56] hover:shadow-[2.5px_2.5px_0px_0px_#cdfb56] hover:translate-x-[-0.5px] hover:translate-y-[-0.5px] flex flex-col justify-between transition-all">
+          <div className="bg-white/75 hover:bg-white/90 backdrop-blur-xl border border-slate-900/10 hover:border-slate-900/20 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] hover:-translate-y-0.5 flex flex-col justify-between transition-all">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
                 Verified Candidates
               </span>
-              <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 border border-[#0f172a] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 border border-[#0f172a]/20 flex items-center justify-center font-bold">
                 <UserPlus className="w-4 h-4" />
               </div>
             </div>
@@ -445,7 +445,7 @@ export default function NeoBrutalistDashboard() {
                 412
               </div>
               <div className="mt-2.5 flex items-center justify-between text-xs">
-                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a] font-bold text-[10px]">
+                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a]/30 font-bold text-[10px]">
                   +32 Direct Registrations
                 </span>
                 <span className="text-slate-500 font-medium">94.8% Match</span>
@@ -454,12 +454,12 @@ export default function NeoBrutalistDashboard() {
           </div>
 
           {/* Card 4: Active Trunks */}
-          <div className="bg-[#0f172a] text-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 shadow-[2px_2px_0px_0px_#cdfb56] hover:shadow-[2.5px_2.5px_0px_0px_#cdfb56] hover:translate-x-[-0.5px] hover:translate-y-[-0.5px] flex flex-col justify-between transition-all">
+          <div className="bg-[#0f172a]/90 hover:bg-[#0f172a]/95 backdrop-blur-xl text-white border border-white/10 hover:border-white/20 rounded-2xl p-5 shadow-[0_8px_30px_rgba(15,23,42,0.15)] hover:shadow-[0_12px_32px_rgba(15,23,42,0.25)] hover:-translate-y-0.5 flex flex-col justify-between transition-all">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                 Active SIP Trunks
               </span>
-              <div className="w-8 h-8 rounded-xl bg-[#cdfb56] text-slate-950 border border-[#0f172a] flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-xl bg-[#cdfb56] text-slate-950 border border-[#0f172a]/30 flex items-center justify-center font-bold">
                 <PhoneCall className="w-4 h-4" />
               </div>
             </div>
@@ -469,7 +469,7 @@ export default function NeoBrutalistDashboard() {
                 <span className="text-base text-slate-400 font-normal">/ 20</span>
               </div>
               <div className="mt-2.5 flex items-center justify-between text-xs">
-                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a] font-bold text-[10px]">
+                <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a]/30 font-bold text-[10px]">
                   Carrier Grade QoS
                 </span>
                 <span className="text-emerald-400 font-bold font-mono">0.02% Jitter</span>
@@ -487,10 +487,10 @@ export default function NeoBrutalistDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             
             {/* Left 8 Cols: Candidate Admissions Lead Triage Hub */}
-            <div className="lg:col-span-8 bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 sm:p-6 shadow-[2px_2px_0px_0px_#cdfb56] space-y-4">
+            <div className="lg:col-span-8 bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-5 sm:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-4">
               
               {/* Header & Category Filters */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
                 <div>
                   <h2 className="text-base font-bold tracking-tight text-slate-950">
                     Candidate Lead Triage & Admissions Docket
@@ -507,7 +507,7 @@ export default function NeoBrutalistDashboard() {
                     placeholder="Search candidate name / phone..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-white text-slate-900 text-xs font-semibold pl-8 pr-3 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#cdfb56] outline-none w-56 placeholder:text-slate-400 focus:bg-slate-50 transition-colors"
+                    className="bg-white/70 focus:bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold pl-8 pr-3 py-2 rounded-xl border border-slate-900/15 shadow-xs outline-none w-56 placeholder:text-slate-400 transition-colors"
                   />
                   <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 </div>
@@ -527,10 +527,10 @@ export default function NeoBrutalistDashboard() {
                   <button
                     key={tab.id}
                     onClick={() => setSelectedCategory(tab.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer backdrop-blur-md ${
                       selectedCategory === tab.id
-                        ? "bg-[#cdfb56] text-slate-950 border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a]"
-                        : "bg-white text-slate-700 hover:bg-slate-50 border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56]"
+                        ? "bg-[#cdfb56] text-slate-950 border border-[#0f172a] shadow-xs"
+                        : "bg-white/60 text-slate-700 hover:bg-white/90 border border-slate-900/10 shadow-xs"
                     }`}
                   >
                     {tab.label}
@@ -543,11 +543,11 @@ export default function NeoBrutalistDashboard() {
                 {filteredLeads.map((lead) => (
                   <div
                     key={lead.id}
-                    className="border-[1.5px] border-[#0f172a] rounded-xl p-4 bg-white hover:bg-slate-50/70 shadow-[1.5px_1.5px_0px_0px_#cdfb56] transition-all space-y-2.5"
+                    className="border border-slate-900/10 rounded-xl p-4 bg-white/70 hover:bg-white/95 backdrop-blur-md shadow-xs hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all space-y-2.5"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-[#0f172a] text-[#cdfb56] border border-[#0f172a] flex items-center justify-center font-bold text-xs">
+                        <div className="w-8 h-8 rounded-lg bg-[#0f172a] text-[#cdfb56] border border-[#0f172a]/30 flex items-center justify-center font-bold text-xs">
                           {lead.name.charAt(0)}
                         </div>
                         <div>
@@ -558,13 +558,13 @@ export default function NeoBrutalistDashboard() {
                             </span>
                           </div>
                           <div className="text-xs font-medium text-slate-600">
-                            {lead.program} • <span className="bg-[#cdfb56] text-slate-950 px-1.5 py-0.2 rounded border border-[#0f172a] font-bold text-[10px]">{lead.score}</span>
+                            {lead.program} • <span className="bg-[#cdfb56] text-slate-950 px-1.5 py-0.2 rounded border border-[#0f172a]/30 font-bold text-[10px]">{lead.score}</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2 self-end sm:self-auto">
-                        <span className="bg-slate-100 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded border border-[#0f172a]">
+                        <span className="bg-slate-100/90 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded border border-[#0f172a]/20">
                           {lead.language} ({lead.agent})
                         </span>
                         <span className="text-[10px] font-medium text-slate-400">
@@ -574,14 +574,14 @@ export default function NeoBrutalistDashboard() {
                     </div>
 
                     {/* Summary Verbatim */}
-                    <div className="text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-normal leading-relaxed">
+                    <div className="text-xs text-slate-700 bg-white/60 border border-slate-200/80 rounded-lg p-2.5 font-normal leading-relaxed backdrop-blur-xs">
                       "{lead.summary}"
                     </div>
 
                     {/* Action Bar */}
                     <div className="flex items-center justify-between pt-1">
                       <div className="flex items-center gap-2 text-[11px] font-semibold text-slate-600">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 border border-[#0f172a]" />
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 border border-[#0f172a]/30" />
                         <span>Sentiment: {lead.sentiment}</span>
                       </div>
 
@@ -589,7 +589,7 @@ export default function NeoBrutalistDashboard() {
                         {/* WhatsApp Push Button */}
                         <button
                           onClick={() => handleSendWhatsApp(lead.id)}
-                          className="bg-white hover:bg-slate-100 text-slate-800 text-[11px] font-semibold px-2.5 py-1 rounded-lg border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56] cursor-pointer transition-all"
+                          className="bg-white/70 hover:bg-white/95 backdrop-blur-md text-slate-800 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-slate-900/15 shadow-xs cursor-pointer transition-all"
                         >
                           {whatsappSentId === lead.id ? "✓ Sent to WhatsApp" : "Send WhatsApp"}
                         </button>
@@ -597,7 +597,7 @@ export default function NeoBrutalistDashboard() {
                         {/* Inspect Call Audio */}
                         <button
                           onClick={() => handleOpenLiveCall()}
-                          className="bg-[#0f172a] hover:bg-slate-800 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border-[1.5px] border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56] transition-all flex items-center gap-1 cursor-pointer"
+                          className="bg-[#0f172a] hover:bg-slate-800 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-[#0f172a] shadow-xs transition-all flex items-center gap-1 cursor-pointer"
                         >
                           <Play className="w-3 h-3 fill-current text-[#cdfb56]" />
                           <span>Inspect Call</span>
@@ -613,13 +613,13 @@ export default function NeoBrutalistDashboard() {
             <div className="lg:col-span-4 space-y-5">
               
               {/* Interactive Speech Audition Box */}
-              <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 shadow-[2px_2px_0px_0px_#cdfb56] text-slate-950 space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <div className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-slate-950 space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                   <div className="font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 text-slate-900">
                     <Headphones className="w-4 h-4 stroke-[2.2]" />
                     <span>Indic Speech Playground</span>
                   </div>
-                  <span className="text-[10px] font-bold bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a]">
+                  <span className="text-[10px] font-bold bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a]/30">
                     Bulbul V3 TTS
                   </span>
                 </div>
@@ -638,13 +638,13 @@ export default function NeoBrutalistDashboard() {
                     <div
                       key={v.name}
                       onClick={() => toggleVoiceSample(v.name)}
-                      className={`border-[1.5px] border-[#0f172a] rounded-xl p-3 shadow-[1.5px_1.5px_0px_0px_#cdfb56] cursor-pointer transition-all space-y-1 ${
-                        playingVoice === v.name ? "bg-[#cdfb56]/20 border-slate-900" : "bg-slate-50 hover:bg-slate-100"
+                      className={`border border-slate-900/10 rounded-xl p-3 shadow-xs cursor-pointer transition-all space-y-1 backdrop-blur-sm ${
+                        playingVoice === v.name ? "bg-[#cdfb56]/20 border-slate-900/40" : "bg-white/60 hover:bg-white/90"
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-md bg-[#0f172a] text-[#cdfb56] border border-[#0f172a] flex items-center justify-center font-bold text-xs">
+                          <div className="w-6 h-6 rounded-md bg-[#0f172a] text-[#cdfb56] border border-[#0f172a]/30 flex items-center justify-center font-bold text-xs">
                             {playingVoice === v.name ? (
                               <Pause className="w-3 h-3 fill-current" />
                             ) : (
@@ -652,7 +652,7 @@ export default function NeoBrutalistDashboard() {
                             )}
                           </div>
                           <span className="font-bold text-xs text-slate-950">{v.name}</span>
-                          <span className="text-[10px] bg-[#cdfb56] text-slate-950 font-bold px-1.5 py-0.2 rounded border border-[#0f172a]">
+                          <span className="text-[10px] bg-[#cdfb56] text-slate-950 font-bold px-1.5 py-0.2 rounded border border-[#0f172a]/30">
                             {v.lang}
                           </span>
                         </div>
@@ -678,14 +678,14 @@ export default function NeoBrutalistDashboard() {
               </div>
 
               {/* Fast Telephony Routing Card */}
-              <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 shadow-[2px_2px_0px_0px_#cdfb56] space-y-3.5">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <div className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-3.5">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                   <h3 className="font-bold text-xs uppercase tracking-wider text-slate-900">
                     Live Telephony Channels
                   </h3>
                   <button
                     onClick={() => setActiveTab("trunks")}
-                    className="text-[10px] font-bold uppercase bg-[#0f172a] hover:bg-slate-800 text-[#cdfb56] px-2 py-0.5 rounded border border-[#0f172a] cursor-pointer shadow-[1px_1px_0px_0px_#cdfb56]"
+                    className="text-[10px] font-bold uppercase bg-[#0f172a] hover:bg-slate-800 text-[#cdfb56] px-2 py-0.5 rounded border border-[#0f172a] cursor-pointer shadow-xs"
                   >
                     View All
                   </button>
@@ -695,7 +695,7 @@ export default function NeoBrutalistDashboard() {
                   {mockTelephonyNumbers.slice(0, 3).map((trunk) => (
                     <div
                       key={trunk.id}
-                      className="flex items-center justify-between p-2.5 border-[1.5px] border-[#0f172a] rounded-xl bg-slate-50 hover:bg-[#cdfb56]/15 transition-colors shadow-[1px_1px_0px_0px_#cdfb56]"
+                      className="flex items-center justify-between p-2.5 border border-slate-900/10 rounded-xl bg-white/60 hover:bg-[#cdfb56]/15 backdrop-blur-sm transition-colors shadow-xs"
                     >
                       <div>
                         <div className="font-mono font-bold text-xs text-slate-900">
@@ -706,7 +706,7 @@ export default function NeoBrutalistDashboard() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <span className="inline-block bg-[#cdfb56] text-slate-950 text-[9px] font-bold px-1.5 py-0.2 rounded border border-[#0f172a]">
+                        <span className="inline-block bg-[#cdfb56] text-slate-950 text-[9px] font-bold px-1.5 py-0.2 rounded border border-[#0f172a]/30">
                           {trunk.status.toUpperCase()}
                         </span>
                         <div className="text-[10px] font-mono text-slate-500 mt-0.5">
@@ -719,7 +719,7 @@ export default function NeoBrutalistDashboard() {
               </div>
 
               {/* Admissions Yield Metric Callout */}
-              <div className="bg-[#0f172a] text-white border-[1.5px] border-[#0f172a] rounded-2xl p-5 shadow-[2px_2px_0px_0px_#cdfb56] space-y-2.5">
+              <div className="bg-[#0f172a]/90 backdrop-blur-xl text-white border border-white/10 rounded-2xl p-5 shadow-[0_8px_30px_rgba(15,23,42,0.15)] space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-400 font-bold uppercase">Autonomous Admissions Yield</span>
                   <span className="text-[#cdfb56] font-bold">98.4% Target</span>
@@ -739,15 +739,15 @@ export default function NeoBrutalistDashboard() {
 
         {/* TAB 2: AI FLEET */}
         {activeTab === "agents" && (
-          <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-6 shadow-[2px_2px_0px_0px_#cdfb56] space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
               <div>
                 <h2 className="text-lg font-bold text-slate-950">Campus AI Agent Fleet ({agentsList.length})</h2>
                 <p className="text-xs text-slate-500">Autonomous Indic voice personas configured for university admissions and counseling</p>
               </div>
               <button
                 onClick={() => setCreateAgentOpen(true)}
-                className="bg-[#cdfb56] text-slate-950 font-bold uppercase text-xs px-4 py-2.5 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a] hover:bg-[#bef03f] transition-all cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+                className="bg-[#cdfb56] hover:bg-[#bef03f] backdrop-blur-md text-slate-950 font-bold uppercase text-xs px-4 py-2.5 rounded-xl border border-[#0f172a]/30 shadow-xs hover:-translate-y-0.5 transition-all cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />
                 <span>Deploy New Agent</span>
@@ -758,12 +758,12 @@ export default function NeoBrutalistDashboard() {
               {agentsList.map((agent) => (
                 <div
                   key={agent.id}
-                  className="border-[1.5px] border-[#0f172a] rounded-2xl p-5 bg-white shadow-[1.5px_1.5px_0px_0px_#cdfb56] hover:shadow-[2px_2px_0px_0px_#cdfb56] hover:translate-x-[-0.5px] hover:translate-y-[-0.5px] transition-all flex flex-col justify-between space-y-4"
+                  className="border border-slate-900/10 rounded-2xl p-5 bg-white/70 hover:bg-white/95 backdrop-blur-md shadow-xs hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#0f172a] text-[#cdfb56] border border-[#0f172a] flex items-center justify-center font-bold text-sm">
+                        <div className="w-10 h-10 rounded-xl bg-[#0f172a] text-[#cdfb56] border border-[#0f172a]/30 flex items-center justify-center font-bold text-sm">
                           {agent.name.charAt(0)}
                         </div>
                         <div>
@@ -771,32 +771,32 @@ export default function NeoBrutalistDashboard() {
                           <span className="text-[11px] text-slate-500 font-medium">{agent.role}</span>
                         </div>
                       </div>
-                      <span className="bg-[#cdfb56] text-slate-950 text-[10px] font-bold uppercase px-2 py-0.5 rounded border border-[#0f172a]">
+                      <span className="bg-[#cdfb56] text-slate-950 text-[10px] font-bold uppercase px-2 py-0.5 rounded border border-[#0f172a]/30">
                         {agent.status}
                       </span>
                     </div>
 
-                    <div className="text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-slate-700">
+                    <div className="text-xs bg-white/60 p-2.5 rounded-xl border border-slate-200/80 text-slate-700 backdrop-blur-xs">
                       "{agent.systemPromptPreview}"
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs pt-1 font-medium">
-                      <div className="p-2 border border-slate-200 rounded-lg bg-slate-50">
+                      <div className="p-2 border border-slate-200/80 rounded-lg bg-white/60 backdrop-blur-xs">
                         <div className="text-[10px] text-slate-500 uppercase font-bold">Voice Model</div>
                         <div className="font-bold text-slate-900 mt-0.5">{agent.voice.name}</div>
                       </div>
-                      <div className="p-2 border border-slate-200 rounded-lg bg-slate-50">
+                      <div className="p-2 border border-slate-200/80 rounded-lg bg-white/60 backdrop-blur-xs">
                         <div className="text-[10px] text-slate-500 uppercase font-bold">Language</div>
                         <div className="font-bold text-slate-900 mt-0.5">{agent.language}</div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-200 text-xs">
+                  <div className="flex items-center justify-between pt-3 border-t border-slate-200/80 text-xs">
                     <span className="font-mono text-slate-500">{agent.assignedNumber}</span>
                     <button
                       onClick={() => handleOpenLiveCall()}
-                      className="bg-[#0f172a] text-white hover:bg-slate-800 font-bold uppercase text-[11px] px-3 py-1.5 rounded-xl border border-[#0f172a] shadow-[1px_1px_0px_0px_#cdfb56] transition-colors cursor-pointer"
+                      className="bg-[#0f172a] text-white hover:bg-slate-800 font-bold uppercase text-[11px] px-3 py-1.5 rounded-xl border border-[#0f172a] shadow-xs transition-colors cursor-pointer"
                     >
                       Test Audio
                     </button>
@@ -809,15 +809,15 @@ export default function NeoBrutalistDashboard() {
 
         {/* TAB 3: CALL LOGS */}
         {activeTab === "calls" && (
-          <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-6 shadow-[2px_2px_0px_0px_#cdfb56] space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
               <div>
                 <h2 className="text-lg font-bold text-slate-950">Real-Time Call Records & Transcripts</h2>
                 <p className="text-xs text-slate-500">Sub-140ms first byte recordings, audio spectrograms and sentiment logs</p>
               </div>
               <button
                 onClick={() => setExportOpen(true)}
-                className="bg-[#cdfb56] text-slate-950 font-bold uppercase text-xs px-4 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a] hover:bg-[#bef03f] transition-all cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+                className="bg-[#cdfb56] hover:bg-[#bef03f] backdrop-blur-md text-slate-950 font-bold uppercase text-xs px-4 py-2 rounded-xl border border-[#0f172a]/30 shadow-xs hover:-translate-y-0.5 transition-all cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
               >
                 <Download className="w-4 h-4 stroke-[2]" />
                 <span>Export Call Data</span>
@@ -829,10 +829,10 @@ export default function NeoBrutalistDashboard() {
                 <div
                   key={call.id}
                   onClick={() => handleOpenLiveCall()}
-                  className="border-[1.5px] border-[#0f172a] rounded-xl p-4 bg-white hover:bg-slate-50 shadow-[1.5px_1.5px_0px_0px_#cdfb56] transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className="border border-slate-900/10 rounded-xl p-4 bg-white/70 hover:bg-white/95 backdrop-blur-md shadow-xs hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#0f172a] text-[#cdfb56] border border-[#0f172a] flex items-center justify-center font-bold">
+                    <div className="w-9 h-9 rounded-xl bg-[#0f172a] text-[#cdfb56] border border-[#0f172a]/30 flex items-center justify-center font-bold">
                       <PhoneCall className="w-4 h-4" />
                     </div>
                     <div>
@@ -848,7 +848,7 @@ export default function NeoBrutalistDashboard() {
 
                   <div className="flex items-center gap-4 text-xs font-mono self-end sm:self-auto">
                     <span className="text-slate-500">{call.duration}</span>
-                    <span className="bg-[#cdfb56] text-slate-950 text-xs font-bold px-2.5 py-1 rounded-lg border border-[#0f172a] shadow-[1px_1px_0px_0px_#0f172a]">
+                    <span className="bg-[#cdfb56] text-slate-950 text-xs font-bold px-2.5 py-1 rounded-lg border border-[#0f172a]/30 shadow-xs">
                       {call.status.toUpperCase()}
                     </span>
                     <span className="text-slate-400 font-sans">{call.timestamp}</span>
@@ -861,23 +861,23 @@ export default function NeoBrutalistDashboard() {
 
         {/* TAB 4: CANDIDATES DOCKET */}
         {activeTab === "leads" && (
-          <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-6 shadow-[2px_2px_0px_0px_#cdfb56] space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
               <div>
                 <h2 className="text-lg font-bold text-slate-950">Candidate Admissions Docket</h2>
                 <p className="text-xs text-slate-500">Real-time candidate transcript logs, scholarship qualifications & parent queries</p>
               </div>
               <button
                 onClick={() => setExportOpen(true)}
-                className="bg-[#cdfb56] text-slate-950 font-bold uppercase text-xs px-4 py-2 rounded-xl border-[1.5px] border-[#0f172a] shadow-[1.5px_1.5px_0px_0px_#0f172a] hover:bg-[#bef03f] cursor-pointer"
+                className="bg-[#cdfb56] hover:bg-[#bef03f] backdrop-blur-md text-slate-950 font-bold uppercase text-xs px-4 py-2 rounded-xl border border-[#0f172a]/30 shadow-xs hover:-translate-y-0.5 cursor-pointer"
               >
                 Export CSV Docket
               </button>
             </div>
 
-            <div className="overflow-x-auto border-[1.5px] border-[#0f172a] rounded-xl shadow-[1.5px_1.5px_0px_0px_#cdfb56]">
+            <div className="overflow-x-auto border border-slate-900/15 rounded-xl shadow-xs backdrop-blur-md">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#0f172a] text-white font-bold uppercase border-b border-[#0f172a]">
+                <thead className="bg-[#0f172a]/95 text-white font-bold uppercase border-b border-slate-900/20">
                   <tr>
                     <th className="p-3">Candidate</th>
                     <th className="p-3">Program Applied</th>
@@ -887,16 +887,16 @@ export default function NeoBrutalistDashboard() {
                     <th className="p-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 bg-white">
+                <tbody className="divide-y divide-slate-200/80 bg-white/70 backdrop-blur-sm">
                   {leadsList.map((lead) => (
-                    <tr key={lead.id} className="hover:bg-slate-50">
+                    <tr key={lead.id} className="hover:bg-white/95 transition-colors">
                       <td className="p-3 font-bold text-slate-900">
                         {lead.name}
                         <div className="font-mono text-[10px] text-slate-500 font-normal">{lead.phone}</div>
                       </td>
                       <td className="p-3 text-slate-700">{lead.program}</td>
                       <td className="p-3">
-                        <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a] font-bold text-[11px]">
+                        <span className="bg-[#cdfb56] text-slate-950 px-2 py-0.5 rounded border border-[#0f172a]/30 font-bold text-[11px]">
                           {lead.score}
                         </span>
                       </td>
@@ -905,7 +905,7 @@ export default function NeoBrutalistDashboard() {
                       <td className="p-3 text-right">
                         <button
                           onClick={() => handleSendWhatsApp(lead.id)}
-                          className="bg-white hover:bg-slate-100 text-slate-800 text-[10px] font-bold uppercase px-2.5 py-1 rounded border border-[#0f172a] cursor-pointer shadow-[1px_1px_0px_0px_#cdfb56]"
+                          className="bg-white/80 hover:bg-white text-slate-800 text-[10px] font-bold uppercase px-2.5 py-1 rounded border border-slate-900/15 cursor-pointer shadow-xs"
                         >
                           {whatsappSentId === lead.id ? "Sent" : "WhatsApp"}
                         </button>
@@ -922,8 +922,8 @@ export default function NeoBrutalistDashboard() {
         {activeTab === "telemetry" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Language Breakdown */}
-            <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-6 shadow-[2px_2px_0px_0px_#cdfb56] space-y-4">
-              <h3 className="font-bold text-sm uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">
+            <div className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-4">
+              <h3 className="font-bold text-sm uppercase tracking-wider text-slate-900 border-b border-slate-200/80 pb-2">
                 Indic Language Synthesis Breakdown
               </h3>
               <div className="space-y-3">
@@ -940,7 +940,7 @@ export default function NeoBrutalistDashboard() {
                       <span>{item.lang}</span>
                       <span className="font-mono text-slate-500">{item.chars} ({item.pct}%)</span>
                     </div>
-                    <div className="w-full h-2.5 rounded-full overflow-hidden bg-slate-100 border border-[#0f172a]">
+                    <div className="w-full h-2.5 rounded-full overflow-hidden bg-white/60 border border-slate-900/15">
                       <div style={{ width: `${item.pct}%` }} className="h-full bg-[#cdfb56] rounded-full" />
                     </div>
                   </div>
@@ -949,16 +949,16 @@ export default function NeoBrutalistDashboard() {
             </div>
 
             {/* Benchmarks */}
-            <div className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-6 shadow-[2px_2px_0px_0px_#cdfb56] space-y-4">
-              <h3 className="font-bold text-sm uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">
+            <div className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-4">
+              <h3 className="font-bold text-sm uppercase tracking-wider text-slate-900 border-b border-slate-200/80 pb-2">
                 Turn Latency & WER Benchmarks
               </h3>
               <div className="space-y-3 text-xs">
-                <div className="p-3 border-[1.5px] border-[#0f172a] rounded-xl bg-[#cdfb56] text-slate-950 shadow-[1.5px_1.5px_0px_0px_#0f172a]">
+                <div className="p-3 border border-[#0f172a]/30 rounded-xl bg-[#cdfb56] text-slate-950 shadow-xs">
                   <div className="font-bold">VoicePilot Bulbul V3 vs ElevenLabs Flash</div>
                   <div className="text-[11px] mt-1 text-slate-800">77.95% Preference Win in Indian English & Hindi Accents</div>
                 </div>
-                <div className="p-3 border border-slate-200 rounded-xl bg-slate-50 space-y-1.5 text-slate-700">
+                <div className="p-3 border border-slate-200/80 rounded-xl bg-white/60 backdrop-blur-xs space-y-1.5 text-slate-700">
                   <div className="font-medium flex justify-between">
                     <span>Average ASR Transcribe Latency</span>
                     <span className="font-mono font-bold text-slate-900">142 ms</span>
@@ -971,9 +971,9 @@ export default function NeoBrutalistDashboard() {
                     <span>WebSocket Transport Overhead</span>
                     <span className="font-mono font-bold text-slate-900">42 ms</span>
                   </div>
-                  <div className="pt-2 border-t border-slate-200 font-bold flex justify-between text-sm text-slate-900">
+                  <div className="pt-2 border-t border-slate-200/80 font-bold flex justify-between text-sm text-slate-900">
                     <span>Total End-to-End Latency</span>
-                    <span className="font-mono text-slate-950 bg-[#cdfb56] px-1.5 py-0.5 rounded border border-[#0f172a]">382 ms</span>
+                    <span className="font-mono text-slate-950 bg-[#cdfb56] px-1.5 py-0.5 rounded border border-[#0f172a]/30">382 ms</span>
                   </div>
                 </div>
               </div>
@@ -984,9 +984,9 @@ export default function NeoBrutalistDashboard() {
         {/* ======================================================================= */}
         {/* 5. FOOTER NOTICE                                                        */}
         {/* ======================================================================= */}
-        <footer className="bg-white border-[1.5px] border-[#0f172a] rounded-2xl p-4 shadow-[1.5px_1.5px_0px_0px_#cdfb56] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-600">
+        <footer className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-600">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#cdfb56] border border-[#0f172a] animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#cdfb56] border border-[#0f172a]/30 animate-pulse" />
             <span className="text-slate-900">VoicePilot AI Operations Command Center • Apex Engineering College</span>
           </div>
           <div className="flex items-center gap-4 text-slate-500">

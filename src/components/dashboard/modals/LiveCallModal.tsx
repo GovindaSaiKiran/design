@@ -57,41 +57,41 @@ export default function LiveCallModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-2xl bg-white/95 backdrop-blur-2xl rounded-3xl border border-black/15 shadow-2xl p-6 sm:p-8 overflow-hidden flex flex-col max-h-[90vh] text-neutral-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-200 select-none">
+      <div className="relative w-full max-w-2xl bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 sm:p-8 overflow-hidden flex flex-col max-h-[90vh] text-slate-900">
         {/* Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-black/10 shrink-0">
+        <div className="flex items-center justify-between pb-5 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-3.5">
             <div className="relative">
-              <div className="w-12 h-12 rounded-2xl bg-neutral-900 text-white flex items-center justify-center shadow-md">
-                <Phone className="w-6 h-6 stroke-[1.8]" />
+              <div className="w-12 h-12 rounded-2xl bg-[#cdfb56] text-slate-950 border border-[#bceb42] flex items-center justify-center shadow-xs">
+                <Phone className="w-6 h-6 stroke-[2]" />
               </div>
-              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white animate-pulse" />
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#8ac926] border-2 border-white animate-pulse" />
             </div>
 
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold text-neutral-900 font-mono tracking-tight">
+                <h3 className="text-lg font-bold text-slate-900 font-mono tracking-tight">
                   {call.callerNumber}
                 </h3>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 border border-[#cdfb56] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926] animate-ping" />
                   Live Voice Session
                 </span>
               </div>
-              <p className="text-xs text-neutral-500 mt-0.5">
-                Candidate: <span className="text-neutral-800 font-medium">{call.callerName || "Verified Applicant"}</span> • Agent: <strong className="text-neutral-900 font-semibold">{call.agentName}</strong>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Candidate: <span className="text-slate-900 font-semibold">{call.callerName || "Verified Applicant"}</span> • Agent: <strong className="text-slate-950 font-bold">{call.agentName}</strong>
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2.5">
-            <div className="font-mono text-xs font-semibold text-neutral-700 bg-neutral-100 px-3 py-1.5 rounded-xl border border-black/5">
+            <div className="font-mono text-xs font-bold text-slate-800 bg-[#f7fee7] px-3 py-1.5 rounded-xl border border-[#cdfb56]/60">
               {formattedDuration}
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer"
+              className="p-2 rounded-full bg-slate-100 hover:bg-[#cdfb56] text-slate-600 hover:text-slate-950 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -99,23 +99,23 @@ export default function LiveCallModal({
         </div>
 
         {/* Acoustic Waveform & Latency Bar */}
-        <div className="my-4 p-4 rounded-2xl bg-neutral-900 text-white shadow-inner flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="my-4 p-4 rounded-2xl bg-slate-950 text-white shadow-xs flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-2.5">
-            <Volume2 className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs font-medium text-neutral-300">Live Acoustic Stream:</span>
+            <Volume2 className="w-4 h-4 text-[#cdfb56]" />
+            <span className="text-xs font-medium text-slate-300">Live Acoustic Stream:</span>
             {/* Animated Waveform */}
             <div className="flex items-center gap-1 h-6 px-1">
-              <span className="w-1 bg-emerald-400 rounded-full h-3 animate-pulse" />
-              <span className="w-1 bg-blue-400 rounded-full h-5 animate-pulse delay-75" />
-              <span className="w-1 bg-indigo-400 rounded-full h-6 animate-pulse delay-150" />
-              <span className="w-1 bg-emerald-400 rounded-full h-4 animate-pulse delay-200" />
-              <span className="w-1 bg-cyan-400 rounded-full h-5 animate-pulse delay-300" />
+              <span className="w-1 bg-[#cdfb56] rounded-full h-3 animate-pulse" />
+              <span className="w-1 bg-[#bef03f] rounded-full h-5 animate-pulse delay-75" />
+              <span className="w-1 bg-[#8ac926] rounded-full h-6 animate-pulse delay-150" />
+              <span className="w-1 bg-[#cdfb56] rounded-full h-4 animate-pulse delay-200" />
+              <span className="w-1 bg-[#bef03f] rounded-full h-5 animate-pulse delay-300" />
             </div>
           </div>
 
-          <div className="flex items-center gap-3 text-xs font-mono text-neutral-300">
-            <span>Latency: <strong className="text-blue-300">{call.latencyMs}ms</strong></span>
-            <span>Sentiment: <strong className="text-emerald-300 uppercase">{call.currentSentiment}</strong></span>
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-300">
+            <span>Latency: <strong className="text-[#cdfb56]">{call.latencyMs}ms</strong></span>
+            <span>Sentiment: <strong className="text-[#bef03f] uppercase">{call.currentSentiment}</strong></span>
           </div>
         </div>
 
@@ -174,24 +174,24 @@ export default function LiveCallModal({
 
         {/* Handoff Notice Banner */}
         {handoffSuccess && (
-          <div className="p-3.5 my-2 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center justify-between shadow-xs">
+          <div className="p-3.5 my-2 rounded-2xl bg-[#f7fee7] border border-[#cdfb56] text-slate-900 text-xs font-medium flex items-center justify-between shadow-2xs">
             <span className="flex items-center gap-2">
-              <PhoneForwarded className="w-4 h-4 text-emerald-600" />
+              <PhoneForwarded className="w-4 h-4 text-[#8ac926]" />
               Transfer initiated! Connecting candidate to Senior Admissions Counselor.
             </span>
-            <span className="font-mono text-xs font-semibold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">Desk Queue #01</span>
+            <span className="font-mono text-xs font-bold bg-[#cdfb56] text-slate-950 px-2.5 py-0.5 rounded-full border border-[#bceb42]">Desk Queue #01</span>
           </div>
         )}
 
         {/* Modal Controls */}
-        <div className="flex items-center justify-between pt-5 border-t border-black/10 shrink-0 gap-3">
+        <div className="flex items-center justify-between pt-5 border-t border-slate-100 shrink-0 gap-3">
           <button
             onClick={handleTakeover}
             disabled={handoffSuccess}
-            className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all inline-flex items-center gap-2 cursor-pointer shadow-xs ${
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-2 cursor-pointer shadow-xs ${
               handoffSuccess
-                ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
-                : "bg-neutral-900 hover:bg-neutral-800 text-white active:scale-95"
+                ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                : "bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border border-[#bceb42] active:scale-95 shadow-xs"
             }`}
           >
             <PhoneForwarded className="w-3.5 h-3.5" />
@@ -200,7 +200,7 @@ export default function LiveCallModal({
 
           <button
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-xs font-medium text-neutral-700 bg-neutral-100 hover:bg-neutral-200 border border-black/5 transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-950 bg-white hover:bg-[#f7fee7] border border-slate-200 hover:border-[#cdfb56] transition-all cursor-pointer"
           >
             Close Inspector
           </button>

@@ -2,24 +2,24 @@
 
 @layer base {
   :root {
-    --background: #fbfbfd;
-    --foreground: #111827;
-    --aeline-blue: #1682ec;
-    --aeline-sky: #2293f7;
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --aeline-blue: #cdfb56;
+    --aeline-sky: #bef03f;
     --aeline-lime: #cdfb56;
     --aeline-lime-hover: #bef03f;
-    --aeline-dark: #121316;
-    --aeline-card-bg: #f4f5f7;
+    --aeline-dark: #0f172a;
+    --aeline-card-bg: #ffffff;
   }
 
   * {
-    border-color: #e5e7eb;
+    border-color: #e2e8f0;
   }
 
   body {
-    background-color: #fbfbfd;
-    background-image: radial-gradient(rgba(0, 0, 0, 0.11) 1.25px, transparent 1.25px);
-    background-size: 16px 16px;
+    background-color: #f8fafc;
+    background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.04) 1px, transparent 0);
+    background-size: 24px 24px;
     background-position: 0 0;
     color: var(--foreground);
     font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -30,21 +30,30 @@
   }
 }
 
-/* Small Dotted Background Pattern Utility */
+/* Small Dotted Background Pattern Utility (Calm, modern executive canvas) */
+.stitch-dot-grid,
+.n8n-dot-grid,
 .dot-pattern-canvas,
 .dot-pattern-bg,
 .dot-pattern,
 .sarvam-dotted-canvas {
-  background-color: #fbfbfd;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.16) 1.5px, transparent 1.5px);
-  background-size: 18px 18px;
+  background-color: #f8fafc;
+  background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.045) 1px, transparent 0);
+  background-size: 24px 24px;
   background-position: 0 0;
 }
 
 .dot-pattern-subtle {
-  background-color: #fbfbfd;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.10) 1.2px, transparent 1.2px);
-  background-size: 16px 16px;
+  background-color: #f8fafc;
+  background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+  background-position: 0 0;
+}
+
+.stitch-dot-grid-dense {
+  background-color: #f8fafc;
+  background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.06) 1px, transparent 0);
+  background-size: 20px 20px;
   background-position: 0 0;
 }
 
@@ -428,13 +437,13 @@
 /* ========================================================================= */
 
 .dashboard-atmospheric-bg {
-  background-color: #f6f8fc;
+  background-color: #ffffff;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(22, 130, 236, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.07) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(34, 211, 238, 0.04) 0px, transparent 60%),
-    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
-    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.9) 0%, transparent 80%);
+    radial-gradient(at 0% 0%, rgba(205, 251, 86, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(190, 240, 63, 0.10) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(247, 254, 231, 0.5) 0px, transparent 60%),
+    radial-gradient(at 100% 100%, rgba(138, 201, 38, 0.06) 0px, transparent 50%),
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.95) 0%, transparent 80%);
 }
 
 /* Level 1: Normal Surface */
@@ -446,7 +455,7 @@
 
 /* Level 2: Translucent Glass Panel */
 .glass-lvl-2 {
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid rgba(226, 232, 240, 0.8);
@@ -458,12 +467,12 @@
 
 /* Level 3: Floating High-Definition Glass Element */
 .glass-lvl-3 {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(24px) saturate(190%);
   -webkit-backdrop-filter: blur(24px) saturate(190%);
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow: 
-    0 20px 35px -10px rgba(15, 23, 42, 0.08),
+    0 20px 35px -10px rgba(15, 23, 42, 0.06),
     0 1px 3px 0 rgba(0, 0, 0, 0.03),
     inset 0 1.5px 1px 0 rgba(255, 255, 255, 1),
     inset 0 -1px 1px 0 rgba(226, 232, 240, 0.4);
@@ -471,13 +480,13 @@
 
 /* Level 4: Active / Live Spatial Element */
 .glass-lvl-4 {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 249, 255, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(247, 254, 231, 0.92) 100%);
   backdrop-filter: blur(28px) saturate(200%);
   -webkit-backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid rgba(56, 189, 248, 0.5);
+  border: 1px solid rgba(205, 251, 86, 0.8);
   box-shadow: 
-    0 20px 40px -12px rgba(14, 165, 233, 0.2),
-    0 0 20px 2px rgba(56, 189, 248, 0.15),
+    0 20px 40px -12px rgba(205, 251, 86, 0.25),
+    0 0 20px 2px rgba(205, 251, 86, 0.15),
     inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1);
 }
 
@@ -578,17 +587,17 @@
 
 :root,
 .theme-indigo {
-  --dash-primary: #4f46e5;
-  --dash-primary-hover: #4338ca;
-  --dash-primary-light: #eef2ff;
-  --dash-primary-border: #c7d2fe;
-  --dash-accent: #06b6d4;
-  --dash-accent-hover: #0891b2;
-  --dash-accent-light: #ecfeff;
-  --dash-accent-border: #a5f3fc;
-  --dash-success: #10b981;
-  --dash-success-light: #ecfdf5;
-  --dash-success-border: #a7f3d0;
+  --dash-primary: #cdfb56;
+  --dash-primary-hover: #bef03f;
+  --dash-primary-light: #f7fee7;
+  --dash-primary-border: #d9f99d;
+  --dash-accent: #bef03f;
+  --dash-accent-hover: #a3e635;
+  --dash-accent-light: #f7fee7;
+  --dash-accent-border: #d9f99d;
+  --dash-success: #8ac926;
+  --dash-success-light: #f7fee7;
+  --dash-success-border: #d9f99d;
   --dash-warning: #f59e0b;
   --dash-warning-light: #fffbeb;
   --dash-warning-border: #fde68a;
@@ -597,10 +606,10 @@
   --dash-danger-border: #fecdd3;
   --dash-card-bg: #ffffff;
   --dash-card-border: #e2e8f0;
-  --dash-badge-bg: #eef2ff;
-  --dash-badge-text: #4338ca;
-  --dash-glow: rgba(79, 70, 229, 0.15);
-  --dash-canvas-bg: #f8fafc;
+  --dash-badge-bg: #f7fee7;
+  --dash-badge-text: #0f172a;
+  --dash-glow: rgba(205, 251, 86, 0.25);
+  --dash-canvas-bg: #ffffff;
 }
 
 .theme-ocean {
@@ -686,11 +695,11 @@
 .dashboard-neo-frame,
 .dashboard-professional-frame,
 .dashboard-apple-canvas {
-  background-color: #fbfbfd;
+  background-color: #ffffff;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.03) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.03) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.02) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(205, 251, 86, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(190, 240, 63, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(138, 201, 38, 0.03) 0px, transparent 50%);
 }
 
 /* Apple Glassmorphism & Thin Black Border Utilities */

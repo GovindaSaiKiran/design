@@ -164,7 +164,7 @@ export default function DashboardShell() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ffffff] dot-pattern-subtle font-sans select-none antialiased">
+    <div className="min-h-screen stitch-dot-grid font-sans select-none antialiased">
       {/* ========================================================================= */}
       {/* MAIN UNIFIED DASHBOARD CANVAS (SINGLE SEAMLESS DOTTED BACKGROUND)         */}
       {/* ========================================================================= */}

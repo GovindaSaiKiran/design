@@ -1,6 +1,5 @@
-import NeoBrutalistDashboard from "@/components/dashboard/NeoBrutalistDashboard";
+import OverviewPageView from "@/components/dashboard/views/OverviewPageView";
 
-export default function DashboardPage() {
-  return <NeoBrutalistDashboard />;
+export default function DashboardOverviewPage() {
+  return <OverviewPageView />;
 }
-
