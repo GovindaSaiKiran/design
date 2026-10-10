@@ -205,13 +205,13 @@ export default function IndicVoiceSection({
           <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
             <button
               onClick={() => handlePlayVoice(activeVoice)}
-              className="px-6 py-2.5 rounded-full border border-black/15 bg-white hover:bg-neutral-50 text-neutral-900 text-xs sm:text-[13px] font-medium transition-all cursor-pointer shadow-xs active:scale-95"
+              className="px-6 py-2.5 rounded-full border border-black/15 bg-white hover:bg-neutral-50 text-neutral-900 text-xs sm:text-[13px] font-medium transition-all duration-300 cursor-pointer shadow-xs hover:shadow-[0_0_28px_rgba(205,251,86,0.45)] hover:scale-[1.03] active:scale-95"
             >
               Try it
             </button>
             <button
               onClick={onOpenDemo}
-              className="px-6 py-2.5 rounded-full bg-[#121316] hover:bg-neutral-800 text-white text-xs sm:text-[13px] font-medium transition-all cursor-pointer shadow-md hover:shadow-lg active:scale-95"
+              className="px-6 py-2.5 rounded-full bg-[#121316] hover:bg-neutral-800 text-white text-xs sm:text-[13px] font-medium transition-all duration-300 cursor-pointer shadow-md hover:shadow-[0_0_35px_rgba(205,251,86,0.65)] hover:scale-[1.03] active:scale-95"
             >
               Launch Outreach Goal
             </button>
@@ -225,7 +225,7 @@ export default function IndicVoiceSection({
               <select
                 value={selectedLanguage}
                 onChange={(e) => handleLanguageChange(e.target.value)}
-                className="appearance-none bg-[#f4f4f6] hover:bg-[#eaebee] border border-black/[0.06] text-neutral-800 text-xs sm:text-sm font-medium py-1.5 pl-3.5 pr-8 rounded-xl cursor-pointer focus:outline-none transition-all"
+                className="appearance-none bg-[#f4f4f6] hover:bg-[#eaebee] border border-black/[0.06] text-neutral-800 text-xs sm:text-sm font-medium py-1.5 pl-3.5 pr-8 rounded-xl cursor-pointer focus:outline-none transition-all hover:scale-[1.01]"
               >
                 {Object.entries(languageSamples).map(([langKey, data]) => (
                   <option key={langKey} value={langKey}>
@@ -282,13 +282,13 @@ export default function IndicVoiceSection({
                           handleStopVoice();
                         }
                       }}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 transition-all cursor-pointer border ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 transition-all duration-300 cursor-pointer border group ${
                         isSelected
-                          ? "bg-[#121316] text-white border-[#121316] shadow-2xs"
-                          : "bg-white text-neutral-800 hover:bg-neutral-50 border-black/10"
+                          ? "bg-[#121316] text-white border-[#121316] shadow-2xs hover:shadow-[0_0_22px_rgba(205,251,86,0.55)] hover:scale-[1.04]"
+                          : "bg-white text-neutral-800 hover:bg-neutral-50 hover:border-slate-300 border-black/10 hover:shadow-[0_0_20px_rgba(205,251,86,0.45)] hover:scale-[1.04]"
                       }`}
                     >
-                      <span className={`w-2 h-2 rounded-full shrink-0 ${v.disc}`} />
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${v.disc} group-hover:scale-125 transition-transform duration-300`} />
                       <span>{v.name}</span>
                       <span
                         className={`text-[10px] ${
@@ -315,13 +315,13 @@ export default function IndicVoiceSection({
                           handleStopVoice();
                         }
                       }}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 transition-all cursor-pointer border ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 transition-all duration-300 cursor-pointer border group ${
                         isSelected
-                          ? "bg-[#121316] text-white border-[#121316] shadow-2xs"
-                          : "bg-white text-neutral-800 hover:bg-neutral-50 border-black/10"
+                          ? "bg-[#121316] text-white border-[#121316] shadow-2xs hover:shadow-[0_0_22px_rgba(205,251,86,0.55)] hover:scale-[1.04]"
+                          : "bg-white text-neutral-800 hover:bg-neutral-50 hover:border-slate-300 border-black/10 hover:shadow-[0_0_20px_rgba(205,251,86,0.45)] hover:scale-[1.04]"
                       }`}
                     >
-                      <span className={`w-2 h-2 rounded-full shrink-0 ${v.disc}`} />
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${v.disc} group-hover:scale-125 transition-transform duration-300`} />
                       <span>{v.name}</span>
                       <span
                         className={`text-[10px] ${
@@ -341,7 +341,7 @@ export default function IndicVoiceSection({
                 <button
                   type="button"
                   onClick={handleStopVoice}
-                  className="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-3 cursor-pointer shadow-md active:scale-95 transition-all"
+                  className="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-3 cursor-pointer shadow-md hover:shadow-[0_0_30px_rgba(225,29,72,0.6)] hover:scale-[1.04] active:scale-95 transition-all duration-300"
                 >
                   <Square className="w-3.5 h-3.5 fill-current shrink-0 text-white" />
                   <div className="flex flex-col text-left leading-tight">
@@ -355,9 +355,9 @@ export default function IndicVoiceSection({
                 <button
                   type="button"
                   onClick={() => handlePlayVoice(activeVoice)}
-                  className="px-5 py-2.5 rounded-full bg-[#121316] hover:bg-neutral-800 text-white flex items-center gap-3 cursor-pointer shadow-md hover:shadow-lg active:scale-95 transition-all"
+                  className="px-5 py-2.5 rounded-full bg-[#121316] hover:bg-neutral-800 text-white flex items-center gap-3 cursor-pointer shadow-md hover:shadow-[0_0_35px_10px_rgba(205,251,86,0.65)] hover:scale-[1.04] active:scale-95 transition-all duration-300 group"
                 >
-                  <Play className="w-3.5 h-3.5 fill-current shrink-0 text-white" />
+                  <Play className="w-3.5 h-3.5 fill-current shrink-0 text-white group-hover:scale-115 group-hover:text-[#cdfb56] transition-all duration-300" />
                   <div className="flex flex-col text-left leading-tight">
                     <span className="text-[11px] font-semibold text-neutral-200">Speak</span>
                     <span className="text-xs font-semibold text-white">{activeVoice}</span>

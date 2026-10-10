@@ -362,12 +362,12 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
       <div className="absolute top-1/2 left-6 w-80 h-80 bg-sky-100/30 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto space-y-16 sm:space-y-20 relative z-10">
-        
+
         {/* ========================================================================= */}
         {/* 1. TWO-COLUMN HERO & WORKFLOW PREPARATION STAGE                            */}
         {/* ========================================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
+
           {/* LEFT COLUMN: Outcome & Goal Delegation */}
           <div className="lg:col-span-6 space-y-6 sm:space-y-7">
             {/* Badge */}
@@ -406,16 +406,14 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                       setGoalInput(p.prompt);
                       setActiveStep(4);
                     }}
-                    className={`text-xs px-3.5 py-1.5 rounded-full transition-all cursor-pointer border flex items-center gap-1.5 active:scale-95 ${
-                      isSelected
-                        ? "bg-[#dbeafe] text-[#1d4ed8] border-[#93c5fd] font-medium shadow-2xs"
-                        : "bg-white hover:bg-slate-50 text-[#475569] border-[#e2e8f0]"
-                    }`}
+                    className={`text-xs px-3.5 py-1.5 rounded-full transition-all cursor-pointer border flex items-center gap-1.5 active:scale-95 ${isSelected
+                      ? "bg-[#dbeafe] text-[#1d4ed8] border-[#93c5fd] font-medium shadow-2xs"
+                      : "bg-white hover:bg-slate-50 text-[#475569] border-[#e2e8f0]"
+                      }`}
                   >
                     <IconComponent
-                      className={`w-3.5 h-3.5 ${
-                        isSelected ? "text-[#1d4ed8]" : "text-[#64748b]"
-                      }`}
+                      className={`w-3.5 h-3.5 ${isSelected ? "text-[#1d4ed8]" : "text-[#64748b]"
+                        }`}
                     />
                     <span>{p.label}</span>
                   </button>
@@ -466,7 +464,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
           {/* RIGHT COLUMN: VoicePilot Workflow Card */}
           <div className="lg:col-span-6">
             <div className="bg-white/95 backdrop-blur-xl rounded-[32px] p-6 sm:p-8 border border-[#e2e8f0] shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] relative overflow-hidden">
-              
+
               {/* Card Header */}
               <div className="flex items-center gap-3.5 pb-4 border-b border-[#f1f5f9]">
                 <div className="w-11 h-11 rounded-2xl bg-[#eff6ff] text-[#2563eb] flex items-center justify-center shrink-0 shadow-2xs">
@@ -490,11 +488,10 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 {/* Step 1: Reading your data */}
                 <div className="relative z-10 flex items-center gap-3.5">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors duration-300 ${
-                      activeStep >= 1
-                        ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
-                        : "border-2 border-[#cbd5e1] bg-white text-[#94a3b8]"
-                    }`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors duration-300 ${activeStep >= 1
+                      ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
+                      : "border-2 border-[#cbd5e1] bg-white text-[#94a3b8]"
+                      }`}
                   >
                     {activeStep >= 1 ? (
                       <Check className="w-4 h-4 stroke-[2.5]" />
@@ -525,11 +522,10 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 {/* Step 2: Generating context */}
                 <div className="relative z-10 flex items-center gap-3.5">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors duration-300 ${
-                      activeStep >= 2
-                        ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
-                        : "border-2 border-[#cbd5e1] bg-white text-[#94a3b8]"
-                    }`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors duration-300 ${activeStep >= 2
+                      ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
+                      : "border-2 border-[#cbd5e1] bg-white text-[#94a3b8]"
+                      }`}
                   >
                     {activeStep >= 2 ? (
                       <Check className="w-4 h-4 stroke-[2.5]" />
@@ -560,11 +556,10 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 {/* Step 3: Selecting the right agent */}
                 <div className="relative z-10 flex items-center gap-3.5">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors duration-300 ${
-                      activeStep >= 3
-                        ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
-                        : "border-2 border-[#cbd5e1] bg-white text-[#94a3b8]"
-                    }`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors duration-300 ${activeStep >= 3
+                      ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
+                      : "border-2 border-[#cbd5e1] bg-white text-[#94a3b8]"
+                      }`}
                   >
                     {activeStep >= 3 ? (
                       <Check className="w-4 h-4 stroke-[2.5]" />
@@ -595,13 +590,12 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 {/* Step 4: Preparing the calling workflow (Active / Processing) */}
                 <div className="relative z-10 flex items-center gap-3.5">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 relative transition-all duration-300 ${
-                      activeStep === 4
-                        ? "bg-[#eff6ff] border-2 border-dashed border-[#2563eb]"
-                        : activeStep > 4
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 relative transition-all duration-300 ${activeStep === 4
+                      ? "bg-[#eff6ff] border-2 border-dashed border-[#2563eb]"
+                      : activeStep > 4
                         ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
                         : "border-2 border-[#cbd5e1] bg-white text-[#94a3b8]"
-                    }`}
+                      }`}
                   >
                     {activeStep === 4 ? (
                       <span className="w-2.5 h-2.5 rounded-full bg-[#2563eb] animate-pulse" />
@@ -612,19 +606,17 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                     )}
                   </div>
                   <div
-                    className={`flex-1 flex items-center justify-between p-3 rounded-2xl transition-all ${
-                      activeStep === 4
-                        ? "bg-[#f0f7ff] border border-[#bfdbfe] shadow-xs"
-                        : "hover:bg-[#f8fafc]"
-                    }`}
+                    className={`flex-1 flex items-center justify-between p-3 rounded-2xl transition-all ${activeStep === 4
+                      ? "bg-[#f0f7ff] border border-[#bfdbfe] shadow-xs"
+                      : "hover:bg-[#f8fafc]"
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs transition-colors ${
-                          activeStep === 4
-                            ? "bg-[#2563eb] text-white"
-                            : "bg-[#ecfdf5] text-[#10b981]"
-                        }`}
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs transition-colors ${activeStep === 4
+                          ? "bg-[#2563eb] text-white"
+                          : "bg-[#ecfdf5] text-[#10b981]"
+                          }`}
                       >
                         <Phone className="w-5 h-5" />
                       </div>
@@ -643,28 +635,25 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 {/* Step 5: Ready for your approval (Pending / Completed) */}
                 <div className="relative z-10 flex items-center gap-3.5">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors duration-300 ${
-                      activeStep >= 5
-                        ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
-                        : "border-2 border-[#cbd5e1] bg-white"
-                    }`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors duration-300 ${activeStep >= 5
+                      ? "bg-[#dcfce7] text-[#16a34a] border border-[#bbf7d0]"
+                      : "border-2 border-[#cbd5e1] bg-white"
+                      }`}
                   >
                     {activeStep >= 5 ? <Check className="w-4 h-4 stroke-[2.5]" /> : null}
                   </div>
                   <div
-                    className={`flex-1 flex items-center justify-between p-2.5 sm:p-3 rounded-2xl transition-all ${
-                      activeStep >= 5
-                        ? "bg-[#ecfdf5] border border-[#bbf7d0]"
-                        : "opacity-75"
-                    }`}
+                    className={`flex-1 flex items-center justify-between p-2.5 sm:p-3 rounded-2xl transition-all ${activeStep >= 5
+                      ? "bg-[#ecfdf5] border border-[#bbf7d0]"
+                      : "opacity-75"
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                          activeStep >= 5
-                            ? "bg-[#10b981] text-white"
-                            : "bg-[#f1f5f9] text-[#64748b]"
-                        }`}
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${activeStep >= 5
+                          ? "bg-[#10b981] text-white"
+                          : "bg-[#f1f5f9] text-[#64748b]"
+                          }`}
                       >
                         <Send className="w-4 h-4" />
                       </div>
@@ -690,7 +679,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
         {/* 2. 4 VIBRANT 3D INFOGRAPHIC CARDS (FROM TEMPLATE)                         */}
         {/* ========================================================================= */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
-          
+
           {/* Card 1: Sky Blue / Idea Up / Understands your goal */}
           <div
             onClick={() => {
@@ -1039,9 +1028,8 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                   {/* Ambient Outer Card Bottom Glow Halo (Matches Voice Color) */}
                   <div className="absolute inset-x-0 -bottom-8 h-28 pointer-events-none overflow-hidden rounded-b-[32px] opacity-65 group-hover:opacity-100 transition-opacity duration-500">
                     <div
-                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-20 rounded-full blur-2xl transition-all duration-700 ${
-                        isSelected ? "opacity-100 scale-125" : "animate-liquid-aura opacity-75"
-                      } ${disc.cardBottomGlowClass}`}
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-20 rounded-full blur-2xl transition-all duration-700 ${isSelected ? "opacity-100 scale-125" : "animate-liquid-aura opacity-75"
+                        } ${disc.cardBottomGlowClass}`}
                     />
                   </div>
 
@@ -1072,11 +1060,10 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                   {/* Center Area: Interactive Floating Play Button with Equalizer Waveforms */}
                   <div className="my-auto py-5 flex flex-col items-center justify-center z-10 relative text-center">
                     <div
-                      className={`w-18 h-18 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 relative ${
-                        isSelected
-                          ? "bg-slate-900 text-white scale-110 shadow-2xl ring-4 ring-white"
-                          : "bg-white/95 backdrop-blur-md text-slate-900 border border-white hover:scale-110 hover:shadow-xl group-hover:bg-white"
-                      }`}
+                      className={`w-18 h-18 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 relative ${isSelected
+                        ? "bg-slate-900 text-white scale-110 shadow-2xl ring-4 ring-white"
+                        : "bg-white/95 backdrop-blur-md text-slate-900 border border-white hover:scale-110 hover:shadow-xl group-hover:bg-white"
+                        }`}
                     >
                       {isSelected ? (
                         <Square className="w-6 h-6 fill-current text-white" />
@@ -1094,11 +1081,10 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                       {[35, 75, 100, 60, 90, 45, 80, 50].map((height, i) => (
                         <span
                           key={i}
-                          className={`w-1 rounded-full transition-all duration-300 ${
-                            isSelected
-                              ? `${disc.waveBarColor} animate-pulse`
-                              : "bg-slate-400/40 group-hover:bg-slate-500/60"
-                          }`}
+                          className={`w-1 rounded-full transition-all duration-300 ${isSelected
+                            ? `${disc.waveBarColor} animate-pulse`
+                            : "bg-slate-400/40 group-hover:bg-slate-500/60"
+                            }`}
                           style={{
                             height: isSelected ? `${height}%` : "30%",
                             animationDelay: `${i * 120}ms`,
@@ -1123,20 +1109,18 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                     <div className="absolute inset-x-0 bottom-0 h-22 pointer-events-none overflow-hidden rounded-b-2xl">
                       {/* Deep diffuse bloom */}
                       <div
-                        className={`absolute -bottom-7 left-1/2 -translate-x-1/2 w-52 h-22 rounded-full blur-xl transition-all duration-700 ${
-                          isSelected
-                            ? "opacity-100 scale-125 animate-voice-active-glow"
-                            : "opacity-85 animate-liquid-aura group-hover:opacity-100 group-hover:scale-110"
-                        } ${disc.auraGlowClass}`}
+                        className={`absolute -bottom-7 left-1/2 -translate-x-1/2 w-52 h-22 rounded-full blur-xl transition-all duration-700 ${isSelected
+                          ? "opacity-100 scale-125 animate-voice-active-glow"
+                          : "opacity-85 animate-liquid-aura group-hover:opacity-100 group-hover:scale-110"
+                          } ${disc.auraGlowClass}`}
                       />
 
                       {/* Concentrated bright core beam (just like the blue light in Image 1) */}
                       <div
-                        className={`absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-36 h-12 rounded-full blur-md transition-all duration-500 ${
-                          isSelected
-                            ? "opacity-100 scale-135"
-                            : "opacity-90 animate-liquid-core group-hover:opacity-100"
-                        } ${disc.coreGlowClass}`}
+                        className={`absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-36 h-12 rounded-full blur-md transition-all duration-500 ${isSelected
+                          ? "opacity-100 scale-135"
+                          : "opacity-90 animate-liquid-core group-hover:opacity-100"
+                          } ${disc.coreGlowClass}`}
                       />
 
                       {/* Specular bottom rim streak */}
@@ -1258,26 +1242,15 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
               </div>
             </div>
 
-            {/* Card 2: Warm Pastel Coral / Orange (Image 2 Middle Card - Inverted layout) */}
+            {/* Card 2: Warm Pastel Coral / Orange (Image 2 Middle Card) */}
             <div
               onClick={() => onOpenDemo?.()}
               className="bg-[#fca166] rounded-[32px] p-6 sm:p-7 flex flex-col justify-between min-h-[320px] shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group relative overflow-hidden"
             >
-              {/* Top Row: Pill Tag + Titles on Left, Nested Photo on Right */}
-              <div className="flex items-start justify-between gap-3 mb-4">
-                <div className="flex-1 min-w-[130px]">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold border border-black/20 text-slate-900 bg-black/5 mb-2.5">
-                    Native Dialects
-                  </div>
-                  <div className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
-                    11
-                  </div>
-                  <div className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight mt-1">
-                    Indian Languages
-                  </div>
-                  <p className="text-[11px] sm:text-xs text-slate-900/80 font-medium mt-1 leading-snug">
-                    Hindi, Telugu, Kannada, Tamil, Bengali, Marathi, Punjabi, Gujarati, etc.
-                  </p>
+              {/* Top Row: Arrow Button on Left & Nested Photo on Right */}
+              <div className="flex items-start justify-between gap-3 mb-6">
+                <div className="w-11 h-11 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:rotate-45 transition-all duration-300 shrink-0">
+                  <ArrowUpRight className="w-5 h-5 text-slate-900" />
                 </div>
 
                 <div className="w-36 h-40 sm:w-44 sm:h-44 rounded-[24px] overflow-hidden shadow-sm border border-white/90 bg-white p-1.5 flex items-center justify-center relative shrink-0">
@@ -1290,9 +1263,20 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 </div>
               </div>
 
-              {/* Bottom: Arrow Button on Bottom-Left (matches Card 2 in Image 2) */}
-              <div className="w-11 h-11 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xs group-hover:scale-110 group-hover:rotate-45 transition-all duration-300 shrink-0 mt-2">
-                <ArrowUpRight className="w-5 h-5 text-slate-900" />
+              {/* Bottom Info: Pill Tag + Big Value + Subtitle */}
+              <div className="mt-auto">
+                <div className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold border border-black/20 text-slate-900 bg-black/5 mb-2.5">
+                  Native Dialects
+                </div>
+                <div className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-none">
+                  11 +
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight mt-1">
+                  Indian Languages
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-800/80 font-medium mt-1 leading-snug max-w-[210px]">
+                  Hindi, Telugu, Kannada, Tamil, Bengali, Marathi, Punjabi, Gujarati, etc.
+                </p>
               </div>
             </div>
 

@@ -43,9 +43,12 @@ export default function DashboardHeroSection({
         </div>
 
         {/* Giant Editorial Serif Headline (Matches Front Page) */}
-        <h1 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-neutral-900 leading-[1.12]">
+        <h1
+          style={{ color: "#000000" }}
+          className="font-serif-display text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-black leading-[1.12]"
+        >
           Let AI Handle the Calls.<br />
-          <span className="font-serif italic text-neutral-500">Your Team Handles What Matters.</span>
+          <span style={{ color: "#000000" }} className="font-serif italic text-black">Your Team Handles What Matters.</span>
         </h1>
 
         {/* Subtitle */}

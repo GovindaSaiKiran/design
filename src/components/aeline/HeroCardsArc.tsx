@@ -20,7 +20,8 @@ import {
 
 export default function HeroCardsArc() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const rotationRef = useRef<number>(0);
+  // Initial rotation angle (-210deg) centers Card 7 (Resolution Rate 96%) flanked by 520k+ and Polyglot Voice as shown in design
+  const rotationRef = useRef<number>(-210);
   const velocityRef = useRef<number>(0);
   const isHoveredRef = useRef<boolean>(false);
   const isDraggingRef = useRef<boolean>(false);
@@ -28,7 +29,7 @@ export default function HeroCardsArc() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // State for tracking closest card to front
-  const [activeCardIndex, setActiveCardIndex] = useState<number>(0);
+  const [activeCardIndex, setActiveCardIndex] = useState<number>(7);
   const [isUserInteracting, setIsUserInteracting] = useState<boolean>(false);
 
   // 12 Cards covering the full features and capabilities of Edu-Voice-Ai
@@ -37,8 +38,21 @@ export default function HeroCardsArc() {
 
   // Update card positions directly via transforms for 120fps buttery-smooth motion
   const updateCardTransforms = useCallback((currentRotation: number) => {
-    const width = typeof window !== "undefined" ? window.innerWidth : 1200;
-    const radius = width < 640 ? 360 : width < 1024 ? 490 : 580;
+    const width = typeof window !== "undefined" ? window.innerWidth : 1440;
+    
+    // Significantly expanded rotating radius so the cards span end-to-end horizontally across the entire page
+    let radius: number;
+    if (width < 640) {
+      radius = Math.max(420, width * 0.90);
+    } else if (width < 1024) {
+      radius = Math.max(680, width * 0.82);
+    } else if (width < 1440) {
+      radius = Math.max(920, width * 0.75);
+    } else if (width < 1920) {
+      radius = Math.max(1150, width * 0.72);
+    } else {
+      radius = Math.max(1350, width * 0.68);
+    }
 
     let closestIndex = 0;
     let minDiff = 999;
@@ -58,21 +72,21 @@ export default function HeroCardsArc() {
         closestIndex = i;
       }
 
-      // Cylindrical 3D positioning
+      // Cylindrical 3D positioning across wide horizontal diameter
       const x = Math.sin(rad) * radius;
-      // Front (0 deg): z = 0; sides (90 deg): z = -radius; back (180 deg): z = -2*radius
-      const z = (Math.cos(rad) - 1) * radius;
-      // Gentle vertical arching: center elevated, sides curve smoothly downward
-      const y = (1 - Math.cos(rad)) * 34;
-      // Tangential facing angle with natural curvature
-      const rotateY = normAngle * 0.74;
+      // Z depth: front cards (0 deg) at z = 0, sides drop back with smooth natural depth
+      const z = (Math.cos(rad) - 1) * radius * 0.55;
+      // Gentle horizontal horizon arch: center cards slightly elevated, sides level
+      const y = (1 - Math.cos(rad)) * 18;
+      // Facing angle: cards face more forward toward user for clear readability across the wide expanse
+      const rotateY = normAngle * 0.52;
       // Subtle realistic banking tilt
-      const rotateZ = Math.sin(rad) * -4.5;
-      // Perspective scale: front cards are larger, periphery cards slightly smaller
-      const scale = 0.82 + 0.22 * Math.max(0, Math.cos(rad));
-      // Opacity: front hemisphere is crisp, back hemisphere smoothly dims
+      const rotateZ = Math.sin(rad) * -2.2;
+      // Perspective scale: front cards large and crisp, periphery cards remain substantial
+      const scale = 0.88 + 0.16 * Math.max(0, Math.cos(rad));
+      // Opacity: front arc is crisp, back hemisphere smoothly dims
       const cosVal = Math.cos(rad);
-      const opacity = cosVal > 0 ? 1 : Math.max(0.15, 1 + cosVal * 1.6);
+      const opacity = cosVal > -0.2 ? 1 : Math.max(0.12, 1 + cosVal * 1.4);
       // Layer ordering: front card always in front
       const zIndex = Math.round((cosVal + 1) * 50);
 
@@ -163,8 +177,8 @@ export default function HeroCardsArc() {
   };
 
   return (
-    <div className="w-full relative pt-1 sm:pt-2 pb-6 flex flex-col items-center justify-center select-none overflow-hidden">
-      {/* Interactive 3D Cylindrical Stage */}
+    <div className="w-full relative pt-2 sm:pt-4 pb-8 flex flex-col items-center justify-center select-none overflow-hidden">
+      {/* Interactive 3D Cylindrical Stage - Expanded End to End Horizontally */}
       <div
         ref={containerRef}
         onPointerDown={handlePointerDown}
@@ -179,9 +193,9 @@ export default function HeroCardsArc() {
           isHoveredRef.current = false;
           isDraggingRef.current = false;
         }}
-        className="w-full max-w-[1380px] h-[340px] sm:h-[370px] lg:h-[390px] relative flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
+        className="w-full h-[400px] sm:h-[450px] lg:h-[490px] relative flex items-center justify-center cursor-grab active:cursor-grabbing touch-none overflow-visible"
         style={{
-          perspective: "1600px",
+          perspective: "2600px",
           transformStyle: "preserve-3d"
         }}
       >
@@ -406,7 +420,7 @@ export default function HeroCardsArc() {
         <div
           ref={(el) => { cardRefs.current[5] = el; }}
           onClick={() => rotateToCard(5)}
-          className="absolute w-44 sm:w-50 h-60 sm:h-70 rounded-2xl p-4 shadow-[0_24px_50px_rgba(14,165,233,0.35)] border-2 border-white/60 transition-shadow duration-300 hover:shadow-[0_30px_60px_rgba(14,165,233,0.45)] flex flex-col items-center justify-between text-white cursor-pointer will-change-transform"
+          className="absolute w-44 sm:w-52 lg:w-56 h-62 sm:h-72 lg:h-78 rounded-3xl p-5 shadow-[0_24px_50px_rgba(14,165,233,0.35)] border-2 border-white/60 transition-shadow duration-300 hover:shadow-[0_30px_60px_rgba(14,165,233,0.45)] flex flex-col items-center justify-between text-white cursor-pointer will-change-transform"
           style={{
             background: "linear-gradient(145deg, #26a9f7 0%, #087dd4 100%)"
           }}
@@ -416,18 +430,18 @@ export default function HeroCardsArc() {
           </div>
 
           <div className="flex flex-col items-center my-auto">
-            <div className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-2.5 hover:scale-110 transition-transform">
-              <Plus className="w-5 h-5 text-white" />
+            <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 hover:scale-110 transition-transform">
+              <Plus className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xs font-bold text-white tracking-tight">
+            <span className="text-sm font-bold text-white tracking-tight text-center">
               Knowledge Ingestion
             </span>
-            <span className="text-[10px] text-white/85 font-medium text-center">
+            <span className="text-[11px] text-white/85 font-medium text-center mt-0.5">
               Upload prospectus & fees
             </span>
           </div>
 
-          <div className="w-full border border-dashed border-white/40 rounded-xl py-1.5 px-2 text-center text-[9px] text-white/90 bg-white/15">
+          <div className="w-full border border-dashed border-white/40 rounded-xl py-2 px-2.5 text-center text-[10px] text-white/90 bg-white/15 font-medium">
             PDF, Syllabus or SIS API
           </div>
         </div>
@@ -438,38 +452,38 @@ export default function HeroCardsArc() {
         <div
           ref={(el) => { cardRefs.current[6] = el; }}
           onClick={() => rotateToCard(6)}
-          className="absolute w-42 sm:w-48 h-58 sm:h-66 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-[0_22px_48px_rgba(0,0,0,0.24)] border-2 border-white transition-shadow duration-300 hover:shadow-[0_28px_58px_rgba(0,0,0,0.32)] flex flex-col justify-between cursor-pointer will-change-transform"
+          className="absolute w-46 sm:w-54 lg:w-58 h-64 sm:h-74 lg:h-80 bg-white/95 backdrop-blur-md rounded-3xl p-5 shadow-[0_22px_48px_rgba(0,0,0,0.22)] border-2 border-white transition-shadow duration-300 hover:shadow-[0_28px_58px_rgba(0,0,0,0.3)] flex flex-col justify-between cursor-pointer will-change-transform"
         >
           <div>
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-md mb-2 text-[8px] font-semibold text-slate-500">
-              <span className="px-1 py-0.5 bg-white text-slate-900 rounded shadow-xs">
+            <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg mb-3 text-[9px] font-semibold text-slate-500">
+              <span className="px-2 py-0.5 bg-white text-slate-900 rounded-md shadow-xs">
                 Undergrad
               </span>
-              <span className="px-1 py-0.5">Graduate</span>
-              <span className="px-1 py-0.5">NRI</span>
+              <span className="px-2 py-0.5">Graduate</span>
+              <span className="px-2 py-0.5">NRI</span>
             </div>
 
-            <span className="text-[10px] text-slate-400 font-semibold tracking-wide uppercase">
+            <span className="text-[11px] text-slate-400 font-semibold tracking-wide uppercase">
               Student Inquiries
             </span>
-            <div className="text-2xl font-black text-slate-900 leading-tight">
+            <div className="text-3xl font-black text-slate-900 leading-tight mt-0.5">
               520k+
             </div>
           </div>
 
-          <div className="space-y-1.5 pt-1">
-            <div className="flex items-center justify-between text-[9px] text-slate-500">
+          <div className="space-y-2 pt-2">
+            <div className="flex items-center justify-between text-[10px] text-slate-500">
               <span>Tuition & Aid</span>
               <span className="font-semibold text-slate-700">82%</span>
             </div>
-            <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
               <div className="w-[82%] h-full bg-blue-600 rounded-full" />
             </div>
-            <div className="flex items-center justify-between text-[9px] text-slate-500">
+            <div className="flex items-center justify-between text-[10px] text-slate-500">
               <span>Hostel & Eligibility</span>
               <span className="font-semibold text-slate-700">95%</span>
             </div>
-            <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
               <div className="w-[95%] h-full bg-sky-500 rounded-full" />
             </div>
           </div>
@@ -481,41 +495,41 @@ export default function HeroCardsArc() {
         <div
           ref={(el) => { cardRefs.current[7] = el; }}
           onClick={() => rotateToCard(7)}
-          className="absolute w-38 sm:w-44 h-56 sm:h-64 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-[0_20px_45px_rgba(0,0,0,0.22)] border-2 border-white transition-shadow duration-300 hover:shadow-[0_25px_55px_rgba(0,0,0,0.3)] flex flex-col justify-between cursor-pointer will-change-transform"
+          className="absolute w-48 sm:w-56 lg:w-60 h-66 sm:h-76 lg:h-82 bg-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-6 shadow-[0_24px_50px_rgba(0,0,0,0.18)] border-2 border-white transition-shadow duration-300 hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] flex flex-col justify-between cursor-pointer will-change-transform"
         >
           <div>
-            <div className="text-[11px] font-bold text-slate-800">
+            <div className="text-xs sm:text-[13px] font-bold text-slate-800">
               Resolution Rate
             </div>
-            <div className="flex items-baseline gap-1 my-1">
-              <span className="text-2xl font-black text-slate-900">96%</span>
-              <span className="text-[9px] text-emerald-600 font-bold">▲ +14%</span>
+            <div className="flex items-baseline gap-1.5 my-1.5">
+              <span className="text-3xl font-black text-slate-900">96%</span>
+              <span className="text-[10px] text-emerald-600 font-bold">▲ +14%</span>
             </div>
           </div>
 
-          <div className="w-16 h-16 mx-auto relative flex items-center justify-center">
+          <div className="w-20 h-20 sm:w-22 sm:h-22 mx-auto relative flex items-center justify-center my-auto">
             <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
               <path
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#e2e8f0"
-                strokeWidth="3.5"
+                strokeWidth="3.2"
               />
               <path
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#38bdf8"
-                strokeWidth="3.5"
+                strokeWidth="3.2"
                 strokeDasharray="96, 100"
                 strokeLinecap="round"
               />
             </svg>
-            <span className="absolute text-[10px] font-bold text-slate-700">
+            <span className="absolute text-xs sm:text-sm font-bold text-slate-700">
               96%
             </span>
           </div>
 
-          <div className="text-[9px] text-slate-400 text-center font-medium">
+          <div className="text-[10px] text-slate-400 text-center font-medium">
             Zero hold times
           </div>
         </div>
@@ -526,42 +540,42 @@ export default function HeroCardsArc() {
         <div
           ref={(el) => { cardRefs.current[8] = el; }}
           onClick={() => rotateToCard(8)}
-          className="absolute w-44 sm:w-50 h-60 sm:h-70 rounded-2xl p-4 shadow-[0_24px_50px_rgba(99,102,241,0.3)] border-2 border-white/70 flex flex-col justify-between text-white cursor-pointer will-change-transform"
+          className="absolute w-48 sm:w-56 lg:w-60 h-66 sm:h-76 lg:h-82 rounded-3xl p-5 sm:p-6 shadow-[0_24px_50px_rgba(99,102,241,0.3)] border-2 border-white/70 flex flex-col justify-between text-white cursor-pointer will-change-transform"
           style={{
             background: "linear-gradient(145deg, #4f46e5 0%, #312e81 100%)"
           }}
         >
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold tracking-tight text-white flex items-center gap-1.5">
-                <Globe className="w-3.5 h-3.5 text-indigo-300" />
+              <span className="text-xs sm:text-[13px] font-bold tracking-tight text-white flex items-center gap-1.5">
+                <Globe className="w-4 h-4 text-indigo-300" />
                 Polyglot Voice
               </span>
-              <span className="text-[9px] bg-white/20 font-mono px-1.5 py-0.5 rounded border border-white/25">
+              <span className="text-[9px] bg-white/20 font-mono px-2 py-0.5 rounded-full border border-white/25">
                 18+ Langs
               </span>
             </div>
-            <p className="text-[11px] text-indigo-100 font-normal leading-tight">
+            <p className="text-[11px] text-indigo-100 font-normal leading-snug">
               Real-time regional dialect & accent adaptation
             </p>
           </div>
 
           <div className="space-y-1.5 py-2">
-            <div className="flex flex-wrap gap-1">
-              <span className="text-[9px] bg-white/15 px-2 py-0.5 rounded-full font-semibold">English</span>
-              <span className="text-[9px] bg-white/15 px-2 py-0.5 rounded-full font-semibold">Español</span>
-              <span className="text-[9px] bg-white/15 px-2 py-0.5 rounded-full font-semibold">Hindi</span>
-              <span className="text-[9px] bg-white/15 px-2 py-0.5 rounded-full font-semibold">Arabic</span>
-              <span className="text-[9px] bg-white/15 px-2 py-0.5 rounded-full font-semibold">French</span>
+            <div className="flex flex-wrap gap-1.5">
+              <span className="text-[10px] bg-white/15 px-2.5 py-0.5 rounded-full font-semibold">English</span>
+              <span className="text-[10px] bg-white/15 px-2.5 py-0.5 rounded-full font-semibold">Español</span>
+              <span className="text-[10px] bg-white/15 px-2.5 py-0.5 rounded-full font-semibold">Hindi</span>
+              <span className="text-[10px] bg-white/15 px-2.5 py-0.5 rounded-full font-semibold">Arabic</span>
+              <span className="text-[10px] bg-white/15 px-2.5 py-0.5 rounded-full font-semibold">French</span>
             </div>
           </div>
 
           <div className="pt-2 border-t border-indigo-400/30">
-            <div className="flex items-center justify-between text-[10px]">
+            <div className="flex items-center justify-between text-[11px]">
               <span className="text-indigo-200">Code-Switching</span>
               <span className="text-[#cdfb56] font-mono font-bold">&lt; 120ms</span>
             </div>
-            <div className="text-[9px] text-indigo-200/80 mt-0.5">
+            <div className="text-[10px] text-indigo-200/80 mt-0.5">
               Zero accent friction for applicants
             </div>
           </div>
@@ -573,15 +587,15 @@ export default function HeroCardsArc() {
         <div
           ref={(el) => { cardRefs.current[9] = el; }}
           onClick={() => rotateToCard(9)}
-          className="absolute w-44 sm:w-50 h-60 sm:h-70 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-[0_24px_50px_rgba(0,0,0,0.26)] border-2 border-white transition-shadow duration-300 hover:shadow-[0_30px_60px_rgba(0,0,0,0.34)] flex flex-col justify-between cursor-pointer will-change-transform"
+          className="absolute w-46 sm:w-54 lg:w-58 h-64 sm:h-74 lg:h-80 bg-white/95 backdrop-blur-md rounded-3xl p-5 shadow-[0_24px_50px_rgba(0,0,0,0.24)] border-2 border-white transition-shadow duration-300 hover:shadow-[0_30px_60px_rgba(0,0,0,0.32)] flex flex-col justify-between cursor-pointer will-change-transform"
         >
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <Headphones className="w-3.5 h-3.5 text-blue-600" />
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs sm:text-[13px] font-bold text-slate-900 flex items-center gap-1.5">
+                <Headphones className="w-4 h-4 text-blue-600" />
                 Smart Handoff
               </span>
-              <span className="text-[9px] bg-blue-50 text-blue-700 font-bold px-1.5 py-0.5 rounded">
+              <span className="text-[9px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">
                 Warm Route
               </span>
             </div>
@@ -590,7 +604,7 @@ export default function HeroCardsArc() {
             </p>
           </div>
 
-          <div className="bg-slate-50 rounded-xl p-2.5 space-y-1.5 border border-slate-100">
+          <div className="bg-slate-50 rounded-2xl p-3 space-y-1.5 border border-slate-100">
             <div className="flex items-center justify-between text-[10px]">
               <span className="text-slate-500">Lead Intent</span>
               <span className="font-bold text-emerald-600">High (98%)</span>
@@ -703,22 +717,22 @@ export default function HeroCardsArc() {
         {/* Left Arrow Button */}
         <button
           onClick={() => rotateStep("left")}
-          className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/35 active:scale-90 border border-white/30 backdrop-blur-md text-white flex items-center justify-center transition-all cursor-pointer shadow-sm"
+          className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 border border-slate-200/90 text-slate-700 flex items-center justify-center transition-all cursor-pointer shadow-xs"
           aria-label="Rotate Previous Card"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
 
         {/* Circular Wheel Prompt Pill */}
-        <div className="dynamic-island-glass rounded-full px-4 py-1.5 flex items-center gap-2 text-white text-[11px] font-semibold border border-white/35 shadow-sm">
-          <RotateCw className="w-3 h-3 text-[#cdfb56] animate-spin" style={{ animationDuration: "6s" }} />
+        <div className="bg-white/95 backdrop-blur-md rounded-full px-4 py-1.5 flex items-center gap-2 text-slate-700 text-[11px] font-semibold border border-slate-200/90 shadow-xs">
+          <RotateCw className="w-3 h-3 text-[#65a30d] animate-spin" style={{ animationDuration: "6s" }} />
           <span>Use mouse wheel or drag to spin all 12 feature cards in 3D</span>
         </div>
 
         {/* Right Arrow Button */}
         <button
           onClick={() => rotateStep("right")}
-          className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/35 active:scale-90 border border-white/30 backdrop-blur-md text-white flex items-center justify-center transition-all cursor-pointer shadow-sm"
+          className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-90 border border-slate-200/90 text-slate-700 flex items-center justify-center transition-all cursor-pointer shadow-xs"
           aria-label="Rotate Next Card"
         >
           <ChevronRight className="w-4 h-4" />
@@ -726,15 +740,15 @@ export default function HeroCardsArc() {
       </div>
 
       {/* Under Arc: Client Rating & Stars */}
-      <div className="mt-4 flex flex-col items-center gap-1.5 z-20">
-        <span className="text-white font-medium text-xs sm:text-[13px] tracking-wide drop-shadow-sm">
+      <div className="mt-4 flex flex-col items-center gap-1.5 z-20 pb-4">
+        <span className="text-slate-600 font-medium text-xs sm:text-[13px] tracking-wide">
           Rated 4.9/5 by 120+ Universities & Colleges
         </span>
         <div className="flex items-center gap-1">
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#fbbf24] fill-[#fbbf24] drop-shadow-[0_1px_4px_rgba(251,191,36,0.5)]"
+              className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#fbbf24] fill-[#fbbf24] drop-shadow-[0_1px_4px_rgba(251,191,36,0.3)]"
             />
           ))}
         </div>
