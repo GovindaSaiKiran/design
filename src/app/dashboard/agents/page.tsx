@@ -26,16 +26,17 @@ import { mockAgents } from "@/data/mock/dashboardData";
 
 export default function AgentsPage() {
   const [agents, setAgents] = useState<DashboardAgent[]>(mockAgents);
-  const [selectedAgent, setSelectedAgent] = useState<DashboardAgent>(mockAgents[0]);
+  const [selectedAgent, setSelectedAgent] = useState<DashboardAgent | null>(mockAgents[0] || null);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [liveModalOpen, setLiveModalOpen] = useState(false);
   const [testCallItem, setTestCallItem] = useState<LiveCallItem | null>(null);
 
-  const handleSimulateCall = (agent: DashboardAgent) => {
+  const handleSimulateCall = (agent?: DashboardAgent | null) => {
+    if (!agent) return;
     const liveCallObj: LiveCallItem = {
       id: `sim-${agent.id}`,
       callerNumber: "+91 98401 99999",
-      callerName: "Prospective Student (Simulation)",
+      callerName: "Prospective Customer (Simulation)",
       agentId: agent.id,
       agentName: agent.name.split("—")[0].trim(),
       direction: "inbound",
@@ -49,7 +50,7 @@ export default function AgentsPage() {
       latencyMs: 135,
       transcript: [
         { speaker: "caller", text: "Hello, I am testing the conversational voice agent.", time: "00:02" },
-        { speaker: "agent", text: `Hello! I am ${agent.name.split("—")[0].trim()}, representing Apex Engineering College. How can I assist you today?`, time: "00:08" },
+        { speaker: "agent", text: `Hello! I am ${agent.name.split("—")[0].trim()}. How can I assist you today?`, time: "00:08" },
       ],
     };
     setTestCallItem(liveCallObj);
@@ -73,7 +74,7 @@ export default function AgentsPage() {
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              4 Personas Active
+              {agents.length} Personas Active
             </span>
           </div>
 
@@ -88,13 +89,15 @@ export default function AgentsPage() {
 
         {/* Workspace Actions */}
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
-          <button
-            onClick={() => handleSimulateCall(selectedAgent)}
-            className="inline-flex items-center gap-2 bg-white hover:bg-[#f7fee7] text-slate-800 hover:text-slate-950 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-200 hover:border-[#cdfb56] shadow-2xs transition-all cursor-pointer"
-          >
-            <Volume2 className="w-3.5 h-3.5 text-slate-500" />
-            <span>Test Voice Simulator</span>
-          </button>
+          {selectedAgent && (
+            <button
+              onClick={() => handleSimulateCall(selectedAgent)}
+              className="inline-flex items-center gap-2 bg-white hover:bg-[#f7fee7] text-slate-800 hover:text-slate-950 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-200 hover:border-[#cdfb56] shadow-2xs transition-all cursor-pointer"
+            >
+              <Volume2 className="w-3.5 h-3.5 text-slate-500" />
+              <span>Test Voice Simulator</span>
+            </button>
+          )}
 
           <button
             onClick={() => setCreateModalOpen(true)}
@@ -106,10 +109,40 @@ export default function AgentsPage() {
         </div>
       </div>
 
-      {/* ======================================================================= */}
-      {/* WORKSPACE SUB-FOLDER CARDS FOR AGENTS                                   */}
-      {/* ======================================================================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {agents.length === 0 ? (
+        <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 text-center shadow-xs space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto shadow-xs border border-purple-100">
+            <Bot className="w-8 h-8" />
+          </div>
+          <div className="max-w-md mx-auto space-y-2">
+            <h2 className="text-xl font-bold text-slate-900">No AI employees yet</h2>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Build your first AI employee in under 2 minutes by describing what you want them to do, or browse ready-to-deploy personas from our store.
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-3 pt-2">
+            <button
+              onClick={() => setCreateModalOpen(true)}
+              className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md hover:shadow-purple-600/20 transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Build AI Employee</span>
+            </button>
+            <Link
+              href="/dashboard/store"
+              className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-200 shadow-2xs transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+              <span>Browse Employee Store</span>
+            </Link>
+          </div>
+        </div>
+      ) : selectedAgent ? (
+        <>
+          {/* ======================================================================= */}
+          {/* WORKSPACE SUB-FOLDER CARDS FOR AGENTS                                   */}
+          {/* ======================================================================= */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {agents.slice(0, 4).map((agent) => (
           <WorkspaceCard
             key={agent.id}
@@ -215,10 +248,10 @@ export default function AgentsPage() {
                 Grounded Knowledge Bases
               </span>
               <div className="font-bold text-xs text-slate-900">
-                Apex Engineering College Official RAG
+                Workspace Knowledge Base RAG
               </div>
               <div className="text-[11px] text-slate-600">
-                480 indexed vector chunks active
+                Connected to uploaded knowledge docs
               </div>
               <div className="text-[11px] text-slate-600">
                 Strict grounding with source citations
@@ -251,6 +284,8 @@ export default function AgentsPage() {
           </div>
         </div>
       </div>
+      </>
+      ) : null}
 
       {/* Modals */}
       <CreateAgentModal

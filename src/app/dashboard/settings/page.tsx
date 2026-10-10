@@ -16,8 +16,8 @@ import {
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 
 export default function SettingsPage() {
-  const [collegeName, setCollegeName] = useState("Apex Engineering College");
-  const [domain, setDomain] = useState("apex.edu.in");
+  const [collegeName, setCollegeName] = useState("clinic");
+  const [domain, setDomain] = useState("taninkigovinda@gmail.com");
   const [timezone, setTimezone] = useState("Asia/Kolkata (IST • UTC+05:30)");
   const [savedNotice, setSavedNotice] = useState(false);
 
@@ -44,7 +44,7 @@ export default function SettingsPage() {
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              Institutional Scale
+              Workspace Active
             </span>
           </div>
 
@@ -53,7 +53,7 @@ export default function SettingsPage() {
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Manage college profile, operational timezones, security preferences, third-party integrations, and quotas.
+            Manage workspace profile, operational timezones, security preferences, third-party integrations, and quotas.
           </p>
         </div>
 
@@ -79,11 +79,11 @@ export default function SettingsPage() {
       {/* ======================================================================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <WorkspaceCard
-          name="Collegiate Profile"
+          name="Workspace Profile"
           icon={Building2}
-          description="Verified university identity, domain records, and campus contact details."
-          metric="Apex College"
-          metricLabel="NAAC A++ Accredited • Autonomous"
+          description="Verified organization identity, tenant details, and administrative contact."
+          metric="clinic"
+          metricLabel="Admin: taninkigovinda@gmail.com"
           status="Verified"
           statusType="ready"
           actionLabel="Edit profile →"
@@ -92,10 +92,10 @@ export default function SettingsPage() {
         <WorkspaceCard
           name="Calling Allowance"
           icon={CreditCard}
-          description="Monthly talk-time consumption across admissions and support desks."
-          metric="6,800 / 10,000 min"
-          metricLabel="68% utilized • Renews on 1st of month"
-          status="Active Tier"
+          description="Monthly talk-time consumption across inbound and outbound channels."
+          metric="0 / 14 min"
+          metricLabel="Free tier sandbox • 14 min available"
+          status="Free Tier"
           statusType="running"
           actionLabel="Upgrade tier →"
         />
@@ -114,10 +114,10 @@ export default function SettingsPage() {
         <WorkspaceCard
           name="API & Webhooks"
           icon={Key}
-          description="Institutional ERP endpoints, Salesforce webhook, and CRM sync."
-          metric="3 endpoints"
-          metricLabel="Last heartbeat 100% successful"
-          status="Connected"
+          description="Telephony webhooks, CRM webhooks, and backend integration endpoints."
+          metric="0 endpoints"
+          metricLabel="Ready for backend webhook hookup"
+          status="Standby"
           statusType="live"
           actionLabel="Manage keys →"
         />
@@ -133,7 +133,7 @@ export default function SettingsPage() {
             General Configuration Parameters
           </span>
           <span className="text-[11px] text-slate-500 font-mono">
-            Tenant ID: apex-eng-hyderabad-01
+            Tenant ID: clinic-workspace-01
           </span>
         </div>
 
@@ -141,7 +141,7 @@ export default function SettingsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700">
-                Institution Name
+                Organization Name
               </label>
               <input
                 type="text"
@@ -153,7 +153,7 @@ export default function SettingsPage() {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700">
-                Official Campus Domain
+                Contact Email / Domain
               </label>
               <input
                 type="text"

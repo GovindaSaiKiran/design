@@ -3,7 +3,20 @@
 import React, { useState, useEffect } from "react";
 import AppSidebar from "./AppSidebar";
 import AppHeader from "./AppHeader";
-import { Search, X, ArrowRight, LayoutDashboard, Sparkles, PhoneCall, Send, Users, Bot, BookOpen, Radio, BarChart3, FileSpreadsheet, UserCog, Settings } from "lucide-react";
+import {
+  Search,
+  X,
+  ArrowRight,
+  LayoutDashboard,
+  Bot,
+  UserPlus,
+  GraduationCap,
+  Sparkles,
+  Phone,
+  CreditCard,
+  UserCog,
+  History,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -35,18 +48,15 @@ export default function DashboardLayoutClient({
   }, [searchModalOpen]);
 
   const quickLinks = [
-    { label: "Overview", href: "/dashboard", category: "Workspace", icon: LayoutDashboard },
-    { label: "Delegate Task", href: "/dashboard/delegate", category: "Workspace", icon: Sparkles },
-    { label: "Calls & Transcripts", href: "/dashboard/calls", category: "Operations", icon: PhoneCall },
-    { label: "Outbound Campaigns", href: "/dashboard/campaigns", category: "Operations", icon: Send },
-    { label: "Contacts & Applicants", href: "/dashboard/contacts", category: "Operations", icon: Users },
-    { label: "AI Agents", href: "/dashboard/agents", category: "AI Workforce", icon: Bot },
-    { label: "College Knowledge", href: "/dashboard/knowledge", category: "AI Workforce", icon: BookOpen },
-    { label: "Phone Numbers & SIP Trunks", href: "/dashboard/phone-numbers", category: "AI Workforce", icon: Radio },
-    { label: "Analytics & Benchmarks", href: "/dashboard/analytics", category: "Insights", icon: BarChart3 },
-    { label: "Export Reports", href: "/dashboard/reports", category: "Insights", icon: FileSpreadsheet },
-    { label: "Team & Permissions", href: "/dashboard/team", category: "Organization", icon: UserCog },
-    { label: "Settings", href: "/dashboard/settings", category: "Organization", icon: Settings },
+    { label: "Dash boards", href: "/dashboard", category: "Overview", icon: LayoutDashboard },
+    { label: "My agents", href: "/dashboard/agents", category: "AI Agents", icon: Bot },
+    { label: "Create a new agent", href: "/dashboard/agents", category: "Quick Action", icon: UserPlus },
+    { label: "Train My Agent", href: "/dashboard/knowledge", category: "Training & Knowledge", icon: GraduationCap },
+    { label: "Use agents", href: "/dashboard/delegate", category: "Execution", icon: Sparkles },
+    { label: "Phone numbers", href: "/dashboard/phone-numbers", category: "Telephony", icon: Phone },
+    { label: "Credits", href: "/dashboard/billing", category: "Billing", icon: CreditCard },
+    { label: "Account", href: "/dashboard/settings", category: "Account & Org", icon: UserCog },
+    { label: "History", href: "/dashboard/calls", category: "Call Logs", icon: History },
   ];
 
   const filteredLinks = quickLinks.filter((item) =>
@@ -61,7 +71,7 @@ export default function DashboardLayoutClient({
   };
 
   return (
-    <div className="min-h-screen flex bg-[#f8fafc] text-slate-900 antialiased font-sans">
+    <div className="min-h-screen flex bg-[#eceef2] text-slate-900 antialiased font-sans">
       {/* Persistent / Responsive Sidebar */}
       <AppSidebar
         isOpenMobile={mobileSidebarOpen}
@@ -139,7 +149,7 @@ export default function DashboardLayoutClient({
             {/* Footer */}
             <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
               <span>Press <kbd className="font-mono bg-white px-1 py-0.5 rounded border border-slate-200">Esc</kbd> to exit</span>
-              <span className="font-semibold text-slate-600">VoicePilot AI</span>
+              <span className="font-semibold text-slate-600">Swaram AI</span>
             </div>
           </div>
         </div>

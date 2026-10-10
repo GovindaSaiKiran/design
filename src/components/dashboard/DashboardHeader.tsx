@@ -86,7 +86,7 @@ export default function DashboardHeader({
           <Link
             href="/"
             className="flex items-center gap-2 focus:outline-none group/logo"
-            title="Return to VoicePilot Front Page"
+            title="Return to Swaram Front Page"
           >
             <div className="w-7 h-7 sm:w-8 sm:h-8 relative flex items-center justify-center shrink-0">
               <svg
@@ -102,7 +102,7 @@ export default function DashboardHeader({
             </div>
             <div className="flex items-center gap-1.5">
               <span className="font-extrabold text-sm sm:text-base tracking-tight text-neutral-900">
-                VoicePilot
+                Swaram
               </span>
               <span className="text-[#0d5926] bg-[#cdfb56] text-[9px] sm:text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded-md shadow-xs">
                 AI
@@ -300,7 +300,7 @@ export default function DashboardHeader({
           <Link
             href="/"
             className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-300 text-neutral-700 hover:text-neutral-950 bg-neutral-100/60 hover:bg-neutral-200/60 transition-all cursor-pointer flex items-center gap-1 shrink-0"
-            title="Return to VoicePilot Front Page"
+            title="Return to Swaram Front Page"
           >
             <ArrowLeft className="w-3 h-3" />
             <span className="hidden md:inline">FRONT PAGE</span>

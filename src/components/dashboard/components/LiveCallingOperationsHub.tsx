@@ -66,7 +66,20 @@ export default function LiveCallingOperationsHub({
     { name: "B.Des Product & UX Design", count: 62, pct: 14, color: "bg-amber-500", key: "design" }
   ];
 
-  const currentActiveLead = mockStudentLeads[0];
+  const currentActiveLead = mockStudentLeads[0] || {
+    id: "lead-none",
+    name: "No Active Caller",
+    phone: "--",
+    course: "Standby Channel",
+    category: "inbound_inquiry" as const,
+    agentName: "Voice Engine",
+    callDuration: "0s",
+    timestamp: "Now",
+    timeAgo: "Now",
+    summary: "No active calls streaming currently.",
+    transcriptSnippet: "Channel in standby mode.",
+    actionTaken: "Listening for inbound rings"
+  };
 
   return (
     <div className="w-full space-y-6 select-none">

@@ -34,6 +34,28 @@ export default function ContactDossierModal({
 
   const contact = mockContactIntelligence.featuredContact;
 
+  if (!contact) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-200 select-none">
+        <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 text-center space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+            <User className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-slate-900">No Contact Selected</h3>
+          <p className="text-xs text-slate-500">
+            Select a contact from your contacts directory or calls table to view their complete dossier.
+          </p>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition-all cursor-pointer"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-200 select-none">
       <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 sm:p-8 overflow-hidden text-slate-900">
@@ -41,15 +63,15 @@ export default function ContactDossierModal({
         <div className="flex items-center justify-between pb-5 border-b border-slate-100">
           <div className="flex items-center gap-3.5">
             <div className="w-12 h-12 rounded-2xl bg-[#cdfb56] text-slate-950 border border-[#bceb42] flex items-center justify-center font-bold text-base shadow-xs">
-              RV
+              {contact.name.slice(0, 2).toUpperCase()}
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-xl font-bold text-slate-900 tracking-tight">
-                  {contact.name} (राहुल वर्मा)
+                  {contact.name}
                 </h3>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 border border-[#cdfb56]">
-                  94.2% PCM
+                  Verified Lead
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -71,7 +93,7 @@ export default function ContactDossierModal({
           <div className="grid grid-cols-2 gap-3.5">
             <div className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-[#cdfb56] transition-colors shadow-2xs">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                Direct Candidate Line
+                Direct Contact Phone
               </span>
               <span className="font-bold text-slate-900 font-mono text-sm">
                 {contact.phone}
@@ -83,7 +105,7 @@ export default function ContactDossierModal({
                 Assigned Voice Engine
               </span>
               <span className="font-bold text-slate-900 text-sm">
-                {contact.assignedAgent} (Hindi/Eng)
+                {contact.assignedAgent}
               </span>
             </div>
           </div>
@@ -91,10 +113,10 @@ export default function ContactDossierModal({
           {/* Inquiry topic */}
           <div className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-[#cdfb56] text-slate-800 transition-colors shadow-2xs">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-              Primary Academic Intent & Scholarship Tier
+              Interest Topic & Inquiries
             </span>
             <span className="text-xs font-semibold text-slate-900">
-              {contact.interestTopic} (50% Tuition Fee Waiver Granted)
+              {contact.interestTopic}
             </span>
           </div>
 

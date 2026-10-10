@@ -56,31 +56,31 @@ export default function AIAgentsView({
   // Language options with authentic sample Indic text
   const languagePresets: Record<string, { prompt: string; voices: string[] }> = {
     Hindi: {
-      prompt: "भारत की सुबह का नज़ारा ही कुछ और होता है। चाय की चुस्की के साथ अख़बार, बच्चों की किलकारियां, और कॉलेज प्रवेश परामर्श की नई शुरुआत।",
+      prompt: "नमस्ते! हमारे कस्टमर केयर हेल्पलाइन में आपका स्वागत है। मैं आपकी सहायता के लिए तैयार हूँ।",
       voices: ["Ritu", "Shubh", "Shreya", "Manan"]
     },
     Telugu: {
-      prompt: "నమస్కారం! అపెక్స్ యూనివర్సిటీ B.Tech కంప్యూటర్ సైన్స్ మరియు ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ అడ్మిషన్ల వివరాల కోసం స్వాగతం.",
+      prompt: "నమస్కారం! మా కస్టమర్ సపోర్ట్ హెల్ప్‌లైన్‌కు స్వాగతం. మీ ప్రశ్నలకు సమాధానాలు అందించడానికి నేను ఇక్కడ ఉన్నాను.",
       voices: ["Neha", "Shashi", "Kavya", "Venkat"]
     },
     Tamil: {
-      prompt: "வணக்கம்! அப்பெக்ஸ் பல்கலைக்கழகத்தின் பொறியியல் சேர்க்கை மற்றும் தகுதி உதவித்தொகை விவரங்களுக்கு வரவேற்கிறோம்.",
+      prompt: "வணக்கம்! எங்கள் வாடிக்கையாளர் ஆதரவு உதவி மையத்திற்கு வரவேற்கிறோம்.",
       voices: ["Ishita", "Anbu", "Priya", "Karthik"]
     },
     Kannada: {
-      prompt: "ನಮಸ್ಕಾರ! ಅಪೆಕ್ಸ್ ಇಂಜಿನಿಯರಿಂಗ್ ಕಾಲೇಜಿನ ಪ್ರವೇಶ ಮತ್ತು 35% ಚಾನ್ಸಲರ್ ಮೆರಿಟ್ ಸ್ಕಾಲರ್‌ಶಿಪ್ ವಿವರಗಳನ್ನು ತಿಳಿಯಿರಿ.",
+      prompt: "ನಮಸ್ಕಾರ! ನಮ್ಮ ಗ್ರಾಹಕರ ಸೇವಾ ಸಹಾಯವಾಣಿಗೆ ಸುಸ್ವಾಗತ.",
       voices: ["Ishita", "Chetan", "Suhani", "Raghu"]
     },
     Marathi: {
-      prompt: "नमस्कार! अपेक्स कॉलेजच्या बी.टेक इंजिनिअरिंग व मेरिट स्कॉलरशिप प्रवेश प्रक्रियेत आपले सहर्ष स्वागत आहे.",
+      prompt: "नमस्कार! आमच्या ग्राहक सेवा हेल्पलाइनमध्ये आपले सहर्ष स्वागत आहे.",
       voices: ["Sneha", "Amol", "Ritu", "Vikram"]
     },
     Bengali: {
-      prompt: "নমস্কার! অ্যাপেক্স ইনস্টিটিউট অব টেকনোলজির বি.টেক এবং উচ্চশিক্ষা ভর্তি পোর্টালে আপনাকে স্বাগতম।",
+      prompt: "নমস্কার! আমাদের কাস্টমার সাপোর্ট হেল্পলাইনে আপনাকে স্বাগতম।",
       voices: ["Suhani", "Debnath", "Tanushree", "Ayan"]
     },
     English: {
-      prompt: "Welcome to Apex University Admissions Helpline. I can assist you with B.Tech cutoffs, Chancellor Scholarships, and campus hostel tours.",
+      prompt: "Welcome to our customer service helpline. I can assist you with questions, service bookings, and support inquiries.",
       voices: ["Maya Pro", "Vikram", "Rohan", "Priya"]
     }
   };

@@ -56,11 +56,11 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Voice Pilot — AI Voice Agents for Every Business",
+  title: "Swaram — AI Voice Agents for Every Business",
   description:
-    "Voice Pilot creates AI voice agents for businesses, institutions, hospitals, and service teams. Handle calls at scale with zero hold times.",
+    "Swaram creates AI voice agents for businesses, institutions, hospitals, and service teams. Handle calls at scale with zero hold times.",
   keywords: [
-    "Voice Pilot",
+    "Swaram",
     "AI Voice Agent",
     "Voice AI",
     "Business Telephony",
@@ -68,14 +68,14 @@ export const metadata: Metadata = {
     "Automated Calls",
     "Zero Hold Times"
   ],
-  authors: [{ name: "Voice Pilot Inc." }],
+  authors: [{ name: "Swaram Inc." }],
   openGraph: {
-    title: "Voice Pilot — AI Voice Agents for Every Business",
+    title: "Swaram — AI Voice Agents for Every Business",
     description:
-      "Voice Pilot creates AI voice agents that handle calls 24/7, answer questions, and connect customers with your team when needed.",
+      "Swaram creates AI voice agents that handle calls 24/7, answer questions, and connect customers with your team when needed.",
     type: "website",
     locale: "en_IN",
-    siteName: "Voice Pilot"
+    siteName: "Swaram"
   }
 };
 

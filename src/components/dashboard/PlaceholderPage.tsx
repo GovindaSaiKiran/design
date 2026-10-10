@@ -113,7 +113,7 @@ export default function PlaceholderPage({
               <span>Return to Workspace Home</span>
             </Link>
             <span className="text-[11px] text-slate-500 font-medium">
-              Apex Engineering College • Production Tenant
+              clinic • Active Workspace
             </span>
           </div>
         </div>

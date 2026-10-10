@@ -131,7 +131,7 @@ export default function AutonomousGoalDelegator({
 
           <p className="text-xs sm:text-sm text-neutral-600 max-w-2xl mx-auto leading-relaxed">
             Describe the admissions or counseling goal and connect your campus documents.
-            VoicePilot orchestrates autonomous voice agents, verifies scholarships, and updates student dossiers in real-time.
+            Swaram orchestrates autonomous voice agents, verifies scholarships, and updates student dossiers in real-time.
           </p>
         </div>
 

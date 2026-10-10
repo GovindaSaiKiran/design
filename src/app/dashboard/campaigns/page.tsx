@@ -66,7 +66,7 @@ export default function CampaignsPage() {
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              Outreach Engine Active
+              {campaigns.length} Campaigns Active
             </span>
           </div>
 
@@ -106,11 +106,11 @@ export default function CampaignsPage() {
         <WorkspaceCard
           name="Active Outbound"
           icon={Send}
-          description="September Student Follow-up & Merit Scholarship Verification."
-          metric="68% progress"
-          metricLabel="842 of 1,240 contacts reached"
-          status="Dialing live"
-          statusType="running"
+          description="Autonomous outbound batch dialing and live lead verification."
+          metric="0 active"
+          metricLabel="0 contacts reached"
+          status="Idle"
+          statusType="neutral"
           actionLabel="View queue →"
           onClick={() => setFilterStatus("active")}
         />
@@ -118,10 +118,10 @@ export default function CampaignsPage() {
         <WorkspaceCard
           name="Scheduled Drives"
           icon={Calendar}
-          description="Open Day & Engineering Expo Invitation cadence launching Sep 20."
-          metric="2,500 queued"
-          metricLabel="High School Seniors & STEM Applicants"
-          status="Starts in 3d"
+          description="Automated outreach cadences scheduled for upcoming calendar dates."
+          metric="0 queued"
+          metricLabel="No cadences scheduled"
+          status="None"
           statusType="neutral"
           actionLabel="Review schedule →"
           onClick={() => setFilterStatus("scheduled")}
@@ -130,10 +130,10 @@ export default function CampaignsPage() {
         <WorkspaceCard
           name="Completed Drives"
           icon={CheckCircle2}
-          description="Semester Fee Deadline & Scholarship Verification finished."
-          metric="950 completed"
-          metricLabel="93.6% connection & verification yield"
-          status="100% finished"
+          description="Finished batch outreach campaigns with qualification yield."
+          metric="0 completed"
+          metricLabel="0% verification yield"
+          status="None"
           statusType="ready"
           actionLabel="Audit outcomes →"
           onClick={() => setFilterStatus("completed")}
@@ -143,10 +143,10 @@ export default function CampaignsPage() {
           name="SIP Concurrency"
           icon={Radio}
           description="Current dialer bandwidth allocated across regional telephony channels."
-          metric="12 channels"
+          metric="0 channels"
           metricLabel="Sub-140ms audio response latency"
-          status="Optimal capacity"
-          statusType="live"
+          status="Idle"
+          statusType="neutral"
           actionLabel="View telephony →"
           href="/dashboard/phone-numbers"
         />
@@ -186,7 +186,36 @@ export default function CampaignsPage() {
       {/* CAMPAIGNS LIST                                                          */}
       {/* ======================================================================= */}
       <div className="space-y-4">
-        {filteredCampaigns.map((camp) => (
+        {filteredCampaigns.length === 0 ? (
+          <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 text-center shadow-xs space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center mx-auto shadow-xs border border-lime-200">
+              <Send className="w-8 h-8" />
+            </div>
+            <div className="max-w-md mx-auto space-y-2">
+              <h2 className="text-xl font-bold text-slate-900">No campaigns created yet</h2>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Upload a CSV contact list to start automated outbound batch calling with your AI workforce.
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <button
+                onClick={() => setStartModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-5 py-2.5 rounded-xl border border-[#bceb42] shadow-xs cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Start First Campaign</span>
+              </button>
+              <button
+                onClick={() => setUploadModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-200 shadow-2xs cursor-pointer"
+              >
+                <Users className="w-3.5 h-3.5 text-slate-500" />
+                <span>Import Contact List</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          filteredCampaigns.map((camp) => (
           <div
             key={camp.id}
             className="bg-white rounded-2xl border border-slate-200/90 hover:border-[#cdfb56] p-5 shadow-xs transition-all space-y-4"
@@ -307,7 +336,7 @@ export default function CampaignsPage() {
               </div>
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       {/* Modals */}

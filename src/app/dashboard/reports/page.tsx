@@ -29,65 +29,15 @@ interface ReportItem {
   recordsCount: number;
 }
 
-const mockReportsList: ReportItem[] = [
-  {
-    id: "rep-01",
-    name: "Daily Call Logs & Conversational Telemetry",
-    category: "Operations",
-    dateRange: "Sep 17, 2026 (Today)",
-    format: "CSV",
-    size: "1.4 MB",
-    generatedAt: "10:45 AM",
-    recordsCount: 248,
-  },
-  {
-    id: "rep-02",
-    name: "B.Tech Merit Scholarship & PCM Qualification Audit",
-    category: "Admissions",
-    dateRange: "Sep 10 - Sep 17, 2026",
-    format: "XLSX",
-    size: "3.2 MB",
-    generatedAt: "09:15 AM",
-    recordsCount: 1240,
-  },
-  {
-    id: "rep-03",
-    name: "Counselor Handoff & Complex Query Escalation Dossier",
-    category: "Student Affairs",
-    dateRange: "Sep 01 - Sep 17, 2026",
-    format: "PDF",
-    size: "820 KB",
-    generatedAt: "Yesterday",
-    recordsCount: 28,
-  },
-  {
-    id: "rep-04",
-    name: "Telephony Carrier SIP Bandwidth & Minute Consumption",
-    category: "Billing",
-    dateRange: "Aug 17 - Sep 17, 2026",
-    format: "CSV",
-    size: "2.1 MB",
-    generatedAt: "Sep 15, 2026",
-    recordsCount: 6800,
-  },
-  {
-    id: "rep-05",
-    name: "Outbound Campaign Yield & Intent Conversion",
-    category: "Campaigns",
-    dateRange: "Sep 12 - Sep 16, 2026",
-    format: "XLSX",
-    size: "1.8 MB",
-    generatedAt: "Sep 16, 2026",
-    recordsCount: 842,
-  },
-];
+const mockReportsList: ReportItem[] = [];
 
 export default function ReportsPage() {
   const [reports, setReports] = useState<ReportItem[]>(mockReportsList);
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
 
-  const handleDownload = (rep: ReportItem) => {
+  const handleDownload = (rep?: ReportItem) => {
+    if (!rep) return;
     setDownloadSuccess(rep.name);
     setTimeout(() => {
       setDownloadSuccess(null);
@@ -111,7 +61,7 @@ export default function ReportsPage() {
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              Audit Exports Ready
+              {reports.length} Reports Ready
             </span>
           </div>
 
@@ -152,48 +102,48 @@ export default function ReportsPage() {
           name="Daily Call Logs"
           icon={FileSpreadsheet}
           description="Complete records of call duration, caller IDs, audio latency, and outcomes."
-          metric="248 calls"
-          metricLabel="CSV Format • 1.4 MB"
-          status="Generated today"
-          statusType="ready"
-          actionLabel="Download CSV →"
-          onClick={() => handleDownload(reports[0])}
+          metric="0 calls"
+          metricLabel="No logs recorded"
+          status="Empty"
+          statusType="neutral"
+          actionLabel="Generate CSV →"
+          onClick={() => setExportModalOpen(true)}
         />
 
         <WorkspaceCard
           name="Admissions Triage"
           icon={FileText}
-          description="Applicants filtered by 12th PCM marks, course choices, and merit grants."
-          metric="1,240 applicants"
-          metricLabel="Excel XLSX • 3.2 MB"
-          status="Audit ready"
-          statusType="ready"
-          actionLabel="Download Excel →"
-          onClick={() => handleDownload(reports[1])}
+          description="Applicants filtered by qualifications, course choices, and intent."
+          metric="0 applicants"
+          metricLabel="No qualification records"
+          status="None"
+          statusType="neutral"
+          actionLabel="Generate Excel →"
+          onClick={() => setExportModalOpen(true)}
         />
 
         <WorkspaceCard
           name="Staff Escalation Log"
           icon={Clock}
           description="Transfers directed to admissions counselors with complete verbatim context."
-          metric="28 handoffs"
-          metricLabel="PDF Executive Brief • 820 KB"
-          status="Verified"
-          statusType="ready"
-          actionLabel="Download PDF →"
-          onClick={() => handleDownload(reports[2])}
+          metric="0 handoffs"
+          metricLabel="No transfers recorded"
+          status="None"
+          statusType="neutral"
+          actionLabel="Generate PDF →"
+          onClick={() => setExportModalOpen(true)}
         />
 
         <WorkspaceCard
           name="Carrier SIP Billing"
           icon={Calendar}
           description="Total talk time, minutes consumed, and concurrent channel telemetry."
-          metric="6,800 mins"
-          metricLabel="68% of 10,000 min allowance"
+          metric="0 mins"
+          metricLabel="0% of minute allowance"
           status="Monthly cycle"
           statusType="neutral"
-          actionLabel="Download statement →"
-          onClick={() => handleDownload(reports[3])}
+          actionLabel="Generate statement →"
+          onClick={() => setExportModalOpen(true)}
         />
       </div>
 
@@ -231,7 +181,29 @@ export default function ReportsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {reports.map((rep) => (
+              {reports.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-16 text-center">
+                    <div className="max-w-md mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center mx-auto shadow-xs border border-lime-200">
+                        <FileSpreadsheet className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900">No export reports generated yet</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Generate customized CSV logs, dual audio transcript archives, or minute consumption statements.
+                      </p>
+                      <button
+                        onClick={() => setExportModalOpen(true)}
+                        className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-xl border border-[#bceb42] shadow-xs cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-slate-950" />
+                        <span>Generate Custom Report</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                reports.map((rep) => (
                 <tr
                   key={rep.id}
                   className="hover:bg-[#f7fee7]/30 transition-colors group"
@@ -292,7 +264,7 @@ export default function ReportsPage() {
                     </button>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

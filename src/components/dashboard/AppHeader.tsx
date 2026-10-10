@@ -7,18 +7,21 @@ import {
   ChevronDown,
   Search,
   Bell,
-  CheckCircle2,
-  Building2,
-  Sparkles,
+  BookOpen,
+  CircleOff,
   User,
   Settings,
   LogOut,
-  X,
-  Phone,
-  ShieldCheck,
-  ArrowLeft,
+  Zap,
+  Mic,
+  RefreshCw,
+  Check,
+  Heart,
+  Sparkles,
+  Calendar,
 } from "lucide-react";
-import { mockNotifications } from "@/data/mock/dashboardData";
+import TestCallModal from "./modals/TestCallModal";
+import TopUpCreditsModal from "./modals/TopUpCreditsModal";
 
 interface AppHeaderProps {
   onToggleMobileSidebar: () => void;
@@ -29,24 +32,14 @@ export default function AppHeader({
   onToggleMobileSidebar,
   onOpenSearch,
 }: AppHeaderProps) {
-  const [orgDropdownOpen, setOrgDropdownOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [unreadNotifications, setUnreadNotifications] = useState(mockNotifications);
+  const [testCallOpen, setTestCallOpen] = useState(false);
+  const [topUpOpen, setTopUpOpen] = useState(false);
 
-  const orgRef = useRef<HTMLDivElement>(null);
-  const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (orgRef.current && !orgRef.current.contains(event.target as Node)) {
-        setOrgDropdownOpen(false);
-      }
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
-        setNotificationsOpen(false);
-      }
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setProfileOpen(false);
       }
@@ -55,263 +48,177 @@ export default function AppHeader({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const markAllRead = () => {
-    setUnreadNotifications([]);
-    setNotificationsOpen(false);
-  };
-
   return (
-    <header className="h-16 px-4 sm:px-6 bg-white border-b border-slate-200/80 sticky top-0 z-20 flex items-center justify-between select-none">
-      {/* LEFT: Mobile Toggle + Organization Selector + Back to Landing Page */}
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* Mobile Sidebar Hamburger */}
-        <button
-          onClick={onToggleMobileSidebar}
-          className="lg:hidden p-2 -ml-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-          aria-label="Toggle navigation"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        {/* Back to Landing Page Button */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700 hover:text-slate-950 text-xs font-semibold transition-all shadow-2xs group shrink-0"
-          title="Return to VoicePilot AI Landing Page"
-        >
-          <ArrowLeft className="w-3.5 h-3.5 text-slate-500 group-hover:-translate-x-0.5 transition-transform" />
-          <span className="hidden sm:inline">Landing Page</span>
-        </Link>
-
-        {/* Organization Selector */}
-        <div className="relative" ref={orgRef}>
+    <>
+      <header className="px-4 sm:px-6 pt-3 pb-2 sticky top-0 z-20 flex items-center justify-between select-none font-sans bg-[#eceef2]/80 backdrop-blur-md">
+        {/* LEFT: Capsule Tools & Profile Dock */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <button
-            onClick={() => setOrgDropdownOpen(!orgDropdownOpen)}
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-900 text-xs font-semibold transition-all shadow-2xs"
-            title="Switch Active Organization"
+            onClick={onToggleMobileSidebar}
+            className="lg:hidden p-2 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
+            aria-label="Toggle navigation"
           >
-            <div className="w-5 h-5 rounded bg-[#cdfb56] text-slate-950 border border-[#bceb42] flex items-center justify-center text-[10px] font-black shrink-0">
-              A
-            </div>
-            <span className="truncate max-w-[120px] sm:max-w-[180px]">
-              Apex Engineering College
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <Menu className="w-4 h-4" />
           </button>
 
-          {/* Org Selector Dropdown */}
-          {orgDropdownOpen && (
-            <div className="absolute left-0 mt-2 w-72 bg-white rounded-xl border border-slate-200 shadow-lg py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-xs">
-              <div className="px-3 py-2 border-b border-slate-100 text-slate-500">
-                <span className="text-[10px] font-bold uppercase tracking-wider block text-slate-400">
-                  Active Organization
-                </span>
-                <span className="font-bold text-slate-900 text-xs mt-0.5 block">
-                  Apex Engineering College
-                </span>
-                <span className="text-[11px] text-slate-500">
-                  Institutional License • Autonomous Tier
-                </span>
-              </div>
+          {/* 1. Tool Actions Capsule: [ 🎙️ | 🔄 | ✓ ] */}
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-slate-600 text-xs">
+            <button
+              onClick={() => setTestCallOpen(true)}
+              className="p-1 rounded-full hover:bg-slate-100 text-slate-700 hover:text-black transition-colors cursor-pointer"
+              title="Mic / Test Voice"
+            >
+              <Mic className="w-3.5 h-3.5 text-purple-600" />
+            </button>
+            <span className="w-px h-3 bg-slate-200" />
+            <button
+              onClick={() => alert("Telephony synced")}
+              className="p-1 rounded-full hover:bg-slate-100 text-slate-700 hover:text-black transition-colors cursor-pointer"
+              title="Sync Telephony"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+            </button>
+            <span className="w-px h-3 bg-slate-200" />
+            <button
+              onClick={() => alert("System online")}
+              className="p-1 rounded-full hover:bg-slate-100 text-emerald-600 hover:text-emerald-700 transition-colors cursor-pointer"
+              title="System Ready"
+            >
+              <Check className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
-              <div className="p-1 space-y-0.5">
-                <div className="px-2.5 py-1.5 rounded-lg bg-[#cdfb56]/20 border border-[#cdfb56]/40 flex items-center justify-between text-slate-950 font-bold">
-                  <span className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-slate-950" />
-                    <span>Apex Engineering College</span>
-                  </span>
-                  <span className="text-[10px] bg-[#cdfb56] text-slate-950 px-1.5 py-0.2 rounded font-bold">Active</span>
+          {/* 2. User Profile Capsule: [ 👤 Govinda / clinic | 🩵 ⚡ ✦ ] */}
+          <div className="relative" ref={profileRef}>
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-xs font-semibold text-slate-800 hover:bg-slate-50 transition-all cursor-pointer"
+            >
+              <div className="w-5 h-5 rounded-full bg-slate-900 text-[#c8f53c] font-black text-[10px] flex items-center justify-center shrink-0">
+                G
+              </div>
+              <span className="font-bold text-slate-900 truncate max-w-[120px]">Govinda T.</span>
+              <div className="flex items-center gap-1 text-[11px] text-slate-400 pl-1 border-l border-slate-200">
+                <span>🩵</span>
+                <span className="text-amber-500">⚡</span>
+                <span className="text-[#84b80e] font-black">✦</span>
+              </div>
+            </button>
+
+            {profileOpen && (
+              <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-xs">
+                <div className="px-3.5 py-2 border-b border-slate-100">
+                  <p className="font-bold text-slate-900 text-xs">clinic</p>
+                  <p className="text-[11px] text-slate-500 truncate">taninkigovinda@gmail.com</p>
                 </div>
-                <button
-                  onClick={() => setOrgDropdownOpen(false)}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors flex items-center justify-between"
-                >
-                  <span>National Institute of Design</span>
-                  <span className="text-[10px] text-slate-400">Switch</span>
-                </button>
-                <button
-                  onClick={() => setOrgDropdownOpen(false)}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors flex items-center justify-between"
-                >
-                  <span>Oxford Global Academy</span>
-                  <span className="text-[10px] text-slate-400">Switch</span>
-                </button>
-              </div>
 
-              <div className="pt-1.5 mt-1 border-t border-slate-100 px-2">
-                <Link
-                  href="/dashboard/settings"
-                  onClick={() => setOrgDropdownOpen(false)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-[11px] transition-colors"
-                >
-                  <Settings className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Manage Organization Settings</span>
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* CENTER / STATUS: Clean Status Pill */}
-      <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200/80 bg-emerald-50/70 text-xs text-slate-800 shadow-2xs">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-        </span>
-        <span className="text-slate-700 font-medium text-[11px]">All telephony & agent systems operational</span>
-      </div>
-
-      {/* RIGHT: Search, Notifications, Admin Profile */}
-      <div className="flex items-center gap-2 sm:gap-2.5">
-        {/* Quick Search */}
-        <button
-          onClick={onOpenSearch}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-900 text-xs font-medium transition-all shadow-2xs"
-          title="Search conversations, agents, and contacts"
-        >
-          <Search className="w-3.5 h-3.5 text-slate-400" />
-          <span className="hidden sm:inline font-medium">Search...</span>
-          <kbd className="hidden sm:inline text-[10px] font-mono bg-slate-100 text-slate-500 px-1 py-0.5 rounded border border-slate-200">
-            ⌘K
-          </kbd>
-        </button>
-
-        {/* Notifications */}
-        <div className="relative" ref={notifRef}>
-          <button
-            onClick={() => setNotificationsOpen(!notificationsOpen)}
-            className="relative p-2 rounded-lg border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer"
-            title="Acoustic Notifications & Alerts"
-            aria-label="Notifications"
-          >
-            <Bell className="w-4 h-4" />
-            {unreadNotifications.length > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 border-2 border-white shadow-xs" />
-            )}
-          </button>
-
-          {/* Notifications Dropdown */}
-          {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl border border-slate-200 shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-100 text-xs space-y-2.5">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                <div className="flex items-center gap-1.5 font-bold text-slate-900 text-xs">
-                  <span>Acoustic Alerts</span>
-                  <span className="text-[10px] font-mono bg-[#cdfb56] text-slate-950 px-1.5 py-0.2 rounded font-bold border border-[#bceb42]">
-                    {unreadNotifications.length} Active
-                  </span>
-                </div>
-                <button
-                  onClick={markAllRead}
-                  className="text-[11px] text-slate-500 hover:text-slate-900 font-medium transition-colors"
-                >
-                  Mark all read
-                </button>
-              </div>
-
-              <div className="max-h-72 overflow-y-auto space-y-1.5 pr-0.5">
-                {unreadNotifications.map((notif) => (
-                  <div
-                    key={notif.id}
-                    className="p-2.5 rounded-lg border border-slate-200/80 bg-white hover:bg-[#f7fee7] hover:border-[#cdfb56] transition-colors shadow-2xs"
+                <div className="py-1">
+                  <Link
+                    href="/dashboard/store"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2 text-slate-700 hover:bg-slate-50 transition-colors"
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="font-bold text-slate-900">
-                        {notif.title}
-                      </span>
-                      <span className="text-[10px] text-slate-400 shrink-0">
-                        {notif.time}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                      {notif.message}
-                    </p>
-                  </div>
-                ))}
-              </div>
+                    <User className="w-3.5 h-3.5 text-slate-400" />
+                    <span>AI Employee Store</span>
+                  </Link>
+                  <Link
+                    href="/dashboard/billing"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2 text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Credits & Minutes</span>
+                  </Link>
+                  <Link
+                    href="/dashboard/settings"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2 px-3.5 py-2 text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    <Settings className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Workspace Settings</span>
+                  </Link>
+                </div>
 
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                <span>Real-time WebSocket alerts</span>
-                <Link
-                  href="/dashboard/calls"
-                  onClick={() => setNotificationsOpen(false)}
-                  className="font-bold text-slate-900 hover:underline"
-                >
-                  View live calls →
-                </Link>
+                <div className="pt-1 border-t border-slate-100">
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                      alert("Signed out");
+                    }}
+                    className="w-full flex items-center gap-2 px-3.5 py-2 text-red-600 hover:bg-red-50 transition-colors text-left font-medium cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* Admin Profile */}
-        <div className="relative" ref={profileRef}>
+        {/* CENTER GREETING (Matching Image: "Hi Celeste, Welcome to AI-BL") */}
+        <div className="hidden xl:flex items-center gap-2 text-xs">
+          <div className="w-5 h-5 rounded-full bg-[#c8f53c] text-slate-950 flex items-center justify-center font-bold text-[10px]">
+            ✦
+          </div>
+          <div>
+            <span className="font-bold text-slate-900">Hi Govinda, </span>
+            <span className="text-slate-400 font-medium">Welcome to Swaram AI</span>
+          </div>
           <button
-            onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2 p-1 sm:px-2 sm:py-1.5 rounded-lg border border-slate-200 bg-white hover:border-[#cdfb56] transition-colors shadow-2xs"
-            title="Account Menu"
+            onClick={onOpenSearch}
+            className="text-slate-400 hover:text-slate-900 ml-1 font-bold text-xs cursor-pointer"
+            title="Search"
           >
-            <div className="w-6 h-6 rounded-md bg-[#cdfb56] text-slate-950 border border-[#bceb42] flex items-center justify-center text-xs font-black shrink-0">
-              AV
-            </div>
-            <div className="hidden sm:block text-left">
-              <span className="text-xs font-bold text-slate-900 block leading-none">
-                Arjun Verma
-              </span>
-              <span className="text-[10px] text-slate-500 font-normal">
-                Dean of Admissions
-              </span>
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+            •••
+          </button>
+        </div>
+
+        {/* RIGHT CAPSULES: Date Pill & Menu Controls */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Date + Notification Pill: [ 🔔 Today, 11 Oct (14 min) ] */}
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-xs font-semibold text-slate-800">
+            <Bell className="w-3.5 h-3.5 text-slate-400" />
+            <span className="font-medium text-slate-700">Sat, 11 Oct</span>
+            <button
+              onClick={() => setTopUpOpen(true)}
+              className="w-5 h-5 rounded-full bg-[#111418] text-white text-[10px] font-black font-mono flex items-center justify-center cursor-pointer"
+              title="14 min credits left. Click to top up."
+            >
+              14
+            </button>
+          </div>
+
+          {/* Search trigger pill */}
+          <button
+            onClick={onOpenSearch}
+            className="p-2 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+            title="Search (Cmd+K)"
+          >
+            <Search className="w-3.5 h-3.5" />
           </button>
 
-          {/* Profile Dropdown */}
-          {profileOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-xs space-y-1">
-              <div className="px-2.5 py-2 border-b border-slate-100">
-                <span className="font-bold text-slate-900 block">
-                  Arjun Verma
-                </span>
-                <span className="text-[11px] text-slate-500 block truncate">
-                  admissions.dean@apex.edu.in
-                </span>
-                <span className="inline-block mt-1 text-[10px] font-bold bg-[#cdfb56] text-slate-950 px-1.5 py-0.2 rounded border border-[#bceb42]">
-                  Organization Administrator
-                </span>
-              </div>
-
-              <Link
-                href="/dashboard/team"
-                onClick={() => setProfileOpen(false)}
-                className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-              >
-                <User className="w-3.5 h-3.5 text-slate-400" />
-                <span>Team & Access</span>
-              </Link>
-
-              <Link
-                href="/dashboard/settings"
-                onClick={() => setProfileOpen(false)}
-                className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-              >
-                <Settings className="w-3.5 h-3.5 text-slate-400" />
-                <span>Organization Settings</span>
-              </Link>
-
-              <div className="pt-1 mt-1 border-t border-slate-100">
-                <Link
-                  href="/"
-                  onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span>Exit Dashboard</span>
-                </Link>
-              </div>
-            </div>
-          )}
+          {/* Menu toggle */}
+          <button
+            onClick={onToggleMobileSidebar}
+            className="p-2 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+            title="Menu"
+          >
+            <Menu className="w-3.5 h-3.5" />
+          </button>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Modals */}
+      <TestCallModal
+        isOpen={testCallOpen}
+        onClose={() => setTestCallOpen(false)}
+      />
+      <TopUpCreditsModal
+        isOpen={topUpOpen}
+        onClose={() => setTopUpOpen(false)}
+        currentCredits={14}
+      />
+    </>
   );
 }

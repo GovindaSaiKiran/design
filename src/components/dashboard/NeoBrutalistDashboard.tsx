@@ -200,13 +200,13 @@ export default function NeoBrutalistDashboard() {
               <Link
                 href="/"
                 className="flex items-center gap-2.5 bg-[#0f172a]/95 backdrop-blur-md text-white px-3.5 py-2 rounded-xl border border-slate-900/20 shadow-xs hover:bg-[#0f172a] hover:-translate-y-0.5 transition-all"
-                title="Return to VoicePilot Front Page"
+                title="Return to Swaram Front Page"
               >
                 <div className="w-5 h-5 bg-[#cdfb56] rounded flex items-center justify-center font-black text-slate-950 text-xs">
-                  VP
+                  SW
                 </div>
                 <span className="font-extrabold text-sm tracking-tight text-white uppercase">
-                  VoicePilot
+                  Swaram
                 </span>
                 <span className="text-[10px] bg-[#cdfb56] text-slate-950 font-black px-1.5 py-0.2 rounded">
                   AI
@@ -955,7 +955,7 @@ export default function NeoBrutalistDashboard() {
               </h3>
               <div className="space-y-3 text-xs">
                 <div className="p-3 border border-[#0f172a]/30 rounded-xl bg-[#cdfb56] text-slate-950 shadow-xs">
-                  <div className="font-bold">VoicePilot Bulbul V3 vs ElevenLabs Flash</div>
+                  <div className="font-bold">Swaram Bulbul V3 vs ElevenLabs Flash</div>
                   <div className="text-[11px] mt-1 text-slate-800">77.95% Preference Win in Indian English & Hindi Accents</div>
                 </div>
                 <div className="p-3 border border-slate-200/80 rounded-xl bg-white/60 backdrop-blur-xs space-y-1.5 text-slate-700">
@@ -987,7 +987,7 @@ export default function NeoBrutalistDashboard() {
         <footer className="bg-white/75 backdrop-blur-xl border border-slate-900/10 rounded-2xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-600">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#cdfb56] border border-[#0f172a]/30 animate-pulse" />
-            <span className="text-slate-900">VoicePilot AI Operations Command Center • Apex Engineering College</span>
+            <span className="text-slate-900">Swaram AI Operations Command Center • clinic Workspace</span>
           </div>
           <div className="flex items-center gap-4 text-slate-500">
             <span>FERPA & DPDP Grounding Active</span>

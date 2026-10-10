@@ -33,12 +33,12 @@ export default function Footer() {
                 </svg>
               </div>
               <span className="text-slate-950 font-bold text-xl tracking-tight flex items-center gap-1">
-                VoicePilot <span className="text-sky-600 text-xs font-black">AI</span>
+                Swaram <span className="text-sky-600 text-xs font-black">AI</span>
               </span>
             </Link>
 
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-sm mb-6 font-normal">
-              Autonomous AI Admission Counselor for Higher Education. Answering prospective student calls 24/7 with verified institutional grounding, zero hold times, and warm dean escalation.
+              Autonomous AI Voice Calling Platform for Business and Higher Education. Answering calls 24/7 with zero hold times, verified knowledge grounding, and warm team escalation.
             </p>
 
             <div className="flex items-center gap-3">
@@ -95,7 +95,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs text-slate-500 font-medium">
               <li>
                 <a href="#about" className="hover:text-slate-950 transition-colors">
-                  About Voice Pilot
+                  About Swaram
                 </a>
               </li>
               <li>
@@ -158,7 +158,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>© 2026 Voice Pilot Inc. All rights reserved.</p>
+          <p>© 2026 Swaram Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <span className="hover:text-slate-600 transition-colors cursor-pointer">
               Student Privacy

@@ -22,7 +22,8 @@ export default function PhoneNumbersPage() {
   const [numbers, setNumbers] = useState<TelephonyNumber[]>(mockTelephonyNumbers);
   const [testLineNotice, setTestLineNotice] = useState<string | null>(null);
 
-  const handleTestInbound = (num: TelephonyNumber) => {
+  const handleTestInbound = (num?: TelephonyNumber) => {
+    if (!num) return;
     setTestLineNotice(
       `Inbound SIP ping sent to ${num.phoneNumber} (${num.label}). Routing verified to ${num.assignedAgent} with ${num.latencyMs}ms latency.`
     );
@@ -47,8 +48,8 @@ export default function PhoneNumbersPage() {
             </Link>
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926] animate-pulse" />
-              SIP Trunking Active
+              <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
+              {numbers.length} Numbers Active
             </span>
           </div>
 
@@ -65,7 +66,7 @@ export default function PhoneNumbersPage() {
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
           <button
             onClick={() => {
-              alert("Airtel Enterprise SIP Trunk is healthy. All 30 concurrent channels active.");
+              alert("Enterprise SIP Trunk is healthy. Channels ready for incoming and outgoing calls.");
             }}
             className="inline-flex items-center gap-2 bg-white hover:bg-[#f7fee7] text-slate-800 hover:text-slate-950 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-200 hover:border-[#cdfb56] shadow-2xs transition-all cursor-pointer"
           >
@@ -78,8 +79,8 @@ export default function PhoneNumbersPage() {
               const newNum: TelephonyNumber = {
                 id: `tel-${Date.now()}`,
                 phoneNumber: "+91 40 4590 1199",
-                label: "Hostel & Facilities Helpline",
-                assignedAgent: "Student Support Agent",
+                label: "Inbound Customer Helpline",
+                assignedAgent: "AI Assistant",
                 status: "active",
                 channelType: "Direct DID",
                 latencyMs: 40,
@@ -108,50 +109,56 @@ export default function PhoneNumbersPage() {
       {/* ======================================================================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <WorkspaceCard
-          name="Admissions Line"
+          name="Primary Helpline"
           icon={Radio}
-          description="Direct inbound line for B.Tech admission inquiries and cutoffs."
-          metric="+91 40 4590 1132"
-          metricLabel="Routed to Maya (Admissions) • 38ms latency"
-          status="Primary DID"
-          statusType="live"
-          actionLabel="Test route →"
-          onClick={() => handleTestInbound(numbers[0])}
+          description="Direct inbound line for customer inquiries and lead routing."
+          metric={numbers[0]?.phoneNumber || "None"}
+          metricLabel={numbers[0] ? `Routed to ${numbers[0].assignedAgent}` : "No inbound line provisioned"}
+          status={numbers[0] ? "Primary DID" : "Unassigned"}
+          statusType={numbers[0] ? "live" : "neutral"}
+          actionLabel="Provision DID →"
+          onClick={() => {
+            if (numbers[0]) handleTestInbound(numbers[0]);
+          }}
         />
 
         <WorkspaceCard
-          name="Student Helpdesk"
+          name="Support Desk Line"
           icon={PhoneCall}
-          description="Helpline for hostel rooms, bus schedules, and campus life queries."
-          metric="+91 40 4590 1144"
-          metricLabel="Routed to Neha (Support) • 42ms latency"
-          status="Direct DID"
-          statusType="live"
-          actionLabel="Test route →"
-          onClick={() => handleTestInbound(numbers[1])}
+          description="Helpline for queries, complaints, and general assistance."
+          metric={numbers[1]?.phoneNumber || "None"}
+          metricLabel={numbers[1] ? `Routed to ${numbers[1].assignedAgent}` : "No support DID provisioned"}
+          status={numbers[1] ? "Direct DID" : "Unassigned"}
+          statusType={numbers[1] ? "live" : "neutral"}
+          actionLabel="Provision DID →"
+          onClick={() => {
+            if (numbers[1]) handleTestInbound(numbers[1]);
+          }}
         />
 
         <WorkspaceCard
           name="Outreach Carrier"
           icon={Layers}
-          description="Toll-free national outbound caller ID for student follow-ups."
-          metric="+91 40 4590 1155"
-          metricLabel="Toll-Free Outbound Channel • 45ms latency"
-          status="Active line"
-          statusType="ready"
-          actionLabel="Test route →"
-          onClick={() => handleTestInbound(numbers[2])}
+          description="National outbound caller ID for automated customer campaigns."
+          metric={numbers[2]?.phoneNumber || "None"}
+          metricLabel={numbers[2] ? `Outbound Channel` : "No outbound CID assigned"}
+          status={numbers[2] ? "Active line" : "Unassigned"}
+          statusType={numbers[2] ? "ready" : "neutral"}
+          actionLabel="Provision DID →"
+          onClick={() => {
+            if (numbers[2]) handleTestInbound(numbers[2]);
+          }}
         />
 
         <WorkspaceCard
           name="SIP Concurrency"
           icon={Activity}
-          description="Enterprise SIP trunk allocation via Airtel Enterprise cloud gateway."
-          metric="30 channels"
-          metricLabel="3 active now • 27 idle ready"
-          status="Carrier live"
-          statusType="live"
-          actionLabel="View carrier →"
+          description="Enterprise SIP trunk allocation via cloud gateway."
+          metric="0 channels"
+          metricLabel="Ready for SIP trunk provisioning"
+          status="Idle"
+          statusType="neutral"
+          actionLabel="Trunk status →"
         />
       </div>
 
@@ -190,65 +197,100 @@ export default function PhoneNumbersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {numbers.map((num) => (
-                <tr
-                  key={num.id}
-                  className="hover:bg-[#f7fee7]/30 transition-colors group"
-                >
-                  {/* Phone Number */}
-                  <td className="py-3.5 px-4 font-mono font-bold text-slate-900 group-hover:text-slate-950">
-                    <div className="flex items-center gap-2">
-                      <Radio className="w-3.5 h-3.5 text-slate-500" />
-                      <span>{num.phoneNumber}</span>
+              {numbers.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-16 text-center">
+                    <div className="max-w-md mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center mx-auto shadow-xs border border-lime-200">
+                        <Radio className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900">No phone numbers provisioned</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Provision dedicated inbound virtual DIDs or configure SIP trunk carrier lines to receive calls.
+                      </p>
+                      <button
+                        onClick={() => {
+                          const newNum: TelephonyNumber = {
+                            id: `tel-${Date.now()}`,
+                            phoneNumber: "+91 40 4590 1199",
+                            label: "Inbound Customer Helpline",
+                            assignedAgent: "AI Assistant",
+                            status: "active",
+                            channelType: "Direct DID",
+                            latencyMs: 40,
+                            callsToday: 0,
+                          };
+                          setNumbers([newNum]);
+                        }}
+                        className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-xl border border-[#bceb42] shadow-xs cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-slate-950" />
+                        <span>Provision Inbound DID</span>
+                      </button>
                     </div>
                   </td>
-
-                  {/* Label */}
-                  <td className="py-3.5 px-4 font-medium text-slate-800">
-                    {num.label}
-                  </td>
-
-                  {/* Channel Type */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                      {num.channelType}
-                    </span>
-                  </td>
-
-                  {/* Routed Agent */}
-                  <td className="py-3.5 px-4 font-medium text-slate-700">
-                    {num.assignedAgent}
-                  </td>
-
-                  {/* Latency */}
-                  <td className="py-3.5 px-4 font-mono text-slate-600">
-                    {num.latencyMs}ms
-                  </td>
-
-                  {/* Calls Today */}
-                  <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
-                    {num.callsToday}
-                  </td>
-
-                  {/* Status */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 px-2 py-0.5 rounded-full border border-[#cdfb56]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926] animate-pulse" />
-                      Active
-                    </span>
-                  </td>
-
-                  {/* Action */}
-                  <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                    <button
-                      onClick={() => handleTestInbound(num)}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-[11px] font-bold bg-white hover:bg-[#cdfb56] text-slate-800 hover:text-slate-950 border border-slate-200 hover:border-[#bceb42] shadow-2xs transition-all cursor-pointer"
-                    >
-                      <span>Test Route</span>
-                    </button>
-                  </td>
                 </tr>
-              ))}
+              ) : (
+                numbers.map((num) => (
+                  <tr
+                    key={num.id}
+                    className="hover:bg-[#f7fee7]/30 transition-colors group"
+                  >
+                    {/* Phone Number */}
+                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900 group-hover:text-slate-950">
+                      <div className="flex items-center gap-2">
+                        <Radio className="w-3.5 h-3.5 text-slate-500" />
+                        <span>{num.phoneNumber}</span>
+                      </div>
+                    </td>
+
+                    {/* Label */}
+                    <td className="py-3.5 px-4 font-medium text-slate-800">
+                      {num.label}
+                    </td>
+
+                    {/* Channel Type */}
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                        {num.channelType}
+                      </span>
+                    </td>
+
+                    {/* Routed Agent */}
+                    <td className="py-3.5 px-4 font-medium text-slate-700">
+                      {num.assignedAgent}
+                    </td>
+
+                    {/* Latency */}
+                    <td className="py-3.5 px-4 font-mono text-slate-600">
+                      {num.latencyMs}ms
+                    </td>
+
+                    {/* Calls Today */}
+                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                      {num.callsToday}
+                    </td>
+
+                    {/* Status */}
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 px-2 py-0.5 rounded-full border border-[#cdfb56]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926] animate-pulse" />
+                        Active
+                      </span>
+                    </td>
+
+                    {/* Action */}
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                      <button
+                        onClick={() => handleTestInbound(num)}
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-[11px] font-bold bg-white hover:bg-[#cdfb56] text-slate-800 hover:text-slate-950 border border-slate-200 hover:border-[#bceb42] shadow-2xs transition-all cursor-pointer"
+                      >
+                        <span>Test Route</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

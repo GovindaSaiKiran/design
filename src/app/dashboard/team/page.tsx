@@ -27,49 +27,13 @@ interface TeamMember {
 
 const mockTeamList: TeamMember[] = [
   {
-    id: "tm-01",
-    name: "Dr. Arjun Verma",
-    email: "arjun.verma@apex.edu.in",
+    id: "tm-owner",
+    name: "clinic",
+    email: "taninkigovinda@gmail.com",
     role: "Institutional Admin",
-    department: "Dean of Admissions & Institutional Ops",
+    department: "Organization Owner",
     status: "active",
     lastActive: "Active now",
-  },
-  {
-    id: "tm-02",
-    name: "Prof. Sunita Rao",
-    email: "sunita.rao@apex.edu.in",
-    role: "Senior Counselor",
-    department: "Admissions & Merit Scholarships",
-    status: "active",
-    lastActive: "15 min ago",
-  },
-  {
-    id: "tm-03",
-    name: "Kavita Reddy",
-    email: "kavita.reddy@apex.edu.in",
-    role: "Admissions Staff",
-    department: "Student Affairs & Campus Life",
-    status: "active",
-    lastActive: "1 hour ago",
-  },
-  {
-    id: "tm-04",
-    name: "Rajeshwar Iyer",
-    email: "r.iyer@apex.edu.in",
-    role: "Senior Counselor",
-    department: "Lateral Entry & Diploma Triage",
-    status: "active",
-    lastActive: "Yesterday",
-  },
-  {
-    id: "tm-05",
-    name: "Meenakshi Sundaram",
-    email: "meenakshi.s@apex.edu.in",
-    role: "Viewer",
-    department: "Executive Board of Trustees",
-    status: "invited",
-    lastActive: "Invitation pending",
   },
 ];
 
@@ -89,7 +53,7 @@ export default function TeamPage() {
       name: inviteEmail.split("@")[0].replace(".", " "),
       email: inviteEmail,
       role: inviteRole,
-      department: "Admissions & Counseling",
+      department: "Support & Operations",
       status: "invited",
       lastActive: "Invitation pending",
     };
@@ -118,7 +82,7 @@ export default function TeamPage() {
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              5 Active Members
+              {team.length} Active Member{team.length === 1 ? "" : "s"}
             </span>
           </div>
 
@@ -127,7 +91,7 @@ export default function TeamPage() {
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Manage institutional staff who can access the VoicePilot AI platform, assign roles, and route warm counselor transfers.
+            Manage organization staff who can access the Swaram AI platform, assign roles, and route warm transfers.
           </p>
         </div>
 
@@ -155,9 +119,9 @@ export default function TeamPage() {
         <WorkspaceCard
           name="Staff Roster"
           icon={Users}
-          description="Institutional administrators and admissions desk team."
-          metric="5 members"
-          metricLabel="4 active • 1 invitation pending"
+          description="Organization administrators and call monitoring team."
+          metric={`${team.length} member`}
+          metricLabel="1 active • 0 invitation pending"
           status="All verified"
           statusType="ready"
           actionLabel="View roster →"
@@ -167,10 +131,10 @@ export default function TeamPage() {
           name="Counselor Handoff Desk"
           icon={UserCheck}
           description="Staff members eligible to receive warm call transfers from AI agents."
-          metric="3 counselors"
-          metricLabel="Dr. Verma, Prof. Rao, Mr. Iyer"
-          status="Online for calls"
-          statusType="live"
+          metric="0 counselors"
+          metricLabel="No external transfer routing configured"
+          status="Idle"
+          statusType="neutral"
           actionLabel="Manage routing →"
         />
 
@@ -190,7 +154,7 @@ export default function TeamPage() {
           icon={Key}
           description="Google Workspace and Microsoft Entra ID single sign-on integration."
           metric="SSO Active"
-          metricLabel="All staff authenticated via apex.edu.in"
+          metricLabel="Authenticated via taninkigovinda@gmail.com"
           status="Enforced"
           statusType="ready"
           actionLabel="Security policy →"
@@ -205,14 +169,14 @@ export default function TeamPage() {
         <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/70 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-              Institutional Staff Roster
+              Organization Staff Roster
             </span>
             <span className="text-[11px] text-slate-500 font-mono">
               ({team.length} members)
             </span>
           </div>
           <span className="text-[11px] text-slate-400 font-medium">
-            Managed under Apex Engineering College tenant
+            Managed under clinic tenant
           </span>
         </div>
 
@@ -320,12 +284,12 @@ export default function TeamPage() {
             <form onSubmit={handleInvite} className="p-5 space-y-4">
               <div className="space-y-1">
                 <label className="text-xs font-bold text-slate-700">
-                  Institutional Email Address
+                  Team Member Email Address
                 </label>
                 <input
                   type="email"
                   required
-                  placeholder="e.g. counselor@apex.edu.in"
+                  placeholder="e.g. member@company.com"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-[#cdfb56]"

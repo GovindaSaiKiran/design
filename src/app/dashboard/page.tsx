@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import OverviewPageView from "@/components/dashboard/views/OverviewPageView";
 
 export default function DashboardOverviewPage() {

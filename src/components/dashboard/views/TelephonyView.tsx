@@ -178,11 +178,11 @@ export default function TelephonyView({ numbers }: TelephonyViewProps) {
           <div className="space-y-3 text-xs">
             <div className="flex justify-between py-2 border-b border-black/5">
               <span className="text-neutral-500">Primary SIP Gateway:</span>
-              <span className="font-mono font-semibold text-neutral-900">sip.hyderabad.voicepilot.in</span>
+              <span className="font-mono font-semibold text-neutral-900">sip.hyderabad.swaram.in</span>
             </div>
             <div className="flex justify-between py-2 border-b border-black/5">
               <span className="text-neutral-500">Backup Failover:</span>
-              <span className="font-mono font-medium text-neutral-700">sip.mumbai.voicepilot.in (Hot Standby)</span>
+              <span className="font-mono font-medium text-neutral-700">sip.mumbai.swaram.in (Hot Standby)</span>
             </div>
             <div className="flex justify-between py-2 border-b border-black/5">
               <span className="text-neutral-500">Codec Negotiation:</span>

@@ -21,7 +21,7 @@ import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 
 export default function DelegateTaskPage() {
   const [goalText, setGoalText] = useState(
-    "Follow up with 420 students who downloaded the B.Tech CSE brochure, evaluate their 12th PCM cutoff marks, and schedule counseling visits for this Saturday."
+    "Contact recently captured leads, verify interest in our services, answer pricing questions, and schedule consultation appointments."
   );
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDelegated, setIsDelegated] = useState(false);
@@ -82,7 +82,7 @@ export default function DelegateTaskPage() {
             Outcome Successfully Delegated to Autonomous Workforce!
           </h2>
           <p className="text-xs text-slate-600 leading-relaxed max-w-md mx-auto">
-            Maya AI & Neha AI are now calling the 420 filtered applicants with PCM &gt; 90%. Real-time telemetry, transfers, and counseling appointments will stream directly to your Overview and Calls workspace.
+            AI workforce has received your instructions. Outbound queue is prepared. Telemetry, live transcripts, and scheduled appointments will stream directly to your Overview and Calls workspace.
           </p>
           <div className="pt-4 flex items-center justify-center gap-3">
             <Link
@@ -103,7 +103,7 @@ export default function DelegateTaskPage() {
                 1
               </span>
               <span className="text-xs font-bold uppercase tracking-wider text-slate-900">
-                Define the Desired Institutional Outcome
+                Define the Desired Operational Outcome
               </span>
             </div>
 
@@ -142,10 +142,10 @@ export default function DelegateTaskPage() {
                     <span>Audience</span>
                   </div>
                   <div className="text-lg font-bold text-slate-900 font-mono">
-                    420 Verified
+                    Target List
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    B.Tech CSE brochure downloaders with PCM &gt; 90%
+                    Uploaded contact list or filtered segment
                   </p>
                 </div>
 
@@ -156,10 +156,10 @@ export default function DelegateTaskPage() {
                     <span>Assigned Persona</span>
                   </div>
                   <div className="text-lg font-bold text-slate-900">
-                    Maya (Admissions)
+                    AI Voice Agent
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    English + Hindi Bilingual • 98.4% accuracy
+                    Autonomous voice engine • Latency &lt; 450ms
                   </p>
                 </div>
 
@@ -170,10 +170,10 @@ export default function DelegateTaskPage() {
                     <span>Knowledge Grounded</span>
                   </div>
                   <div className="text-lg font-bold text-slate-900">
-                    Fee & Scholarships
+                    Knowledge Base
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    50% Chancellor Merit Waiver cutoff matrices
+                    Grounded in uploaded documents and FAQs
                   </p>
                 </div>
 
@@ -184,10 +184,10 @@ export default function DelegateTaskPage() {
                     <span>Cadence Window</span>
                   </div>
                   <div className="text-lg font-bold text-slate-900">
-                    10:00 AM - 5:30 PM
+                    Business Hours
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    12 concurrent channels • 3 retry attempts
+                    Automatic retry attempts & DND compliance
                   </p>
                 </div>
               </div>
@@ -199,7 +199,7 @@ export default function DelegateTaskPage() {
                   <strong className="text-slate-900 font-bold block mb-0.5">
                     Autonomous Guardrails & Warm Transfer Protocols:
                   </strong>
-                  Complex queries regarding lateral diploma exemptions or non-standard fee installment requests will automatically trigger a warm transfer to human admissions staff with live caller notes delivered instantly.
+                  Complex inquiries or customer escalation requests will automatically trigger a warm transfer to human staff with live call summary and context delivered instantly.
                 </div>
               </div>
 

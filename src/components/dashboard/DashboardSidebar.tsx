@@ -4,18 +4,14 @@ import React from "react";
 import {
   LayoutDashboard,
   Bot,
-  PhoneCall,
-  Send,
-  Users,
-  BookOpen,
-  BarChart3,
-  FileSpreadsheet,
-  Radio,
-  UserCog,
-  Settings,
-  ShieldCheck,
+  UserPlus,
+  GraduationCap,
   Sparkles,
-  ChevronRight,
+  Phone,
+  CreditCard,
+  UserCog,
+  History,
+  ShieldCheck,
   Zap,
 } from "lucide-react";
 import { OrganizationInfo } from "@/types/dashboard";
@@ -23,15 +19,18 @@ import { OrganizationInfo } from "@/types/dashboard";
 export type TabKey =
   | "overview"
   | "agents"
+  | "create-agent"
+  | "knowledge"
+  | "delegate"
+  | "telephony"
+  | "billing"
+  | "settings"
   | "calls"
   | "campaigns"
   | "contacts"
-  | "knowledge"
   | "analytics"
   | "reports"
-  | "telephony"
-  | "team"
-  | "settings";
+  | "team";
 
 interface DashboardSidebarProps {
   activeTab: TabKey;
@@ -50,29 +49,17 @@ export default function DashboardSidebar({
 }: DashboardSidebarProps) {
   const sections = [
     {
-      title: "WORKSPACE",
+      title: "FEATURES & CONTROLS",
       items: [
-        { key: "overview" as TabKey, label: "Overview", icon: LayoutDashboard },
-        { key: "agents" as TabKey, label: "AI Agents", icon: Bot, badge: "3" },
-        { key: "calls" as TabKey, label: "Calls", icon: PhoneCall, live: true },
-        { key: "campaigns" as TabKey, label: "Campaigns", icon: Send, badge: "Active" },
-        { key: "contacts" as TabKey, label: "Students & Contacts", icon: Users },
-      ],
-    },
-    {
-      title: "INTELLIGENCE",
-      items: [
-        { key: "knowledge" as TabKey, label: "Knowledge Base", icon: BookOpen, badge: "24 Docs" },
-        { key: "analytics" as TabKey, label: "Analytics", icon: BarChart3 },
-        { key: "reports" as TabKey, label: "Reports", icon: FileSpreadsheet },
-      ],
-    },
-    {
-      title: "ORGANIZATION",
-      items: [
-        { key: "telephony" as TabKey, label: "Telephony", icon: Radio, badge: "3 Lines" },
-        { key: "team" as TabKey, label: "Team", icon: UserCog },
-        { key: "settings" as TabKey, label: "Settings", icon: Settings },
+        { key: "overview" as TabKey, label: "Dash boards", icon: LayoutDashboard },
+        { key: "agents" as TabKey, label: "My agents", icon: Bot },
+        { key: "create-agent" as TabKey, label: "Create a new agent", icon: UserPlus },
+        { key: "knowledge" as TabKey, label: "Train My Agent", icon: GraduationCap },
+        { key: "delegate" as TabKey, label: "Use agents", icon: Sparkles },
+        { key: "telephony" as TabKey, label: "Phone numbers", icon: Phone },
+        { key: "billing" as TabKey, label: "Credits", icon: CreditCard, badge: "14 min" },
+        { key: "settings" as TabKey, label: "Account", icon: UserCog },
+        { key: "calls" as TabKey, label: "History", icon: History },
       ],
     },
   ];

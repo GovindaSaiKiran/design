@@ -262,7 +262,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
               }
             }}
             className="flex items-center gap-1.5 group/brand focus:outline-none whitespace-nowrap shrink-0 cursor-pointer"
-            title="VoicePilot AI Homepage"
+            title="Swaram AI Homepage"
           >
             <div className="w-5.5 h-5.5 sm:w-6 sm:h-6 relative flex items-center justify-center shrink-0">
               <svg
@@ -289,7 +289,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
               </svg>
             </div>
             <span className="font-black text-xs sm:text-sm tracking-tight flex items-center gap-1 whitespace-nowrap text-slate-950 group-hover/brand:text-slate-800 transition-colors">
-              VoicePilot
+              Swaram
               <span className="text-[#0a3d1b] bg-[#cdfb56] text-[8.5px] sm:text-[9.5px] font-black tracking-widest px-1.5 py-0.5 rounded shadow-[0_0_12px_rgba(205,251,86,0.5)] group-hover/brand:bg-[#bef03f] transition-all">
                 AI
               </span>
@@ -548,7 +548,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
           <Link
             href="/dashboard"
             className="text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-2.5 xl:px-3 py-1.5 rounded-full border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 hover:shadow-sm text-slate-800 hover:text-slate-950 hover:scale-[1.03] transition-all duration-200 cursor-pointer active:scale-95 shadow-2xs whitespace-nowrap shrink-0 flex items-center group"
-            title="Open VoicePilot Operations Command Center"
+            title="Open Swaram Operations Command Center"
           >
             <span>DASHBOARD</span>
           </Link>

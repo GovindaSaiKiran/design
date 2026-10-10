@@ -388,7 +388,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
 
             {/* Description Subtitle */}
             <p className="text-sm sm:text-base text-[#475569] leading-relaxed font-sans max-w-xl">
-              Describe the admissions or counseling goal and connect your campus documents. VoicePilot orchestrates autonomous voice agents, verifies scholarships, and updates student dossiers in real-time.
+              Describe the admissions or counseling goal and connect your campus documents. Swaram orchestrates autonomous voice agents, verifies scholarships, and updates student dossiers in real-time.
             </p>
 
             {/* Quick Goals Pill Buttons */}
@@ -472,7 +472,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 </div>
                 <div>
                   <h3 className="font-bold text-[#0f172a] text-base sm:text-lg tracking-tight">
-                    VoicePilot is preparing your workflow
+                    Swaram is preparing your workflow
                   </h3>
                   <p className="text-xs text-[#64748b] mt-0.5">
                     Analyzing your request and campus data...
@@ -1188,7 +1188,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
                 ✦
               </div>
               <p className="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed max-w-sm">
-                At collegiate scale, VoicePilot AI delivers ultra-low latency voice synthesis across Indian languages, empowering seamless inbound and outbound admissions counseling.
+                At enterprise scale, Swaram AI delivers ultra-low latency voice synthesis across Indian languages, empowering seamless inbound and outbound conversational operations.
               </p>
             </div>
 
@@ -1342,7 +1342,7 @@ export default function WorkAgentsShowcase({ onOpenDemo }: WorkAgentsShowcasePro
           >
             <Image
               src="/images/connectors/connectors-showcase-3d.png"
-              alt="VoicePilot AI Connectors & Campus ERPs - Google Drive, Notion, Slack, Microsoft Excel, GitHub"
+              alt="Swaram AI Connectors & Campus ERPs - Google Drive, Notion, Slack, Microsoft Excel, GitHub"
               width={1024}
               height={365}
               priority

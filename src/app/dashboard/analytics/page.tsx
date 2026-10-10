@@ -21,19 +21,19 @@ export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<"today" | "7d" | "30d">("today");
 
   const hourlyData = [
-    { hour: "08 AM", calls: 14 },
-    { hour: "09 AM", calls: 38 },
-    { hour: "10 AM", calls: 72 },
-    { hour: "11 AM", calls: 64 },
-    { hour: "12 PM", calls: 42 },
-    { hour: "01 PM", calls: 28 },
-    { hour: "02 PM", calls: 52 },
-    { hour: "03 PM", calls: 68 },
-    { hour: "04 PM", calls: 56 },
-    { hour: "05 PM", calls: 34 },
+    { hour: "08 AM", calls: 0 },
+    { hour: "09 AM", calls: 0 },
+    { hour: "10 AM", calls: 0 },
+    { hour: "11 AM", calls: 0 },
+    { hour: "12 PM", calls: 0 },
+    { hour: "01 PM", calls: 0 },
+    { hour: "02 PM", calls: 0 },
+    { hour: "03 PM", calls: 0 },
+    { hour: "04 PM", calls: 0 },
+    { hour: "05 PM", calls: 0 },
   ];
 
-  const maxCalls = Math.max(...hourlyData.map((d) => d.calls));
+  const maxCalls = Math.max(...hourlyData.map((d) => d.calls), 1);
 
   return (
     <div className="space-y-6 sm:space-y-8 select-none">
@@ -52,7 +52,7 @@ export default function AnalyticsPage() {
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              Telemetry Pipeline Active
+              Telemetry Pipeline Ready
             </span>
           </div>
 
@@ -91,8 +91,8 @@ export default function AnalyticsPage() {
           name="First-Byte Latency"
           icon={Activity}
           description="Average response time from user silence detection to acoustic audio packet."
-          metric="142ms avg"
-          metricLabel="99.4% of responses delivered < 160ms"
+          metric="-- ms"
+          metricLabel="Awaiting call traffic"
           status="Sub-150ms SLA"
           statusType="ready"
           actionLabel="Inspect telemetry →"
@@ -102,10 +102,10 @@ export default function AnalyticsPage() {
           name="Caller Sentiment"
           icon={Smile}
           description="Real-time acoustic emotion extraction and sentiment classification."
-          metric="92.4% positive"
-          metricLabel="5.2% neutral • 2.4% urgent escalations"
-          status="High satisfaction"
-          statusType="ready"
+          metric="--%"
+          metricLabel="No sentiment data recorded yet"
+          status="Awaiting calls"
+          statusType="neutral"
           actionLabel="Sentiment breakdown →"
         />
 
@@ -113,9 +113,9 @@ export default function AnalyticsPage() {
           name="Autonomous Resolution"
           icon={CheckCircle2}
           description="Conversations resolved end-to-end without human desk intervention."
-          metric="95.2% resolved"
-          metricLabel="12 transfers • 4.8% handoff rate"
-          status="Optimized desk"
+          metric="--%"
+          metricLabel="0 transfers • 0 handoffs"
+          status="Ready"
           statusType="ready"
           actionLabel="View handoffs →"
           href="/dashboard/calls"
@@ -125,10 +125,10 @@ export default function AnalyticsPage() {
           name="Peak Concurrency"
           icon={Radio}
           description="Highest simultaneous SIP trunk channels utilized during surge hours."
-          metric="18 channels"
-          metricLabel="Zero packet drops or audio clipping"
-          status="30 provisioned"
-          statusType="live"
+          metric="0 channels"
+          metricLabel="0 calls in progress"
+          status="Idle"
+          statusType="neutral"
           actionLabel="Manage SIP →"
           href="/dashboard/phone-numbers"
         />
@@ -144,11 +144,11 @@ export default function AnalyticsPage() {
               Hourly Call Volume Distribution
             </h3>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Call frequency across admissions, hostel, and scholarship inquiry desks
+              Call frequency across inbound inquiries and customer support channels
             </p>
           </div>
           <span className="text-[11px] text-slate-500 font-mono">
-            Peak: 10:00 AM (72 calls/hr)
+            Peak: -- (0 calls/hr)
           </span>
         </div>
 
@@ -156,7 +156,7 @@ export default function AnalyticsPage() {
         <div className="pt-6 pb-2">
           <div className="h-44 flex items-end gap-2 sm:gap-4 justify-between border-b border-slate-100 pb-2">
             {hourlyData.map((d, i) => {
-              const heightPercent = Math.round((d.calls / maxCalls) * 100);
+              const heightPercent = maxCalls > 0 && d.calls > 0 ? Math.round((d.calls / maxCalls) * 100) : 4;
               return (
                 <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
                   <span className="text-[10px] font-mono font-bold text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -190,10 +190,10 @@ export default function AnalyticsPage() {
 
           <div className="space-y-3">
             {[
-              { label: "B.Tech Admissions & Specializations", pct: 54, count: 134 },
-              { label: "Fees, Installments & Scholarships", pct: 24, count: 60 },
-              { label: "Hostel Accommodations & Food", pct: 14, count: 35 },
-              { label: "Semester Exams & Document Verification", pct: 8, count: 19 },
+              { label: "General Inquiries", pct: 0, count: 0 },
+              { label: "Product & Service Pricing", pct: 0, count: 0 },
+              { label: "Customer Support & FAQs", pct: 0, count: 0 },
+              { label: "Escalation Requests", pct: 0, count: 0 },
             ].map((intent, i) => (
               <div key={i} className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
@@ -225,9 +225,9 @@ export default function AnalyticsPage() {
                 p50 (Median)
               </span>
               <span className="text-xl font-bold font-mono text-slate-900 block mt-1">
-                120ms
+                -- ms
               </span>
-              <span className="text-[10px] text-[#8ac926] font-bold">Optimal</span>
+              <span className="text-[10px] text-slate-500 font-bold">Awaiting traffic</span>
             </div>
 
             <div className="p-3 rounded-xl bg-[#f7fee7] border border-[#cdfb56]">
@@ -235,9 +235,9 @@ export default function AnalyticsPage() {
                 p90 (Standard)
               </span>
               <span className="text-xl font-bold font-mono text-slate-950 block mt-1">
-                142ms
+                -- ms
               </span>
-              <span className="text-[10px] text-slate-900 font-bold">Sub-150ms</span>
+              <span className="text-[10px] text-slate-900 font-bold">Sub-150ms SLA</span>
             </div>
 
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
@@ -245,9 +245,9 @@ export default function AnalyticsPage() {
                 p99 (Peak Surge)
               </span>
               <span className="text-xl font-bold font-mono text-slate-900 block mt-1">
-                185ms
+                -- ms
               </span>
-              <span className="text-[10px] text-slate-500 font-bold">Sub-200ms</span>
+              <span className="text-[10px] text-slate-500 font-bold">Sub-200ms SLA</span>
             </div>
           </div>
 

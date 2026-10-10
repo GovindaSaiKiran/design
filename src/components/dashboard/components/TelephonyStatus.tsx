@@ -19,7 +19,7 @@ export default function TelephonyStatus({ onManageNumbers }: TelephonyStatusProp
               Carrier & SIP Network
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200">
-              3 Lines Active
+              {mockTelephonyNumbers.length} Lines Active
             </span>
           </div>
 
@@ -37,7 +37,7 @@ export default function TelephonyStatus({ onManageNumbers }: TelephonyStatusProp
             Virtual Number Routing Table
           </h3>
           <span className="text-xs font-mono font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-            Latency: 38ms avg
+            {mockTelephonyNumbers.length > 0 ? "Latency: 38ms avg" : "Standby"}
           </span>
         </div>
         <p className="text-xs text-neutral-500 mt-0.5">
@@ -47,32 +47,42 @@ export default function TelephonyStatus({ onManageNumbers }: TelephonyStatusProp
 
       {/* Number List */}
       <div className="space-y-3 my-5">
-        {mockTelephonyNumbers.map((item) => (
-          <div
-            key={item.id}
-            className="liquid-glass-subtle p-4 rounded-2xl border border-black/10 hover:border-black/30 hover:bg-white/80 hover:shadow-xs transition-all flex items-center justify-between gap-3"
-          >
-            <div className="flex items-center gap-3.5 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center shrink-0 shadow-xs">
-                <Phone className="w-4 h-4 stroke-[2]" />
-              </div>
-              <div className="min-w-0">
-                <div className="font-semibold text-neutral-900 font-mono text-sm truncate">
-                  {item.phoneNumber}
-                </div>
-                <div className="text-xs text-neutral-500 truncate mt-0.5">
-                  Assigned Agent: <strong className="text-neutral-800 font-medium">{item.assignedAgent}</strong>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-right shrink-0">
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-neutral-200/70 text-neutral-700 border border-black/5">
-                {item.channelType}
-              </span>
-            </div>
+        {mockTelephonyNumbers.length === 0 ? (
+          <div className="liquid-glass-subtle p-6 rounded-2xl border border-black/10 text-center space-y-2">
+            <Phone className="w-6 h-6 text-neutral-400 mx-auto" />
+            <p className="text-xs font-semibold text-neutral-800">No phone numbers provisioned</p>
+            <p className="text-[11px] text-neutral-500 max-w-sm mx-auto">
+              Provision a virtual DID or connect your SIP trunk to assign dedicated phone numbers to your AI voice agents.
+            </p>
           </div>
-        ))}
+        ) : (
+          mockTelephonyNumbers.map((item) => (
+            <div
+              key={item.id}
+              className="liquid-glass-subtle p-4 rounded-2xl border border-black/10 hover:border-black/30 hover:bg-white/80 hover:shadow-xs transition-all flex items-center justify-between gap-3"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-neutral-900 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Phone className="w-4 h-4 stroke-[2]" />
+                </div>
+                <div className="min-w-0">
+                  <div className="font-semibold text-neutral-900 font-mono text-sm truncate">
+                    {item.phoneNumber}
+                  </div>
+                  <div className="text-xs text-neutral-500 truncate mt-0.5">
+                    Assigned Agent: <strong className="text-neutral-800 font-medium">{item.assignedAgent}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-right shrink-0">
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-neutral-200/70 text-neutral-700 border border-black/5">
+                  {item.channelType}
+                </span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Action / Health Telemetry */}

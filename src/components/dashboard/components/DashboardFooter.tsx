@@ -20,7 +20,7 @@ export default function DashboardFooter() {
               </svg>
             </div>
             <span className="font-extrabold text-base tracking-tight text-neutral-900">
-              VoicePilot
+              Swaram
             </span>
             <span className="text-[#0d5926] bg-[#cdfb56] text-[9px] font-black tracking-widest px-1.5 py-0.5 rounded-md shadow-xs">
               AI
@@ -28,7 +28,7 @@ export default function DashboardFooter() {
           </div>
 
           <p className="text-xs text-neutral-500 leading-relaxed max-w-sm">
-            Autonomous AI Admission Counselor for Higher Education. Answering prospective student calls 24/7 with verified institutional grounding, zero hold times, and warm dean escalation.
+            Autonomous AI Voice Workforce. Handling inbound customer support and outbound calling campaigns 24/7 with verified knowledge grounding, zero hold times, and intelligent human escalation.
           </p>
 
           <div className="flex items-center gap-3 text-[11px] font-semibold text-neutral-500 pt-1">
@@ -77,7 +77,7 @@ export default function DashboardFooter() {
       {/* Bottom Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-neutral-200/80 text-xs text-neutral-400">
         <div>
-          © 2026 Voice Pilot Inc. All rights reserved.
+          © 2026 Swaram Inc. All rights reserved.
         </div>
         <div className="flex items-center gap-6">
           <span className="hover:text-neutral-700 cursor-pointer">Student Privacy</span>

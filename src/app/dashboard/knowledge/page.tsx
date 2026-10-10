@@ -68,7 +68,7 @@ export default function KnowledgePage() {
             <span className="text-slate-300">/</span>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
               <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              Zero-Hallucination Vector Store
+              {documents.length} Vector Sources
             </span>
           </div>
 
@@ -77,7 +77,7 @@ export default function KnowledgePage() {
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Institutional documents, cutoff matrices, fee schedules, and grounded semantic vector search.
+            Company documents, catalogs, pricing guidelines, and grounded semantic vector search.
           </p>
         </div>
 
@@ -85,8 +85,7 @@ export default function KnowledgePage() {
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
           <button
             onClick={() => {
-              // Simulated re-indexing
-              alert("Re-indexing complete: All 925 vector chunks synchronized across agents.");
+              alert("Re-indexing complete: All vector chunks synchronized across agents.");
             }}
             className="inline-flex items-center gap-2 bg-white hover:bg-[#f7fee7] text-slate-800 hover:text-slate-950 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-200 hover:border-[#cdfb56] shadow-2xs transition-all cursor-pointer"
           >
@@ -109,47 +108,51 @@ export default function KnowledgePage() {
       {/* ======================================================================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <WorkspaceCard
-          name="Academic & Course Info"
+          name="Company & Product Info"
           icon={BookOpen}
-          description="Collegiate brochure 2026-27, curriculum syllabi, and faculty directory."
-          metric="480 chunks"
-          metricLabel="4.8 MB PDF • 100% Vectorized"
-          status="Synchronized"
-          statusType="ready"
-          actionLabel="Inspect chunks →"
+          description="Brochures, catalog items, and official FAQs."
+          metric="0 chunks"
+          metricLabel="No documents uploaded"
+          status="Empty"
+          statusType="neutral"
+          actionLabel="Upload doc →"
+          onClick={() => setUploadModalOpen(true)}
         />
 
         <WorkspaceCard
-          name="Fees & Scholarships"
+          name="Pricing & Guidelines"
           icon={FileSpreadsheet}
-          description="B.Tech fee schedule, 3-part installment rules, and merit waivers."
-          metric="140 chunks"
-          metricLabel="1.2 MB XLSX • 100% Vectorized"
-          status="Synchronized"
-          statusType="ready"
-          actionLabel="Inspect chunks →"
+          description="Pricing sheets, discounts, and payment terms."
+          metric="0 chunks"
+          metricLabel="No documents uploaded"
+          status="Empty"
+          statusType="neutral"
+          actionLabel="Upload doc →"
+          onClick={() => setUploadModalOpen(true)}
         />
 
         <WorkspaceCard
-          name="Campus & Hostel"
+          name="Customer Support FAQs"
           icon={Layers}
-          description="Hostel room allotments, mess dietary menus, and campus curfews."
-          metric="210 chunks"
-          metricLabel="6.4 MB PDF • Vectorizing"
-          status="84% Synced"
-          statusType="running"
-          actionLabel="View progress →"
+          description="Troubleshooting guides and return policies."
+          metric="0 chunks"
+          metricLabel="No documents uploaded"
+          status="Empty"
+          statusType="neutral"
+          actionLabel="Upload doc →"
+          onClick={() => setUploadModalOpen(true)}
         />
 
         <WorkspaceCard
-          name="Admissions & Cutoffs"
+          name="Compliance & Rules"
           icon={ShieldCheck}
-          description="State CET ranks, JEE cutoff percentiles, and lateral entry rules."
-          metric="95 chunks"
-          metricLabel="2.9 MB PDF • Vectorizing"
-          status="42% Synced"
-          statusType="running"
-          actionLabel="View progress →"
+          description="Guardrails, terms of service, and escalations."
+          metric="0 chunks"
+          metricLabel="No documents uploaded"
+          status="Empty"
+          statusType="neutral"
+          actionLabel="Upload doc →"
+          onClick={() => setUploadModalOpen(true)}
         />
       </div>
 
@@ -254,75 +257,98 @@ export default function KnowledgePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {documents.map((doc) => (
-                <tr
-                  key={doc.id}
-                  className="hover:bg-[#f7fee7]/30 transition-colors group"
-                >
-                  {/* Title */}
-                  <td className="py-3.5 px-4">
-                    <div className="font-semibold text-slate-900 group-hover:text-slate-950 flex items-center gap-2">
-                      <FileText className="w-3.5 h-3.5 text-slate-500" />
-                      <span>{doc.title}</span>
+              {documents.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-16 text-center">
+                    <div className="max-w-md mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center mx-auto shadow-xs border border-lime-200">
+                        <BookOpen className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900">No knowledge documents uploaded</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Upload PDFs, FAQs, spreadsheets, or price books to ground your AI employees with 100% verified factual truth.
+                      </p>
+                      <button
+                        onClick={() => setUploadModalOpen(true)}
+                        className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-xl border border-[#bceb42] shadow-xs cursor-pointer"
+                      >
+                        <Upload className="w-3.5 h-3.5 text-slate-950" />
+                        <span>Upload Knowledge Document</span>
+                      </button>
                     </div>
                   </td>
-
-                  {/* Category */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-                      {doc.category}
-                    </span>
-                  </td>
-
-                  {/* File Size */}
-                  <td className="py-3.5 px-4 font-mono text-slate-600">
-                    {doc.fileSize}
-                  </td>
-
-                  {/* Chunks */}
-                  <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
-                    {doc.vectorChunks} chunks
-                  </td>
-
-                  {/* Status */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    {doc.status === "ready" ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 px-2 py-0.5 rounded-full border border-[#cdfb56]">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-[#8ac926]" />
-                        Vectorized
-                      </span>
-                    ) : doc.status === "processing" ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#f7fee7] text-slate-900 px-2 py-0.5 rounded-full border border-[#cdfb56]">
-                        <RefreshCw className="w-2.5 h-2.5 text-[#8ac926] animate-spin" />
-                        Vectorizing
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full border border-rose-200">
-                        <AlertCircle className="w-2.5 h-2.5 text-rose-500" />
-                        Failed
-                      </span>
-                    )}
-                  </td>
-
-                  {/* Last Updated */}
-                  <td className="py-3.5 px-4 text-slate-500 text-[11px]">
-                    {doc.lastUpdated}
-                  </td>
-
-                  {/* Actions */}
-                  <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                    <button
-                      onClick={() => {
-                        setTestQuery(doc.title.split(".")[0]);
-                        handleTestSearch({ preventDefault: () => {} } as any);
-                      }}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white hover:bg-[#cdfb56] text-slate-800 hover:text-slate-950 border border-slate-200 hover:border-[#bceb42] shadow-2xs transition-all cursor-pointer"
-                    >
-                      <span>Inspect</span>
-                    </button>
-                  </td>
                 </tr>
-              ))}
+              ) : (
+                documents.map((doc) => (
+                  <tr
+                    key={doc.id}
+                    className="hover:bg-[#f7fee7]/30 transition-colors group"
+                  >
+                    {/* Title */}
+                    <td className="py-3.5 px-4">
+                      <div className="font-semibold text-slate-900 group-hover:text-slate-950 flex items-center gap-2">
+                        <FileText className="w-3.5 h-3.5 text-slate-500" />
+                        <span>{doc.title}</span>
+                      </div>
+                    </td>
+
+                    {/* Category */}
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                        {doc.category}
+                      </span>
+                    </td>
+
+                    {/* File Size */}
+                    <td className="py-3.5 px-4 font-mono text-slate-600">
+                      {doc.fileSize}
+                    </td>
+
+                    {/* Chunks */}
+                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                      {doc.vectorChunks} chunks
+                    </td>
+
+                    {/* Status */}
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      {doc.status === "ready" ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 px-2 py-0.5 rounded-full border border-[#cdfb56]">
+                          <CheckCircle2 className="w-2.5 h-2.5 text-[#8ac926]" />
+                          Vectorized
+                        </span>
+                      ) : doc.status === "processing" ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#f7fee7] text-slate-900 px-2 py-0.5 rounded-full border border-[#cdfb56]">
+                          <RefreshCw className="w-2.5 h-2.5 text-[#8ac926] animate-spin" />
+                          Vectorizing
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full border border-rose-200">
+                          <AlertCircle className="w-2.5 h-2.5 text-rose-500" />
+                          Failed
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Last Updated */}
+                    <td className="py-3.5 px-4 text-slate-500 text-[11px]">
+                      {doc.lastUpdated}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                      <button
+                        onClick={() => {
+                          setTestQuery(doc.title.split(".")[0]);
+                          handleTestSearch({ preventDefault: () => {} } as any);
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white hover:bg-[#cdfb56] text-slate-800 hover:text-slate-950 border border-slate-200 hover:border-[#bceb42] shadow-2xs transition-all cursor-pointer"
+                      >
+                        <span>Inspect</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

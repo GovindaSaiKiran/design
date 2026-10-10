@@ -22,99 +22,7 @@ import ContactDossierModal from "@/components/dashboard/modals/ContactDossierMod
 import LiveCallModal from "@/components/dashboard/modals/LiveCallModal";
 import { ContactItem, LiveCallItem } from "@/types/dashboard";
 
-const mockContactsList: ContactItem[] = [
-  {
-    id: "cont-01",
-    name: "Rahul Verma",
-    phone: "+91 98401 55219",
-    email: "rahul.verma94@gmail.com",
-    category: "High Intent",
-    organization: "B.Tech CSE (AI & Robotics) • PCM 94.2%",
-    lastCallOutcome: "Interested",
-    lastContacted: "4 min ago",
-    notes: "Scored 94% in 12th PCM. Eligible for 50% Chancellor Merit Scholarship. Booked campus tour for this Saturday.",
-    assignedAgent: "Maya (Admissions)",
-    priorityScore: 96,
-  },
-  {
-    id: "cont-02",
-    name: "Priya Sharma",
-    phone: "+91 94402 11980",
-    email: "priya.sharma_in@outlook.com",
-    category: "Resolved",
-    organization: "B.Tech Electronics & VLSI • PCM 89.0%",
-    lastCallOutcome: "Completed",
-    lastContacted: "18 min ago",
-    notes: "Confirmed girls' hostel 2-sharing AC room with meal plan. Paid reservation advance fee.",
-    assignedAgent: "Neha (Support)",
-    priorityScore: 88,
-  },
-  {
-    id: "cont-03",
-    name: "Ananya Kumar",
-    phone: "+91 98840 55120",
-    email: "ananya.sports@yahoo.com",
-    category: "High Intent",
-    organization: "B.Tech Mechanical • Sports Quota",
-    lastCallOutcome: "Interested",
-    lastContacted: "25 min ago",
-    notes: "State gold medalist in athletics. Inquired regarding 25% sports quota fee waiver and training facilities.",
-    assignedAgent: "Maya (Admissions)",
-    priorityScore: 94,
-  },
-  {
-    id: "cont-04",
-    name: "Gaurav Joshi",
-    phone: "+91 98840 33219",
-    email: "gaurav.joshi.mech@gmail.com",
-    category: "Follow-up",
-    organization: "B.Tech Data Science • Enrolled Student",
-    lastCallOutcome: "Callback Requested",
-    lastContacted: "1 hour ago",
-    notes: "Parent requested callback after 5:30 PM regarding college transport bus routes from Secunderabad.",
-    assignedAgent: "Neha (Support)",
-    priorityScore: 78,
-  },
-  {
-    id: "cont-05",
-    name: "Anita Roy",
-    phone: "+91 98765 11980",
-    email: "anita.diploma@rediffmail.com",
-    category: "Follow-up",
-    organization: "Lateral Entry 2nd-Year Diploma",
-    lastCallOutcome: "Human Handoff",
-    lastContacted: "2 hours ago",
-    notes: "Completed 3-year Mechanical Diploma with 88%. Transferred to Senior Admissions Dean for credit transfer review.",
-    assignedAgent: "Neha (Support)",
-    priorityScore: 82,
-  },
-  {
-    id: "cont-06",
-    name: "Vikram Malhotra",
-    phone: "+91 98401 77120",
-    email: "vikram.malhotra2006@gmail.com",
-    category: "Resolved",
-    organization: "B.Tech CSE (Autonomous Systems)",
-    lastCallOutcome: "Completed",
-    lastContacted: "Today, 09:30 AM",
-    notes: "Counseling session booked for Saturday 10:30 AM. WhatsApp pass delivered successfully.",
-    assignedAgent: "Maya (Admissions)",
-    priorityScore: 91,
-  },
-  {
-    id: "cont-07",
-    name: "Deepika Sen",
-    phone: "+91 91760 88231",
-    email: "deepika.sen.scholar@gmail.com",
-    category: "High Intent",
-    organization: "B.Tech AI & Data Science • PCM 96.8%",
-    lastCallOutcome: "Completed",
-    lastContacted: "Yesterday",
-    notes: "100% Chancellor Scholarship candidate. Online application submitted and document checklist completed.",
-    assignedAgent: "Maya (Admissions)",
-    priorityScore: 99,
-  },
-];
+const mockContactsList: ContactItem[] = [];
 
 export default function ContactsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -166,7 +74,7 @@ export default function ContactsPage() {
       latencyMs: 138,
       transcript: [
         { speaker: "system", text: `Outbound call connected to ${contact.name}.`, time: "00:00" },
-        { speaker: "agent", text: `Hello ${contact.name}, this is Priya from Apex Engineering College following up on your application.`, time: "00:04" },
+        { speaker: "agent", text: `Hello ${contact.name}, this is our voice assistant calling regarding your inquiry.`, time: "00:04" },
       ],
     };
     setActiveCall(liveCallObj);
@@ -230,11 +138,11 @@ export default function ContactsPage() {
         <WorkspaceCard
           name="High Intent Applicants"
           icon={Star}
-          description="Candidates with PCM > 90% and confirmed counseling intent."
-          metric="31 students"
-          metricLabel="96.2 average qualification score"
-          status="Priority queue"
-          statusType="ready"
+          description="Candidates with high qualification scores and confirmed intent."
+          metric="0 contacts"
+          metricLabel="0% qualification yield"
+          status="Empty"
+          statusType="neutral"
           actionLabel="View high intent →"
           onClick={() => setCategoryFilter("High Intent")}
         />
@@ -242,11 +150,11 @@ export default function ContactsPage() {
         <WorkspaceCard
           name="Counseling Confirmed"
           icon={CheckCircle2}
-          description="Students scheduled for Saturday campus tours and dean interviews."
-          metric="182 confirmed"
-          metricLabel="Passes issued via WhatsApp & SMS"
-          status="Active schedule"
-          statusType="running"
+          description="Candidates scheduled for appointments and consultations."
+          metric="0 confirmed"
+          metricLabel="No appointments scheduled"
+          status="None"
+          statusType="ready"
           actionLabel="View appointments →"
           onClick={() => setCategoryFilter("Resolved")}
         />
@@ -254,10 +162,10 @@ export default function ContactsPage() {
         <WorkspaceCard
           name="Pending Follow-up"
           icon={AlertCircle}
-          description="Callbacks requested by parents for evening hours or fee assistance."
-          metric="19 queued"
-          metricLabel="Auto-retry scheduled after 5:00 PM"
-          status="Action needed"
+          description="Callbacks requested by callers for evening hours or assistance."
+          metric="0 queued"
+          metricLabel="No pending callbacks"
+          status="Clean"
           statusType="neutral"
           actionLabel="Inspect callbacks →"
           onClick={() => setCategoryFilter("Follow-up")}
@@ -266,10 +174,10 @@ export default function ContactsPage() {
         <WorkspaceCard
           name="Total Directory"
           icon={Users}
-          description="Verified collegiate applicant registry with phone and academic records."
-          metric="1,840 contacts"
-          metricLabel="412 reached today across departments"
-          status="Directory active"
+          description="Verified applicant and lead registry with phone and notes."
+          metric="0 contacts"
+          metricLabel="0 reached today"
+          status="Ready for import"
           statusType="ready"
           actionLabel="Show all contacts →"
           onClick={() => setCategoryFilter("all")}
@@ -284,10 +192,10 @@ export default function ContactsPage() {
           {/* Category Filter Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
             {[
-              { id: "all", label: "All Contacts", count: mockContactsList.length },
-              { id: "High Intent", label: "High Intent (31)" },
-              { id: "Follow-up", label: "Follow-up Needed (19)" },
-              { id: "Resolved", label: "Resolved (52)" },
+              { id: "all", label: "All Contacts (0)" },
+              { id: "High Intent", label: "High Intent (0)" },
+              { id: "Follow-up", label: "Follow-up (0)" },
+              { id: "Resolved", label: "Resolved (0)" },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -351,7 +259,29 @@ export default function ContactsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredContacts.map((contact) => (
+              {filteredContacts.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-16 text-center">
+                    <div className="max-w-md mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center mx-auto shadow-xs border border-lime-200">
+                        <Users className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900">No contacts in directory</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed">
+                        Upload a CSV contact list or connect Meta Ads/Webhooks to start automated outreach with your AI workforce.
+                      </p>
+                      <button
+                        onClick={() => setUploadModalOpen(true)}
+                        className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-xl border border-[#bceb42] shadow-xs transition-all cursor-pointer"
+                      >
+                        <Upload className="w-3.5 h-3.5 text-slate-950" />
+                        <span>Upload Contacts (CSV)</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredContacts.map((contact) => (
                 <tr
                   key={contact.id}
                   className="hover:bg-[#f7fee7]/30 transition-colors group"
@@ -435,7 +365,7 @@ export default function ContactsPage() {
                     </button>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

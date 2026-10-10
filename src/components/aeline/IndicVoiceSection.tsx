@@ -91,7 +91,7 @@ export default function IndicVoiceSection({
       nativeLabel: "ਪੰਜਾਬੀ",
     },
     English: {
-      text: "VoicePilot delivers human-grade, emotion-rich speech synthesis across all official languages of India with ultra-low sub-400ms latency.",
+      text: "Swaram delivers human-grade, emotion-rich speech synthesis across all official languages of India with ultra-low sub-400ms latency.",
       defaultVoice: "Shubh",
       langCode: "en-IN",
       nativeLabel: "English",

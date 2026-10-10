@@ -37,173 +37,7 @@ export interface StudentLeadItem {
   lang?: string;
 }
 
-export const mockStudentLeads: StudentLeadItem[] = [
-  // 1. INTERESTED ENROLLEES
-  {
-    id: "lead-01",
-    name: "Rahul Verma",
-    phone: "+91 98401 55219",
-    course: "B.Tech Computer Science (AI & ML)",
-    category: "interested",
-    meritScore: "94.2% PCM • CBSE",
-    agentName: "Ritu (Hindi Admissions)",
-    callDuration: "3m 42s",
-    timestamp: "2026-09-18 11:24 AM",
-    timeAgo: "4 min ago",
-    lang: "Hindi + Eng",
-    summary: "छात्र ने बी.टेक एआई में प्रवेश एवं चांसलर स्कॉलरशिप के लिए पूछताछ की। 35% स्कॉलरशिप हेतु प्री-अप्रूवल दिया गया। शनिवार 11:00 AM पर कैंपस विजिट बुक किया।",
-    transcriptSnippet: "नमस्ते राहुल जी! आपके 12th PCM में 94.2% मार्क्स के आधार पर 35% चांसलर मेरिट स्कॉलरशिप स्वीकृत कर दी गई है।",
-    actionTaken: "Pre-Approved 35% Scholarship • Campus Tour Pass Emailed"
-  },
-  {
-    id: "lead-02",
-    name: "Sneha Reddy",
-    phone: "+91 98401 77120",
-    course: "MBA FinTech & Business Analytics",
-    category: "interested",
-    meritScore: "CAT 88.5 Percentile",
-    agentName: "Neha (Telugu Counseling)",
-    callDuration: "2m 58s",
-    timestamp: "2026-09-18 11:15 AM",
-    timeAgo: "12 min ago",
-    lang: "Telugu + Eng",
-    summary: "విద్యార్థి ఎంబీఏ ఫిన్‌టెక్ ఫీజు మరియు 3-విడతల సున్నా వడ్డీ ఈఎంఐ ప్లాన్ గురించి ఆరా తీశారు. టోకెన్ అడ్మిషన్ ఫీజు చెల్లించడానికి లింక్ పంపబడింది.",
-    transcriptSnippet: "నమస్కారం స్నేహ గారు! ఎంబీఏ ఫిన్‌టెక్ 3-విడతల ఫీజు వివరాలు మరియు బ్రోచర్ మీ వాట్సాప్‌కు పంపించాము.",
-    actionTaken: "EMI Payment Link Sent • Counseling Slot Booked"
-  },
-  {
-    id: "lead-03",
-    name: "Priya Rao",
-    phone: "+91 91760 33412",
-    course: "B.Tech Electronics & VLSI Design",
-    category: "interested",
-    meritScore: "KCET Rank 4,210",
-    agentName: "Ishita (Kannada Support)",
-    callDuration: "3m 12s",
-    timestamp: "2026-09-18 10:55 AM",
-    timeAgo: "32 min ago",
-    lang: "Kannada",
-    summary: "ಇಂಜಿನಿಯರಿಂಗ್ ವಿಎಲ್‌ಎಸ್‌ಐ ಸೀಟ್ ಮತ್ತು ಹಾಸ್ಟೆಲ್ ಸಿಂಗಲ್ ಎಸಿ ರೂಮ್ ಲಭ್ಯತೆ ದೃಢಪಡಿಸಲಾಗಿದೆ. ₹10,000 ಟೋಕನ್ ಸೀಟ್ ಕಾಯ್ದಿರಿಸುವಿಕೆ ಪೂರ್ಣಗೊಂಡಿದೆ.",
-    transcriptSnippet: "ನಮಸ್ಕಾರ ಪ್ರಿಯಾ! ವಿಎಲ್‌ಎಸ್‌ಐ ಕೋರ್ಸ್ ಸೀಟ್ ಬುಕಿಂಗ್ ದೃಢಪಡಿಸಲಾಗಿದೆ. ಹಾಸ್ಟೆಲ್ ರೂಮ್ ನಂಬರ್ 302 ನಿಗದಿಪಡಿಸಲಾಗಿದೆ.",
-    actionTaken: "Token Reservation Completed • Hostel Pass Issued"
-  },
-  {
-    id: "lead-04",
-    name: "Tanushree Das",
-    phone: "+91 98300 44192",
-    course: "B.Des User Experience & Interaction",
-    category: "interested",
-    meritScore: "UCEED Rank 890",
-    agentName: "Suhani (Bengali Advisor)",
-    callDuration: "2m 30s",
-    timestamp: "2026-09-18 10:42 AM",
-    timeAgo: "45 min ago",
-    lang: "Bengali",
-    summary: "ডিজাইন পোর্টফোলিও রিভিউ এবং স্কলারশিপ স্ল্যাব ব্যাখ্যা করা হয়েছে। আগামীকাল প্রধান অধ্যাপকের সাথে অনলাইন পোর্টফোলিও রাউন্ড নির্ধারিত।",
-    transcriptSnippet: "নমস্কার তনুশ্রী! ইউসিড র্যাঙ্ক অনুযায়ী আপনার ২৫% স্কলারশিপ নিশ্চিত হয়েছে। আগামীকাল সকাল ১০টায় পোর্টফোলিও কল হবে।",
-    actionTaken: "Design Portfolio Interview Booked • Catalog Sent"
-  },
-
-  // 2. CALL LATER / FOLLOW-UP
-  {
-    id: "lead-05",
-    name: "Gaurav Joshi",
-    phone: "+91 98840 33219",
-    course: "B.Tech Mechanical (Robotics)",
-    category: "call_later",
-    callbackTime: "Today at 5:30 PM",
-    agentName: "Shubh (Hindi Professional)",
-    callDuration: "1m 54s",
-    timestamp: "2026-09-18 10:11 AM",
-    timeAgo: "49 min ago",
-    lang: "Hindi",
-    summary: "पिताजी यात्रा के दौरान कॉल पर थे। शाम 5:30 बजे कॉलेज बस रूट एवं मेस मेनू पर विस्तृत चर्चा हेतु कॉलबैक मांगा।",
-    transcriptSnippet: "मैं अभी मीटिंग में हूँ। कृपया शाम 5:30 बजे कॉल करें ताकि मेरी बेटी भी साथ में बात कर सके।",
-    actionTaken: "Callback Queued for 5:30 PM • SMS Reminder Scheduled"
-  },
-  {
-    id: "lead-06",
-    name: "Meera Nair",
-    phone: "+91 90032 66781",
-    course: "M.Tech Data Science & AI",
-    category: "call_later",
-    callbackTime: "Tomorrow at 11:00 AM",
-    agentName: "Ritu (Hindi Admissions)",
-    callDuration: "1m 18s",
-    timestamp: "2026-09-18 09:15 AM",
-    timeAgo: "1h 45m ago",
-    lang: "English + Hindi",
-    summary: "वर्किंग प्रोफेशनल छात्र। कंपनी एचआर से स्पॉन्सरशिप लेटर कन्फर्म कर कल सुबह 11 बजे दोबारा बात करने का अनुरोध किया।",
-    transcriptSnippet: "I need to confirm company tuition sponsorship with our HR team today. Please ring me tomorrow at 11 AM.",
-    actionTaken: "Callback Queued for Tomorrow 11 AM • Brochure Emailed"
-  },
-
-  // 3. NOT INTERESTED / OPT-OUT
-  {
-    id: "lead-07",
-    name: "Rohan Varma",
-    phone: "+91 97890 22345",
-    course: "B.Tech Civil Engineering",
-    category: "not_interested",
-    disqualifiedReason: "Admitted into NIT Trichy (JoSAA Round 2)",
-    agentName: "Ritu (Hindi Admissions)",
-    callDuration: "1m 02s",
-    timestamp: "2026-09-18 09:40 AM",
-    timeAgo: "1h 20m ago",
-    lang: "English + Hindi",
-    summary: "छात्र को जोसा राउंड 2 में एनआईटी त्रिची में सीट आवंटित हो गई है। सादर ऑप-आउट अनुरोध। डू नॉट कॉल लिस्ट अपडेट।",
-    transcriptSnippet: "Thank you for calling, but I have already frozen my seat in NIT Trichy in the 2nd JoSAA counseling round.",
-    actionTaken: "Marked Opt-Out • Removed from Active Intake Campaign"
-  },
-  {
-    id: "lead-08",
-    name: "Pooja Hegde",
-    phone: "+91 94441 55678",
-    course: "B.Sc Biotechnology",
-    category: "not_interested",
-    disqualifiedReason: "Secured MBBS Seat via NEET Counseling",
-    agentName: "Neha (Telugu Counseling)",
-    callDuration: "0m 55s",
-    timestamp: "2026-09-18 08:30 AM",
-    timeAgo: "2h 30m ago",
-    lang: "Telugu + Eng",
-    summary: "నీట్ మెడికల్ కౌన్సెలింగ్ ద్వారా ఎంబీబీఎస్ సీటు ఖరారు చేసుకున్నారు. ఈ సంవత్సరం ఇంజనీరింగ్ అడ్మిషన్ అవసరం లేదు.",
-    transcriptSnippet: "I am joining MBBS through state medical counseling, so I won't be taking admission for B.Sc.",
-    actionTaken: "Archived • Not Interested Logged"
-  },
-
-  // 4. INBOUND INQUIRIES & ESCALATIONS
-  {
-    id: "lead-09",
-    name: "Anita Roy",
-    phone: "+91 98765 11980",
-    course: "Lateral Entry (Direct 2nd Year B.Tech)",
-    category: "inbound_inquiry",
-    agentName: "Ritu (Hindi Admissions)",
-    callDuration: "3m 10s",
-    timestamp: "2026-09-18 10:39 AM",
-    timeAgo: "21 min ago",
-    lang: "Hindi + Eng",
-    summary: "3-वर्षीय मैकेनिकल डिप्लोमा (88%) क्रेडिट ट्रांसफर एवं सीधे द्वितीय वर्ष में प्रवेश संबंधी तत्काल पूछताछ। चीफ डीन को ट्रांसफर किया गया।",
-    transcriptSnippet: "मैंने 88% के साथ डिप्लोमा पूरा किया है। मुझे डायरेक्ट 2nd-year B.Tech एडमिशन की कटऑफ और प्रक्रिया जाननी है।",
-    actionTaken: "Warm Handoff to Dean of Admissions • Dossier Transferred"
-  },
-  {
-    id: "lead-10",
-    name: "Deepika Sen",
-    phone: "+91 91760 88231",
-    course: "B.Tech AI & Robotics",
-    category: "inbound_inquiry",
-    agentName: "Suhani (Bengali Advisor)",
-    callDuration: "2m 45s",
-    timestamp: "2026-09-18 10:05 AM",
-    timeAgo: "55 min ago",
-    lang: "Bengali + Eng",
-    summary: "এনআরআই কোটা ফি কাঠামো, সিঙ্গেল এসি হোস্টেল এবং আন্তর্জাতিক এক্সচেঞ্জ প্রোগ্রাম সম্পর্কে অভিভাবকের বিশদ অনুসন্ধান।",
-    transcriptSnippet: "Is there any additional deposit for the single AC hostel room, and can we pay tuition in US Dollars or INR?",
-    actionTaken: "NRI Fee Catalog Sent • Callback Scheduled with Dean"
-  }
-];
+export const mockStudentLeads: StudentLeadItem[] = [];
 
 interface LeadSegmentationHubProps {
   activeCategory?: "all" | "interested" | "call_later" | "not_interested" | "inbound";
@@ -295,7 +129,7 @@ export default function LeadSegmentationHub({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `apex_indic_${activeTab}_candidates_${Date.now()}.csv`);
+    link.setAttribute("download", `swaram_${activeTab}_leads_${Date.now()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -311,14 +145,14 @@ export default function LeadSegmentationHub({
         <div>
           <div className="flex items-center gap-2.5 mb-1">
             <h2 className="text-lg sm:text-xl font-semibold text-neutral-900 tracking-tight font-serif-display">
-              Candidate Ingestion & Multilingual Registry
+              Lead Intelligence & Call Registry
             </h2>
             <span className="px-3 py-0.5 rounded-full text-[11px] font-semibold bg-neutral-100 text-neutral-700 border border-black/5">
-              {filteredLeads.length} Candidates
+              {filteredLeads.length} Records
             </span>
           </div>
           <p className="text-xs text-neutral-500 font-normal">
-            Real-time Indic voice interactions synthesized in regional dialects with instant audio playback.
+            Live telemetry, sentiment analysis, and call recordings from active AI campaigns.
           </p>
         </div>
 
@@ -327,7 +161,7 @@ export default function LeadSegmentationHub({
           <span className="text-xs text-neutral-400 font-medium">Segment:</span>
           <span className="px-3 py-1 rounded-full text-xs font-medium capitalize bg-neutral-900 text-white shadow-xs flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            {activeTab === "all" ? "All Candidates" : activeTab.replace("_", " ")}
+            {activeTab === "all" ? "All Contacts" : activeTab.replace("_", " ")}
           </span>
           {activeTab !== "all" && (
             <button
@@ -345,13 +179,13 @@ export default function LeadSegmentationHub({
         <div className="mb-5 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl shadow-xs flex items-center justify-between text-xs font-semibold text-emerald-900 animate-in fade-in duration-200">
           <div className="flex items-center gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>Exported {filteredLeads.length} candidate dossiers successfully with Indic voice logs!</span>
+            <span>Exported {filteredLeads.length} contact records successfully!</span>
           </div>
           <span className="text-[11px] font-mono bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-md">CSV Saved</span>
         </div>
       )}
 
-      {/* Unified Search, Course Filter & Export Toolbar */}
+      {/* Unified Search, Channel Filter & Export Toolbar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
@@ -360,24 +194,22 @@ export default function LeadSegmentationHub({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search candidate name, phone, dialect, or query..."
+            placeholder="Search contact name, phone, or query..."
             className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 hover:bg-white border border-black/10 hover:border-black/25 rounded-xl text-xs font-medium text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-black focus:outline-none transition-all"
           />
         </div>
 
-        {/* Program Filter & Single CSV Export Button */}
+        {/* Filter & Single CSV Export Button */}
         <div className="flex items-center gap-3 shrink-0">
           <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
             className="px-3.5 py-2.5 bg-neutral-50 hover:bg-white border border-black/10 hover:border-black/25 rounded-xl text-xs font-medium text-neutral-800 focus:outline-none cursor-pointer transition-all"
           >
-            <option value="all">All Academic Programs</option>
-            <option value="computer science">B.Tech Computer Science (AI & ML)</option>
-            <option value="fintech">MBA FinTech</option>
-            <option value="electronics">B.Tech Electronics & VLSI</option>
-            <option value="design">B.Des Interaction Design</option>
-            <option value="mechanical">B.Tech Mechanical</option>
+            <option value="all">All Campaign Channels</option>
+            <option value="outbound">Outbound Voice Calls</option>
+            <option value="inbound">Inbound Helpline</option>
+            <option value="sms">SMS Follow-up</option>
           </select>
 
           <button
@@ -508,9 +340,14 @@ export default function LeadSegmentationHub({
         </table>
 
         {filteredLeads.length === 0 && (
-          <div className="text-center py-12 text-neutral-500">
-            <p className="font-semibold text-sm">No candidate records found matching this filter.</p>
-            <p className="text-xs text-neutral-400 mt-1">Try resetting your search query or choosing another segment card above.</p>
+          <div className="text-center py-16 px-4">
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
+              <PhoneCall className="w-6 h-6 stroke-[1.5]" />
+            </div>
+            <p className="font-bold text-sm text-slate-800">No contact call records yet</p>
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              Once AI voice agents initiate outbound calls or receive inbound helpline calls, real-time audio transcripts and outcomes will appear here.
+            </p>
           </div>
         )}
       </div>
