@@ -7,7 +7,6 @@ import IndicVoiceSection from "@/components/aeline/IndicVoiceSection";
 import WorkAgentsShowcase from "@/components/aeline/WorkAgentsShowcase";
 import AboutSection from "@/components/aeline/AboutSection";
 import ServicesSection from "@/components/aeline/ServicesSection";
-import InnovationShowcase from "@/components/aeline/InnovationShowcase";
 import PricingSection from "@/components/aeline/PricingSection";
 import TestimonialsSection from "@/components/aeline/TestimonialsSection";
 import BlogSection from "@/components/aeline/BlogSection";
@@ -52,11 +51,8 @@ export default function EduVoicePage() {
         onOpenSimulator={() => setSimulatorOpen(true)}
       />
 
-      {/* 4. Core Capabilities (24/7 Telephony, Institutional RAG, Smart Human Handoff) */}
-      <ServicesSection />
-
-      {/* 5. Interactive Admissions ROI & Telephony Yield Calculator */}
-      <InnovationShowcase />
+      {/* Core Capabilities */}
+      <ServicesSection onOpenDemo={() => setDemoOpen(true)} />
 
       {/* 6. Institutional Campus Plans Built for Every Higher Ed Institution */}
       <PricingSection onSelectPlan={handleSelectPlan} />

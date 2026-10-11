@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
@@ -63,6 +64,43 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
     { id: "capabilities", label: "Capabilities", href: "#capabilities", icon: Zap },
     { id: "pricing", label: "Pricing", href: "#pricing", icon: Tag },
   ];
+
+  const pathname = usePathname();
+
+  // Active route detection supporting direct URL hashes, nested routes, and popstate
+  useEffect(() => {
+    const syncActiveRoute = () => {
+      if (typeof window === "undefined") return;
+
+      if (window.location.hash) {
+        const hash = window.location.hash;
+        const match = navItems.find((n) => n.href === hash || n.href.endsWith(hash));
+        if (match) {
+          setActiveTab(match.id);
+          return;
+        }
+      }
+
+      if (pathname && pathname !== "/") {
+        const match = navItems.find(
+          (n) => n.href === pathname || (n.href !== "/" && pathname.startsWith(n.href))
+        );
+        if (match) {
+          setActiveTab(match.id);
+          return;
+        }
+      }
+    };
+
+    syncActiveRoute();
+
+    window.addEventListener("popstate", syncActiveRoute);
+    window.addEventListener("hashchange", syncActiveRoute);
+    return () => {
+      window.removeEventListener("popstate", syncActiveRoute);
+      window.removeEventListener("hashchange", syncActiveRoute);
+    };
+  }, [pathname]);
 
   // Smooth scroll handler with header offset & scrollspy lock
   const handleNavClick = (
@@ -191,40 +229,46 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
 
   const useCases = [
     {
-      title: "Campus Admissions Counseling",
-      desc: "Sub-400ms multilingual voice for student inquiries & lead nurture",
+      title: "Admissions Counseling",
+      desc: "Sub-140ms multilingual voice for student inquiries & lead nurture",
       icon: GraduationCap,
-      href: "#capabilities",
+      href: "#work-agents",
+      tag: "Sub-140ms",
     },
     {
       title: "Institutional Knowledge RAG",
       desc: "Instant grounding on syllabus, fees, dates & campus guidelines",
       icon: Layers,
-      href: "#capabilities",
+      href: "#work-agents",
+      tag: "Zero Leak",
     },
     {
       title: "24/7 AI Telephony Fleet",
       desc: "Zero dropped calls with automated human counselor escalation",
       icon: Radio,
       href: "#about",
+      tag: "SIP Live",
     },
     {
-      title: "Admissions ROI Calculator",
-      desc: "Calculate yield improvement and operational cost savings",
+      title: "Admissions ROI & Yield Plans",
+      desc: "Calculate yield improvement and operational counseling savings",
       icon: Calculator,
-      href: "#calculator",
+      href: "#pricing",
+      tag: "Yield +24%",
     },
     {
       title: "FERPA & DPDP Compliance",
       desc: "Enterprise data sovereignty & audited student privacy protection",
       icon: ShieldCheck,
       href: "#pricing",
+      tag: "Audited",
     },
     {
       title: "Research & Admissions Insights",
       desc: "Higher education whitepapers, benchmarks and case studies",
       icon: BookOpen,
       href: "#blog",
+      tag: "Insights",
     },
   ];
 
@@ -290,7 +334,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
             </div>
             <span className="font-black text-xs sm:text-sm tracking-tight flex items-center gap-1 whitespace-nowrap text-slate-950 group-hover/brand:text-slate-800 transition-colors">
               Swaram
-              <span className="text-[#0a3d1b] bg-[#cdfb56] text-[8.5px] sm:text-[9.5px] font-black tracking-widest px-1.5 py-0.5 rounded shadow-[0_0_12px_rgba(205,251,86,0.5)] group-hover/brand:bg-[#bef03f] transition-all">
+              <span className="text-[#0a3d1b] bg-[#cdfb56] text-[8.5px] sm:text-[9.5px] font-black tracking-widest px-1.5 py-0.5 rounded shadow-xs group-hover/brand:bg-[#bef03f] transition-all">
                 AI
               </span>
             </span>
@@ -370,7 +414,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
         </div>
 
         {/* ===================================================================== */}
-        {/* 2. CENTER ZONE: CLEAN, CRISP NAVIGATION LINKS WITH FLOATING HOVER     */}
+        {/* 2. CENTER ZONE: CLEAN, CRISP NAVIGATION LINKS WITH TUBELIGHT INDICATOR */}
         {/* ===================================================================== */}
         <nav
           aria-label="Main Navigation"
@@ -393,13 +437,18 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
                     : "text-slate-600 hover:text-slate-950 font-bold hover:scale-[1.02]"
                 )}
               >
-                {/* Active Tab Accent Pill */}
+                {/* Tubelight Animated Active Indicator */}
                 {isActive && (
                   <motion.div
                     layoutId="navbar-active-pill"
                     className="absolute inset-0 rounded-full bg-slate-100/90 border border-slate-200/90 -z-10 shadow-2xs"
-                    transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                  />
+                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  >
+                    {/* Subtle, restrained top filament bar from Tubelight */}
+                    <div className="absolute -top-[1.5px] left-1/2 -translate-x-1/2 w-5 h-[1.5px] bg-slate-900 rounded-full pointer-events-none">
+                      <div className="absolute -top-[1px] -left-1 w-7 h-1 bg-slate-900/15 rounded-full blur-[1px] pointer-events-none" />
+                    </div>
+                  </motion.div>
                 )}
 
                 {/* Floating Hover Spotlight Pill */}
@@ -443,8 +492,12 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
                 <motion.div
                   layoutId="navbar-active-pill"
                   className="absolute inset-0 rounded-full bg-slate-100/90 border border-slate-200/90 -z-10 shadow-2xs"
-                  transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                />
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                >
+                  <div className="absolute -top-[1.5px] left-1/2 -translate-x-1/2 w-5 h-[1.5px] bg-slate-900 rounded-full pointer-events-none">
+                    <div className="absolute -top-[1px] -left-1 w-7 h-1 bg-slate-900/15 rounded-full blur-[1px] pointer-events-none" />
+                  </div>
+                </motion.div>
               )}
 
               {!dropdownOpen && hoveredTab === "solutions" && (
@@ -470,48 +523,95 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
             <AnimatePresence>
               {dropdownOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                  transition={{ duration: 0.16 }}
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-84 rounded-3xl p-2.5 shadow-2xl z-50 border bg-white/95 backdrop-blur-2xl border-slate-200/90 text-slate-900 shadow-[0_24px_55px_rgba(15,23,42,0.18)]"
+                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[590px] max-w-[calc(100vw-24px)] rounded-3xl p-3.5 sm:p-4 shadow-[0_24px_55px_rgba(15,23,42,0.14),0_4px_16px_rgba(15,23,42,0.06),inset_0_1px_1px_rgba(255,255,255,1)] z-50 border bg-white/98 backdrop-blur-3xl border-slate-200/90 text-slate-900"
                 >
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 border-b border-slate-100 mb-1.5 text-blue-700">
-                    <Sparkles className="w-3 h-3" />
-                    Higher Ed Voice Solutions
+                  {/* Subtle Top Indicator Pointer Arrow */}
+                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-white border-t border-l border-slate-200/90 rounded-tl-xs pointer-events-none" />
+
+                  {/* Top Specular Sheen */}
+                  <div className="pointer-events-none absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-90" />
+
+                  {/* Header Strip - Harmonized with Swaram brand tokens */}
+                  <div className="flex items-center justify-between pb-3 mb-2.5 border-b border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-900 inline-block" />
+                      <div>
+                        <div className="text-[10px] font-bold tracking-[0.18em] uppercase text-slate-500">
+                          Autonomous Voice Solutions
+                        </div>
+                        <p className="text-[11px] text-slate-600 font-medium">
+                          Domain-grounded multi-agent workflows for colleges & enterprises
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#cdfb56] text-[#0a3d1b] border border-[#bef03f]/60 shadow-2xs">
+                      BULBUL V3
+                    </span>
                   </div>
-                  {useCases.map((item, idx) => {
-                    const Icon = item.icon;
-                    return (
-                      <a
-                        key={idx}
-                        href={item.href}
-                        onClick={(e) => {
-                          setDropdownOpen(false);
-                          handleNavClick(e, {
-                            id: "solutions",
-                            label: item.title,
-                            href: item.href,
-                            icon: GraduationCap,
-                          });
-                        }}
-                        className="flex items-start gap-2.5 px-3 py-2 rounded-2xl text-left transition-all duration-200 group text-slate-800 hover:bg-slate-100/90 hover:scale-[1.01] hover:translate-x-1 cursor-pointer"
-                      >
-                        <div className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-all duration-200 bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110">
-                          <Icon className="w-3.5 h-3.5" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-xs font-bold transition-colors flex items-center justify-between text-slate-900 group-hover:text-blue-600">
-                            <span>{item.title}</span>
-                            <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-blue-600" />
+
+                  {/* 2-Column Grid */}
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {useCases.map((item, idx) => {
+                      const Icon = item.icon;
+                      return (
+                        <a
+                          key={idx}
+                          href={item.href}
+                          onClick={(e) => {
+                            setDropdownOpen(false);
+                            handleNavClick(e, {
+                              id: "solutions",
+                              label: item.title,
+                              href: item.href,
+                              icon: GraduationCap,
+                            });
+                          }}
+                          className="group relative flex items-start gap-2.5 p-2.5 rounded-2xl transition-all duration-200 hover:bg-slate-50 hover:scale-[1.01] border border-transparent hover:border-slate-200/80 cursor-pointer"
+                        >
+                          <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 bg-slate-100 text-slate-800 border border-slate-200/80 transition-all duration-200 group-hover:bg-slate-950 group-hover:text-white group-hover:scale-105 shadow-2xs">
+                            <Icon className="w-4 h-4 transition-colors" />
                           </div>
-                          <p className="text-[11px] line-clamp-1 mt-0.5 text-slate-500">
-                            {item.desc}
-                          </p>
-                        </div>
-                      </a>
-                    );
-                  })}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1.5">
+                              <span className="text-[11.5px] font-bold text-slate-900 group-hover:text-slate-950 transition-colors truncate">
+                                {item.title}
+                              </span>
+                              <span className="text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200/80 shrink-0 group-hover:border-slate-300">
+                                {item.tag}
+                              </span>
+                            </div>
+                            <p className="text-[10.5px] text-slate-500 line-clamp-1 mt-0.5 leading-snug group-hover:text-slate-600 transition-colors">
+                              {item.desc}
+                            </p>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+
+                  {/* Interactive Bottom Action Strip */}
+                  <div className="mt-2.5 pt-2.5 border-t border-slate-100 flex items-center justify-between px-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.7)] animate-pulse" />
+                      <span className="text-[10.5px] text-slate-600 font-medium">
+                        Sub-140ms Indic speech-to-speech audio playground
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        onOpenSimulator?.();
+                      }}
+                      className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-slate-200 bg-white hover:bg-[#cdfb56] hover:text-[#0a3d1b] hover:border-[#bef03f] transition-all duration-200 cursor-pointer flex items-center gap-1.5 text-slate-800 shadow-2xs group/btn active:scale-95"
+                    >
+                      <PhoneCall className="w-3 h-3 text-[#0284c7] group-hover/btn:scale-110 transition-transform" />
+                      <span>TEST MAYA VOICE</span>
+                    </button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -536,7 +636,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
           <LiquidButton
             onClick={onOpenDemo}
             size="sm"
-            className="rounded-full bg-slate-950 hover:bg-slate-900 text-white border border-slate-950 text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-3 xl:px-3.5 py-1.5 shadow-sm hover:shadow-[0_0_25px_rgba(205,251,86,0.45)] hover:scale-[1.03] transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95 group"
+            className="rounded-full bg-slate-950 hover:bg-slate-900 text-white border border-slate-950 text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-3 xl:px-3.5 py-1.5 shadow-sm hover:shadow-md hover:scale-[1.03] transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95 group"
           >
             <span className="flex items-center gap-1">
               <span>BOOK DEMO</span>

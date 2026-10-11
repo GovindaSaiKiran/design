@@ -75,8 +75,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#calculator" className="hover:text-slate-950 transition-colors">
-                  Admissions ROI Calculator
+                <a href="#pricing" className="hover:text-slate-950 transition-colors">
+                  Admissions ROI & Yield Plans
                 </a>
               </li>
               <li>

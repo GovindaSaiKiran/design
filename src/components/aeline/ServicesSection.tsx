@@ -1,384 +1,458 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import {
-  PhoneCall,
-  BookOpen,
-  Radio,
-  UserCheck,
-  Zap,
-  Sparkles,
-  ArrowUpRight,
-} from "lucide-react";
+import React, { useState } from "react";
+import { soundSynth } from "@/lib/audio-synth";
 
-// Catmull-Rom spline formula guaranteeing the curve passes EXACTLY through every point
-function getSplinePath(pts: { x: number; y: number }[]): string {
-  if (pts.length < 2) return "";
-  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = i > 0 ? pts[i - 1] : pts[i];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = i !== pts.length - 2 ? pts[i + 2] : p2;
-
-    const cp1x = p1.x + (p2.x - p0.x) / 6;
-    const cp1y = p1.y + (p2.y - p0.y) / 6;
-    const cp2x = p2.x - (p3.x - p1.x) / 6;
-    const cp2y = p2.y - (p3.y - p1.y) / 6;
-
-    d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
-  }
-  return d;
+interface ServicesSectionProps {
+  onOpenDemo?: () => void;
 }
 
-const defaultRopePath = getSplinePath([
-  { x: -500, y: 10 },
-  { x: 142, y: 38 },
-  { x: 440, y: 70 },
-  { x: 710, y: 102 },
-  { x: 980, y: 70 },
-  { x: 1278, y: 38 },
-  { x: 1920, y: 10 },
-]);
+export default function ServicesSection({ onOpenDemo }: ServicesSectionProps) {
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
-export default function ServicesSection() {
-  const [activeCard, setActiveCard] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const clipRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [ropePath, setRopePath] = useState<string>(defaultRopePath);
-
-  // Dynamically calculate the rope path passing EXACTLY through each clothespin's eyelet
-  useEffect(() => {
-    const updateRope = () => {
-      if (!containerRef.current) return;
-      const contRect = containerRef.current.getBoundingClientRect();
-      const points: { x: number; y: number }[] = [];
-
-      for (let i = 0; i < 5; i++) {
-        const el = clipRefs.current[i];
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          points.push({
-            x: rect.left + rect.width / 2 - contRect.left,
-            y: rect.top + rect.height * 0.45 - contRect.top,
-          });
-        }
-      }
-
-      if (points.length === 5) {
-        // Extend gracefully off-screen to both sides
-        const screenSpan = Math.max(window.innerWidth * 0.5, 450);
-        const p0 = {
-          x: -screenSpan,
-          y: Math.max(12, points[0].y - 48),
-        };
-        const p6 = {
-          x: contRect.width + screenSpan,
-          y: Math.max(12, points[4].y - 48),
-        };
-
-        const path = getSplinePath([p0, ...points, p6]);
-        setRopePath(path);
-      }
-    };
-
-    updateRope();
-    window.addEventListener("resize", updateRope);
-    window.addEventListener("orientationchange", updateRope);
-
-    const ro = new ResizeObserver(() => updateRope());
-    if (containerRef.current) ro.observe(containerRef.current);
-
-    return () => {
-      window.removeEventListener("resize", updateRope);
-      window.removeEventListener("orientationchange", updateRope);
-      ro.disconnect();
-    };
-  }, []);
-
-  // 5 Hanging Capability Badge Tiles (1:1 with Reference Template Image)
-  const capabilityTiles = [
+  const cards = [
     {
-      id: "latency",
-      title: "Sub-400ms Voice",
-      cardStyle:
-        "bg-white border border-slate-200/90 shadow-[0_14px_34px_-8px_rgba(0,0,0,0.07)] ring-1 ring-slate-900/5",
-      textColor: "text-slate-900",
-      yOffset: "lg:mt-0",
-      swayClass: "animate-sway-left-strong",
-      iconNode: (
-        <div className="w-18 h-18 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-[24px] sm:rounded-[26px] bg-gradient-to-tr from-[#84cc16] via-[#a3e635] to-[#bef264] shadow-md flex flex-col items-center justify-center p-3 relative group-hover:scale-105 transition-transform duration-300">
-          {/* Two eyes: one open dot, one playful wink curve */}
-          <div className="flex items-center justify-between w-9 sm:w-10 mb-1 px-0.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-lime-950" />
-            <svg className="w-3.5 h-2.5" viewBox="0 0 16 10" fill="none">
-              <path
-                d="M 2 8 Q 8 2 14 8"
-                stroke="#1a2e05"
-                strokeWidth="2.8"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          {/* Playful smile curve matching Card 1 in reference image */}
-          <svg className="w-7 h-3.5" viewBox="0 0 28 14" fill="none">
+      id: "voice",
+      title: "voice",
+      stackedTitle: false,
+      hasDivider: false,
+      bg: "bg-[#1d644d]", // Rich pine green from template
+      textColor: "text-white",
+      bulletColor: "text-[#a7f3d0]",
+      rotation: "-rotate-[6deg]",
+      zIndex: "z-10",
+      stickerPos: "-top-8 right-3",
+      sticker: (
+        <div className="relative transform -rotate-10 hover:rotate-0 hover:scale-110 transition-transform duration-300 drop-shadow-[0_5px_12px_rgba(0,0,0,0.25)]">
+          {/* Die-cut Black Retro Camera with White Flash Sparks */}
+          <svg width="68" height="62" viewBox="0 0 76 70" fill="none">
+            {/* White die-cut outer silhouette outline */}
             <path
-              d="M 2 2 Q 14 14 26 2"
-              stroke="#1a2e05"
-              strokeWidth="3.2"
-              strokeLinecap="round"
+              d="M22 24 L26 18 L40 18 L44 24 L60 24 C64 24 68 28 68 32 L68 56 C68 60 64 64 60 64 L18 64 C14 64 10 60 10 56 L10 32 C10 28 14 24 18 24 Z"
+              fill="#18181b"
+              stroke="#ffffff"
+              strokeWidth="4.5"
+              strokeLinejoin="round"
             />
+            <circle cx="39" cy="44" r="13" stroke="#ffffff" strokeWidth="3" fill="#27272a" />
+            <circle cx="39" cy="44" r="6" fill="#ffffff" />
+            <circle cx="56" cy="32" r="2.8" fill="#ffffff" />
+            <path d="M30 10 L34 4 M44 4 L48 10 M22 14 L16 10" stroke="#ffffff" strokeWidth="2.8" strokeLinecap="round" />
+            <path d="M52 10 L60 7 M64 16 L70 14" stroke="#ffffff" strokeWidth="2.4" strokeLinecap="round" />
           </svg>
         </div>
       ),
+      bullets: [
+        "Sub-400ms Voice",
+        "11+ Indic Languages",
+        "Natural Conversational Tone",
+        "Carrier SIP & WebRTC Ready",
+      ],
     },
     {
       id: "rag",
-      title: "Vector RAG",
-      cardStyle:
-        "bg-gradient-to-b from-[#e0f2fe] via-[#bae6fd] to-[#7dd3fc] border border-sky-300 shadow-[0_16px_36px_-8px_rgba(2,132,199,0.22)] ring-1 ring-sky-400/25",
-      textColor: "text-slate-950",
-      yOffset: "lg:mt-8",
-      swayClass: "animate-sway-left",
-      iconNode: (
-        <div className="w-18 h-18 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-[24px] sm:rounded-[26px] bg-slate-950 shadow-xl border border-white/20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-          <BookOpen className="w-9 h-9 sm:w-10 sm:h-10 text-white stroke-[2.2]" />
+      title: "vector rag",
+      stackedTitle: false,
+      hasDivider: false,
+      bg: "bg-[#6384f7]", // Periwinkle blue from template
+      textColor: "text-white",
+      bulletColor: "text-[#dbeafe]",
+      rotation: "-rotate-[2.5deg]",
+      zIndex: "z-20",
+      stickerPos: "-top-8 left-2",
+      sticker: (
+        <div className="relative transform -rotate-12 hover:rotate-0 hover:scale-110 transition-transform duration-300 drop-shadow-[0_5px_12px_rgba(0,0,0,0.22)]">
+          {/* Die-cut Pale Lime Hand Holding Phone with Radio Waves */}
+          <svg width="64" height="66" viewBox="0 0 70 74" fill="none">
+            <rect
+              x="10"
+              y="12"
+              width="44"
+              height="52"
+              rx="18"
+              fill="#d9f99d"
+              stroke="#ffffff"
+              strokeWidth="4.5"
+              strokeLinejoin="round"
+              transform="rotate(6 32 38)"
+            />
+            <rect
+              x="22"
+              y="16"
+              width="24"
+              height="42"
+              rx="5"
+              fill="#ffffff"
+              stroke="#b91c1c"
+              strokeWidth="2.5"
+            />
+            <line x1="30" y1="20" x2="38" y2="20" stroke="#b91c1c" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="34" cy="52" r="1.8" fill="#b91c1c" />
+            <path
+              d="M16 36 C16 36 24 36 24 42 C24 48 16 48 16 48"
+              stroke="#b91c1c"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <path d="M14 22 C10 26 10 32 14 36" stroke="#b91c1c" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+            <path d="M52 20 C56 24 56 30 52 34" stroke="#b91c1c" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+          </svg>
         </div>
       ),
+      bullets: [
+        "Prospectus & Fee RAG",
+        "Zero-Hallucination Answers",
+        "Cutoff & Eligibility Matching",
+        "Multi-Turn Student Memory",
+      ],
     },
     {
       id: "fleet",
-      title: "24/7 Fleet",
-      cardStyle:
-        "bg-white border border-slate-200/95 shadow-[0_18px_40px_-8px_rgba(0,0,0,0.09)] ring-1 ring-slate-900/5",
-      textColor: "text-slate-900",
-      yOffset: "lg:mt-16",
-      swayClass: "animate-sway-center",
-      iconNode: (
-        <div className="w-18 h-18 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-[24px] sm:rounded-[26px] bg-[#0a0f1d] shadow-xl border border-slate-800 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-          {/* Radiant Multi-Color Ribbon Loop (matching the 'P' icon in Card 3 of reference image) */}
-          <svg className="w-11 h-11 sm:w-12 sm:h-12" viewBox="0 0 48 48" fill="none">
-            <defs>
-              <linearGradient id="pRibbon" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#38bdf8" />
-                <stop offset="25%" stopColor="#818cf8" />
-                <stop offset="50%" stopColor="#ec4899" />
-                <stop offset="75%" stopColor="#f97316" />
-                <stop offset="100%" stopColor="#eab308" />
-              </linearGradient>
-            </defs>
+      title: "24/7 fleet",
+      stackedTitle: false,
+      hasDivider: false,
+      bg: "bg-[#f65723]", // Vibrant Tomato Orange from template
+      textColor: "text-white",
+      bulletColor: "text-[#fed7aa]",
+      rotation: "rotate-[0.5deg]",
+      zIndex: "z-30",
+      stickerPos: "-top-8 left-1/2 -translate-x-1/2",
+      sticker: (
+        <div className="relative transform rotate-6 hover:rotate-0 hover:scale-110 transition-transform duration-300 drop-shadow-[0_5px_12px_rgba(0,0,0,0.22)]">
+          {/* Die-cut Periwinkle Blue Winking Smiley Face */}
+          <svg width="60" height="60" viewBox="0 0 66 66" fill="none">
+            <circle cx="33" cy="33" r="27" fill="#3b82f6" stroke="#ffffff" strokeWidth="4.5" />
+            <path d="M23 29 C24 26 28 26 29 29" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" fill="none" />
+            <ellipse cx="41" cy="28" rx="2.5" ry="3.5" fill="#ffffff" />
             <path
-              d="M 16 38 V 16 C 16 10.5 20.5 6 26 6 C 31.5 6 36 10.5 36 16 C 36 21.5 31.5 26 26 26 H 16"
-              stroke="url(#pRibbon)"
-              strokeWidth="6"
+              d="M23 37 C25 44 39 44 43 37"
+              stroke="#ffffff"
+              strokeWidth="3.2"
               strokeLinecap="round"
-              strokeLinejoin="round"
+              fill="none"
             />
           </svg>
         </div>
       ),
+      bullets: [
+        "Zero-Hold Telephony Lines",
+        "10,000+ Concurrent Calls",
+        "Admissions Peak Elasticity",
+        "Automated Callback Queues",
+      ],
     },
     {
       id: "handoff",
-      title: "Smart Handoff",
-      cardStyle:
-        "bg-white border border-slate-200/90 shadow-[0_14px_34px_-8px_rgba(0,0,0,0.07)] ring-1 ring-slate-900/5",
-      textColor: "text-slate-900",
-      yOffset: "lg:mt-8",
-      swayClass: "animate-sway-right",
-      iconNode: (
-        <div className="w-18 h-18 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-[24px] sm:rounded-[26px] bg-gradient-to-tr from-[#10b981] via-[#34d399] to-[#6ee7b7] shadow-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-          {/* DreamFace style smiling mascot badge */}
-          <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-black/90 flex flex-col items-center justify-center p-2 shadow-inner">
-            <div className="flex items-center justify-between w-7 mb-0.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-white" />
-              <svg className="w-2.5 h-2" viewBox="0 0 12 8" fill="none">
-                <path
-                  d="M 1 6 Q 6 1 11 6"
-                  stroke="white"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-            <svg className="w-4.5 h-2" viewBox="0 0 18 10" fill="none">
-              <path
-                d="M 2 2 Q 9 9 16 2"
-                stroke="white"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
+      title: "smart handoff",
+      stackedTitle: true,
+      hasDivider: false,
+      bg: "bg-[#8c264a]", // Deep Burgundy Wine from template
+      textColor: "text-white",
+      bulletColor: "text-[#fbcfe8]",
+      rotation: "rotate-[4deg]",
+      zIndex: "z-40",
+      stickerPos: "-top-8 right-4",
+      sticker: (
+        <div className="relative transform rotate-8 hover:rotate-0 hover:scale-110 transition-transform duration-300 drop-shadow-[0_5px_12px_rgba(0,0,0,0.22)]">
+          {/* Die-cut Pale Yellow Handshake / Watch Hand with Sparkles */}
+          <svg width="66" height="62" viewBox="0 0 74 68" fill="none">
+            <path
+              d="M14 30 C14 20 22 16 34 16 C46 16 58 18 62 28 C66 38 62 50 50 54 C38 58 20 56 16 46 Z"
+              fill="#fef08a"
+              stroke="#ffffff"
+              strokeWidth="4.5"
+              strokeLinejoin="round"
+            />
+            <rect x="20" y="26" width="10" height="14" rx="2" fill="#f97316" stroke="#c2410c" strokeWidth="1.5" />
+            <circle cx="25" cy="33" r="3.5" fill="#ffffff" stroke="#c2410c" strokeWidth="1.2" />
+            <path
+              d="M30 28 C38 24 48 24 54 30 C58 34 56 40 48 42 C40 44 32 40 30 36"
+              stroke="#c2410c"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+            />
+            <path d="M24 12 L26 8 M36 10 L38 6 M48 12 L52 8" stroke="#ea580c" strokeWidth="2.2" strokeLinecap="round" />
+          </svg>
         </div>
       ),
+      bullets: [
+        "Sentiment & Tone Triggers",
+        "Warm Counselor Routing",
+        "Live Student Dossiers",
+        "Zero-Drop Call Transfers",
+      ],
     },
     {
-      id: "crm-sync",
-      title: "CRM Bi-Sync",
-      cardStyle:
-        "bg-[#0a0e1a] border border-slate-800 shadow-[0_18px_40px_-8px_rgba(0,0,0,0.6)] ring-1 ring-white/10",
-      textColor: "text-slate-200",
-      yOffset: "lg:mt-0",
-      swayClass: "animate-sway-right-strong",
-      iconNode: (
-        <div className="w-18 h-18 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-[24px] sm:rounded-[26px] bg-[#141b2d] shadow-lg border border-white/10 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-          {/* Vibrant Glowing Multi-Color Play Button (matching Card 5 in reference image) */}
-          <svg className="w-11 h-11 sm:w-12 sm:h-12" viewBox="0 0 48 48" fill="none">
-            <defs>
-              <linearGradient id="playGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#f43f5e" />
-                <stop offset="45%" stopColor="#fb923c" />
-                <stop offset="85%" stopColor="#fde047" />
-                <stop offset="100%" stopColor="#38bdf8" />
-              </linearGradient>
-            </defs>
+      id: "crm",
+      title: "crm bi-sync",
+      stackedTitle: true,
+      hasDivider: true, // Specific design element from template image
+      bg: "bg-[#e0a6ff]", // Soft Lilac Pink from template
+      textColor: "text-[#18181b]", // Dark charcoal text on light card
+      bulletColor: "text-[#4a044e]",
+      rotation: "rotate-[7.5deg]",
+      zIndex: "z-50",
+      stickerPos: "-top-8 right-3",
+      sticker: (
+        <div className="relative transform rotate-14 hover:rotate-0 hover:scale-110 transition-transform duration-300 drop-shadow-[0_5px_12px_rgba(0,0,0,0.22)]">
+          {/* Die-cut Burgundy Heart with 2 White Sparkle Stars */}
+          <svg width="64" height="60" viewBox="0 0 70 66" fill="none">
             <path
-              d="M 17 11.5 C 17 9.5 19.2 8.2 21 9.3 L 37.5 19.8 C 39.2 20.9 39.2 23.1 37.5 24.2 L 21 34.7 C 19.2 35.8 17 34.5 17 32.5 Z"
-              fill="url(#playGradient)"
+              d="M35 56 C35 56 12 42 12 26 C12 18 18 12 26 12 C32 12 35 16 35 16 C35 16 38 12 44 12 C52 12 58 18 58 26 C58 42 35 56 35 56 Z"
+              fill="#831843"
+              stroke="#ffffff"
+              strokeWidth="4.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M45 20 Q45 26 49 26 Q45 26 45 32 Q45 26 41 26 Q45 26 45 20 Z"
+              fill="#ffffff"
+            />
+            <path
+              d="M32 28 Q32 31 34 31 Q32 31 32 34 Q32 31 30 31 Q32 31 32 28 Z"
+              fill="#ffffff"
             />
           </svg>
         </div>
       ),
+      bullets: [
+        "Salesforce & HubSpot CRM",
+        "LeadSquared & ExtraaEdge",
+        "Campus SIS ERP Webhooks",
+        "WhatsApp Cloud API",
+      ],
     },
   ];
 
   return (
     <section
       id="capabilities"
-      className="w-full bg-[#fafafa] py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-100 overflow-hidden"
+      className="w-full bg-white py-14 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-100/90 overflow-hidden select-none"
     >
-      <div className="max-w-[1380px] mx-auto">
+      <div className="max-w-[1340px] mx-auto">
         {/* ================================================================= */}
-        {/* SECTION HEADER (MATCHING TEMPLATE IN IMAGE 1)                     */}
+        {/* WARM CREAM RETRO POSTER CONTAINER BLENDED SEAMLESSLY ON WHITE     */}
         {/* ================================================================= */}
-        <div className="text-center max-w-3xl mx-auto mb-4">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.2em] text-slate-500 uppercase mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-900 inline-block" />
-            CORE CAPABILITIES
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-950 tracking-tight leading-tight mb-3">
-            Stop Settling, Start Automating
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-lg mx-auto mb-5 font-normal">
-            Don&apos;t pick from rigid bots. Deploy autonomous, human-cadence voice agents tuned your way.
-          </p>
-
-          {/* Pill Action Button from Reference Image ("Make Your Logo Now ✨") */}
-          <div className="flex justify-center relative z-20 mb-2">
-            <button
-              onClick={() => {
-                const el = document.getElementById("indic-tts");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#6366f1] via-[#4f46e5] to-[#4338ca] text-white text-xs font-bold shadow-[0_8px_22px_-4px_rgba(79,70,229,0.5)] hover:shadow-[0_12px_28px_-4px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+        <div className="bg-[#fcfaf4] rounded-[36px] sm:rounded-[46px] p-6 sm:p-9 lg:p-12 border border-stone-200/80 shadow-[0_10px_35px_-12px_rgba(0,0,0,0.06)] relative overflow-hidden">
+          {/* =============================================================== */}
+          {/* TOP BAR: Orange Starburst 'work' | Cursive 'swaram' | WhatsApp   */}
+          {/* =============================================================== */}
+          <div className="flex items-center justify-between pb-6 sm:pb-9 relative z-10">
+            {/* Left Orange Starburst Badge with 'work' */}
+            <div
+              onClick={() => onOpenDemo?.()}
+              className="flex items-center gap-2 group cursor-pointer"
+              title="Swaram Work Capabilities"
             >
-              <span>Explore Voice Architecture</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#cdfb56] group-hover:rotate-12 transition-transform" />
-            </button>
+              <div className="relative flex items-center justify-center">
+                {/* 12-point jagged starburst */}
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 48 48"
+                  className="text-[#f95723] drop-shadow-2xs group-hover:rotate-45 transition-transform duration-500"
+                  fill="currentColor"
+                >
+                  <path d="M24 0 L28 10 L39 5 L36 16 L48 18 L40 26 L48 34 L36 36 L39 47 L28 42 L24 52 L20 42 L9 47 L12 36 L0 34 L8 26 L0 18 L12 16 L9 5 L20 10 Z" />
+                </svg>
+                {/* Black lowercase 'work' text matching template */}
+                <span className="absolute font-black text-xs lowercase tracking-tight text-slate-950 select-none">
+                  work
+                </span>
+              </div>
+            </div>
+
+            {/* Center Fluid Cursive Wordmark: 'swaram' */}
+            <div className="text-center">
+              <span
+                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                className="italic font-black text-3xl sm:text-4xl text-slate-950 tracking-tight select-none lowercase"
+              >
+                swaram
+              </span>
+            </div>
+
+            {/* Right WhatsApp / Chat Icon Badge */}
+            <a
+              href="https://wa.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp Us"
+              className="w-10 h-10 rounded-full bg-slate-950 text-white flex items-center justify-center hover:bg-slate-800 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+            >
+              {/* WhatsApp speech bubble & handset glyph */}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 6.46 17.5 2 12.04 2ZM12.04 20.15C10.56 20.15 9.11 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.3C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.68 12.04 3.68C16.58 3.68 20.27 7.37 20.27 11.91C20.27 16.45 16.58 20.15 12.04 20.15ZM16.56 14.36C16.31 14.24 15.09 13.64 14.86 13.56C14.64 13.47 14.47 13.43 14.31 13.68C14.14 13.93 13.66 14.49 13.51 14.66C13.37 14.82 13.22 14.85 12.97 14.72C12.72 14.6 11.93 14.34 10.99 13.5C10.26 12.85 9.77 12.04 9.63 11.79C9.48 11.54 9.61 11.41 9.74 11.28C9.85 11.17 9.98 11 10.11 10.85C10.23 10.71 10.28 10.6 10.36 10.44C10.44 10.27 10.4 10.13 10.34 10.01C10.28 9.88 9.78 8.66 9.58 8.16C9.37 7.67 9.17 7.74 9.02 7.73C8.87 7.72 8.71 7.72 8.54 7.72C8.37 7.72 8.1 7.79 7.87 8.03C7.64 8.28 7 8.88 7 10.1C7 11.32 7.89 12.5 8.01 12.67C8.14 12.83 9.75 15.32 12.22 16.38C12.81 16.63 13.26 16.78 13.62 16.9C14.21 17.08 14.75 17.06 15.17 17C15.64 16.93 16.61 16.41 16.82 15.83C17.02 15.25 17.02 14.76 16.96 14.65C16.9 14.55 16.75 14.49 16.56 14.36Z" />
+              </svg>
+            </a>
           </div>
-        </div>
 
-        {/* ================================================================= */}
-        {/* HANGING CLOTHESLINE SUSPENSION CONTAINER                          */}
-        {/* Full-Bleed Black Thread & Authentic Squircle Hanging Cards        */}
-        {/* ================================================================= */}
-        <div
-          ref={containerRef}
-          className="relative w-full max-w-[1360px] xl:max-w-[1460px] mx-auto pt-4 sm:pt-6 pb-16"
-        >
-          {/* Dynamic High-Tension Black Suspension Rope (Passes Directly Through Each Card's Clip) */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block z-20 overflow-visible"
-            fill="none"
-          >
-            {/* Soft ambient drop shadow of the black rope */}
-            <path
-              d={ropePath}
-              stroke="rgba(0, 0, 0, 0.12)"
-              strokeWidth="5"
-              strokeLinecap="round"
-              transform="translate(0, 2)"
-            />
-            {/* Main deep black high-tension suspension rope */}
-            <path
-              d={ropePath}
-              stroke="#060911"
-              strokeWidth="2.8"
-              strokeLinecap="round"
-            />
-            {/* Specular sheen on top edge of rope */}
-            <path
-              d={ropePath}
-              stroke="rgba(255, 255, 255, 0.45)"
-              strokeWidth="0.8"
-              strokeLinecap="round"
-              transform="translate(0, -0.6)"
-            />
-          </svg>
+          {/* =============================================================== */}
+          {/* DISPLAY HEADLINE: 'call us if you need:' (EXACT MATCH TEMPLATE) */}
+          {/* =============================================================== */}
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 relative z-10">
+            <h2 className="text-3xl sm:text-5xl lg:text-[60px] font-black text-slate-950 tracking-tight leading-none font-sans">
+              call us if you{" "}
+              <span className="font-serif italic font-normal relative inline-block text-slate-950 ml-1">
+                need:
+                {/* Hand-drawn double sketchy underlines from template */}
+                <svg
+                  className="absolute -bottom-2 sm:-bottom-2.5 left-0 w-full overflow-visible pointer-events-none"
+                  viewBox="0 0 130 18"
+                  fill="none"
+                >
+                  <path
+                    d="M 2 5 C 32 1.5, 85 2.5, 128 6"
+                    stroke="#0f172a"
+                    strokeWidth="3.4"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M 8 13 C 38 10, 92 11, 122 14"
+                    stroke="#0f172a"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+            </h2>
+          </div>
 
-          {/* 5 Hanging Squircle Cards Grid (Matching Reference Image Spacing & Shape) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 2xl:gap-20 relative z-10 pt-4 lg:pt-8 place-items-center">
-            {capabilityTiles.map((card, index) => {
-              const isSelected = activeCard === index;
-              return (
+          {/* =============================================================== */}
+          {/* 5 OVERLAPPING TILTED CARDS (COMPACT LENGTH / REDUCED HEIGHT)    */}
+          {/* =============================================================== */}
+          <div className="relative z-10 pt-3 pb-2">
+            {/* Desktop / Tablet Fan-Out Container */}
+            <div className="hidden md:flex items-stretch justify-center -space-x-3 lg:-space-x-5 xl:-space-x-6 max-w-[1200px] mx-auto px-2">
+              {cards.map((card, idx) => {
+                const isHovered = hoveredCard === idx;
+                return (
+                  <div
+                    key={card.id}
+                    onMouseEnter={() => {
+                      setHoveredCard(idx);
+                      soundSynth.playPop();
+                    }}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    onClick={() => {
+                      soundSynth.playPop();
+                      onOpenDemo?.();
+                    }}
+                    className={`relative w-48 lg:w-52 xl:w-56 min-h-[290px] lg:min-h-[310px] rounded-[22px] sm:rounded-[26px] p-5 lg:p-5 flex flex-col justify-between transition-all duration-300 origin-bottom cursor-pointer shadow-md hover:shadow-xl ${
+                      card.bg
+                    } ${
+                      isHovered
+                        ? "rotate-0 scale-105 z-60 -translate-y-4 shadow-[0_20px_45px_-10px_rgba(0,0,0,0.28)]"
+                        : `${card.rotation} ${card.zIndex}`
+                    }`}
+                  >
+                    {/* Die-Cut Sticker Placed on Top */}
+                    <div className={`absolute ${card.stickerPos} pointer-events-none`}>
+                      {card.sticker}
+                    </div>
+
+                    {/* Card Title (Bold Lowercase from Reference) */}
+                    <div className="pt-1">
+                      {card.stackedTitle ? (
+                        <h3
+                          className={`text-xl sm:text-[22px] font-black tracking-tight leading-tight lowercase ${card.textColor}`}
+                        >
+                          {card.title.split(" ").map((word, wIdx) => (
+                            <span key={wIdx} className="block">
+                              {word}
+                            </span>
+                          ))}
+                        </h3>
+                      ) : (
+                        <h3
+                          className={`text-xl sm:text-[22px] font-black tracking-tight leading-none lowercase ${card.textColor}`}
+                        >
+                          {card.title}
+                        </h3>
+                      )}
+
+                      {/* Card 5 Distinctive Horizontal Separator Line */}
+                      {card.hasDivider && (
+                        <div className="w-full h-[1.5px] bg-[#18181b]/80 my-2 rounded-full" />
+                      )}
+                    </div>
+
+                    {/* Compact Bullet Points with ✦ Stars */}
+                    <ul className={`space-y-1.5 sm:space-y-2 my-auto ${card.hasDivider ? "pt-1 pb-2" : "py-2"}`}>
+                      {card.bullets.map((bullet, bIdx) => (
+                        <li
+                          key={bIdx}
+                          className={`text-[11.5px] sm:text-xs font-medium leading-snug flex items-start gap-1.5 ${card.textColor}`}
+                        >
+                          <span className={`text-[9px] mt-0.5 shrink-0 ${card.bulletColor}`}>✦</span>
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Clean compact bottom margin */}
+                    <div className="h-1" />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile Swipeable / Scrollable Carousel */}
+            <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-3.5 pb-5 pt-7 px-4 no-scrollbar">
+              {cards.map((card, idx) => (
                 <div
                   key={card.id}
-                  className={`relative flex flex-col items-center w-full ${card.yOffset}`}
+                  onClick={() => {
+                    soundSynth.playPop();
+                    onOpenDemo?.();
+                  }}
+                  className={`snap-center shrink-0 w-[240px] min-h-[290px] rounded-[22px] p-5 flex flex-col justify-between shadow-lg relative ${card.bg}`}
                 >
-                  {/* Stationary Attachment Reference (Rope connects right here at eyelet) */}
-                  <div
-                    ref={(el) => {
-                      clipRefs.current[index] = el;
-                    }}
-                    className="absolute -top-6 left-1/2 -translate-x-1/2 w-6 h-10 pointer-events-none"
-                  />
+                  {/* Top Sticker */}
+                  <div className={`absolute ${card.stickerPos} pointer-events-none`}>
+                    {card.sticker}
+                  </div>
 
-                  {/* Swaying Card & Clothespin Assembly (Tilts and sways around top pin) */}
-                  <div
-                    className={`relative flex flex-col items-center transition-all duration-700 ease-out origin-top ${card.swayClass} hover:!rotate-0 group w-full`}
-                  >
-                    {/* Purple Clothespin / Suspension Clip from Reference Image */}
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none flex flex-col items-center group-hover:scale-105 transition-transform duration-300">
-                      {/* Clothespin Body */}
-                      <div className="w-6 h-10 rounded-t-[8px] rounded-b-[3px] bg-gradient-to-b from-[#818cf8] via-[#6366f1] to-[#4f46e5] shadow-sm border border-indigo-300/90 flex flex-col items-center justify-between py-2 relative">
-                        {/* Inner eyelet hole / spring loop from reference image */}
-                        <div className="w-3 h-3 rounded-full bg-white shadow-inner border border-indigo-200/90 flex items-center justify-center relative z-10 mt-0.5">
-                          <div className="w-1.5 h-1.5 rounded-full bg-slate-950" />
-                        </div>
-
-                        {/* Clamping jaws slit at bottom overlapping top of card */}
-                        <div className="w-0.5 h-3 bg-indigo-950/50 mb-0 rounded-full" />
-                      </div>
-                    </div>
-
-                    {/* Pure Squircle Hanging Card (Exact Match to Reference Image Shape) */}
-                    <div
-                      onClick={() => setActiveCard(isSelected ? null : index)}
-                      className={`w-40 sm:w-44 lg:w-48 xl:w-52 aspect-square rounded-[34px] sm:rounded-[38px] p-5 border transition-all duration-500 flex flex-col items-center justify-center cursor-pointer origin-top group-hover:scale-105 group-hover:-translate-y-2 ${
-                        card.cardStyle
-                      } ${
-                        isSelected
-                          ? "ring-2 ring-indigo-500 shadow-2xl scale-105 -translate-y-2"
-                          : ""
-                      }`}
-                    >
-                      {/* Big Iconic App Tile in Center */}
-                      <div className="mb-3 sm:mb-3.5">
-                        {card.iconNode}
-                      </div>
-
-                      {/* Clean Minimal Typography Below Icon (Matching Reference Image) */}
-                      <h3
-                        className={`text-xs sm:text-sm font-semibold tracking-tight text-center ${card.textColor}`}
-                      >
+                  {/* Card Title */}
+                  <div className="pt-1">
+                    {card.stackedTitle ? (
+                      <h3 className={`text-xl font-black tracking-tight leading-tight lowercase ${card.textColor}`}>
+                        {card.title.split(" ").map((word, wIdx) => (
+                          <span key={wIdx} className="block">
+                            {word}
+                          </span>
+                        ))}
+                      </h3>
+                    ) : (
+                      <h3 className={`text-xl font-black tracking-tight lowercase ${card.textColor}`}>
                         {card.title}
                       </h3>
-                    </div>
+                    )}
+
+                    {card.hasDivider && (
+                      <div className="w-full h-[1.5px] bg-[#18181b]/80 my-2 rounded-full" />
+                    )}
                   </div>
+
+                  {/* Bullets */}
+                  <ul className={`space-y-2 my-auto ${card.hasDivider ? "pt-1 pb-2" : "py-2"}`}>
+                    {card.bullets.map((bullet, bIdx) => (
+                      <li
+                        key={bIdx}
+                        className={`text-xs font-medium leading-snug flex items-start gap-1.5 ${card.textColor}`}
+                      >
+                        <span className={`text-[9px] mt-0.5 shrink-0 ${card.bulletColor}`}>✦</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="h-1" />
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
       </div>
