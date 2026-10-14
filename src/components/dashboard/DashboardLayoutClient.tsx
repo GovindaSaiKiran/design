@@ -71,7 +71,7 @@ export default function DashboardLayoutClient({
   };
 
   return (
-    <div className="min-h-screen flex bg-[#eceef2] text-slate-900 antialiased font-sans">
+    <div className="min-h-screen flex bg-[#000000] text-[#FFFFFF] antialiased font-sans selection:bg-white selection:text-black">
       {/* Persistent / Responsive Sidebar */}
       <AppSidebar
         isOpenMobile={mobileSidebarOpen}
@@ -79,50 +79,50 @@ export default function DashboardLayoutClient({
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 bg-[#000000]">
         <AppHeader
           onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
           onOpenSearch={() => setSearchModalOpen(true)}
         />
 
         {/* Dynamic Page Content Viewport */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto">
+        <main className="flex-1 p-3 sm:p-5 lg:p-6 max-w-[1440px] w-full mx-auto">
           {children}
         </main>
       </div>
 
       {/* Global Quick Search Modal (⌘K Command Palette) */}
       {searchModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-100">
-          <div className="relative w-full max-w-lg bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden text-xs text-slate-900">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-100">
+          <div className="relative w-full max-w-lg bg-[#09090B] rounded-[2px] border border-[#3F3F46] shadow-2xl overflow-hidden text-xs text-white">
             {/* Input Bar */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-200">
-              <Search className="w-4 h-4 text-slate-400 shrink-0" />
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-[#27272A] bg-[#09090B]">
+              <Search className="w-4 h-4 text-[#A1A1AA] shrink-0" />
               <input
                 type="text"
                 autoFocus
-                placeholder="Search pages, agents, contacts, transcripts (Esc to close)..."
+                placeholder="Search channels, agents, transcripts, phone trunks (Esc to close)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full text-xs font-medium outline-none placeholder:text-slate-400 bg-transparent"
+                className="w-full text-xs font-medium outline-none placeholder:text-[#71717A] bg-transparent text-white"
               />
               <button
                 onClick={() => setSearchModalOpen(false)}
-                className="p-1 rounded text-slate-400 hover:text-slate-700"
+                className="p-1 rounded-[1px] text-[#A1A1AA] hover:text-white hover:bg-[#18181B]"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Results List */}
-            <div className="max-h-80 overflow-y-auto p-2 space-y-1">
-              <div className="px-2 py-1 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                Quick Navigation
+            <div className="max-h-80 overflow-y-auto p-2 space-y-1 bg-[#09090B]">
+              <div className="px-2 py-1 text-[10px] font-bold text-[#A1A1AA] tracking-wider uppercase font-telemetry">
+                Dispatch Routing &amp; Telephony Channels
               </div>
 
               {filteredLinks.length === 0 ? (
-                <div className="p-4 text-center text-slate-400">
-                  No matching pages found for "{searchQuery}"
+                <div className="p-4 text-center text-[#71717A] font-telemetry">
+                  No operational records found for "{searchQuery}"
                 </div>
               ) : (
                 filteredLinks.map((item) => {
@@ -131,13 +131,13 @@ export default function DashboardLayoutClient({
                     <button
                       key={item.href}
                       onClick={() => handleSelectLink(item.href)}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f7fee7] hover:border hover:border-[#cdfb56]/60 text-slate-700 hover:text-slate-950 transition-colors text-left"
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-[2px] border border-transparent hover:border-white hover:bg-[#18181B] text-zinc-300 hover:text-white transition-all text-left group cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Icon className="w-4 h-4 text-slate-400" />
-                        <span className="font-medium text-xs">{item.label}</span>
+                        <Icon className="w-4 h-4 text-[#A1A1AA] group-hover:text-white" />
+                        <span className="font-semibold text-xs text-white">{item.label}</span>
                       </div>
-                      <span className="text-[10px] text-slate-400 font-normal">
+                      <span className="text-[10px] text-[#71717A] font-telemetry group-hover:text-[#A1A1AA]">
                         {item.category}
                       </span>
                     </button>
@@ -147,9 +147,9 @@ export default function DashboardLayoutClient({
             </div>
 
             {/* Footer */}
-            <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-              <span>Press <kbd className="font-mono bg-white px-1 py-0.5 rounded border border-slate-200">Esc</kbd> to exit</span>
-              <span className="font-semibold text-slate-600">Swaram AI</span>
+            <div className="px-4 py-2 bg-[#040405] border-t border-[#27272A] flex items-center justify-between text-[11px] text-[#71717A]">
+              <span className="font-telemetry">Press <kbd className="font-telemetry bg-[#18181B] px-1.5 py-0.5 rounded-[1px] border border-[#27272A] text-white">Esc</kbd> to exit</span>
+              <span className="font-display font-bold tracking-tight text-white uppercase">Swaram Operations Deck</span>
             </div>
           </div>
         </div>

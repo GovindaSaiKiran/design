@@ -21,6 +21,7 @@ import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import UploadKnowledgeModal from "@/components/dashboard/modals/UploadKnowledgeModal";
 import { KnowledgeDocument } from "@/types/dashboard";
 import { mockKnowledgeBase } from "@/data/mock/dashboardData";
+import { soundSynth } from "@/lib/audio-synth";
 
 export default function KnowledgePage() {
   const [documents, setDocuments] = useState<KnowledgeDocument[]>(mockKnowledgeBase);
@@ -38,6 +39,7 @@ export default function KnowledgePage() {
     e.preventDefault();
     if (!testQuery.trim()) return;
 
+    soundSynth.play("confirm");
     setSearching(true);
     setTimeout(() => {
       setTestResult({
@@ -52,32 +54,32 @@ export default function KnowledgePage() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-none">
+    <div className="space-y-6 sm:space-y-8 select-none font-sans text-white">
       {/* ======================================================================= */}
       {/* WORKSPACE HEADER                                                        */}
       {/* ======================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-[11px] font-bold tracking-wider text-slate-500 hover:text-slate-800 uppercase transition-colors"
+              className="text-[10px] font-mono font-bold tracking-widest text-[#71717A] hover:text-white uppercase transition-colors"
             >
               WORKSPACES
             </Link>
-            <span className="text-slate-300">/</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              {documents.length} Vector Sources
+            <span className="text-[#3F3F46]">/</span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-white bg-[#18181B] px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
+              <span className="w-1.5 h-1.5 rounded-full bg-white" />
+              {documents.length} VECTOR STORES
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1">
             Knowledge Base & RAG Retrieval
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Company documents, catalogs, pricing guidelines, and grounded semantic vector search.
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 max-w-2xl leading-relaxed">
+            Institutional knowledge documents, catalog fee structures, and strict grounded vector search.
           </p>
         </div>
 
@@ -85,19 +87,23 @@ export default function KnowledgePage() {
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
           <button
             onClick={() => {
+              soundSynth.play("click");
               alert("Re-indexing complete: All vector chunks synchronized across agents.");
             }}
-            className="inline-flex items-center gap-2 bg-white hover:bg-[#f7fee7] text-slate-800 hover:text-slate-950 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-200 hover:border-[#cdfb56] shadow-2xs transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 bg-[#09090B] hover:bg-[#18181B] text-white text-xs font-mono font-bold uppercase tracking-wider px-3.5 py-2 rounded-[2px] border border-[#27272A] hover:border-white transition-all cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+            <RefreshCw className="w-3.5 h-3.5 text-[#A1A1AA]" />
             <span>Re-index Chunks</span>
           </button>
 
           <button
-            onClick={() => setUploadModalOpen(true)}
-            className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-lg border border-[#bceb42] shadow-xs hover:shadow transition-all cursor-pointer"
+            onClick={() => {
+              soundSynth.play("confirm");
+              setUploadModalOpen(true);
+            }}
+            className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] shadow-sm transition-all cursor-pointer"
           >
-            <Upload className="w-3.5 h-3.5 text-slate-950" />
+            <Upload className="w-3.5 h-3.5" />
             <span>Upload Document</span>
           </button>
         </div>
@@ -116,7 +122,10 @@ export default function KnowledgePage() {
           status="Empty"
           statusType="neutral"
           actionLabel="Upload doc →"
-          onClick={() => setUploadModalOpen(true)}
+          onClick={() => {
+            soundSynth.play("click");
+            setUploadModalOpen(true);
+          }}
         />
 
         <WorkspaceCard
@@ -128,7 +137,10 @@ export default function KnowledgePage() {
           status="Empty"
           statusType="neutral"
           actionLabel="Upload doc →"
-          onClick={() => setUploadModalOpen(true)}
+          onClick={() => {
+            soundSynth.play("click");
+            setUploadModalOpen(true);
+          }}
         />
 
         <WorkspaceCard
@@ -140,7 +152,10 @@ export default function KnowledgePage() {
           status="Empty"
           statusType="neutral"
           actionLabel="Upload doc →"
-          onClick={() => setUploadModalOpen(true)}
+          onClick={() => {
+            soundSynth.play("click");
+            setUploadModalOpen(true);
+          }}
         />
 
         <WorkspaceCard
@@ -152,44 +167,47 @@ export default function KnowledgePage() {
           status="Empty"
           statusType="neutral"
           actionLabel="Upload doc →"
-          onClick={() => setUploadModalOpen(true)}
+          onClick={() => {
+            soundSynth.play("click");
+            setUploadModalOpen(true);
+          }}
         />
       </div>
 
       {/* ======================================================================= */}
       {/* INTERACTIVE RAG RETRIEVAL TESTER                                        */}
       {/* ======================================================================= */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4">
+      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] p-5 space-y-4">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-[#cdfb56] text-slate-950 border border-[#bceb42] flex items-center justify-center shadow-2xs">
+          <div className="w-6 h-6 rounded-[2px] bg-white text-black flex items-center justify-center font-bold">
             <Sparkles className="w-3.5 h-3.5" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+            <h3 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
               RAG Retrieval Diagnostic Tester
             </h3>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-[#A1A1AA] font-mono">
               Test what context your voice agents retrieve in real-time before answering a caller
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleTestSearch} className="flex gap-2">
+        <form onSubmit={handleTestSearch} className="flex gap-2 font-mono">
           <div className="relative flex-1">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="e.g. What is the fee waiver for an applicant with 94% in PCM?"
               value={testQuery}
               onChange={(e) => setTestQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 text-xs bg-slate-50/70 border border-slate-200/90 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#cdfb56] focus:border-[#cdfb56] transition-all placeholder:text-slate-400"
+              className="w-full pl-8 pr-3 py-2 text-xs bg-[#000000] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all placeholder:text-[#71717A]"
             />
           </div>
 
           <button
             type="submit"
             disabled={searching}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border border-[#bceb42] shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[2px] text-xs font-mono font-bold uppercase tracking-wider bg-white hover:bg-zinc-200 text-black transition-all cursor-pointer shrink-0 disabled:opacity-50"
           >
             {searching ? (
               <span>Retrieving...</span>
@@ -203,20 +221,20 @@ export default function KnowledgePage() {
         </form>
 
         {testResult && (
-          <div className="p-4 rounded-xl bg-slate-50/90 border border-slate-200 space-y-2">
+          <div className="p-4 rounded-[2px] bg-[#121215] border border-[#27272A] space-y-2 font-mono">
             <div className="flex items-center justify-between text-[11px]">
-              <span className="font-bold text-slate-700">
+              <span className="font-bold text-white">
                 Matched Document: {testResult.matchedDoc}
               </span>
-              <span className="font-bold font-mono text-[#8ac926] bg-[#cdfb56]/40 px-2 py-0.5 rounded border border-[#cdfb56]">
+              <span className="font-bold font-mono text-white bg-[#18181B] px-2 py-0.5 rounded-[2px] border border-[#27272A]">
                 Cosine Relevance: {testResult.score}
               </span>
             </div>
-            <p className="text-xs text-slate-800 leading-relaxed font-mono bg-white p-3 rounded-lg border border-slate-200/80">
+            <p className="text-xs text-zinc-200 leading-relaxed font-mono bg-[#000000] p-3 rounded-[2px] border border-[#27272A]">
               {testResult.chunkText}
             </p>
-            <div className="text-[10px] text-slate-400 flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3 text-[#8ac926]" />
+            <div className="text-[10px] text-[#71717A] flex items-center gap-1 font-mono">
+              <CheckCircle2 className="w-3 h-3 text-white" />
               <span>Grounded truth verified • Zero hallucinatory confidence score 99.8%</span>
             </div>
           </div>
@@ -226,27 +244,27 @@ export default function KnowledgePage() {
       {/* ======================================================================= */}
       {/* INDEXED DOCUMENTS TABLE                                                 */}
       {/* ======================================================================= */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] overflow-hidden">
         {/* Top Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/70 border-b border-slate-100">
+        <div className="flex items-center justify-between px-5 py-3.5 bg-[#121215] border-b border-[#27272A]">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+            <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
               Indexed Institutional Files
             </span>
-            <span className="text-[11px] text-slate-500 font-mono">
+            <span className="text-[11px] text-[#A1A1AA] font-mono">
               ({documents.length} sources)
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 font-medium">
+          <span className="text-[10px] text-[#71717A] font-mono uppercase tracking-wider">
             Auto-chunked at 512 tokens with 50-token overlap
           </span>
         </div>
 
         {/* Table Content */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs font-mono">
             <thead>
-              <tr className="bg-slate-50/40 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+              <tr className="bg-[#000000] border-b border-[#27272A] text-[#71717A] font-bold uppercase tracking-wider text-[10px]">
                 <th className="py-3 px-4">Document Title</th>
                 <th className="py-3 px-4">Category</th>
                 <th className="py-3 px-4">File Size</th>
@@ -256,23 +274,26 @@ export default function KnowledgePage() {
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#27272A]">
               {documents.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-16 text-center">
+                  <td colSpan={7} className="py-16 text-center font-sans">
                     <div className="max-w-md mx-auto space-y-3">
-                      <div className="w-12 h-12 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center mx-auto shadow-xs border border-lime-200">
+                      <div className="w-12 h-12 rounded-[2px] bg-[#121215] text-white flex items-center justify-center mx-auto border border-[#27272A]">
                         <BookOpen className="w-6 h-6" />
                       </div>
-                      <h3 className="text-sm font-bold text-slate-900">No knowledge documents uploaded</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed">
+                      <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider">No knowledge documents uploaded</h3>
+                      <p className="text-xs text-[#A1A1AA] leading-relaxed">
                         Upload PDFs, FAQs, spreadsheets, or price books to ground your AI employees with 100% verified factual truth.
                       </p>
                       <button
-                        onClick={() => setUploadModalOpen(true)}
-                        className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-xl border border-[#bceb42] shadow-xs cursor-pointer"
+                        onClick={() => {
+                          soundSynth.play("confirm");
+                          setUploadModalOpen(true);
+                        }}
+                        className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] transition-all cursor-pointer"
                       >
-                        <Upload className="w-3.5 h-3.5 text-slate-950" />
+                        <Upload className="w-3.5 h-3.5" />
                         <span>Upload Knowledge Document</span>
                       </button>
                     </div>
@@ -282,55 +303,55 @@ export default function KnowledgePage() {
                 documents.map((doc) => (
                   <tr
                     key={doc.id}
-                    className="hover:bg-[#f7fee7]/30 transition-colors group"
+                    className="hover:bg-[#121215] transition-colors group text-white"
                   >
                     {/* Title */}
-                    <td className="py-3.5 px-4">
-                      <div className="font-semibold text-slate-900 group-hover:text-slate-950 flex items-center gap-2">
-                        <FileText className="w-3.5 h-3.5 text-slate-500" />
+                    <td className="py-3.5 px-4 font-sans">
+                      <div className="font-semibold text-white flex items-center gap-2">
+                        <FileText className="w-3.5 h-3.5 text-[#71717A]" />
                         <span>{doc.title}</span>
                       </div>
                     </td>
 
                     {/* Category */}
                     <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-zinc-300 bg-[#18181B] px-2 py-0.5 rounded-[2px] border border-[#27272A]">
                         {doc.category}
                       </span>
                     </td>
 
                     {/* File Size */}
-                    <td className="py-3.5 px-4 font-mono text-slate-600">
+                    <td className="py-3.5 px-4 font-mono text-[#A1A1AA]">
                       {doc.fileSize}
                     </td>
 
                     {/* Chunks */}
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                    <td className="py-3.5 px-4 font-mono font-bold text-white">
                       {doc.vectorChunks} chunks
                     </td>
 
                     {/* Status */}
                     <td className="py-3.5 px-4 whitespace-nowrap">
                       {doc.status === "ready" ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 px-2 py-0.5 rounded-full border border-[#cdfb56]">
-                          <CheckCircle2 className="w-2.5 h-2.5 text-[#8ac926]" />
-                          Vectorized
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold bg-[#18181B] text-zinc-300 px-2 py-0.5 rounded-[2px] border border-[#27272A]">
+                          <CheckCircle2 className="w-2.5 h-2.5 text-white" />
+                          VECTORIZED
                         </span>
                       ) : doc.status === "processing" ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#f7fee7] text-slate-900 px-2 py-0.5 rounded-full border border-[#cdfb56]">
-                          <RefreshCw className="w-2.5 h-2.5 text-[#8ac926] animate-spin" />
-                          Vectorizing
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold bg-[#18181B] text-white px-2 py-0.5 rounded-[2px] border border-[#27272A]">
+                          <RefreshCw className="w-2.5 h-2.5 text-white animate-spin" />
+                          VECTORIZING
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full border border-rose-200">
-                          <AlertCircle className="w-2.5 h-2.5 text-rose-500" />
-                          Failed
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold bg-[#18181B] text-zinc-400 px-2 py-0.5 rounded-[2px] border border-[#27272A]">
+                          <AlertCircle className="w-2.5 h-2.5 text-zinc-400" />
+                          FAILED
                         </span>
                       )}
                     </td>
 
                     {/* Last Updated */}
-                    <td className="py-3.5 px-4 text-slate-500 text-[11px]">
+                    <td className="py-3.5 px-4 text-[#71717A] text-[11px] font-mono">
                       {doc.lastUpdated}
                     </td>
 
@@ -338,10 +359,11 @@ export default function KnowledgePage() {
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => {
+                          soundSynth.play("click");
                           setTestQuery(doc.title.split(".")[0]);
                           handleTestSearch({ preventDefault: () => {} } as any);
                         }}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white hover:bg-[#cdfb56] text-slate-800 hover:text-slate-950 border border-slate-200 hover:border-[#bceb42] shadow-2xs transition-all cursor-pointer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[2px] text-[10px] font-mono font-bold uppercase tracking-wider bg-[#121215] hover:bg-white hover:text-black text-white border border-[#27272A] transition-all cursor-pointer"
                       >
                         <span>Inspect</span>
                       </button>

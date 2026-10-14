@@ -2,13 +2,11 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Menu,
-  ChevronDown,
   Search,
   Bell,
-  BookOpen,
-  CircleOff,
   User,
   Settings,
   LogOut,
@@ -16,9 +14,10 @@ import {
   Mic,
   RefreshCw,
   Check,
-  Heart,
-  Sparkles,
   Calendar,
+  Sparkles,
+  PhoneCall,
+  Activity,
 } from "lucide-react";
 import TestCallModal from "./modals/TestCallModal";
 import TopUpCreditsModal from "./modals/TopUpCreditsModal";
@@ -32,11 +31,27 @@ export default function AppHeader({
   onToggleMobileSidebar,
   onOpenSearch,
 }: AppHeaderProps) {
+  const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
   const [testCallOpen, setTestCallOpen] = useState(false);
   const [topUpOpen, setTopUpOpen] = useState(false);
+  const [userName, setUserName] = useState("Govinda T.");
+  const [userEmail, setUserEmail] = useState("clinic@swaram.ai");
 
   const profileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("swaram_user");
+      if (stored) {
+        const u = JSON.parse(stored);
+        if (u.name || u.fullName) setUserName(u.name || u.fullName);
+        if (u.email) setUserEmail(u.email);
+      }
+    } catch {
+      // Keep defaults
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,164 +63,148 @@ export default function AppHeader({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleSignOut = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("aeline_auth_token");
+    }
+    setProfileOpen(false);
+    router.push("/");
+  };
+
   return (
     <>
-      <header className="px-4 sm:px-6 pt-3 pb-2 sticky top-0 z-20 flex items-center justify-between select-none font-sans bg-[#eceef2]/80 backdrop-blur-md">
-        {/* LEFT: Capsule Tools & Profile Dock */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+      <header className="sticky top-0 z-30 flex items-center justify-between px-3 sm:px-5 lg:px-6 py-2.5 bg-[#09090B] border-b border-[#27272A] select-none text-white">
+        {/* LEFT: Mobile toggle & Breadcrumb / Status */}
+        <div className="flex items-center gap-3">
           <button
             onClick={onToggleMobileSidebar}
-            className="lg:hidden p-2 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
+            className="lg:hidden p-1.5 rounded-[2px] bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-white transition-colors"
             aria-label="Toggle navigation"
           >
             <Menu className="w-4 h-4" />
           </button>
 
-          {/* 1. Tool Actions Capsule: [ 🎙️ | 🔄 | ✓ ] */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-slate-600 text-xs">
-            <button
-              onClick={() => setTestCallOpen(true)}
-              className="p-1 rounded-full hover:bg-slate-100 text-slate-700 hover:text-black transition-colors cursor-pointer"
-              title="Mic / Test Voice"
-            >
-              <Mic className="w-3.5 h-3.5 text-purple-600" />
-            </button>
-            <span className="w-px h-3 bg-slate-200" />
-            <button
-              onClick={() => alert("Telephony synced")}
-              className="p-1 rounded-full hover:bg-slate-100 text-slate-700 hover:text-black transition-colors cursor-pointer"
-              title="Sync Telephony"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-            </button>
-            <span className="w-px h-3 bg-slate-200" />
-            <button
-              onClick={() => alert("System online")}
-              className="p-1 rounded-full hover:bg-slate-100 text-emerald-600 hover:text-emerald-700 transition-colors cursor-pointer"
-              title="System Ready"
-            >
-              <Check className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 font-telemetry text-xs">
+              <span className="text-[#A1A1AA] uppercase font-bold tracking-wider">Trunk Deck</span>
+              <span className="text-[#3F3F46]">/</span>
+              <span className="font-bold text-white tracking-tight">Main Dispatcher</span>
+            </div>
 
-          {/* 2. User Profile Capsule: [ 👤 Govinda / clinic | 🩵 ⚡ ✦ ] */}
+            {/* Carrier Status Indicator */}
+            <div className="flex items-center gap-2 px-2.5 py-0.5 rounded-[2px] bg-[#18181B] border border-[#27272A] text-[11px] font-telemetry text-white">
+              <span className="w-1.5 h-1.5 rounded-[1px] bg-white animate-pulse" />
+              <span className="font-bold">SIP/2.0: 200 OK</span>
+            </div>
+          </div>
+        </div>
+
+        {/* CENTER: Quick Command Search */}
+        <div className="hidden md:flex items-center flex-1 max-w-md mx-6">
+          <button
+            onClick={onOpenSearch}
+            className="w-full flex items-center justify-between px-3 py-1.5 rounded-[2px] bg-[#121215] hover:bg-[#18181B] border border-[#27272A] hover:border-white text-xs text-[#A1A1AA] transition-all cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5 text-[#71717A]" />
+              <span className="font-sans text-[12px]">Search channels, phone trunks, call logs...</span>
+            </div>
+            <kbd className="px-1.5 py-0.5 rounded-[2px] text-[10px] font-telemetry bg-[#18181B] border border-[#27272A] text-white">
+              ⌘K
+            </kbd>
+          </button>
+        </div>
+
+        {/* RIGHT: Actions, Balance & Profile */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Mobile search button */}
+          <button
+            onClick={onOpenSearch}
+            className="md:hidden p-1.5 rounded-[2px] text-[#A1A1AA] hover:bg-[#18181B] transition-colors"
+            title="Search (⌘K)"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
+          {/* Balance Telemetry Meter */}
+          <button
+            onClick={() => setTopUpOpen(true)}
+            className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[2px] bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-xs font-telemetry font-bold text-white transition-all cursor-pointer"
+            title="Voice minutes remaining. Click to add more."
+          >
+            <span className="w-1.5 h-1.5 rounded-[1px] bg-white" />
+            <span>14.0 MIN</span>
+          </button>
+
+          {/* Live Test Call Inverted Brick Button */}
+          <button
+            onClick={() => setTestCallOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-xs font-bold transition-all border border-white cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
+          >
+            <Mic className="w-3.5 h-3.5 text-black" />
+            <span className="hidden sm:inline font-display">Test Voice Agent</span>
+          </button>
+
+          {/* User Profile Capsule */}
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-xs font-semibold text-slate-800 hover:bg-slate-50 transition-all cursor-pointer"
+              className="flex items-center gap-2 px-2 py-1 rounded-[2px] bg-[#121215] hover:bg-[#18181B] transition-all cursor-pointer border border-[#27272A]"
             >
-              <div className="w-5 h-5 rounded-full bg-slate-900 text-[#c8f53c] font-black text-[10px] flex items-center justify-center shrink-0">
-                G
+              <div className="w-5 h-5 rounded-[2px] bg-white text-black font-telemetry font-bold text-[11px] flex items-center justify-center shrink-0">
+                {userName.charAt(0).toUpperCase()}
               </div>
-              <span className="font-bold text-slate-900 truncate max-w-[120px]">Govinda T.</span>
-              <div className="flex items-center gap-1 text-[11px] text-slate-400 pl-1 border-l border-slate-200">
-                <span>🩵</span>
-                <span className="text-amber-500">⚡</span>
-                <span className="text-[#84b80e] font-black">✦</span>
-              </div>
+              <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[90px] font-sans">
+                {userName}
+              </span>
             </button>
 
             {profileOpen && (
-              <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-xs">
-                <div className="px-3.5 py-2 border-b border-slate-100">
-                  <p className="font-bold text-slate-900 text-xs">clinic</p>
-                  <p className="text-[11px] text-slate-500 truncate">taninkigovinda@gmail.com</p>
+              <div className="absolute right-0 mt-1.5 w-56 bg-[#09090B] rounded-[2px] border border-[#3F3F46] shadow-2xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100 text-xs">
+                <div className="px-3.5 py-2 border-b border-[#27272A] bg-[#121215]">
+                  <p className="font-bold text-white font-display text-xs">{userName}</p>
+                  <p className="text-[11px] text-[#A1A1AA] font-telemetry truncate">{userEmail}</p>
                 </div>
 
                 <div className="py-1">
                   <Link
-                    href="/dashboard/store"
+                    href="/dashboard/agents"
                     onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-2 px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors"
                   >
-                    <User className="w-3.5 h-3.5 text-slate-400" />
-                    <span>AI Employee Store</span>
+                    <User className="w-3.5 h-3.5 text-[#A1A1AA]" />
+                    <span>Manage Voice Agents</span>
                   </Link>
                   <Link
                     href="/dashboard/billing"
                     onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-2 px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors"
                   >
-                    <Zap className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Credits & Minutes</span>
+                    <Zap className="w-3.5 h-3.5 text-white" />
+                    <span>Credits & Billing (14 min)</span>
                   </Link>
                   <Link
                     href="/dashboard/settings"
                     onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-2 px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors"
                   >
-                    <Settings className="w-3.5 h-3.5 text-slate-400" />
+                    <Settings className="w-3.5 h-3.5 text-[#A1A1AA]" />
                     <span>Workspace Settings</span>
                   </Link>
                 </div>
 
-                <div className="pt-1 border-t border-slate-100">
+                <div className="pt-1 border-t border-[#27272A]">
                   <button
-                    onClick={() => {
-                      setProfileOpen(false);
-                      alert("Signed out");
-                    }}
-                    className="w-full flex items-center gap-2 px-3.5 py-2 text-red-600 hover:bg-red-50 transition-colors text-left font-medium cursor-pointer"
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-2 px-3.5 py-1.5 text-red-400 hover:bg-red-950/40 transition-colors text-left font-medium cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span>Log Out</span>
+                    <span>Sign Out</span>
                   </button>
                 </div>
               </div>
             )}
           </div>
-        </div>
-
-        {/* CENTER GREETING (Matching Image: "Hi Celeste, Welcome to AI-BL") */}
-        <div className="hidden xl:flex items-center gap-2 text-xs">
-          <div className="w-5 h-5 rounded-full bg-[#c8f53c] text-slate-950 flex items-center justify-center font-bold text-[10px]">
-            ✦
-          </div>
-          <div>
-            <span className="font-bold text-slate-900">Hi Govinda, </span>
-            <span className="text-slate-400 font-medium">Welcome to Swaram AI</span>
-          </div>
-          <button
-            onClick={onOpenSearch}
-            className="text-slate-400 hover:text-slate-900 ml-1 font-bold text-xs cursor-pointer"
-            title="Search"
-          >
-            •••
-          </button>
-        </div>
-
-        {/* RIGHT CAPSULES: Date Pill & Menu Controls */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
-          {/* Date + Notification Pill: [ 🔔 Today, 11 Oct (14 min) ] */}
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-2xs text-xs font-semibold text-slate-800">
-            <Bell className="w-3.5 h-3.5 text-slate-400" />
-            <span className="font-medium text-slate-700">Sat, 11 Oct</span>
-            <button
-              onClick={() => setTopUpOpen(true)}
-              className="w-5 h-5 rounded-full bg-[#111418] text-white text-[10px] font-black font-mono flex items-center justify-center cursor-pointer"
-              title="14 min credits left. Click to top up."
-            >
-              14
-            </button>
-          </div>
-
-          {/* Search trigger pill */}
-          <button
-            onClick={onOpenSearch}
-            className="p-2 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
-            title="Search (Cmd+K)"
-          >
-            <Search className="w-3.5 h-3.5" />
-          </button>
-
-          {/* Menu toggle */}
-          <button
-            onClick={onToggleMobileSidebar}
-            className="p-2 rounded-full bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
-            title="Menu"
-          >
-            <Menu className="w-3.5 h-3.5" />
-          </button>
         </div>
       </header>
 

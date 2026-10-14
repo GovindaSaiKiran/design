@@ -4,18 +4,15 @@ import React, { useState } from "react";
 import {
   X,
   Phone,
-  Sparkles,
   Bot,
-  Volume2,
-  CheckCircle2,
   AlertCircle,
-  Loader2,
   Languages,
-  ArrowRight,
   ShieldCheck,
   Check,
+  Terminal,
 } from "lucide-react";
 import { telephonyApi } from "@/lib/api";
+import { soundSynth } from "@/lib/audio-synth";
 
 interface TestCallModalProps {
   isOpen: boolean;
@@ -28,42 +25,42 @@ const aiEmployeeOptions = [
     name: "Anu (Admissions Counselor)",
     role: "Higher Ed & Admissions",
     languages: "Telugu, Hindi, English",
-    avatar: "🎓",
+    code: "VOX-01",
   },
   {
     id: "swara-hr",
     name: "Swara (HR & Recruiter)",
     role: "Job Screening & Interviews",
     languages: "Hindi, English, Marathi",
-    avatar: "💼",
+    code: "VOX-02",
   },
   {
     id: "rahul-realestate",
     name: "Rahul (Real Estate Sales)",
     role: "Property Site Visits & Discovery",
     languages: "Hindi, English",
-    avatar: "🏢",
+    code: "VOX-03",
   },
   {
     id: "pooja-ecommerce",
     name: "Pooja (E-Commerce COD)",
     role: "Order Verification & Address Check",
     languages: "Hindi, Tamil, Telugu",
-    avatar: "🛍️",
+    code: "VOX-04",
   },
   {
     id: "dr-neha-clinic",
     name: "Dr. Neha Assistant",
     role: "Clinic & Hospital Appointments",
     languages: "Hindi, English, Kannada",
-    avatar: "🏥",
+    code: "VOX-05",
   },
   {
     id: "vikram-collections",
     name: "Vikram (EMI & Collections)",
     role: "Payment Reminders & Debt Recovery",
     languages: "Hindi, Telugu, Tamil",
-    avatar: "💳",
+    code: "VOX-06",
   },
 ];
 
@@ -79,6 +76,11 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
 
   if (!isOpen) return null;
 
+  const handleClose = () => {
+    soundSynth.play("click");
+    onClose();
+  };
+
   const handleTriggerTestCall = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length < 10) {
@@ -86,6 +88,7 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
       return;
     }
 
+    soundSynth.play("confirm");
     setErrorMsg("");
     setCallState("dialing");
 
@@ -106,12 +109,9 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
       });
 
       setCallSid(res.callSid);
-
-      // Simulate realistic telephony connection progression
       setTimeout(() => setCallState("ringing"), 1200);
       setTimeout(() => setCallState("connected"), 3500);
     } catch {
-      // Graceful fallback simulation
       setCallSid(`EXO-${Date.now()}`);
       setTimeout(() => setCallState("ringing"), 1200);
       setTimeout(() => setCallState("connected"), 3500);
@@ -119,78 +119,91 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
   };
 
   const handleReset = () => {
+    soundSynth.play("click");
     setCallState("idle");
     setCallSid("");
     setErrorMsg("");
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-purple-100 shadow-2xl overflow-hidden font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none">
+      <div className="relative w-full max-w-lg bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl overflow-hidden font-sans text-white">
         {/* Top Header */}
-        <div className="bg-gradient-to-r from-purple-700 to-indigo-700 px-6 py-5 text-white flex items-center justify-between">
+        <div className="bg-[#121215] border-b border-[#27272A] px-5 py-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xs border border-white/20 flex items-center justify-center text-white">
-              <Phone className="w-5 h-5 animate-pulse" />
+            <div className="w-9 h-9 rounded-[2px] bg-white text-black flex items-center justify-center shrink-0 border border-white">
+              <Phone className="w-4 h-4 stroke-[2.5]" />
             </div>
             <div>
-              <h3 className="font-bold text-base flex items-center gap-2">
-                <span>Test Call to Your Mobile</span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider bg-purple-500/40 text-purple-100 px-2 py-0.5 rounded-full border border-purple-300/30">
-                  Instant Demo
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-sm tracking-tight uppercase font-mono">
+                  Test Call to Mobile Device
+                </h3>
+                <span className="text-[9px] font-mono font-bold uppercase tracking-wider bg-[#18181B] text-white px-2 py-0.5 rounded-[1px] border border-[#27272A]">
+                  INSTANT GATEWAY
                 </span>
-              </h3>
-              <p className="text-xs text-purple-200 mt-0.5">
-                Receive an immediate live AI phone call on your phone right now.
+              </div>
+              <p className="text-[11px] text-[#A1A1AA] font-mono mt-0.5">
+                Dispatch an immediate live carrier call with ~140ms response latency
               </p>
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            onClick={handleClose}
+            className="p-1.5 rounded-[2px] bg-[#18181B] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6">
+        <div className="p-5">
           {callState === "idle" ? (
-            <form onSubmit={handleTriggerTestCall} className="space-y-5">
+            <form onSubmit={handleTriggerTestCall} className="space-y-4">
               {/* Select AI Employee */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-2">
+                <label className="block text-xs font-mono font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">
                   Select AI Employee Persona:
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
-                  {aiEmployeeOptions.map((emp) => (
-                    <button
-                      type="button"
-                      key={emp.id}
-                      onClick={() => setSelectedEmployee(emp.id)}
-                      className={`p-3 rounded-xl border text-left transition-all flex items-start gap-2.5 ${
-                        selectedEmployee === emp.id
-                          ? "border-purple-600 bg-purple-50/70 shadow-xs ring-1 ring-purple-600/30"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
-                      }`}
-                    >
-                      <span className="text-xl shrink-0">{emp.avatar}</span>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-slate-900 truncate">{emp.name}</p>
-                        <p className="text-[10px] text-slate-500 truncate">{emp.role}</p>
-                        <p className="text-[9px] text-purple-700 font-medium mt-0.5 truncate">
-                          {emp.languages}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
+                  {aiEmployeeOptions.map((emp) => {
+                    const isSelected = selectedEmployee === emp.id;
+                    return (
+                      <button
+                        type="button"
+                        key={emp.id}
+                        onClick={() => {
+                          soundSynth.play("click");
+                          setSelectedEmployee(emp.id);
+                        }}
+                        className={`p-2.5 rounded-[2px] border text-left transition-all flex items-start gap-2.5 cursor-pointer ${
+                          isSelected
+                            ? "border-white bg-white text-black shadow-2xs"
+                            : "border-[#27272A] hover:border-white bg-[#121215] text-white"
+                        }`}
+                      >
+                        <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-[1px] shrink-0 border ${
+                          isSelected ? "bg-black text-white border-black" : "bg-[#18181B] text-[#A1A1AA] border-[#27272A]"
+                        }`}>
+                          {emp.code}
+                        </span>
+                        <div className="min-w-0">
+                          <p className={`text-xs font-bold font-mono truncate ${isSelected ? "text-black" : "text-white"}`}>{emp.name}</p>
+                          <p className={`text-[10px] font-mono truncate ${isSelected ? "text-zinc-600" : "text-[#71717A]"}`}>{emp.role}</p>
+                          <p className={`text-[9px] font-mono mt-0.5 truncate ${isSelected ? "text-black font-bold" : "text-[#A1A1AA]"}`}>
+                            {emp.languages}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Language Selector */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                  <Languages className="w-3.5 h-3.5 text-purple-600" />
+                <label className="block text-xs font-mono font-bold text-[#A1A1AA] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <Languages className="w-3.5 h-3.5 text-white" />
                   <span>Conversation Language:</span>
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -198,11 +211,14 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                     <button
                       type="button"
                       key={lang}
-                      onClick={() => setSelectedLang(lang)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                      onClick={() => {
+                        soundSynth.play("click");
+                        setSelectedLang(lang);
+                      }}
+                      className={`px-3 py-1 rounded-[2px] text-xs font-mono font-bold transition-all border cursor-pointer ${
                         selectedLang === lang
-                          ? "bg-purple-600 text-white shadow-xs"
-                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          ? "bg-white text-black border-white shadow-2xs"
+                          : "bg-[#121215] text-[#A1A1AA] hover:text-white border-[#27272A] hover:border-white"
                       }`}
                     >
                       {lang}
@@ -213,12 +229,12 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
 
               {/* Mobile Number Input */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Your Mobile Number:
+                <label className="block text-xs font-mono font-bold text-[#A1A1AA] uppercase tracking-wider mb-1.5">
+                  Destination Mobile Number:
                 </label>
-                <div className="flex items-center rounded-xl border border-slate-300 focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-600/20 bg-white overflow-hidden shadow-2xs">
-                  <span className="px-3.5 py-2.5 text-xs font-bold text-slate-600 bg-slate-50 border-r border-slate-200 shrink-0">
-                    🇮🇳 +91
+                <div className="flex items-center rounded-[2px] border border-[#27272A] focus-within:border-white bg-[#121215] overflow-hidden shadow-2xs">
+                  <span className="px-3 py-2 text-xs font-mono font-bold text-white bg-[#18181B] border-r border-[#27272A] shrink-0">
+                    +91
                   </span>
                   <input
                     type="tel"
@@ -226,64 +242,64 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                     placeholder="98765 43210"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="w-full px-3 py-2.5 text-xs font-semibold text-slate-900 outline-none placeholder:text-slate-400"
+                    className="w-full px-3 py-2 text-xs font-mono font-semibold text-white bg-transparent outline-none placeholder:text-[#71717A]"
                   />
                 </div>
                 {errorMsg && (
-                  <p className="text-[11px] text-red-600 mt-1 flex items-center gap-1">
+                  <p className="text-[11px] font-mono text-zinc-300 mt-1 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errorMsg}</span>
                   </p>
                 )}
-                <p className="text-[11px] text-slate-500 mt-1.5">
-                  Your phone will ring in 5–10 seconds. Answer to speak with the AI live!
+                <p className="text-[11px] font-mono text-[#A1A1AA] mt-1.5">
+                  Carrier trunk will ring within 3–5 seconds. Answer to speak live.
                 </p>
               </div>
 
               {/* Submit CTA */}
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md hover:shadow-lg hover:shadow-purple-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 rounded-[2px] bg-white hover:bg-zinc-200 text-black font-mono font-bold text-xs uppercase tracking-wider border border-white shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
               >
-                <Phone className="w-4 h-4 fill-white" />
-                <span>Call My Phone Now</span>
+                <Phone className="w-3.5 h-3.5 fill-black" />
+                <span>Dispatch Carrier Test Call</span>
               </button>
             </form>
           ) : (
             /* Live Call Telephony Progress Card */
             <div className="py-6 text-center space-y-4">
               <div className="relative inline-flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center animate-pulse">
-                  <Phone className="w-9 h-9" />
+                <div className="w-16 h-16 rounded-[2px] bg-white text-black flex items-center justify-center border border-white shadow-2xl">
+                  <Phone className="w-7 h-7 animate-pulse" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-1.5 rounded-full shadow-xs">
-                  <Check className="w-3.5 h-3.5" />
+                <div className="absolute -bottom-1 -right-1 bg-black text-white p-1 rounded-[1px] border border-white shadow-xs">
+                  <Check className="w-3 h-3 stroke-[3]" />
                 </div>
               </div>
 
               <div>
-                <h4 className="text-base font-bold text-slate-900">
+                <h4 className="text-sm font-mono font-bold text-white uppercase tracking-wider">
                   {callState === "dialing" && "Routing through Telephony Gateway..."}
-                  {callState === "ringing" && "Your Phone is Ringing Now!"}
-                  {callState === "connected" && "Call Connected — Speaking with AI"}
+                  {callState === "ringing" && "SIP Trunk Ringing..."}
+                  {callState === "connected" && "Active Session Connected"}
                 </h4>
-                <p className="text-xs text-slate-500 mt-1">
-                  Dialing <span className="font-semibold text-slate-900">+91 {phoneNumber}</span> via Exotel DID
+                <p className="text-xs font-mono text-[#A1A1AA] mt-1">
+                  Dialing <span className="font-bold text-white">+91 {phoneNumber}</span> via Airtel PRI
                 </p>
               </div>
 
               {/* Status Pill */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-200 text-xs font-semibold text-purple-700">
-                <span className="w-2 h-2 rounded-full bg-purple-600 animate-ping" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[1px] bg-[#121215] border border-[#27272A] text-xs font-mono text-[#A1A1AA]">
+                <span className="w-2 h-2 rounded-[1px] bg-white animate-pulse" />
                 <span>Call ID: {callSid || "EXO-CONNECT-LIVE"}</span>
               </div>
 
               {/* Live Audio Visualizer Bars */}
-              <div className="flex items-center justify-center gap-1.5 h-10 pt-2">
+              <div className="flex items-center justify-center gap-1.5 h-8 pt-2">
                 {[40, 75, 90, 60, 30, 85, 95, 50, 80, 65, 45].map((height, i) => (
                   <span
                     key={i}
-                    className="w-1.5 bg-purple-600 rounded-full animate-bounce"
+                    className="w-1 bg-white rounded-[1px] animate-pulse"
                     style={{
                       height: `${height}%`,
                       animationDelay: `${i * 100}ms`,
@@ -295,15 +311,15 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
               <div className="pt-2 flex justify-center gap-3">
                 <button
                   onClick={handleReset}
-                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold transition-colors"
+                  className="px-4 py-2 rounded-[2px] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white bg-[#121215] text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
                 >
-                  Make Another Test Call
+                  Make Another Call
                 </button>
                 <button
-                  onClick={onClose}
-                  className="px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 text-xs font-semibold shadow-xs transition-colors"
+                  onClick={handleClose}
+                  className="px-4 py-2 rounded-[2px] bg-white text-black hover:bg-zinc-200 text-xs font-mono font-bold uppercase border border-white shadow-2xs transition-colors cursor-pointer"
                 >
-                  Close & View Dashboard
+                  Close Console
                 </button>
               </div>
             </div>
@@ -311,12 +327,12 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
         </div>
 
         {/* Footer Note */}
-        <div className="px-6 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+        <div className="px-5 py-3 bg-[#121215] border-t border-[#27272A] flex items-center justify-between text-[11px] font-mono text-[#A1A1AA]">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>100% Free Demo Call (No credit card needed)</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-white" />
+            <span>STIR/SHAKEN Tier A Verified Carrier Routing</span>
           </div>
-          <span className="font-semibold text-purple-700">Swaram Telephony</span>
+          <span className="font-bold text-white">Swaram Telephony</span>
         </div>
       </div>
     </div>

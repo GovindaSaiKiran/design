@@ -10,6 +10,95 @@
     --aeline-lime-hover: #bef03f;
     --aeline-dark: #0f172a;
     --aeline-card-bg: #ffffff;
+
+    /* Signature UI: High-Contrast Stark Monochrome Console */
+    --console-ground: #000000;
+    --console-surface: #09090B;
+    --console-surface-raised: #121215;
+    --console-surface-sunken: #040405;
+    --console-ink: #FFFFFF;
+    --console-ink-muted: #A1A1AA;
+    --console-ink-dim: #71717A;
+    --console-accent: #FFFFFF;
+    --console-accent-hover: #E4E4E7;
+    --console-on-accent: #000000;
+    --console-signal-amber: #FFFFFF;
+    --console-signal-green: #FFFFFF;
+    --console-signal-red: #FFFFFF;
+    --console-line: #27272A;
+    --console-line-strong: #3F3F46;
+  }
+
+  .font-display {
+    font-family: var(--font-bricolage), sans-serif;
+  }
+
+  .font-telemetry {
+    font-family: var(--font-mono), monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .console-panel {
+    background-color: var(--console-surface);
+    border: 1px solid var(--console-line);
+    border-radius: 2px;
+  }
+
+  .console-panel-raised {
+    background-color: var(--console-surface-raised);
+    border: 1px solid var(--console-line);
+    border-radius: 2px;
+  }
+
+  .console-bay {
+    background-color: var(--console-surface-sunken);
+    border: 1px solid var(--console-line);
+    border-radius: 2px;
+  }
+
+  .console-brick-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border: 1.5px solid #FFFFFF;
+    background-color: #FFFFFF;
+    color: #000000;
+    border-radius: 2px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.12s;
+  }
+  .console-brick-btn:hover {
+    background-color: #E4E4E7;
+  }
+  .console-brick-btn:active {
+    transform: translate(1px, 1px);
+  }
+
+  .console-brick-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid #3F3F46;
+    background-color: #09090B;
+    color: #FFFFFF;
+    border-radius: 2px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.12s, background-color 0.12s;
+  }
+  .console-brick-btn-outline:hover {
+    border-color: #FFFFFF;
+    background-color: #121215;
+  }
+  .console-brick-btn-outline:active {
+    transform: translate(1px, 1px);
   }
 
   * {

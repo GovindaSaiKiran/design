@@ -94,29 +94,29 @@ export default function TopUpCreditsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl border border-purple-100 shadow-2xl overflow-hidden font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl overflow-hidden font-sans text-white">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-700 to-indigo-800 px-6 py-5 text-white flex items-center justify-between">
+        <div className="bg-[#121215] px-6 py-5 border-b border-[#27272A] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xs border border-white/20 flex items-center justify-center">
-              <Zap className="w-5 h-5 text-amber-300 fill-amber-300" />
+            <div className="w-10 h-10 rounded-[2px] bg-white text-black flex items-center justify-center font-bold">
+              <Zap className="w-5 h-5 fill-black" />
             </div>
             <div>
-              <h3 className="font-bold text-base flex items-center gap-2">
+              <h3 className="font-bold text-sm uppercase tracking-wider flex items-center gap-2">
                 <span>Top Up Calling Credits</span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider bg-amber-400/20 text-amber-200 px-2 py-0.5 rounded-full border border-amber-300/30">
-                  {currentCredits} Free Credits Left
+                <span className="text-[10px] font-mono uppercase tracking-wider bg-[#18181B] text-zinc-300 px-2 py-0.5 rounded-[2px] border border-[#27272A]">
+                  {currentCredits} Credits Remaining
                 </span>
               </h3>
-              <p className="text-xs text-purple-200 mt-0.5">
-                Pay only for connected minutes. Unused minutes never expire.
+              <p className="text-xs text-[#A1A1AA] mt-0.5 font-mono">
+                Pure pay-per-minute model. Unused minutes never expire.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-[2px] text-[#71717A] hover:text-white hover:bg-[#18181B] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -125,12 +125,12 @@ export default function TopUpCreditsModal({
         {/* Content */}
         <div className="p-6 space-y-6">
           {success ? (
-            <div className="py-12 text-center space-y-3">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                <Check className="w-8 h-8" />
+            <div className="py-12 text-center space-y-3 font-mono">
+              <div className="w-14 h-14 rounded-[2px] bg-white text-black flex items-center justify-center mx-auto">
+                <Check className="w-7 h-7" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900">Credits Added Successfully!</h4>
-              <p className="text-xs text-slate-500">Your account balance has been recharged.</p>
+              <h4 className="text-base font-bold text-white uppercase tracking-wider">Credits Added Successfully</h4>
+              <p className="text-xs text-[#A1A1AA]">Your account balance has been recharged.</p>
             </div>
           ) : (
             <>
@@ -142,38 +142,38 @@ export default function TopUpCreditsModal({
                     <div
                       key={pack.id}
                       onClick={() => setSelectedPack(pack.id)}
-                      className={`relative p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between ${
+                      className={`relative p-4 rounded-[2px] border cursor-pointer transition-all flex flex-col justify-between ${
                         isSelected
-                          ? "border-purple-600 bg-purple-50/60 ring-2 ring-purple-600/30 shadow-md"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
+                          ? "border-white bg-[#121215] shadow-sm"
+                          : "border-[#27272A] hover:border-[#3F3F46] bg-[#000000]"
                       }`}
                     >
                       {pack.popular && (
-                        <span className="absolute -top-2.5 right-3 bg-purple-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
-                          Most Popular
+                        <span className="absolute -top-2.5 right-3 bg-white text-black text-[9px] font-mono font-bold px-2 py-0.5 rounded-[2px] uppercase tracking-wider">
+                          Standard
                         </span>
                       )}
 
                       <div>
-                        <h4 className="font-bold text-slate-900 text-sm">{pack.title}</h4>
+                        <h4 className="font-bold text-white text-xs font-mono uppercase tracking-wider">{pack.title}</h4>
                         <div className="mt-2 flex items-baseline gap-1">
-                          <span className="text-xl font-extrabold text-slate-950">
+                          <span className="text-xl font-extrabold font-mono text-white">
                             ₹{pack.priceInr.toLocaleString("en-IN")}
                           </span>
-                          <span className="text-[10px] text-slate-500 font-medium">+ GST</span>
+                          <span className="text-[10px] text-[#71717A] font-mono">+ GST</span>
                         </div>
-                        <p className="text-[11px] font-semibold text-purple-700 mt-0.5">
+                        <p className="text-[11px] font-mono text-zinc-300 mt-0.5">
                           ₹{pack.ratePerMin} / connected min
                         </p>
-                        <p className="text-[10px] text-slate-500 mt-2 leading-relaxed">
+                        <p className="text-[10px] text-[#71717A] mt-2 leading-relaxed font-sans">
                           {pack.description}
                         </p>
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-slate-100 space-y-1.5">
+                      <div className="mt-4 pt-3 border-t border-[#27272A] space-y-1.5 font-mono">
                         {pack.features.map((feat, idx) => (
-                          <div key={idx} className="flex items-start gap-1.5 text-[10px] text-slate-600">
-                            <Check className="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" />
+                          <div key={idx} className="flex items-start gap-1.5 text-[10px] text-[#A1A1AA]">
+                            <Check className="w-3 h-3 text-white shrink-0 mt-0.5" />
                             <span>{feat}</span>
                           </div>
                         ))}
@@ -184,17 +184,17 @@ export default function TopUpCreditsModal({
               </div>
 
               {/* Summary & Checkout CTA */}
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="p-4 rounded-[2px] bg-[#121215] border border-[#27272A] flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-700">
-                    <CreditCard className="w-5 h-5 text-purple-600" />
+                  <div className="w-10 h-10 rounded-[2px] bg-[#000000] border border-[#27272A] flex items-center justify-center text-white">
+                    <CreditCard className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">
+                    <p className="text-xs font-bold text-white uppercase tracking-wider">
                       Razorpay / UPI / NetBanking / Cards
                     </p>
-                    <p className="text-[11px] text-slate-500">
-                      Instant wallet activation with GST invoice generated automatically.
+                    <p className="text-[10px] text-[#71717A] font-sans">
+                      Instant wallet activation with GST tax invoice generated automatically.
                     </p>
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export default function TopUpCreditsModal({
                 <button
                   onClick={handleRecharge}
                   disabled={isProcessing}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-[2px] bg-white hover:bg-zinc-200 text-black font-mono font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isProcessing ? (
                     <span>Processing Payment...</span>
@@ -219,12 +219,12 @@ export default function TopUpCreditsModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+        <div className="px-6 py-3 bg-[#121215] border-t border-[#27272A] flex items-center justify-between text-[10px] text-[#71717A] font-mono">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <ShieldCheck className="w-3.5 h-3.5 text-white" />
             <span>256-bit Encrypted Banking Gateway</span>
           </div>
-          <span className="font-semibold text-purple-700">Swaram Pay</span>
+          <span className="font-bold text-white uppercase tracking-wider">SWARAM TELEPHONY</span>
         </div>
       </div>
     </div>

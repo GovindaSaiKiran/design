@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { X, Send, Users, Calendar, Bot, Sparkles, Check, PhoneCall, Layers, ShieldCheck } from "lucide-react";
+import { soundSynth } from "@/lib/audio-synth";
 
 interface StartCampaignModalProps {
   isOpen: boolean;
@@ -23,60 +24,64 @@ export default function StartCampaignModal({
   if (!isOpen) return null;
 
   const handleLaunch = () => {
+    try { soundSynth.play("confirm"); } catch {}
     onCampaignStarted?.(title, 1240);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 sm:p-8 overflow-hidden text-slate-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200 select-none">
+      <div className="relative w-full max-w-lg bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl p-6 sm:p-7 overflow-hidden text-white font-mono">
         {/* Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-slate-100">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#cdfb56] text-slate-950 border border-[#bceb42] flex items-center justify-center shadow-xs">
-              <Send className="w-6 h-6 stroke-[2]" />
+        <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-[2px] bg-white text-black flex items-center justify-center shadow-xs">
+              <Send className="w-5 h-5 text-black" />
             </div>
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#8ac926]">OUTBOUND CAMPAIGN</div>
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#71717A]">OUTBOUND CADENCE</div>
+              <h3 className="text-lg font-bold text-white tracking-tight">
                 Launch Outreach Goal
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#A1A1AA] font-sans">
                 Set the admissions outcome and delegate autonomous batch calling
               </p>
             </div>
           </div>
 
           <button
-            onClick={onClose}
-            className="p-2 rounded-full bg-slate-100 hover:bg-[#cdfb56] text-slate-600 hover:text-slate-950 transition-colors cursor-pointer"
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              onClose();
+            }}
+            className="p-1.5 rounded-[2px] text-[#71717A] hover:text-white hover:bg-[#121215] transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Form Fields */}
-        <div className="space-y-4 my-6 text-xs">
+        <div className="space-y-4 my-5 text-xs">
           <div>
-            <label className="block font-semibold text-slate-700 mb-1.5 text-xs">
+            <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
               Admissions Goal / Campaign Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-[#cdfb56] focus:bg-[#f7fee7]/20 focus:outline-none transition-all shadow-2xs"
+              className="w-full px-3.5 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] text-white focus:outline-none focus:border-white transition-all"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-1.5 text-xs">
+            <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
               Target Candidate Register
             </label>
             <select
               value={audience}
               onChange={(e) => setAudience(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 focus:border-[#cdfb56] focus:outline-none cursor-pointer transition-all font-medium shadow-2xs"
+              className="w-full px-3.5 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] text-white focus:outline-none focus:border-white cursor-pointer transition-all font-mono"
             >
               <option value="High-Percentile PCM Applicants (1,240 Verified Candidates)">
                 High-Percentile PCM Applicants (1,240 Verified Candidates)
@@ -92,13 +97,13 @@ export default function StartCampaignModal({
 
           <div className="grid grid-cols-2 gap-3.5">
             <div>
-              <label className="block font-semibold text-slate-700 mb-1.5 text-xs">
+              <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
                 Assigned Voice Engine
               </label>
               <select
                 value={selectedAgent}
                 onChange={(e) => setSelectedAgent(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-800 focus:border-[#cdfb56] focus:outline-none cursor-pointer transition-all font-medium shadow-2xs"
+                className="w-full px-3 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] text-white focus:outline-none focus:border-white cursor-pointer transition-all font-mono text-xs"
               >
                 <option value="Maya AI (Hindi/English) & Neha AI (Telugu)">Maya (Hindi) + Neha (Telugu)</option>
                 <option value="Ishita AI (Kannada) & Suhani AI (Bengali)">Ishita (Kannada) + Suhani (Bengali)</option>
@@ -107,8 +112,8 @@ export default function StartCampaignModal({
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1.5 text-xs">
-                Concurrent Trunks ({concurrentLines} SIP lines)
+              <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
+                Concurrent Trunks ({concurrentLines} lines)
               </label>
               <input
                 type="range"
@@ -117,36 +122,39 @@ export default function StartCampaignModal({
                 step={5}
                 value={concurrentLines}
                 onChange={(e) => setConcurrentLines(Number(e.target.value))}
-                className="w-full accent-[#8ac926] mt-3 cursor-pointer"
+                className="w-full accent-white mt-2 cursor-pointer"
               />
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#f7fee7] border border-[#cdfb56]/60 flex items-center justify-between text-xs text-slate-800 shadow-2xs">
-            <span className="font-medium flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#8ac926]" />
+          <div className="p-3.5 rounded-[2px] bg-[#121215] border border-[#27272A] flex items-center justify-between text-xs text-zinc-300">
+            <span className="flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-white" />
               Automated WhatsApp Slot Passes & 3x Retry on No-Answer
             </span>
-            <span className="font-mono text-xs font-bold text-slate-950 bg-[#cdfb56] px-2.5 py-0.5 rounded-full border border-[#bceb42]">
-              ACTIVE
+            <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-[#18181B] px-2 py-0.5 rounded-[2px] border border-[#27272A]">
+              ARMED
             </span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-5 border-t border-slate-100">
+        <div className="flex items-center justify-between pt-4 border-t border-[#27272A]">
           <button
-            onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-slate-950 bg-white hover:bg-[#f7fee7] border border-slate-200 hover:border-[#cdfb56] transition-all cursor-pointer"
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              onClose();
+            }}
+            className="px-4 py-2 rounded-[2px] text-xs uppercase tracking-wider text-[#A1A1AA] hover:text-white bg-transparent hover:bg-[#121215] border border-[#27272A] hover:border-white transition-all cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             onClick={handleLaunch}
-            className="px-6 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-[#cdfb56] hover:bg-[#bef03f] border border-[#bceb42] shadow-xs inline-flex items-center gap-2 cursor-pointer transition-all active:scale-95"
+            className="px-5 py-2 rounded-[2px] text-xs font-bold uppercase tracking-wider text-black bg-white hover:bg-zinc-200 shadow-sm inline-flex items-center gap-2 cursor-pointer transition-all"
           >
-            <Check className="w-4 h-4" />
+            <Check className="w-3.5 h-3.5 text-black" />
             <span>Launch Outreach Goal</span>
           </button>
         </div>

@@ -14,6 +14,7 @@ import {
   Key,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
+import { soundSynth } from "@/lib/audio-synth";
 
 interface TeamMember {
   id: string;
@@ -47,6 +48,7 @@ export default function TeamPage() {
   const handleInvite = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inviteEmail.trim()) return;
+    try { soundSynth.play("confirm"); } catch {}
 
     const newMember: TeamMember = {
       id: `tm-${Date.now()}`,
@@ -66,48 +68,51 @@ export default function TeamPage() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-none">
+    <div className="space-y-6 sm:space-y-8 select-none text-white">
       {/* ======================================================================= */}
       {/* WORKSPACE HEADER                                                        */}
       {/* ======================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-[11px] font-bold tracking-wider text-slate-500 hover:text-slate-800 uppercase transition-colors"
+              className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] hover:text-white transition-colors"
             >
-              ORGANIZATION
+              ORGANIZATION STAFF
             </Link>
-            <span className="text-slate-300">/</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              {team.length} Active Member{team.length === 1 ? "" : "s"}
+            <span className="text-[#3F3F46]">/</span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-white bg-[#121215] px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              {team.length} ACTIVE MEMBER{team.length === 1 ? "" : "S"}
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mt-1">
-            Team & Staff Access
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1.5">
+            Team & Staff Access Control
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Manage organization staff who can access the Swaram AI platform, assign roles, and route warm transfers.
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 max-w-2xl leading-relaxed">
+            Manage institutional staff who can access the Swaram AI platform, configure RBAC permissions, and route warm call handoffs.
           </p>
         </div>
 
         {/* Workspace Actions */}
         <button
-          onClick={() => setInviteModalOpen(true)}
-          className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-lg border border-[#bceb42] shadow-xs hover:shadow transition-all cursor-pointer"
+          onClick={() => {
+            try { soundSynth.play("click"); } catch {}
+            setInviteModalOpen(true);
+          }}
+          className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] transition-all cursor-pointer shadow-sm"
         >
-          <UserPlus className="w-3.5 h-3.5 text-slate-950" />
+          <UserPlus className="w-3.5 h-3.5 text-black" />
           <span>Invite Staff Member</span>
         </button>
       </div>
 
       {inviteSuccess && (
-        <div className="bg-[#f7fee7] border border-[#cdfb56] p-3 rounded-xl flex items-center gap-2 text-xs font-semibold text-slate-900 shadow-sm animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-[#8ac926]" />
+        <div className="bg-[#121215] border border-white/40 p-3.5 rounded-[2px] flex items-center gap-3 text-xs font-mono text-white shadow-lg animate-in fade-in duration-200">
+          <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
           <span>Invitation email delivered to {inviteSuccess}.</span>
         </div>
       )}
@@ -164,18 +169,18 @@ export default function TeamPage() {
       {/* ======================================================================= */}
       {/* TEAM MEMBERS TABLE                                                      */}
       {/* ======================================================================= */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] overflow-hidden">
         {/* Table Top Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/70 border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="flex items-center justify-between px-5 py-3.5 bg-[#121215] border-b border-[#27272A]">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
               Organization Staff Roster
             </span>
-            <span className="text-[11px] text-slate-500 font-mono">
-              ({team.length} members)
+            <span className="text-[11px] text-[#A1A1AA] font-mono">
+              ({team.length} MEMBERS)
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 font-medium">
+          <span className="text-[11px] text-[#71717A] font-mono hidden sm:inline">
             Managed under clinic tenant
           </span>
         </div>
@@ -184,60 +189,52 @@ export default function TeamPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="bg-slate-50/40 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                <th className="py-3 px-4">Staff Member</th>
-                <th className="py-3 px-4">Institutional Role</th>
-                <th className="py-3 px-4">Department</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Last Active</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+              <tr className="bg-[#121215]/80 border-b border-[#27272A] text-[#71717A] font-mono uppercase tracking-wider text-[10px]">
+                <th className="py-3 px-4 font-bold">Staff Member</th>
+                <th className="py-3 px-4 font-bold">Institutional Role</th>
+                <th className="py-3 px-4 font-bold">Department</th>
+                <th className="py-3 px-4 font-bold">Status</th>
+                <th className="py-3 px-4 font-bold">Last Active</th>
+                <th className="py-3 px-4 text-right font-bold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#18181B]">
               {team.map((member) => (
                 <tr
                   key={member.id}
-                  className="hover:bg-[#f7fee7]/30 transition-colors group"
+                  className="hover:bg-[#121215] transition-colors group"
                 >
                   {/* Member Name & Email */}
                   <td className="py-3.5 px-4">
-                    <div className="font-semibold text-slate-900 group-hover:text-slate-950">
+                    <div className="font-semibold text-white group-hover:text-white">
                       {member.name}
                     </div>
-                    <div className="text-[11px] text-slate-500 font-mono mt-0.5">
+                    <div className="text-[11px] text-[#A1A1AA] font-mono mt-0.5">
                       {member.email}
                     </div>
                   </td>
 
                   {/* Role */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${
-                        member.role === "Institutional Admin"
-                          ? "bg-slate-900 text-white border-slate-900"
-                          : member.role === "Senior Counselor"
-                          ? "bg-[#cdfb56]/40 text-slate-950 border-[#cdfb56]"
-                          : "bg-slate-100 text-slate-700 border-slate-200"
-                      }`}
-                    >
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-mono uppercase bg-[#121215] text-zinc-300 border border-[#27272A]">
                       {member.role}
                     </span>
                   </td>
 
                   {/* Department */}
-                  <td className="py-3.5 px-4 text-slate-600 font-medium">
+                  <td className="py-3.5 px-4 text-zinc-300 font-medium">
                     {member.department}
                   </td>
 
                   {/* Status */}
                   <td className="py-3.5 px-4 whitespace-nowrap">
                     {member.status === "active" ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-900 bg-[#f7fee7] px-2 py-0.5 rounded-full border border-[#cdfb56]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider bg-[#121215] text-white px-2 py-0.5 rounded-[2px] border border-[#27272A]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                         Active
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider bg-[#121215] text-[#71717A] px-2 py-0.5 rounded-[2px] border border-[#27272A]">
                         <Clock className="w-2.5 h-2.5" />
                         Invited
                       </span>
@@ -245,15 +242,18 @@ export default function TeamPage() {
                   </td>
 
                   {/* Last Active */}
-                  <td className="py-3.5 px-4 text-slate-500 text-[11px] font-mono">
+                  <td className="py-3.5 px-4 text-[#A1A1AA] text-[11px] font-mono">
                     {member.lastActive}
                   </td>
 
                   {/* Action */}
                   <td className="py-3.5 px-4 text-right whitespace-nowrap">
                     <button
-                      onClick={() => alert(`Managing permissions for ${member.name}`)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer"
+                      onClick={() => {
+                        try { soundSynth.play("click"); } catch {}
+                        alert(`Managing permissions for ${member.name}`);
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[2px] text-[10px] font-mono font-bold uppercase tracking-wider bg-transparent hover:bg-white text-zinc-300 hover:text-black border border-[#27272A] hover:border-white transition-all cursor-pointer"
                     >
                       <span>Configure</span>
                     </button>
@@ -267,23 +267,23 @@ export default function TeamPage() {
 
       {/* Invite Member Modal */}
       {inviteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95">
-            <div className="px-5 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+          <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95">
+            <div className="px-5 py-4 bg-[#121215] border-b border-[#27272A] flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
                 Invite Staff Member
               </span>
               <button
                 onClick={() => setInviteModalOpen(false)}
-                className="text-slate-400 hover:text-slate-700 text-sm font-bold cursor-pointer"
+                className="text-[#71717A] hover:text-white text-xs font-mono cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleInvite} className="p-5 space-y-4">
+            <form onSubmit={handleInvite} className="p-5 space-y-4 font-mono">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700">
+                <label className="text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold block">
                   Team Member Email Address
                 </label>
                 <input
@@ -292,18 +292,18 @@ export default function TeamPage() {
                   placeholder="e.g. member@company.com"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-[#cdfb56]"
+                  className="w-full text-xs p-2.5 bg-[#121215] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all placeholder:text-[#71717A]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700">
+                <label className="text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold block">
                   Platform Role
                 </label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as any)}
-                  className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-[#cdfb56]"
+                  className="w-full text-xs p-2.5 bg-[#121215] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all"
                 >
                   <option value="Senior Counselor">Senior Counselor (Call Handoffs)</option>
                   <option value="Admissions Staff">Admissions Staff (View & Call)</option>
@@ -312,17 +312,17 @@ export default function TeamPage() {
                 </select>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+              <div className="pt-3 border-t border-[#27272A] flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setInviteModalOpen(false)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100"
+                  className="px-3 py-1.5 rounded-[2px] text-xs font-mono uppercase tracking-wider text-[#A1A1AA] hover:text-white cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border border-[#bceb42] shadow-2xs cursor-pointer"
+                  className="px-4 py-1.5 rounded-[2px] text-xs font-mono font-bold uppercase tracking-wider bg-white hover:bg-zinc-200 text-black transition-all cursor-pointer shadow-xs"
                 >
                   Send Invitation
                 </button>

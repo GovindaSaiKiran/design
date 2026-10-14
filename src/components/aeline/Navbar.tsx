@@ -31,6 +31,8 @@ import { cn } from "@/lib/utils";
 interface NavbarProps {
   onOpenDemo?: () => void;
   onOpenSimulator?: () => void;
+  onOpenLogin?: () => void;
+  onOpenGetStarted?: () => void;
 }
 
 interface NavItem {
@@ -40,7 +42,12 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
+export default function Navbar({
+  onOpenDemo,
+  onOpenSimulator,
+  onOpenLogin,
+  onOpenGetStarted,
+}: NavbarProps) {
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -285,8 +292,8 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
           "shadow-[0_4px_24px_rgba(15,23,42,0.06),0_1px_3px_rgba(15,23,42,0.04),inset_0_1px_1.5px_rgba(255,255,255,1)]",
           "hover:shadow-[0_8px_32px_rgba(15,23,42,0.08),0_2px_6px_rgba(15,23,42,0.04)]",
           isScrolled
-            ? "max-w-[98vw] lg:max-w-[1360px] xl:max-w-[1440px] pl-4 sm:pl-5 lg:pl-6 pr-6 sm:pr-7 lg:pr-8 xl:pr-9 py-2 sm:py-2.5 text-slate-900 gap-2 lg:gap-4"
-            : "max-w-[96vw] lg:max-w-[1280px] xl:max-w-[1380px] pl-4 sm:pl-5 lg:pl-6 pr-6 sm:pr-7 lg:pr-8 xl:pr-9 py-2 sm:py-2.5 text-slate-900 gap-2 lg:gap-4"
+            ? "max-w-[98vw] xl:max-w-[1400px] 2xl:max-w-[1480px] px-3 sm:px-4 lg:px-5 xl:px-6 py-2 sm:py-2.5 text-slate-900 gap-2 lg:gap-3 xl:gap-4"
+            : "max-w-[96vw] xl:max-w-[1360px] 2xl:max-w-[1440px] px-3 sm:px-4 lg:px-5 xl:px-6 py-2 sm:py-2.5 text-slate-900 gap-2 lg:gap-3 xl:gap-4"
         )}
       >
         {/* Subtle Liquid Glass Specular Top Sheen */}
@@ -431,7 +438,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
                 onMouseEnter={() => setHoveredTab(item.id)}
                 onMouseLeave={() => setHoveredTab(null)}
                 className={cn(
-                  "relative px-2 xl:px-2.5 py-1 text-[10.5px] xl:text-[11px] tracking-wider uppercase rounded-full transition-all duration-200 select-none cursor-pointer group whitespace-nowrap",
+                  "relative px-1.5 xl:px-2.5 py-1 text-[10px] xl:text-[11px] tracking-wider uppercase rounded-full transition-all duration-200 select-none cursor-pointer group whitespace-nowrap",
                   isActive
                     ? "text-slate-950 font-black"
                     : "text-slate-600 hover:text-slate-950 font-bold hover:scale-[1.02]"
@@ -482,7 +489,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
               onMouseEnter={() => setHoveredTab("solutions")}
               onMouseLeave={() => setHoveredTab(null)}
               className={cn(
-                "relative flex items-center gap-1 px-2 xl:px-2.5 py-1 text-[10.5px] xl:text-[11px] font-bold tracking-wider uppercase rounded-full transition-all duration-200 select-none cursor-pointer group whitespace-nowrap hover:scale-[1.02]",
+                "relative flex items-center gap-1 px-1.5 xl:px-2.5 py-1 text-[10px] xl:text-[11px] font-bold tracking-wider uppercase rounded-full transition-all duration-200 select-none cursor-pointer group whitespace-nowrap hover:scale-[1.02]",
                 dropdownOpen
                   ? "text-slate-950 font-black"
                   : "text-slate-600 hover:text-slate-950"
@@ -621,22 +628,31 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
         {/* ===================================================================== */}
         {/* 3. RIGHT ZONE: Action Buttons (Desktop with Tactile Hover)             */}
         {/* ===================================================================== */}
-        <div className="hidden lg:flex items-center gap-1.5 xl:gap-2 shrink-0 flex-nowrap z-10 mr-1 sm:mr-2">
-          {/* Test Maya Simulator Button */}
+        <div className="hidden lg:flex items-center gap-1.5 xl:gap-2 shrink-0 flex-nowrap z-10">
+          {/* Log In Button */}
           <button
-            onClick={onOpenSimulator}
-            className="text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-2.5 xl:px-3 py-1.5 rounded-full border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 hover:shadow-sm text-slate-800 hover:text-slate-950 hover:scale-[1.03] transition-all duration-200 cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs whitespace-nowrap shrink-0 group"
-            title="Interact with Maya in the real-time audio playground"
+            onClick={onOpenLogin}
+            className="text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-2.5 xl:px-3 py-1.5 rounded-full border border-slate-200/90 hover:border-slate-400 bg-white hover:bg-slate-50 hover:shadow-2xs text-slate-700 hover:text-slate-950 transition-all duration-200 cursor-pointer active:scale-95 shadow-2xs whitespace-nowrap shrink-0 flex items-center"
+            title="Log in to your Swaram account"
           >
-            <PhoneCall className="w-3 h-3 xl:w-3.5 xl:h-3.5 shrink-0 text-[#0284c7] group-hover:scale-115 group-hover:rotate-12 transition-transform duration-200" />
-            <span>TEST MAYA</span>
+            <span>LOG IN</span>
           </button>
 
-          {/* Book Institutional Demo CTA */}
+          {/* Get Started For Free CTA */}
+          <button
+            onClick={onOpenGetStarted}
+            className="text-[10px] xl:text-[10.5px] font-black uppercase tracking-wider px-3 xl:px-3.5 py-1.5 rounded-full bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border border-[#bef03f] shadow-[0_2px_10px_rgba(205,251,86,0.35)] hover:shadow-[0_4px_16px_rgba(205,251,86,0.5)] hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95 group"
+            title="Start with 100 free voice minutes"
+          >
+            <span>GET STARTED FREE</span>
+            <ArrowUpRight className="w-3 h-3 xl:w-3.5 xl:h-3.5 stroke-[2.5] shrink-0 text-slate-950 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+          </button>
+
+          {/* Book Institutional Demo CTA (Visible on wider desktop viewports) */}
           <LiquidButton
             onClick={onOpenDemo}
             size="sm"
-            className="rounded-full bg-slate-950 hover:bg-slate-900 text-white border border-slate-950 text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-3 xl:px-3.5 py-1.5 shadow-sm hover:shadow-md hover:scale-[1.03] transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95 group"
+            className="hidden xl:inline-flex rounded-full bg-slate-950 hover:bg-slate-900 text-white border border-slate-950 text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-3 xl:px-3.5 py-1.5 shadow-sm hover:scale-[1.02] transition-all duration-200 cursor-pointer items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95 group"
           >
             <span className="flex items-center gap-1">
               <span>BOOK DEMO</span>
@@ -647,7 +663,7 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
           {/* Dashboard Direct Link */}
           <Link
             href="/dashboard"
-            className="text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-2.5 xl:px-3 py-1.5 rounded-full border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 hover:shadow-sm text-slate-800 hover:text-slate-950 hover:scale-[1.03] transition-all duration-200 cursor-pointer active:scale-95 shadow-2xs whitespace-nowrap shrink-0 flex items-center group"
+            className="text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-2.5 xl:px-3 py-1.5 rounded-full border border-slate-200/90 hover:border-slate-400 bg-white hover:bg-slate-50 hover:shadow-2xs text-slate-800 hover:text-slate-950 transition-all duration-200 cursor-pointer active:scale-95 shadow-2xs whitespace-nowrap shrink-0 flex items-center group"
             title="Open Swaram Operations Command Center"
           >
             <span>DASHBOARD</span>
@@ -740,6 +756,28 @@ export default function Navbar({ onOpenDemo, onOpenSimulator }: NavbarProps) {
 
               {/* Mobile CTAs */}
               <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenLogin?.();
+                    }}
+                    className="w-full font-bold py-2.5 rounded-full text-center transition-all flex items-center justify-center gap-1.5 border text-xs uppercase tracking-wider bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-xs cursor-pointer active:scale-95"
+                  >
+                    <span>LOG IN</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenGetStarted?.();
+                    }}
+                    className="w-full font-black py-2.5 rounded-full text-center transition-all flex items-center justify-center gap-1 border text-xs uppercase tracking-wider bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border-[#bef03f] shadow-xs cursor-pointer active:scale-95"
+                  >
+                    <span>GET STARTED</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-slate-950" />
+                  </button>
+                </div>
+
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);

@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
+import { soundSynth } from "@/lib/audio-synth";
 
 export default function SettingsPage() {
   const [collegeName, setCollegeName] = useState("clinic");
@@ -23,36 +24,37 @@ export default function SettingsPage() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    try { soundSynth.play("confirm"); } catch {}
     setSavedNotice(true);
-    setTimeout(() => setSavedNotice(false), 3000);
+    setTimeout(() => setSavedNotice(false), 3500);
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-none">
+    <div className="space-y-6 sm:space-y-8 select-none text-white">
       {/* ======================================================================= */}
       {/* WORKSPACE HEADER                                                        */}
       {/* ======================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-[11px] font-bold tracking-wider text-slate-500 hover:text-slate-800 uppercase transition-colors"
+              className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] hover:text-white transition-colors"
             >
-              ORGANIZATION
+              ORGANIZATION PROFILE
             </Link>
-            <span className="text-slate-300">/</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              Workspace Active
+            <span className="text-[#3F3F46]">/</span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-white bg-[#121215] px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              SYSTEM ACTIVE
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1.5">
             Organization Settings
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 max-w-2xl leading-relaxed">
             Manage workspace profile, operational timezones, security preferences, third-party integrations, and quotas.
           </p>
         </div>
@@ -60,16 +62,16 @@ export default function SettingsPage() {
         {/* Save Changes */}
         <button
           onClick={handleSave}
-          className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-lg border border-[#bceb42] shadow-xs hover:shadow transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] transition-all cursor-pointer shadow-sm"
         >
-          <Save className="w-3.5 h-3.5 text-slate-950" />
+          <Save className="w-3.5 h-3.5 text-black" />
           <span>Save Changes</span>
         </button>
       </div>
 
       {savedNotice && (
-        <div className="bg-[#f7fee7] border border-[#cdfb56] p-3 rounded-xl flex items-center gap-2 text-xs font-semibold text-slate-900 shadow-sm">
-          <CheckCircle2 className="w-4 h-4 text-[#8ac926]" />
+        <div className="bg-[#121215] border border-white/40 p-3.5 rounded-[2px] flex items-center gap-3 text-xs font-mono text-white shadow-lg animate-in fade-in duration-200">
+          <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
           <span>Configuration saved successfully across all voice channels and agents.</span>
         </div>
       )}
@@ -126,75 +128,75 @@ export default function SettingsPage() {
       {/* ======================================================================= */}
       {/* SETTINGS FORM                                                           */}
       {/* ======================================================================= */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] overflow-hidden">
         {/* Top Folder Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/70 border-b border-slate-100">
-          <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="flex items-center justify-between px-5 py-3.5 bg-[#121215] border-b border-[#27272A]">
+          <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
             General Configuration Parameters
           </span>
-          <span className="text-[11px] text-slate-500 font-mono">
-            Tenant ID: clinic-workspace-01
+          <span className="text-[11px] text-[#A1A1AA] font-mono">
+            TENANT ID: clinic-workspace-01
           </span>
         </div>
 
-        <form onSubmit={handleSave} className="p-5 sm:p-6 space-y-5">
+        <form onSubmit={handleSave} className="p-5 sm:p-6 space-y-5 font-mono">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700">
+              <label className="text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold block">
                 Organization Name
               </label>
               <input
                 type="text"
                 value={collegeName}
                 onChange={(e) => setCollegeName(e.target.value)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-[#cdfb56]"
+                className="w-full text-xs p-2.5 bg-[#121215] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700">
+              <label className="text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold block">
                 Contact Email / Domain
               </label>
               <input
                 type="text"
                 value={domain}
                 onChange={(e) => setDomain(e.target.value)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-[#cdfb56]"
+                className="w-full text-xs p-2.5 bg-[#121215] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700">
+              <label className="text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold block">
                 Operational Timezone
               </label>
               <input
                 type="text"
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-[#cdfb56]"
+                className="w-full text-xs p-2.5 bg-[#121215] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700">
+              <label className="text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold block">
                 Primary Regional Operating Language
               </label>
-              <select className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-[#cdfb56]">
-                <option>English + Hindi (Default Pan-India)</option>
-                <option>English + Telugu (Telangana & AP)</option>
-                <option>English + Tamil (Tamil Nadu)</option>
-                <option>English + Kannada (Karnataka)</option>
+              <select className="w-full text-xs p-2.5 bg-[#121215] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all">
+                <option value="en-hi">English + Hindi (Default Pan-India)</option>
+                <option value="en-te">English + Telugu (Telangana & AP)</option>
+                <option value="en-ta">English + Tamil (Tamil Nadu)</option>
+                <option value="en-kn">English + Kannada (Karnataka)</option>
               </select>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-xs text-slate-500">
+          <div className="pt-4 border-t border-[#27272A] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <span className="text-xs text-[#71717A]">
               Changes apply instantly across all active AI agents and telephony trunks.
             </span>
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg text-xs font-bold bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border border-[#bceb42] shadow-2xs cursor-pointer"
+              className="px-4 py-2 rounded-[2px] text-xs font-mono font-bold uppercase tracking-wider bg-white hover:bg-zinc-200 text-black transition-all cursor-pointer shadow-xs"
             >
               Save Configuration
             </button>

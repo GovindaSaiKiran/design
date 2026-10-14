@@ -14,11 +14,24 @@ import FinalCTA from "@/components/aeline/FinalCTA";
 import Footer from "@/components/aeline/Footer";
 import LiveVoiceSimulatorModal from "@/components/aeline/LiveVoiceSimulatorModal";
 import InstitutionalDemoModal from "@/components/aeline/InstitutionalDemoModal";
+import AuthOnboardingModal from "@/components/aeline/AuthOnboardingModal";
 
 export default function EduVoicePage() {
   const [simulatorOpen, setSimulatorOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "get-started">("get-started");
   const [selectedPlan, setSelectedPlan] = useState("Collegiate Growth Plan");
+
+  const handleOpenLogin = () => {
+    setAuthMode("login");
+    setAuthModalOpen(true);
+  };
+
+  const handleOpenGetStarted = () => {
+    setAuthMode("get-started");
+    setAuthModalOpen(true);
+  };
 
   const handleSelectPlan = (plan: string) => {
     setSelectedPlan(plan);
@@ -31,6 +44,8 @@ export default function EduVoicePage() {
       <Hero
         onOpenDemo={() => setDemoOpen(true)}
         onOpenSimulator={() => setSimulatorOpen(true)}
+        onOpenLogin={handleOpenLogin}
+        onOpenGetStarted={handleOpenGetStarted}
       />
 
       {/* 2. University Partner Logo Marquee */}
@@ -64,7 +79,7 @@ export default function EduVoicePage() {
       <BlogSection />
 
       {/* 9. Final CTA with Campus Pilot Registration */}
-      <FinalCTA onOpenDemo={() => setDemoOpen(true)} />
+      <FinalCTA onOpenDemo={handleOpenGetStarted} />
 
       {/* 10. Global Higher Ed Compliance Footer */}
       <Footer />
@@ -78,6 +93,11 @@ export default function EduVoicePage() {
         isOpen={demoOpen}
         onClose={() => setDemoOpen(false)}
         defaultPlan={selectedPlan}
+      />
+      <AuthOnboardingModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialMode={authMode}
       />
     </main>
   );

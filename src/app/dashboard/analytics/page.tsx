@@ -16,6 +16,7 @@ import {
   Filter,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
+import { soundSynth } from "@/lib/audio-synth";
 
 export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<"today" | "7d" | "30d">("today");
@@ -36,48 +37,51 @@ export default function AnalyticsPage() {
   const maxCalls = Math.max(...hourlyData.map((d) => d.calls), 1);
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-none">
+    <div className="space-y-6 sm:space-y-8 select-none font-sans text-white">
       {/* ======================================================================= */}
       {/* WORKSPACE HEADER                                                        */}
       {/* ======================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-[11px] font-bold tracking-wider text-slate-500 hover:text-slate-800 uppercase transition-colors"
+              className="text-[10px] font-mono font-bold tracking-widest text-[#71717A] hover:text-white uppercase transition-colors"
             >
               WORKSPACES
             </Link>
-            <span className="text-slate-300">/</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              Telemetry Pipeline Ready
+            <span className="text-[#3F3F46]">/</span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-white bg-[#18181B] px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
+              <span className="w-1.5 h-1.5 rounded-full bg-white" />
+              TELEMETRY STREAM ONLINE
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1">
             Analytics & Telemetry
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 max-w-2xl leading-relaxed">
             Sub-150ms first-byte stream telemetry, intent breakdown, and conversation resolution yield.
           </p>
         </div>
 
         {/* Time Filter Tabs */}
-        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200/80">
+        <div className="flex items-center gap-1.5 bg-[#121215] p-1 rounded-[2px] border border-[#27272A]">
           {(["today", "7d", "30d"] as const).map((r) => (
             <button
               key={r}
-              onClick={() => setTimeRange(r)}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all capitalize cursor-pointer ${
+              onClick={() => {
+                soundSynth.play("click");
+                setTimeRange(r);
+              }}
+              className={`px-3 py-1 rounded-[2px] text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 timeRange === r
-                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
-                  : "text-slate-500 hover:text-slate-900"
+                  ? "bg-white text-black"
+                  : "text-[#71717A] hover:text-white"
               }`}
             >
-              {r === "today" ? "Today" : r === "7d" ? "Last 7 Days" : "Last 30 Days"}
+              {r === "today" ? "Today" : r === "7d" ? "7 Days" : "30 Days"}
             </button>
           ))}
         </div>
@@ -137,38 +141,38 @@ export default function AnalyticsPage() {
       {/* ======================================================================= */}
       {/* HOURLY CALL VOLUME CHART                                                */}
       {/* ======================================================================= */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs space-y-4">
+      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
               Hourly Call Volume Distribution
             </h3>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-[11px] text-[#A1A1AA] mt-0.5 font-mono">
               Call frequency across inbound inquiries and customer support channels
             </p>
           </div>
-          <span className="text-[11px] text-slate-500 font-mono">
+          <span className="text-[10px] text-[#71717A] font-mono uppercase tracking-wider">
             Peak: -- (0 calls/hr)
           </span>
         </div>
 
         {/* Visual Bar Chart */}
         <div className="pt-6 pb-2">
-          <div className="h-44 flex items-end gap-2 sm:gap-4 justify-between border-b border-slate-100 pb-2">
+          <div className="h-44 flex items-end gap-2 sm:gap-4 justify-between border-b border-[#27272A] pb-2">
             {hourlyData.map((d, i) => {
               const heightPercent = maxCalls > 0 && d.calls > 0 ? Math.round((d.calls / maxCalls) * 100) : 4;
               return (
                 <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                  <span className="text-[10px] font-mono font-bold text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-[10px] font-mono font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     {d.calls}
                   </span>
-                  <div className="w-full bg-slate-100 rounded-t-lg overflow-hidden flex items-end h-full">
+                  <div className="w-full bg-[#121215] border border-[#27272A] rounded-[1px] overflow-hidden flex items-end h-full">
                     <div
-                      className="w-full bg-[#cdfb56] hover:bg-[#bef03f] transition-all rounded-t-lg group-hover:shadow-sm"
+                      className="w-full bg-white hover:bg-zinc-200 transition-all rounded-[1px]"
                       style={{ height: `${heightPercent}%` }}
                     />
                   </div>
-                  <span className="text-[10px] font-mono text-slate-500 block truncate">
+                  <span className="text-[10px] font-mono text-[#71717A] block truncate">
                     {d.hour}
                   </span>
                 </div>
@@ -183,12 +187,12 @@ export default function AnalyticsPage() {
       {/* ======================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Intent Distribution */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+        <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] p-5 space-y-4">
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
             Caller Intent Distribution
           </h3>
 
-          <div className="space-y-3">
+          <div className="space-y-3 font-mono">
             {[
               { label: "General Inquiries", pct: 0, count: 0 },
               { label: "Product & Service Pricing", pct: 0, count: 0 },
@@ -197,14 +201,14 @@ export default function AnalyticsPage() {
             ].map((intent, i) => (
               <div key={i} className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-700">{intent.label}</span>
-                  <span className="font-mono text-slate-900 font-bold">
+                  <span className="text-zinc-300 font-sans">{intent.label}</span>
+                  <span className="font-mono text-white font-bold">
                     {intent.pct}% ({intent.count})
                   </span>
                 </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-[#121215] border border-[#27272A] rounded-[1px] overflow-hidden">
                   <div
-                    className="h-full bg-slate-900 rounded-full"
+                    className="h-full bg-white rounded-[1px]"
                     style={{ width: `${intent.pct}%` }}
                   />
                 </div>
@@ -214,44 +218,44 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Latency Telemetry Breakdown */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+        <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] p-5 space-y-4 font-mono">
+          <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
             Acoustic Latency Percentiles (p50 / p90 / p99)
           </h3>
 
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block">
+            <div className="p-3 rounded-[2px] bg-[#121215] border border-[#27272A]">
+              <span className="text-[10px] uppercase font-bold text-[#71717A] block">
                 p50 (Median)
               </span>
-              <span className="text-xl font-bold font-mono text-slate-900 block mt-1">
+              <span className="text-xl font-bold font-mono text-white block mt-1">
                 -- ms
               </span>
-              <span className="text-[10px] text-slate-500 font-bold">Awaiting traffic</span>
+              <span className="text-[10px] text-[#A1A1AA] font-bold">Awaiting traffic</span>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#f7fee7] border border-[#cdfb56]">
-              <span className="text-[10px] uppercase font-bold text-slate-600 block">
+            <div className="p-3 rounded-[2px] bg-[#18181B] border border-white/60">
+              <span className="text-[10px] uppercase font-bold text-zinc-300 block">
                 p90 (Standard)
               </span>
-              <span className="text-xl font-bold font-mono text-slate-950 block mt-1">
+              <span className="text-xl font-bold font-mono text-white block mt-1">
                 -- ms
               </span>
-              <span className="text-[10px] text-slate-900 font-bold">Sub-150ms SLA</span>
+              <span className="text-[10px] text-white font-bold">Sub-150ms SLA</span>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block">
+            <div className="p-3 rounded-[2px] bg-[#121215] border border-[#27272A]">
+              <span className="text-[10px] uppercase font-bold text-[#71717A] block">
                 p99 (Peak Surge)
               </span>
-              <span className="text-xl font-bold font-mono text-slate-900 block mt-1">
+              <span className="text-xl font-bold font-mono text-white block mt-1">
                 -- ms
               </span>
-              <span className="text-[10px] text-slate-500 font-bold">Sub-200ms SLA</span>
+              <span className="text-[10px] text-[#A1A1AA] font-bold">Sub-200ms SLA</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-100 text-xs text-slate-600 leading-relaxed">
+          <div className="p-3 rounded-[2px] bg-[#121215] border border-[#27272A] text-xs text-[#A1A1AA] leading-relaxed font-sans">
             Our direct WebRTC and SIP native media pipeline streams audio chunks incrementally without full-turn text completion delays, guaranteeing conversations flow naturally without unnatural pauses.
           </div>
         </div>

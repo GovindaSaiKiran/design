@@ -22,7 +22,7 @@ export default function DashboardFooter() {
             <span className="font-extrabold text-base tracking-tight text-neutral-900">
               Swaram
             </span>
-            <span className="text-[#0d5926] bg-[#cdfb56] text-[9px] font-black tracking-widest px-1.5 py-0.5 rounded-md shadow-xs">
+            <span className="text-black bg-white text-[9px] font-mono font-bold tracking-widest px-1.5 py-0.5 rounded-[1px] shadow-xs">
               AI
             </span>
           </div>

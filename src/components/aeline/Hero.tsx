@@ -14,9 +14,16 @@ import {
 interface HeroProps {
   onOpenDemo?: () => void;
   onOpenSimulator?: () => void;
+  onOpenLogin?: () => void;
+  onOpenGetStarted?: () => void;
 }
 
-export default function Hero({ onOpenDemo, onOpenSimulator }: HeroProps) {
+export default function Hero({
+  onOpenDemo,
+  onOpenSimulator,
+  onOpenLogin,
+  onOpenGetStarted,
+}: HeroProps) {
   return (
     <section className="w-full p-2 sm:p-4 lg:p-6 bg-[#ffffff]">
       {/* Framed Rounded Hero Canvas matching uploaded screenshot */}
@@ -27,6 +34,8 @@ export default function Hero({ onOpenDemo, onOpenSimulator }: HeroProps) {
           <Navbar
             onOpenDemo={onOpenDemo}
             onOpenSimulator={onOpenSimulator}
+            onOpenLogin={onOpenLogin}
+            onOpenGetStarted={onOpenGetStarted}
           />
         </div>
 
@@ -67,22 +76,31 @@ export default function Hero({ onOpenDemo, onOpenSimulator }: HeroProps) {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 mb-8 sm:mb-9">
-            {/* Explore Capabilities Button */}
+            {/* Get Started For Free Primary Button */}
             <button
-              onClick={onOpenSimulator}
-              className="bg-white hover:bg-slate-50 active:scale-95 text-[#64748b] hover:text-slate-950 border border-slate-200/90 hover:border-slate-300 px-7 sm:px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_0_32px_8px_rgba(205,251,86,0.45)] hover:scale-[1.02] cursor-pointer flex items-center gap-2 group"
+              onClick={onOpenGetStarted}
+              className="relative bg-[#cdfb56] hover:bg-[#bef03f] active:scale-95 text-slate-950 border border-[#bef03f] px-7 sm:px-8 py-3.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-[0_4px_20px_rgba(205,251,86,0.4)] hover:shadow-[0_0_36px_10px_rgba(205,251,86,0.65)] hover:scale-[1.02] cursor-pointer flex items-center gap-2 group"
             >
-              <PhoneCall className="w-3.5 h-3.5 text-[#84cc16] group-hover:scale-115 group-hover:rotate-12 transition-transform duration-300" />
-              <span>EXPLORE CAPABILITIES</span>
+              <span>GET STARTED FOR FREE</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-slate-950 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:scale-110" />
             </button>
 
-            {/* Create Your AI Agent Button - Glow Appears on Hover */}
+            {/* Explore Capabilities / Voice Simulator Button */}
+            <button
+              onClick={onOpenSimulator}
+              className="bg-white hover:bg-slate-50 active:scale-95 text-[#64748b] hover:text-slate-950 border border-slate-200/90 hover:border-slate-300 px-7 sm:px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:scale-[1.02] cursor-pointer flex items-center gap-2 group"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-[#0284c7] group-hover:scale-115 group-hover:rotate-12 transition-transform duration-300" />
+              <span>TEST MAYA VOICE</span>
+            </button>
+
+            {/* Schedule Campus Pilot Button */}
             <button
               onClick={onOpenDemo}
-              className="relative bg-white hover:bg-slate-50 active:scale-95 text-slate-900 border border-slate-200/90 hover:border-slate-300 px-7 sm:px-8 py-3.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_0_40px_12px_rgba(205,251,86,0.75)] hover:scale-[1.02] cursor-pointer flex items-center gap-2 group"
+              className="bg-slate-950 hover:bg-slate-900 active:scale-95 text-white border border-slate-950 px-6 sm:px-7 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_4px_16px_rgba(0,0,0,0.08)] hover:scale-[1.02] cursor-pointer flex items-center gap-1.5 group"
             >
-              <span>CREATE YOUR AI AGENT</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#84cc16] stroke-[2.5] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:scale-110" />
+              <span>SCHEDULE DEMO</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#cdfb56] stroke-[2.5] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
           </div>
 

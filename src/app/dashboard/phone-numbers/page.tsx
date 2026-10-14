@@ -17,6 +17,7 @@ import {
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import { TelephonyNumber } from "@/types/dashboard";
 import { mockTelephonyNumbers } from "@/data/mock/dashboardData";
+import { soundSynth } from "@/lib/audio-synth";
 
 export default function PhoneNumbersPage() {
   const [numbers, setNumbers] = useState<TelephonyNumber[]>(mockTelephonyNumbers);
@@ -24,41 +25,44 @@ export default function PhoneNumbersPage() {
 
   const handleTestInbound = (num?: TelephonyNumber) => {
     if (!num) return;
+    try {
+      soundSynth.play("confirm");
+    } catch {}
     setTestLineNotice(
-      `Inbound SIP ping sent to ${num.phoneNumber} (${num.label}). Routing verified to ${num.assignedAgent} with ${num.latencyMs}ms latency.`
+      `INBOUND SIP PING DISPATCHED → ${num.phoneNumber} (${num.label}). Routing verified to ${num.assignedAgent} with ${num.latencyMs}ms carrier latency.`
     );
     setTimeout(() => {
       setTestLineNotice(null);
-    }, 4000);
+    }, 4500);
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-none">
+    <div className="space-y-6 sm:space-y-8 select-none text-white">
       {/* ======================================================================= */}
       {/* WORKSPACE HEADER                                                        */}
       {/* ======================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-200/80">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-[11px] font-bold tracking-wider text-slate-500 hover:text-slate-800 uppercase transition-colors"
+              className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] hover:text-white transition-colors"
             >
-              WORKSPACES
+              TELEPHONY WORKSPACE
             </Link>
-            <span className="text-slate-300">/</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-950 bg-[#cdfb56]/30 px-2.5 py-0.5 rounded-full border border-[#cdfb56]/70">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926]" />
-              {numbers.length} Numbers Active
+            <span className="text-[#3F3F46]">/</span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-white bg-[#121215] px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              {numbers.length} CARRIER DIDS ROUTED
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1.5">
             Phone Numbers & Telephony Routing
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Inbound DIDs, SIP trunk lines, regional carrier routing, and concurrency limits.
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 max-w-2xl leading-relaxed">
+            Direct Inbound DIDs, SIP trunk lines, regional carrier routing matrices, and concurrency limits.
           </p>
         </div>
 
@@ -66,16 +70,18 @@ export default function PhoneNumbersPage() {
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
           <button
             onClick={() => {
-              alert("Enterprise SIP Trunk is healthy. Channels ready for incoming and outgoing calls.");
+              try { soundSynth.play("click"); } catch {}
+              alert("Enterprise SIP Trunk is healthy. 16 channels primed for concurrent inbound/outbound calls.");
             }}
-            className="inline-flex items-center gap-2 bg-white hover:bg-[#f7fee7] text-slate-800 hover:text-slate-950 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-200 hover:border-[#cdfb56] shadow-2xs transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 bg-[#09090B] hover:bg-[#18181B] text-white text-xs font-mono uppercase tracking-wider px-3.5 py-2 rounded-[2px] border border-[#27272A] hover:border-white transition-all cursor-pointer"
           >
-            <Settings className="w-3.5 h-3.5 text-slate-500" />
+            <Settings className="w-3.5 h-3.5 text-[#A1A1AA]" />
             <span>Trunk Diagnostics</span>
           </button>
 
           <button
             onClick={() => {
+              try { soundSynth.play("confirm"); } catch {}
               const newNum: TelephonyNumber = {
                 id: `tel-${Date.now()}`,
                 phoneNumber: "+91 40 4590 1199",
@@ -88,9 +94,9 @@ export default function PhoneNumbersPage() {
               };
               setNumbers([...numbers, newNum]);
             }}
-            className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-lg border border-[#bceb42] shadow-xs hover:shadow transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] transition-all cursor-pointer shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5 text-slate-950" />
+            <Plus className="w-3.5 h-3.5 text-black" />
             <span>Provision Inbound DID</span>
           </button>
         </div>
@@ -98,9 +104,9 @@ export default function PhoneNumbersPage() {
 
       {/* Test Line Banner */}
       {testLineNotice && (
-        <div className="bg-[#f7fee7] border border-[#cdfb56] p-3 rounded-xl flex items-center gap-2 text-xs font-semibold text-slate-900 shadow-sm animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-[#8ac926]" />
-          <span>{testLineNotice}</span>
+        <div className="bg-[#121215] border border-white/40 p-3.5 rounded-[2px] flex items-center gap-3 text-xs font-mono text-white shadow-lg animate-in fade-in duration-200">
+          <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
+          <span className="leading-snug">{testLineNotice}</span>
         </div>
       )}
 
@@ -154,10 +160,10 @@ export default function PhoneNumbersPage() {
           name="SIP Concurrency"
           icon={Activity}
           description="Enterprise SIP trunk allocation via cloud gateway."
-          metric="0 channels"
+          metric="16 channels"
           metricLabel="Ready for SIP trunk provisioning"
-          status="Idle"
-          statusType="neutral"
+          status="Operational"
+          statusType="live"
           actionLabel="Trunk status →"
         />
       </div>
@@ -165,18 +171,18 @@ export default function PhoneNumbersPage() {
       {/* ======================================================================= */}
       {/* TELEPHONY ROUTING TABLE                                                 */}
       {/* ======================================================================= */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] overflow-hidden">
         {/* Top Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50/70 border-b border-slate-100">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+        <div className="flex items-center justify-between px-5 py-3.5 bg-[#121215] border-b border-[#27272A]">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
               Telephony Route Registry
             </span>
-            <span className="text-[11px] text-slate-500 font-mono">
-              ({numbers.length} configured lines)
+            <span className="text-[11px] text-[#A1A1AA] font-mono">
+              ({numbers.length} CONFIGURED TRUNKS)
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 font-medium">
+          <span className="text-[11px] text-[#71717A] font-mono hidden sm:inline">
             Sub-50ms carrier handoff to AI agent WebRTC gateway
           </span>
         </div>
@@ -185,31 +191,32 @@ export default function PhoneNumbersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="bg-slate-50/40 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                <th className="py-3 px-4">DID Number</th>
-                <th className="py-3 px-4">Department / Label</th>
-                <th className="py-3 px-4">Channel Type</th>
-                <th className="py-3 px-4">Routed AI Agent</th>
-                <th className="py-3 px-4">Carrier Latency</th>
-                <th className="py-3 px-4">Calls Today</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+              <tr className="bg-[#121215]/80 border-b border-[#27272A] text-[#71717A] font-mono uppercase tracking-wider text-[10px]">
+                <th className="py-3 px-4 font-bold">DID Number</th>
+                <th className="py-3 px-4 font-bold">Department / Label</th>
+                <th className="py-3 px-4 font-bold">Channel Type</th>
+                <th className="py-3 px-4 font-bold">Routed AI Agent</th>
+                <th className="py-3 px-4 font-bold">Carrier Latency</th>
+                <th className="py-3 px-4 font-bold">Calls Today</th>
+                <th className="py-3 px-4 font-bold">Status</th>
+                <th className="py-3 px-4 text-right font-bold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#18181B]">
               {numbers.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-16 text-center">
                     <div className="max-w-md mx-auto space-y-3">
-                      <div className="w-12 h-12 rounded-2xl bg-lime-50 text-lime-700 flex items-center justify-center mx-auto shadow-xs border border-lime-200">
-                        <Radio className="w-6 h-6" />
+                      <div className="w-12 h-12 rounded-[2px] bg-[#121215] text-white flex items-center justify-center mx-auto border border-[#27272A]">
+                        <Radio className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-sm font-bold text-slate-900">No phone numbers provisioned</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed">
+                      <h3 className="text-sm font-bold text-white">No phone numbers provisioned</h3>
+                      <p className="text-xs text-[#A1A1AA] leading-relaxed">
                         Provision dedicated inbound virtual DIDs or configure SIP trunk carrier lines to receive calls.
                       </p>
                       <button
                         onClick={() => {
+                          try { soundSynth.play("confirm"); } catch {}
                           const newNum: TelephonyNumber = {
                             id: `tel-${Date.now()}`,
                             phoneNumber: "+91 40 4590 1199",
@@ -222,9 +229,9 @@ export default function PhoneNumbersPage() {
                           };
                           setNumbers([newNum]);
                         }}
-                        className="inline-flex items-center gap-2 bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 text-xs font-bold px-4 py-2 rounded-xl border border-[#bceb42] shadow-xs cursor-pointer"
+                        className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] cursor-pointer"
                       >
-                        <Plus className="w-3.5 h-3.5 text-slate-950" />
+                        <Plus className="w-3.5 h-3.5 text-black" />
                         <span>Provision Inbound DID</span>
                       </button>
                     </div>
@@ -234,47 +241,47 @@ export default function PhoneNumbersPage() {
                 numbers.map((num) => (
                   <tr
                     key={num.id}
-                    className="hover:bg-[#f7fee7]/30 transition-colors group"
+                    className="hover:bg-[#121215] transition-colors group"
                   >
                     {/* Phone Number */}
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900 group-hover:text-slate-950">
+                    <td className="py-3.5 px-4 font-mono font-bold text-white group-hover:text-white">
                       <div className="flex items-center gap-2">
-                        <Radio className="w-3.5 h-3.5 text-slate-500" />
+                        <Radio className="w-3.5 h-3.5 text-[#A1A1AA]" />
                         <span>{num.phoneNumber}</span>
                       </div>
                     </td>
 
                     {/* Label */}
-                    <td className="py-3.5 px-4 font-medium text-slate-800">
+                    <td className="py-3.5 px-4 font-medium text-zinc-300">
                       {num.label}
                     </td>
 
                     {/* Channel Type */}
                     <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-mono uppercase bg-[#121215] text-zinc-300 border border-[#27272A]">
                         {num.channelType}
                       </span>
                     </td>
 
                     {/* Routed Agent */}
-                    <td className="py-3.5 px-4 font-medium text-slate-700">
+                    <td className="py-3.5 px-4 font-medium text-zinc-300">
                       {num.assignedAgent}
                     </td>
 
                     {/* Latency */}
-                    <td className="py-3.5 px-4 font-mono text-slate-600">
+                    <td className="py-3.5 px-4 font-mono text-[#A1A1AA]">
                       {num.latencyMs}ms
                     </td>
 
                     {/* Calls Today */}
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                    <td className="py-3.5 px-4 font-mono font-bold text-white">
                       {num.callsToday}
                     </td>
 
                     {/* Status */}
                     <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#cdfb56]/40 text-slate-950 px-2 py-0.5 rounded-full border border-[#cdfb56]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#8ac926] animate-pulse" />
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider bg-[#121215] text-white px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                         Active
                       </span>
                     </td>
@@ -283,7 +290,7 @@ export default function PhoneNumbersPage() {
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => handleTestInbound(num)}
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-[11px] font-bold bg-white hover:bg-[#cdfb56] text-slate-800 hover:text-slate-950 border border-slate-200 hover:border-[#bceb42] shadow-2xs transition-all cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-[2px] text-[10px] font-mono font-bold uppercase tracking-wider bg-transparent hover:bg-white text-zinc-300 hover:text-black border border-[#27272A] hover:border-white transition-all cursor-pointer"
                       >
                         <span>Test Route</span>
                       </button>
