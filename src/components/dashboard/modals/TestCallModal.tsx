@@ -77,7 +77,9 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
   if (!isOpen) return null;
 
   const handleClose = () => {
-    soundSynth.play("click");
+    try {
+      soundSynth.play("click");
+    } catch {}
     onClose();
   };
 
@@ -149,10 +151,12 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
             </div>
           </div>
           <button
+            type="button"
             onClick={handleClose}
+            aria-label="Close modal"
             className="p-1.5 rounded-[2px] bg-[#18181B] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 pointer-events-none" />
           </button>
         </div>
 

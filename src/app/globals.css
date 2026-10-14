@@ -1195,4 +1195,258 @@
   animation: floatSlow 4s ease-in-out infinite;
 }
 
+/* ==========================================================================
+   DASHBOARD THEME REVERSAL (LIGHT / INVERTED MODE)
+   Stark high-contrast B&W inversion: White becomes Black, Black becomes White
+   ========================================================================== */
+
+[data-dashboard-theme="light"] {
+  color-scheme: light;
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+
+  --console-ground: #FFFFFF;
+  --console-surface: #F4F4F5;
+  --console-surface-raised: #FFFFFF;
+  --console-surface-sunken: #FAFAFA;
+  --console-ink: #000000;
+  --console-ink-muted: #52525B;
+  --console-ink-dim: #71717A;
+  --console-accent: #000000;
+  --console-accent-hover: #27272A;
+  --console-on-accent: #FFFFFF;
+  --console-signal-amber: #000000;
+  --console-signal-green: #000000;
+  --console-signal-red: #000000;
+  --console-line: #E4E4E7;
+  --console-line-strong: #D4D4D8;
+}
+
+[data-dashboard-theme="light"] ::selection {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+/* Background inversions */
+[data-dashboard-theme="light"] .bg-\[\#000000\] { background-color: #FFFFFF !important; }
+[data-dashboard-theme="light"] .bg-\[\#040405\] { background-color: #FAFAFA !important; }
+[data-dashboard-theme="light"] .bg-\[\#09090B\] { background-color: #F4F4F5 !important; }
+[data-dashboard-theme="light"] .bg-\[\#121215\] { background-color: #FFFFFF !important; }
+[data-dashboard-theme="light"] .bg-\[\#18181B\] { background-color: #E4E4E7 !important; }
+[data-dashboard-theme="light"] .bg-black { background-color: #FFFFFF !important; }
+[data-dashboard-theme="light"] .bg-zinc-950 { background-color: #FFFFFF !important; }
+[data-dashboard-theme="light"] .bg-zinc-900 { background-color: #F4F4F5 !important; }
+[data-dashboard-theme="light"] .bg-zinc-800 { background-color: #E4E4E7 !important; }
+
+/* Invert stark white backgrounds to black (primary action buttons, active badges, tags) */
+[data-dashboard-theme="light"] .bg-white:not(input):not(textarea):not(select) {
+  background-color: #000000 !important;
+}
+
+/* Border inversions */
+[data-dashboard-theme="light"] .border-\[\#27272A\] { border-color: #E4E4E7 !important; }
+[data-dashboard-theme="light"] .border-\[\#3F3F46\] { border-color: #D4D4D8 !important; }
+[data-dashboard-theme="light"] .border-zinc-800 { border-color: #E4E4E7 !important; }
+[data-dashboard-theme="light"] .border-zinc-700 { border-color: #D4D4D8 !important; }
+[data-dashboard-theme="light"] .border-white { border-color: #000000 !important; }
+[data-dashboard-theme="light"] .border-l-white { border-left-color: #000000 !important; }
+[data-dashboard-theme="light"] .border-r-white { border-right-color: #000000 !important; }
+[data-dashboard-theme="light"] .border-t-white { border-top-color: #000000 !important; }
+[data-dashboard-theme="light"] .border-b-white { border-bottom-color: #000000 !important; }
+
+/* Text inversions */
+[data-dashboard-theme="light"] .text-white { color: #000000 !important; }
+[data-dashboard-theme="light"] .text-\[\#FFFFFF\] { color: #000000 !important; }
+[data-dashboard-theme="light"] .text-zinc-100 { color: #09090B !important; }
+[data-dashboard-theme="light"] .text-zinc-200 { color: #18181B !important; }
+[data-dashboard-theme="light"] .text-zinc-300 { color: #27272A !important; }
+[data-dashboard-theme="light"] .text-zinc-400 { color: #52525B !important; }
+[data-dashboard-theme="light"] .text-\[\#A1A1AA\] { color: #52525B !important; }
+[data-dashboard-theme="light"] .text-\[\#71717A\] { color: #71717A !important; }
+
+/* Invert stark black text to white (on primary buttons and chips) */
+[data-dashboard-theme="light"] .text-black:not(input):not(textarea):not(select) {
+  color: #FFFFFF !important;
+}
+
+/* Invert SVG icons with text-black or text-white inside buttons */
+[data-dashboard-theme="light"] .bg-white:not(input) svg.text-black {
+  color: #FFFFFF !important;
+}
+[data-dashboard-theme="light"] .bg-white:not(input) span.text-black {
+  color: #FFFFFF !important;
+}
+
+/* Interactive Hovers */
+[data-dashboard-theme="light"] .hover\:bg-\[\#18181B\]:hover { background-color: #E4E4E7 !important; }
+[data-dashboard-theme="light"] .hover\:bg-\[\#27272A\]:hover { background-color: #D4D4D8 !important; }
+[data-dashboard-theme="light"] .hover\:bg-\[\#121215\]:hover { background-color: #F4F4F5 !important; }
+[data-dashboard-theme="light"] .hover\:bg-zinc-200:hover { background-color: #27272A !important; }
+[data-dashboard-theme="light"] .hover\:bg-zinc-800:hover { background-color: #E4E4E7 !important; }
+[data-dashboard-theme="light"] .hover\:border-white:hover { border-color: #000000 !important; }
+[data-dashboard-theme="light"] .hover\:text-white:hover { color: #000000 !important; }
+
+/* Form inputs & textareas & selects */
+[data-dashboard-theme="light"] input,
+[data-dashboard-theme="light"] textarea,
+[data-dashboard-theme="light"] select {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  border-color: #D4D4D8 !important;
+}
+
+[data-dashboard-theme="light"] input::placeholder,
+[data-dashboard-theme="light"] textarea::placeholder {
+  color: #71717A !important;
+}
+
+/* Modals & Dialog overlays */
+[data-dashboard-theme="light"] .bg-black\/80,
+[data-dashboard-theme="light"] .bg-slate-950\/50 {
+  background-color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Dropdown shadows */
+[data-dashboard-theme="light"] .shadow-2xl,
+[data-dashboard-theme="light"] .shadow-xl {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ==========================================================================
+   SMOOTH CINEMATIC THEME TRANSITIONS & ANIMATIONS
+   ========================================================================== */
+
+/* Universal theme color smoothing across dashboard */
+[data-dashboard-theme],
+[data-dashboard-theme] header,
+[data-dashboard-theme] aside,
+[data-dashboard-theme] main,
+[data-dashboard-theme] nav,
+[data-dashboard-theme] section,
+[data-dashboard-theme] article,
+[data-dashboard-theme] div:not(.no-theme-transition),
+[data-dashboard-theme] button,
+[data-dashboard-theme] a,
+[data-dashboard-theme] span,
+[data-dashboard-theme] p,
+[data-dashboard-theme] h1,
+[data-dashboard-theme] h2,
+[data-dashboard-theme] h3,
+[data-dashboard-theme] h4,
+[data-dashboard-theme] input,
+[data-dashboard-theme] textarea,
+[data-dashboard-theme] select,
+[data-dashboard-theme] table,
+[data-dashboard-theme] tr,
+[data-dashboard-theme] td,
+[data-dashboard-theme] th,
+[data-dashboard-theme] svg {
+  transition-property: background-color, color, border-color, fill, stroke, box-shadow;
+  transition-duration: 550ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Exclude active high-frequency animations from theme transition delay */
+[data-dashboard-theme] .animate-pulse,
+[data-dashboard-theme] .animate-spin,
+[data-dashboard-theme] .animate-ping {
+  transition: none !important;
+}
+
+/* Native View Transitions API Customization */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 550ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: themeFadeOut;
+}
+
+::view-transition-new(root) {
+  animation-name: themeFadeIn;
+}
+
+@keyframes themeFadeOut {
+  from {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  to {
+    opacity: 0;
+    filter: blur(1.5px);
+  }
+}
+
+@keyframes themeFadeIn {
+  from {
+    opacity: 0;
+    filter: blur(1.5px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+/* Subtle Cinematic Theme Flare Ripple */
+@keyframes themeSweepWave {
+  0% {
+    clip-path: circle(0% at 85% 25px);
+    opacity: 0.28;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(200, 200, 200, 0.3) 50%, transparent 100%);
+  }
+  50% {
+    opacity: 0.18;
+  }
+  100% {
+    clip-path: circle(160% at 85% 25px);
+    opacity: 0;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(50, 50, 50, 0.3) 50%, transparent 100%);
+  }
+}
+
+.animate-theme-wave {
+  animation: themeSweepWave 650ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   DAYMODE / NIGHTMODE PILL TOGGLE SWITCH
+   ========================================================================== */
+
+.daymode-pill-track {
+  background-color: #EDEDEF !important;
+  border: 1.5px solid #D4D4D8 !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.nightmode-pill-track {
+  background-color: #1E1E1E !important;
+  border: 1.5px solid #2C2C2E !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.pill-thumb-white {
+  background-color: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.pill-thumb-white svg {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+.pill-text-day {
+  color: #000000 !important;
+}
+
+.pill-text-night {
+  color: #FFFFFF !important;
+}
+
+
+
+
 

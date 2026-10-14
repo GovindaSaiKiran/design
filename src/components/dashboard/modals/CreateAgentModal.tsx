@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   X,
   Bot,
@@ -35,6 +35,26 @@ export default function CreateAgentModal({
     "You are an admissions specialist for the University. Greet prospective applicants and parents with respectful Indian honorifics (Aap/Namaste/Namaskaram). Explain B.Tech CSE (AI & Robotics) and Data Science programs, calculate merit scholarship fee waivers from PCM percentages, and book campus counseling sessions with zero hallucination."
   );
 
+  const handleClose = () => {
+    try {
+      soundSynth.play("click");
+    } catch {
+      // safe fallback
+    }
+    onClose();
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const voices = [
@@ -55,23 +75,24 @@ export default function CreateAgentModal({
     "Marathi + English",
   ];
 
-  const handleClose = () => {
-    soundSynth.play("click");
-    onClose();
-  };
-
   const handleNextStep = () => {
-    soundSynth.play("click");
+    try {
+      soundSynth.play("click");
+    } catch {}
     setStep((prev) => (prev + 1) as 1 | 2 | 3);
   };
 
   const handlePrevStep = () => {
-    soundSynth.play("click");
+    try {
+      soundSynth.play("click");
+    } catch {}
     setStep((prev) => (prev - 1) as 1 | 2 | 3);
   };
 
   const handleSave = () => {
-    soundSynth.play("confirm");
+    try {
+      soundSynth.play("confirm");
+    } catch {}
     onAgentCreated?.({
       name: name || "Maya AI (Admissions Coordinator)",
       role: role || "B.Tech & Merit Scholarship Counselor",
@@ -93,7 +114,12 @@ export default function CreateAgentModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
+    >
       <div className="relative w-full max-w-2xl bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl p-6 sm:p-7 overflow-hidden text-white font-sans">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
@@ -115,10 +141,15 @@ export default function CreateAgentModal({
           </div>
 
           <button
-            onClick={handleClose}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClose();
+            }}
+            aria-label="Close modal"
             className="p-1.5 rounded-[2px] bg-[#121215] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 pointer-events-none" />
           </button>
         </div>
 

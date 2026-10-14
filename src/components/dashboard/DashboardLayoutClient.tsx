@@ -30,7 +30,47 @@ export default function DashboardLayoutClient({
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const router = useRouter();
+
+  const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
+
+  // Load persisted dashboard theme from localStorage
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem("swaram_dashboard_theme") as "dark" | "light" | null;
+      if (savedTheme === "light" || savedTheme === "dark") {
+        setTheme(savedTheme);
+      }
+    } catch {
+      // safe fallback
+    }
+  }, []);
+
+  const handleToggleTheme = () => {
+    setIsThemeTransitioning(true);
+    setTimeout(() => setIsThemeTransitioning(false), 700);
+
+    const applyTheme = () => {
+      setTheme((prev) => {
+        const next = prev === "dark" ? "light" : "dark";
+        try {
+          localStorage.setItem("swaram_dashboard_theme", next);
+        } catch {
+          // safe fallback
+        }
+        return next;
+      });
+    };
+
+    if (typeof document !== "undefined" && "startViewTransition" in document) {
+      (document as unknown as { startViewTransition: (fn: () => void) => void }).startViewTransition(() => {
+        applyTheme();
+      });
+    } else {
+      applyTheme();
+    }
+  };
 
   // Keyboard shortcut for Cmd+K / Ctrl+K
   useEffect(() => {
@@ -71,11 +111,16 @@ export default function DashboardLayoutClient({
   };
 
   return (
-    <div className="min-h-screen flex bg-[#000000] text-[#FFFFFF] antialiased font-sans selection:bg-white selection:text-black">
+    <div
+      data-dashboard-theme={theme}
+      className="min-h-screen flex bg-[#000000] text-[#FFFFFF] antialiased font-sans selection:bg-white selection:text-black transition-colors duration-200"
+    >
       {/* Persistent / Responsive Sidebar */}
       <AppSidebar
         isOpenMobile={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Area */}
@@ -83,6 +128,8 @@ export default function DashboardLayoutClient({
         <AppHeader
           onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
           onOpenSearch={() => setSearchModalOpen(true)}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
         />
 
         {/* Dynamic Page Content Viewport */}
@@ -90,6 +137,14 @@ export default function DashboardLayoutClient({
           {children}
         </main>
       </div>
+
+      {/* Cinematic Theme Wave Flare (Sweeps from header button) */}
+      {isThemeTransitioning && (
+        <div
+          aria-hidden="true"
+          className="fixed inset-0 pointer-events-none z-50 animate-theme-wave"
+        />
+      )}
 
       {/* Global Quick Search Modal (⌘K Command Palette) */}
       {searchModalOpen && (

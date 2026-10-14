@@ -26,19 +26,28 @@ export default function ContactDossierModal({
   const contact = mockContactIntelligence.featuredContact;
 
   const handleClose = () => {
-    soundSynth.play("click");
+    try {
+      soundSynth.play("click");
+    } catch {}
     onClose();
   };
 
   const handlePlayRecording = () => {
-    soundSynth.play("confirm");
-    soundSynth.speak(`Playback initialized for ${contact?.name || "Candidate"}.`);
+    try {
+      soundSynth.play("confirm");
+      soundSynth.speak(`Playback initialized for ${contact?.name || "Candidate"}.`);
+    } catch {}
     onClose();
   };
 
   if (!contact) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none">
+      <div
+        onClick={(e) => {
+          if (e.target === e.currentTarget) handleClose();
+        }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
+      >
         <div className="relative w-full max-w-md bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl p-6 text-center space-y-3 font-mono text-white">
           <div className="w-10 h-10 rounded-[2px] bg-[#121215] border border-[#27272A] flex items-center justify-center mx-auto text-[#A1A1AA]">
             <User className="w-5 h-5" />
@@ -48,6 +57,7 @@ export default function ContactDossierModal({
             Select a contact from your directory or call ledger to view their complete dossier.
           </p>
           <button
+            type="button"
             onClick={handleClose}
             className="px-4 py-2 rounded-[2px] bg-white text-black font-bold text-xs uppercase hover:bg-zinc-200 transition-all cursor-pointer"
           >
@@ -59,7 +69,12 @@ export default function ContactDossierModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
+    >
       <div className="relative w-full max-w-lg bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl p-6 sm:p-7 overflow-hidden text-white font-sans">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
@@ -83,10 +98,12 @@ export default function ContactDossierModal({
           </div>
 
           <button
+            type="button"
             onClick={handleClose}
+            aria-label="Close modal"
             className="p-1.5 rounded-[2px] bg-[#121215] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 pointer-events-none" />
           </button>
         </div>
 

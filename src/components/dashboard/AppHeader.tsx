@@ -18,18 +18,25 @@ import {
   Sparkles,
   PhoneCall,
   Activity,
+  Sun,
+  Moon,
 } from "lucide-react";
 import TestCallModal from "./modals/TestCallModal";
 import TopUpCreditsModal from "./modals/TopUpCreditsModal";
+import { soundSynth } from "@/lib/audio-synth";
 
 interface AppHeaderProps {
   onToggleMobileSidebar: () => void;
   onOpenSearch?: () => void;
+  theme?: "dark" | "light";
+  onToggleTheme?: () => void;
 }
 
 export default function AppHeader({
   onToggleMobileSidebar,
   onOpenSearch,
+  theme = "dark",
+  onToggleTheme,
 }: AppHeaderProps) {
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -126,6 +133,80 @@ export default function AppHeader({
             <Search className="w-4 h-4" />
           </button>
 
+          {/* Custom Daymode / Nightmode Pill Toggle Switch (from user design) */}
+          <button
+            type="button"
+            onClick={() => {
+              soundSynth.playClick();
+              onToggleTheme?.();
+            }}
+            className={`relative w-[132px] h-[34px] rounded-full p-[2.5px] flex items-center select-none cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shrink-0 ${
+              theme === "light"
+                ? "daymode-pill-track justify-end"
+                : "nightmode-pill-track justify-start"
+            }`}
+            aria-label={theme === "light" ? "Switch to Nightmode" : "Switch to Daymode"}
+            title={theme === "light" ? "Switch to Nightmode" : "Switch to Daymode"}
+          >
+            {/* Sliding White Circular Thumb with Sun/Moon Icon */}
+            <div
+              className={`absolute top-[2.5px] left-[2.5px] w-[27px] h-[27px] rounded-full pill-thumb-white flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-10 ${
+                theme === "light" ? "translate-x-0" : "translate-x-[99px]"
+              }`}
+            >
+              {theme === "light" ? (
+                /* Crisp Sun Icon */
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-4 h-4 text-black transition-transform duration-500 rotate-0"
+                >
+                  <circle cx="12" cy="12" r="4.5" />
+                  <path d="M12 2v2.5" />
+                  <path d="M12 19.5v2.5" />
+                  <path d="M4.93 4.93l1.77 1.77" />
+                  <path d="M17.3 17.3l1.77 1.77" />
+                  <path d="M2 12h2.5" />
+                  <path d="M19.5 12h2.5" />
+                  <path d="M4.93 19.07l1.77-1.77" />
+                  <path d="M17.3 6.7l1.77-1.77" />
+                </svg>
+              ) : (
+                /* Crisp Crescent Moon & Sparkle Stars Icon */
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-4 h-4 text-black transition-transform duration-500 rotate-0"
+                >
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                  <path d="M19 2.5v3" />
+                  <path d="M20.5 4h-3" />
+                  <path d="M15.5 7.5v2" />
+                  <path d="M16.5 8.5h-2" />
+                </svg>
+              )}
+            </div>
+
+            {/* Mode Text Label */}
+            {theme === "light" ? (
+              <span className="font-sans font-black text-[10.5px] tracking-wider pill-text-day pr-3 select-none">
+                DAYMODE
+              </span>
+            ) : (
+              <span className="font-sans font-black text-[10.5px] tracking-wider pill-text-night pl-3 select-none">
+                NIGHTMODE
+              </span>
+            )}
+          </button>
+
           {/* Balance Telemetry Meter */}
           <button
             onClick={() => setTopUpOpen(true)}
@@ -167,6 +248,21 @@ export default function AppHeader({
                 </div>
 
                 <div className="py-1">
+                  <button
+                    onClick={() => {
+                      soundSynth.playClick();
+                      onToggleTheme?.();
+                    }}
+                    className="w-full flex items-center justify-between px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors text-left cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      {theme === "light" ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
+                      <span>Theme: {theme === "light" ? "Stark White" : "Pitch Black"}</span>
+                    </div>
+                    <span className="text-[10px] font-telemetry font-bold px-1.5 py-0.5 rounded-[1px] bg-[#18181B] border border-[#27272A] text-white">
+                      {theme === "light" ? "LIGHT" : "DARK"}
+                    </span>
+                  </button>
                   <Link
                     href="/dashboard/agents"
                     onClick={() => setProfileOpen(false)}

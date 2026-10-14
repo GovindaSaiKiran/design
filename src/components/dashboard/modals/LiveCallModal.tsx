@@ -47,12 +47,16 @@ export default function LiveCallModal({
   const formattedDuration = `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 
   const handleClose = () => {
-    soundSynth.play("click");
+    try {
+      soundSynth.play("click");
+    } catch {}
     onClose();
   };
 
   const handleTakeover = () => {
-    soundSynth.play("confirm");
+    try {
+      soundSynth.play("confirm");
+    } catch {}
     setHandoffSuccess(true);
     onHumanHandoff?.();
   };
@@ -91,10 +95,12 @@ export default function LiveCallModal({
               {formattedDuration}
             </div>
             <button
+              type="button"
               onClick={handleClose}
+              aria-label="Close modal"
               className="p-1.5 rounded-[2px] bg-[#121215] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 pointer-events-none" />
             </button>
           </div>
         </div>

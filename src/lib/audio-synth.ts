@@ -99,6 +99,66 @@ class SoundSynthesizer {
       // safe fail
     }
   }
+
+  // UI Confirmation chime
+  playConfirm() {
+    const ctx = this.initCtx();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(587.33, now);
+      osc.frequency.setValueAtTime(880, now + 0.08);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.04, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.23);
+    } catch {
+      // safe fail
+    }
+  }
+
+  // Universal sound player dispatcher
+  play(type: string = "click") {
+    try {
+      if (type === "confirm") {
+        this.playConfirm();
+      } else if (type === "chime") {
+        this.playCallChime();
+      } else if (type === "beep") {
+        this.playMayaSpeakingBeep();
+      } else {
+        this.playClick();
+      }
+    } catch {
+      // safe fail
+    }
+  }
+
+  // Voice speech synthesis
+  speak(text: string) {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.05;
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      // safe fail
+    }
+  }
 }
 
 export const soundSynth = new SoundSynthesizer();
+

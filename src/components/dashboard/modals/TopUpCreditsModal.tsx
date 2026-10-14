@@ -94,7 +94,12 @@ export default function TopUpCreditsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200 cursor-default"
+    >
       <div className="relative w-full max-w-2xl bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl overflow-hidden font-sans text-white">
         {/* Header */}
         <div className="bg-[#121215] px-6 py-5 border-b border-[#27272A] flex items-center justify-between">
@@ -115,10 +120,12 @@ export default function TopUpCreditsModal({
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close modal"
             className="p-1.5 rounded-[2px] text-[#71717A] hover:text-white hover:bg-[#18181B] transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 pointer-events-none" />
           </button>
         </div>
 
