@@ -15,17 +15,19 @@ import {
   Star,
   Eye,
   Filter,
+  Phone,
+  X,
+  ArrowUpRight,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import UploadContactsModal from "@/components/dashboard/modals/UploadContactsModal";
 import ContactDossierModal from "@/components/dashboard/modals/ContactDossierModal";
 import LiveCallModal from "@/components/dashboard/modals/LiveCallModal";
 import { ContactItem, LiveCallItem } from "@/types/dashboard";
-import { soundSynth } from "@/lib/audio-synth";
-
-const mockContactsList: ContactItem[] = [];
+import { mockContacts } from "@/data/mock/dashboardData";
 
 export default function ContactsPage() {
+  const [contactsList, setContactsList] = useState<ContactItem[]>(mockContacts);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -33,9 +35,10 @@ export default function ContactsPage() {
   const [dossierModalOpen, setDossierModalOpen] = useState(false);
   const [liveCallModalOpen, setLiveCallModalOpen] = useState(false);
   const [activeCall, setActiveCall] = useState<LiveCallItem | null>(null);
+  const [confirmCallContact, setConfirmCallContact] = useState<ContactItem | null>(null);
 
   const filteredContacts = useMemo(() => {
-    return mockContactsList.filter((c) => {
+    return contactsList.filter((c) => {
       const matchesSearch =
         c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         c.phone.includes(searchQuery) ||
@@ -50,16 +53,16 @@ export default function ContactsPage() {
 
       return matchesSearch && matchesCat;
     });
-  }, [searchQuery, categoryFilter]);
+  }, [contactsList, searchQuery, categoryFilter]);
 
   const handleOpenDossier = (contact: ContactItem) => {
-    try { soundSynth.play("click"); } catch {}
     setSelectedContact(contact);
     setDossierModalOpen(true);
   };
 
-  const handleCallContact = (contact: ContactItem) => {
-    try { soundSynth.play("confirm"); } catch {}
+  const handleInitiateCallConfirmed = () => {
+    if (!confirmCallContact) return;
+    const contact = confirmCallContact;
     const liveCallObj: LiveCallItem = {
       id: `call-${contact.id}`,
       callerNumber: contact.phone,
@@ -81,150 +84,130 @@ export default function ContactsPage() {
       ],
     };
     setActiveCall(liveCallObj);
+    setConfirmCallContact(null);
     setLiveCallModalOpen(true);
   };
 
+  const highIntentCount = contactsList.filter((c) => c.category === "High Intent").length;
+  const followUpCount = contactsList.filter((c) => c.category === "Follow-up").length;
+  const resolvedCount = contactsList.filter((c) => c.category === "Resolved").length;
+
   return (
-    <div className="space-y-6 sm:space-y-8 select-none text-white">
-      {/* ======================================================================= */}
-      {/* WORKSPACE HEADER                                                        */}
-      {/* ======================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#27272A]">
+    <div className="space-y-6 font-sans text-[#1A1A1A]">
+      {/* Workspace Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-black/[0.06]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] hover:text-white transition-colors"
+              className="text-xs font-semibold text-black/45 hover:text-black transition-colors"
             >
-              DIRECTORY WORKSPACE
+              Overview
             </Link>
-            <span className="text-[#3F3F46]">/</span>
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-white bg-[#121215] px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              DIRECTORY SYNCED
+            <span className="text-black/20">/</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1E3A8A] bg-[#BCD0F5] px-3 py-0.5 rounded-full">
+              Contacts &amp; Lists
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1.5">
-            Contacts & Applicant Directory
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A] mt-2">
+            Contacts &amp; Applicant Lists
           </h1>
 
-          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 max-w-2xl leading-relaxed">
-            Applicant qualification profiles, PCM cutoff metrics, conversation history, and institutional CRM dossiers.
+          <p className="text-sm text-black/55 mt-1 max-w-2xl leading-relaxed">
+            Manage caller contacts, qualification dossiers, lead temperature, and outbound campaign lists.
           </p>
         </div>
 
         {/* Workspace Actions */}
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
+        <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
           <button
-            onClick={() => {
-              try { soundSynth.play("click"); } catch {}
-              setUploadModalOpen(true);
-            }}
-            className="inline-flex items-center gap-2 bg-[#09090B] hover:bg-[#18181B] text-white text-xs font-mono uppercase tracking-wider px-3.5 py-2 rounded-[2px] border border-[#27272A] hover:border-white transition-all cursor-pointer"
+            onClick={() => setUploadModalOpen(true)}
+            className="inline-flex items-center gap-2 bg-[#FBF7ED] hover:bg-[#FAF3E4] text-[#1A1A1A] text-xs font-semibold px-4 py-2.5 rounded-full border border-black/[0.06] transition-all cursor-pointer"
           >
-            <Upload className="w-3.5 h-3.5 text-[#A1A1AA]" />
-            <span>Upload CSV</span>
+            <Upload className="w-3.5 h-3.5 text-black/50" />
+            <span>Upload Contacts CSV</span>
           </button>
 
           <Link
             href="/dashboard/campaigns"
-            className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] transition-all cursor-pointer shadow-sm"
+            className="inline-flex items-center gap-2 bg-[#111111] hover:bg-black text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-all cursor-pointer shadow-sm"
           >
-            <PhoneCall className="w-3.5 h-3.5 text-black" />
+            <PhoneCall className="w-3.5 h-3.5 text-white" />
             <span>Launch Outreach</span>
           </Link>
         </div>
       </div>
 
-      {/* ======================================================================= */}
-      {/* WORKSPACE SUB-FOLDER CARDS                                              */}
-      {/* ======================================================================= */}
+      {/* 4 Workspace Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <WorkspaceCard
-          name="High Intent Applicants"
+          name="High Intent Contacts"
           icon={Star}
           description="Candidates with high qualification scores and confirmed intent."
-          metric="0 contacts"
-          metricLabel="0% qualification yield"
-          status="Empty"
-          statusType="neutral"
+          metric={`${highIntentCount} contacts`}
+          metricLabel="Ready for follow-up"
+          status="Priority"
+          statusType="ready"
           actionLabel="View high intent →"
-          onClick={() => {
-            try { soundSynth.play("click"); } catch {}
-            setCategoryFilter("High Intent");
-          }}
+          onClick={() => setCategoryFilter("High Intent")}
         />
 
         <WorkspaceCard
-          name="Counseling Confirmed"
+          name="Scheduled Appointments"
           icon={CheckCircle2}
-          description="Candidates scheduled for appointments and consultations."
-          metric="0 confirmed"
-          metricLabel="No appointments scheduled"
-          status="None"
+          description="Candidates with confirmed counseling slots and campus visits."
+          metric={`${resolvedCount} confirmed`}
+          metricLabel="Bookings verified"
+          status="Confirmed"
           statusType="ready"
           actionLabel="View appointments →"
-          onClick={() => {
-            try { soundSynth.play("click"); } catch {}
-            setCategoryFilter("Resolved");
-          }}
+          onClick={() => setCategoryFilter("Resolved")}
         />
 
         <WorkspaceCard
-          name="Pending Follow-up"
+          name="Pending Follow-ups"
           icon={AlertCircle}
-          description="Callbacks requested by callers for evening hours or assistance."
-          metric="0 queued"
-          metricLabel="No pending callbacks"
-          status="Clean"
-          statusType="neutral"
+          description="Callers who requested evening callback windows."
+          metric={`${followUpCount} queued`}
+          metricLabel="Action required"
+          status="Pending"
+          statusType="warning"
           actionLabel="Inspect callbacks →"
-          onClick={() => {
-            try { soundSynth.play("click"); } catch {}
-            setCategoryFilter("Follow-up");
-          }}
+          onClick={() => setCategoryFilter("Follow-up")}
         />
 
         <WorkspaceCard
           name="Total Directory"
           icon={Users}
-          description="Verified applicant and lead registry with phone and notes."
-          metric="0 contacts"
-          metricLabel="0 reached today"
-          status="Ready for import"
-          statusType="ready"
+          description="Verified applicant and lead registry with telephone and notes."
+          metric={`${contactsList.length} contacts`}
+          metricLabel="100% consent verified"
+          status="Synced"
+          statusType="neutral"
           actionLabel="Show all contacts →"
-          onClick={() => {
-            try { soundSynth.play("click"); } catch {}
-            setCategoryFilter("all");
-          }}
+          onClick={() => setCategoryFilter("all")}
         />
       </div>
 
-      {/* ======================================================================= */}
-      {/* SEARCH & FILTER BAR                                                     */}
-      {/* ======================================================================= */}
-      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] p-3.5 space-y-3">
+      {/* Search & Filter Bar */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] p-4 space-y-3 shadow-2xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Category Filter Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
             {[
-              { id: "all", label: "All Contacts (0)" },
-              { id: "High Intent", label: "High Intent (0)" },
-              { id: "Follow-up", label: "Follow-up (0)" },
-              { id: "Resolved", label: "Resolved (0)" },
+              { id: "all", label: `All Contacts (${contactsList.length})` },
+              { id: "High Intent", label: `High Intent (${highIntentCount})` },
+              { id: "Follow-up", label: `Follow-up (${followUpCount})` },
+              { id: "Resolved", label: `Resolved (${resolvedCount})` },
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                  try { soundSynth.play("click"); } catch {}
-                  setCategoryFilter(tab.id);
-                }}
-                className={`px-3 py-1.5 rounded-[2px] text-xs font-mono uppercase tracking-wider transition-all shrink-0 cursor-pointer ${
+                onClick={() => setCategoryFilter(tab.id)}
+                className={`px-4 py-2 rounded-full text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                   categoryFilter === tab.id
-                    ? "bg-white text-black font-bold shadow-xs"
-                    : "bg-[#121215] text-[#71717A] hover:text-white border border-[#27272A]"
+                    ? "bg-[#111111] text-white shadow-sm"
+                    : "bg-[#FBF7ED] text-black/60 hover:text-black border border-black/[0.06]"
                 }`}
               >
                 {tab.label}
@@ -234,33 +217,31 @@ export default function ContactsPage() {
 
           {/* Search Box */}
           <div className="relative flex-1 md:max-w-md">
-            <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-black/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by student name, phone, email, course..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs font-mono bg-[#121215] border border-[#27272A] rounded-[2px] text-white focus:outline-none focus:border-white transition-all placeholder:text-[#71717A]"
+              className="w-full pl-9 pr-4 py-2 text-xs bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-black/10 transition-all placeholder:text-black/40"
             />
           </div>
         </div>
       </div>
 
-      {/* ======================================================================= */}
-      {/* CONTACTS TABLE                                                          */}
-      {/* ======================================================================= */}
-      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] overflow-hidden">
+      {/* Contacts Table */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] overflow-hidden shadow-2xs">
         {/* Table Top Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-[#121215] border-b border-[#27272A]">
-          <div className="flex items-center gap-2.5">
-            <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
-              Applicant Records
+        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-black/[0.06]">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-[#1A1A1A]">
+              Contact Records
             </span>
-            <span className="text-[11px] text-[#A1A1AA] font-mono">
-              ({filteredContacts.length} VERIFIED)
+            <span className="text-xs text-black/45 font-medium">
+              ({filteredContacts.length} verified)
             </span>
           </div>
-          <span className="text-[11px] text-[#71717A] font-mono hidden sm:inline">
+          <span className="text-xs text-black/50 hidden sm:inline">
             Click Dossier to view complete qualification profile
           </span>
         </div>
@@ -269,37 +250,34 @@ export default function ContactsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="bg-[#121215]/80 border-b border-[#27272A] text-[#71717A] font-mono uppercase tracking-wider text-[10px]">
-                <th className="py-3 px-4 font-bold">Student Name</th>
-                <th className="py-3 px-4 font-bold">Academic Segment</th>
-                <th className="py-3 px-4 font-bold">Category</th>
-                <th className="py-3 px-4 font-bold">Last Outcome</th>
-                <th className="py-3 px-4 font-bold">Assigned Agent</th>
-                <th className="py-3 px-4 font-bold">Score</th>
-                <th className="py-3 px-4 text-right font-bold">Actions</th>
+              <tr className="bg-[#FBF7ED] border-b border-black/[0.06] text-black/45 font-semibold text-[11px] uppercase tracking-wider">
+                <th className="py-3 px-5">Contact Name</th>
+                <th className="py-3 px-5">Academic Segment</th>
+                <th className="py-3 px-5">Category</th>
+                <th className="py-3 px-5">Last Outcome</th>
+                <th className="py-3 px-5">Assigned Agent</th>
+                <th className="py-3 px-5">Score</th>
+                <th className="py-3 px-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#18181B]">
+            <tbody className="divide-y divide-black/[0.04]">
               {filteredContacts.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-16 text-center">
                     <div className="max-w-md mx-auto space-y-3">
-                      <div className="w-12 h-12 rounded-[2px] bg-[#121215] text-white flex items-center justify-center mx-auto border border-[#27272A]">
-                        <Users className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 rounded-full bg-[#BCD0F5] text-[#1E3A8A] flex items-center justify-center mx-auto">
+                        <Users className="w-6 h-6 text-[#1E3A8A]" />
                       </div>
-                      <h3 className="text-sm font-bold text-white">No contacts in directory</h3>
-                      <p className="text-xs text-[#A1A1AA] leading-relaxed">
-                        Upload a CSV contact list or connect Meta Ads/Webhooks to start automated outreach with your AI workforce.
+                      <h3 className="text-sm font-bold text-[#1A1A1A]">No contacts found</h3>
+                      <p className="text-xs text-black/55 leading-relaxed">
+                        No contacts match your active filter. Upload a CSV list or adjust search criteria.
                       </p>
                       <button
-                        onClick={() => {
-                          try { soundSynth.play("confirm"); } catch {}
-                          setUploadModalOpen(true);
-                        }}
-                        className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] transition-all cursor-pointer"
+                        onClick={() => setUploadModalOpen(true)}
+                        className="inline-flex items-center gap-2 bg-[#111111] hover:bg-black text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-all cursor-pointer shadow-sm"
                       >
-                        <Upload className="w-3.5 h-3.5 text-black" />
-                        <span>Upload Contacts (CSV)</span>
+                        <Upload className="w-3.5 h-3.5 text-white" />
+                        <span>Upload Contacts CSV</span>
                       </button>
                     </div>
                   </td>
@@ -308,75 +286,83 @@ export default function ContactsPage() {
                 filteredContacts.map((contact) => (
                   <tr
                     key={contact.id}
-                    className="hover:bg-[#121215] transition-colors group"
+                    className="hover:bg-black/[0.015] transition-colors group text-[#1A1A1A]"
                   >
                     {/* Name & Phone */}
-                    <td className="py-3.5 px-4">
-                      <div className="font-semibold text-white group-hover:text-white">
+                    <td className="py-4 px-5">
+                      <div className="font-semibold text-[#1A1A1A]">
                         {contact.name}
                       </div>
-                      <div className="text-[11px] text-[#A1A1AA] font-mono mt-0.5">
+                      <div className="text-[11px] text-black/50 mt-0.5">
                         {contact.phone} • {contact.email}
                       </div>
                     </td>
 
                     {/* Organization / Academic Segment */}
-                    <td className="py-3.5 px-4 max-w-xs">
-                      <div className="font-medium text-zinc-300 truncate">
+                    <td className="py-4 px-5 max-w-xs">
+                      <div className="font-medium text-[#1A1A1A] truncate">
                         {contact.organization}
                       </div>
-                      <div className="text-[11px] text-[#71717A] truncate mt-0.5">
+                      <div className="text-[11px] text-black/50 truncate mt-0.5">
                         {contact.notes}
                       </div>
                     </td>
 
                     {/* Category Pill */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-mono uppercase bg-[#121215] text-zinc-300 border border-[#27272A]">
+                    <td className="py-4 px-5 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-medium ${
+                          contact.category === "High Intent"
+                            ? "bg-[#C1F2D5] text-[#0D593F]"
+                            : contact.category === "Follow-up"
+                            ? "bg-[#FFD9A0] text-[#733F00]"
+                            : "bg-[#BCD0F5] text-[#1E3A8A]"
+                        }`}
+                      >
                         {contact.category}
                       </span>
                     </td>
 
                     {/* Last Outcome */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="font-medium text-zinc-300">
+                    <td className="py-4 px-5 whitespace-nowrap">
+                      <span className="font-medium text-[#1A1A1A]">
                         {contact.lastCallOutcome}
                       </span>
-                      <span className="text-[10px] text-[#71717A] font-mono block">
+                      <span className="text-[11px] text-black/50 block mt-0.5">
                         {contact.lastContacted}
                       </span>
                     </td>
 
                     {/* Assigned Agent */}
-                    <td className="py-3.5 px-4 whitespace-nowrap text-[#A1A1AA] font-mono">
+                    <td className="py-4 px-5 whitespace-nowrap text-black/55 font-medium">
                       {contact.assignedAgent}
                     </td>
 
                     {/* Priority Score */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <div className="flex items-center gap-1 font-mono">
-                        <span className="font-bold text-white">
+                    <td className="py-4 px-5 whitespace-nowrap">
+                      <div className="flex items-center gap-1">
+                        <span className="font-bold text-[#1A1A1A]">
                           {contact.priorityScore}
                         </span>
-                        <span className="text-[10px] text-[#71717A]">/ 100</span>
+                        <span className="text-[11px] text-black/45">/ 100</span>
                       </div>
                     </td>
 
                     {/* Actions */}
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap space-x-1.5">
+                    <td className="py-4 px-5 text-right whitespace-nowrap space-x-2">
                       <button
-                        onClick={() => handleCallContact(contact)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[2px] text-[10px] font-mono font-bold uppercase tracking-wider bg-white hover:bg-zinc-200 text-black transition-all cursor-pointer shadow-xs"
+                        onClick={() => setConfirmCallContact(contact)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#111111] hover:bg-black text-white transition-all cursor-pointer shadow-xs"
                       >
-                        <PhoneCall className="w-3 h-3 text-black" />
+                        <PhoneCall className="w-3 h-3 text-white" />
                         <span>Call</span>
                       </button>
 
                       <button
                         onClick={() => handleOpenDossier(contact)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[2px] text-[10px] font-mono font-bold uppercase tracking-wider bg-transparent hover:bg-white text-zinc-300 hover:text-black border border-[#27272A] hover:border-white transition-all cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#FBF7ED] hover:bg-[#FAF3E4] text-[#1A1A1A] border border-black/[0.06] transition-all cursor-pointer"
                       >
-                        <FileText className="w-3 h-3" />
+                        <FileText className="w-3 h-3 text-black/50" />
                         <span>Dossier</span>
                       </button>
                     </td>
@@ -387,6 +373,46 @@ export default function ContactsPage() {
           </table>
         </div>
       </div>
+
+      {/* Confirmation Modal Before Initiating Outbound Live Call (Requirement 4) */}
+      {confirmCallContact && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs p-4 animate-in fade-in duration-150">
+          <div className="bg-white border border-black/[0.06] rounded-[28px] max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#FFD9A0] text-[#733F00] flex items-center justify-center shrink-0">
+                <PhoneCall className="w-5 h-5 text-[#733F00]" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base text-[#1A1A1A]">Confirm Outbound Call</h3>
+                <p className="text-xs text-black/50">Telephony carrier dispatch verification</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#1A1A1A] leading-relaxed">
+              Are you sure you want to trigger a live outbound call to <strong>{confirmCallContact.name}</strong> ({confirmCallContact.phone})? The assigned agent <strong>{confirmCallContact.assignedAgent}</strong> will initiate conversation immediately.
+            </p>
+
+            <div className="p-3.5 bg-[#FBF7ED] rounded-[18px] border border-black/[0.06] text-xs text-black/60">
+              <span className="font-semibold text-[#1A1A1A]">Carrier Compliance Note:</span> Outbound calls consume telephony minute balance and are recorded with caller disclosure.
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                onClick={() => setConfirmCallContact(null)}
+                className="px-4 py-2 text-xs font-semibold text-black/60 hover:text-black border border-black/[0.06] bg-[#FBF7ED] hover:bg-[#FAF3E4] rounded-full transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleInitiateCallConfirmed}
+                className="px-5 py-2 text-xs font-semibold text-white bg-[#111111] hover:bg-black rounded-full shadow-sm transition-all cursor-pointer"
+              >
+                Confirm &amp; Dial Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modals */}
       <UploadContactsModal

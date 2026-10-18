@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { X, FileText, Database, Check, ShieldCheck } from "lucide-react";
-import { soundSynth } from "@/lib/audio-synth";
 
 interface UploadKnowledgeModalProps {
   isOpen: boolean;
@@ -21,17 +20,7 @@ export default function UploadKnowledgeModal({
 
   if (!isOpen) return null;
 
-  const handleClose = () => {
-    try {
-      soundSynth.play("click");
-    } catch {}
-    onClose();
-  };
-
   const handleUpload = () => {
-    try {
-      soundSynth.play("confirm");
-    } catch {}
     setIsProcessing(true);
     setTimeout(() => {
       onDocUploaded?.(docName);
@@ -42,95 +31,86 @@ export default function UploadKnowledgeModal({
   return (
     <div
       onClick={(e) => {
-        if (e.target === e.currentTarget) handleClose();
+        if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
     >
-      <div className="relative w-full max-w-md bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl p-6 overflow-hidden text-white font-sans">
+      <div className="relative w-full max-w-md bg-white rounded-[28px] border border-black/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 sm:p-7 overflow-hidden text-[#1A1A1A] font-sans">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
+        <div className="flex items-center justify-between pb-4 border-b border-black/[0.06]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[2px] bg-white text-black border border-white flex items-center justify-center shrink-0">
-              <Database className="w-4 h-4 stroke-[2.5]" />
+            <div className="w-10 h-10 rounded-2xl bg-[#D9C2FA] text-[#1A1A1A] shadow-xs flex items-center justify-center shrink-0">
+              <Database className="w-4 h-4 text-[#1A1A1A]" />
             </div>
             <div>
-              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A1A1AA]">
-                VECTOR STORE // INGESTION
-              </div>
-              <h3 className="text-sm font-bold text-white tracking-tight uppercase">
-                Add Document Context
+              <span className="text-[10px] font-bold uppercase tracking-wider text-black/40">KNOWLEDGE REPOSITORY</span>
+              <h3 className="text-sm font-bold text-[#1A1A1A]">
+                Upload Knowledge Document
               </h3>
-              <p className="text-[11px] text-[#A1A1AA] font-mono">
-                Vector embeddings for zero-hallucination voice agents
+              <p className="text-xs text-black/55">
+                Ingest PDF, spreadsheet or FAQ manual into vector store
               </p>
             </div>
           </div>
 
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onClose}
             aria-label="Close modal"
-            className="p-1.5 rounded-[2px] bg-[#121215] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-full text-black/40 hover:text-[#1A1A1A] hover:bg-[#FBF7ED] transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4 pointer-events-none" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Dropzone & Category */}
-        <div className="my-5 space-y-4 text-xs font-mono">
+        {/* Form Body */}
+        <div className="my-5 space-y-4">
           <div>
-            <label className="block font-bold text-[#A1A1AA] mb-1.5 text-xs uppercase tracking-wider">
-              Document Category
+            <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+              Knowledge Category:
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] font-mono text-white focus:border-white focus:outline-none transition-all cursor-pointer shadow-2xs"
+              className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all cursor-pointer font-medium"
             >
-              <option value="Academic & Course Info">Academic & Course Info (B.Tech, AI & ML, MBA)</option>
-              <option value="Fees & Scholarships">Fees, TFW & Merit Scholarships (35% - 100%)</option>
-              <option value="Campus & Hostel">Campus Infrastructure & Hostel Regulations</option>
-              <option value="Admissions Policy">JoSAA / State CET Cutoffs & Eligibility Matrix</option>
+              <option value="Academic & Course Info">Academic &amp; Course Info</option>
+              <option value="Fee Structures & Scholarships">Fee Structures &amp; Scholarships</option>
+              <option value="Hostel & Amenities">Hostel &amp; Amenities</option>
+              <option value="Placement Statistics">Placement Statistics</option>
+              <option value="Admissions Policies">Admissions Policies</option>
             </select>
           </div>
 
-          <div className="p-5 rounded-[2px] border border-dashed border-[#27272A] hover:border-white bg-[#121215] text-center cursor-pointer transition-all">
-            <FileText className="w-8 h-8 text-white mx-auto mb-2 stroke-[1.5]" />
-            <div className="font-bold text-white text-xs break-all font-mono">
-              {docName}
-            </div>
-            <p className="text-[11px] text-[#A1A1AA] mt-1">
-              PDF (4.8 MB) • 140 vector embedding chunks will be indexed
+          {/* File Selected Area */}
+          <div className="p-5 rounded-2xl border-2 border-dashed border-black/10 bg-[#FBF7ED] text-center">
+            <FileText className="w-7 h-7 text-[#1A1A1A] mx-auto mb-1.5 opacity-80" />
+            <div className="font-semibold text-xs text-[#1A1A1A]">{docName}</div>
+            <p className="text-[11px] text-black/55 mt-0.5">
+              PDF Document • 2.4 MB • 24 Pages
             </p>
-            <span className="inline-block mt-3 px-2.5 py-1 rounded-[1px] text-[10px] font-mono font-bold bg-[#18181B] text-white border border-[#27272A]">
-              Instant grounding for all autonomous voice personas
-            </span>
-          </div>
-
-          <div className="p-3.5 bg-[#121215] border border-[#27272A] rounded-[2px] text-xs text-white flex items-start gap-2.5 shadow-2xs font-mono">
-            <ShieldCheck className="w-4 h-4 text-white shrink-0 mt-0.5" />
-            <span className="leading-relaxed text-[11px] text-[#A1A1AA]">
-              <strong className="text-white block uppercase tracking-wider mb-0.5">Zero Hallucination Guardrail:</strong> Voice agents cite this document directly when answering tuition fees, cutoff ranks, and hostel questions.
-            </span>
+            <div className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-medium text-[#16856B] bg-[#C1F2D5]/50 px-3 py-1 rounded-full border border-[#16856B]/20">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#16856B]" />
+              <span>Chunks: 142 vectors • Strict zero-hallucination policy</span>
+            </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#27272A]">
+        <div className="flex items-center justify-between pt-4 border-t border-black/[0.06]">
           <button
-            onClick={handleClose}
-            className="px-4 py-2 rounded-[2px] text-xs font-mono font-bold text-[#A1A1AA] hover:text-white bg-transparent border border-[#27272A] hover:border-white transition-all cursor-pointer uppercase"
+            onClick={onClose}
+            className="px-5 py-2.5 rounded-full text-xs font-semibold text-black/60 hover:text-[#1A1A1A] bg-white border border-black/[0.08] hover:bg-[#FAF3E4] transition-all cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             onClick={handleUpload}
-            disabled={isProcessing}
-            className="px-5 py-2 rounded-[2px] text-xs font-mono font-bold text-black bg-white hover:bg-zinc-200 border border-white shadow-2xs inline-flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50 uppercase active:translate-x-[1px] active:translate-y-[1px]"
+            className="px-6 py-2.5 rounded-full text-xs font-semibold text-white bg-[#111111] hover:bg-black shadow-sm inline-flex items-center gap-2 cursor-pointer transition-all"
           >
-            <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>{isProcessing ? "Indexing Vectors..." : "Index & Embed Context"}</span>
+            <Check className="w-3.5 h-3.5" />
+            <span>{isProcessing ? "Vectorizing..." : "Confirm & Ingest"}</span>
           </button>
         </div>
       </div>

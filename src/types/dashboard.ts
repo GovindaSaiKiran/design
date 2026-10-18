@@ -25,12 +25,16 @@ export interface DashboardAgent {
   };
   language: string;
   callsToday: number;
-  avgDuration: string;
+  avgDuration?: string;
   accuracy: number;
   assignedNumber: string;
   systemPromptPreview: string;
   activeLiveCount: number;
+  languages?: string[];
+  totalCallsHandled?: string | number;
 }
+
+export type AIAgent = DashboardAgent;
 
 export interface LiveCallItem {
   id: string;
@@ -52,6 +56,12 @@ export interface LiveCallItem {
     text: string;
     time: string;
   }[];
+  // Optional compatibility fields
+  channel?: string;
+  callerPhone?: string;
+  latency?: number;
+  liveTranscript?: string;
+  duration?: number;
 }
 
 export interface RecentCallRecord {
@@ -67,9 +77,14 @@ export interface RecentCallRecord {
   timeAgo: string;
   summary: string;
   sentimentScore: number; // 0 - 100
-  qualification: "High Intent" | "Qualified" | "Follow-up Needed" | "Unreachable" | "Escalated";
+  qualification: "High Intent" | "Qualified" | "Follow-up Needed" | "Unreachable" | "Escalated" | string;
   transcriptSnippet: string;
   audioRecordingUrl?: string;
+  // Optional compatibility fields
+  callerName?: string;
+  callerNumber?: string;
+  language?: string;
+  status?: string;
 }
 
 export interface CampaignData {
@@ -100,6 +115,8 @@ export interface ContactItem {
   notes: string;
   assignedAgent: string;
   priorityScore: number;
+  interestTopic?: string;
+  lastConversationTimeAgo?: string;
 }
 
 export interface KnowledgeDocument {
@@ -122,6 +139,9 @@ export interface TelephonyNumber {
   channelType: "SIP Trunk" | "Direct DID" | "Toll-Free";
   latencyMs: number;
   callsToday: number;
+  carrier?: string;
+  region?: string;
+  activeConcurrency?: number;
 }
 
 export interface NotificationItem {

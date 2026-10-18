@@ -113,23 +113,20 @@ export default function AutonomousGoalDelegator({
 
   return (
     <section className="w-full mb-10 font-sans select-none" id="autonomous-goals-hub">
-      <div className="bg-white/95 backdrop-blur-xl border border-neutral-200/90 rounded-3xl p-6 sm:p-8 lg:p-10 shadow-sm relative overflow-hidden">
+      <div className="bg-white border border-black/[0.06] rounded-[26px] p-6 sm:p-8 lg:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden">
         
-        {/* Subtle Decorative Backdrop Elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-lime-100/40 via-emerald-50/20 to-transparent rounded-full blur-3xl pointer-events-none" />
-
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-3 mb-8 relative z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-neutral-100 border border-neutral-200 text-neutral-800">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-[#FAF3E4] border border-black/[0.06] text-[#1A1A1A]">
+            <Sparkles className="w-3.5 h-3.5 text-[#8C5300] fill-[#FFD9A0]" />
             <span>AUTONOMOUS WORK AGENTS</span>
           </div>
 
-          <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-neutral-900 leading-[1.15]">
-            Set the outcome. <span className="font-serif italic text-neutral-500">Delegate the process.</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.15]">
+            Set the outcome. <span className="text-black/55 font-medium">Delegate the process.</span>
           </h2>
 
-          <p className="text-xs sm:text-sm text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-black/60 max-w-2xl mx-auto leading-relaxed">
             Describe the admissions or counseling goal and connect your campus documents.
             Swaram orchestrates autonomous voice agents, verifies scholarships, and updates student dossiers in real-time.
           </p>
@@ -137,7 +134,7 @@ export default function AutonomousGoalDelegator({
 
         {/* Quick Goal Pills (Matches PDF Page 4) */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-6 relative z-10">
-          <span className="text-xs font-semibold text-neutral-500 mr-1">Quick Goals:</span>
+          <span className="text-xs font-semibold text-black/50 mr-1">Quick Goals:</span>
           {quickGoals.map((goal) => {
             const isSelected = goal.id === selectedGoalId;
             return (
@@ -146,8 +143,8 @@ export default function AutonomousGoalDelegator({
                 onClick={() => handleSelectGoal(goal)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-neutral-900 text-white font-semibold shadow-xs"
-                    : "bg-neutral-100 hover:bg-neutral-200/80 text-neutral-700 border border-neutral-200/80"
+                    ? "bg-[#111111] text-white font-semibold shadow-xs"
+                    : "bg-[#FAF3E4] hover:bg-[#F3EBDA] text-[#1A1A1A] border border-black/[0.06]"
                 }`}
               >
                 {goal.label}

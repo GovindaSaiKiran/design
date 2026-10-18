@@ -140,21 +140,21 @@ export default function IndicVoicePlaygroundSection() {
 
   return (
     <section className="w-full mb-10 font-sans select-none" id="indic-tts-hub">
-      <div className="bg-white/95 backdrop-blur-xl border border-neutral-200/90 rounded-3xl p-6 sm:p-8 lg:p-10 shadow-sm relative overflow-hidden">
+      <div className="bg-white border border-black/[0.06] rounded-[26px] p-6 sm:p-8 lg:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden">
         
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-3 mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-neutral-100 border border-neutral-200 text-neutral-800">
-            <Globe className="w-3.5 h-3.5 text-blue-600" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-[#FAF3E4] border border-black/[0.06] text-[#1A1A1A]">
+            <Globe className="w-3.5 h-3.5 text-[#16856B]" />
             <span>WORK AGENTS & INDIC TEXT TO SPEECH</span>
           </div>
 
-          <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-neutral-900 leading-[1.15]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.15]">
             Text to Speech that feels natural<br />
-            <span className="font-serif italic text-neutral-500">across India's languages</span>
+            <span className="text-black/55 font-medium">across India&apos;s languages</span>
           </h2>
 
-          <p className="text-xs sm:text-sm text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-black/60 max-w-2xl mx-auto leading-relaxed">
             Turn text into voices that feel human, carry emotion, and sound natural in every conversation.
           </p>
 
@@ -327,39 +327,39 @@ export default function IndicVoicePlaygroundSection() {
         )}
 
         {/* 3 Stat Tiles (Matches PDF Page 7) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto pt-8 mt-6 border-t border-neutral-200/80">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto pt-8 mt-6 border-t border-black/[0.06]">
           <div className="text-center md:text-left space-y-1">
-            <div className="font-serif-display text-3xl font-semibold text-neutral-900 tracking-tight">
+            <div className="text-3xl font-extrabold text-[#1A1A1A] tracking-tight">
               2.4M+
             </div>
-            <div className="text-xs font-bold uppercase tracking-wider text-neutral-800">
+            <div className="text-xs font-bold uppercase tracking-wider text-black/70">
               Characters Streamed Daily
             </div>
-            <p className="text-[11px] text-neutral-500">
+            <p className="text-[11px] text-black/50">
               Real-time synthesis across 11 native Indic languages with 99.98% carrier uptime.
             </p>
           </div>
 
           <div className="text-center md:text-left space-y-1">
-            <div className="font-serif-display text-3xl font-semibold text-neutral-900 tracking-tight">
+            <div className="text-3xl font-extrabold text-[#1A1A1A] tracking-tight">
               11
             </div>
-            <div className="text-xs font-bold uppercase tracking-wider text-neutral-800">
+            <div className="text-xs font-bold uppercase tracking-wider text-black/70">
               Supported Indian Languages
             </div>
-            <p className="text-[11px] text-neutral-500">
+            <p className="text-[11px] text-black/50">
               Hindi, Telugu, Kannada, Bengali, Tamil, Marathi, Gujarati, Punjabi, Odia, Malayalam, Assamese.
             </p>
           </div>
 
           <div className="text-center md:text-left space-y-1">
-            <div className="font-serif-display text-3xl font-semibold text-neutral-900 tracking-tight">
+            <div className="text-3xl font-extrabold text-[#1A1A1A] tracking-tight">
               ₹0.12
             </div>
-            <div className="text-xs font-bold uppercase tracking-wider text-neutral-800">
+            <div className="text-xs font-bold uppercase tracking-wider text-black/70">
               Unit Cost / 10,000 Characters
             </div>
-            <p className="text-[11px] text-neutral-500">
+            <p className="text-[11px] text-black/50">
               High efficiency speech synthesis designed for collegiate admissions scale.
             </p>
           </div>

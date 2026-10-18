@@ -82,55 +82,53 @@ export default function LiveCallingOperationsHub({
   };
 
   return (
-    <div className="w-full space-y-6 select-none">
+    <div className="w-full space-y-6 select-none font-sans">
       {/* Top Grid: Live Ongoing Call Monitor (Left) + Visual Lead Conversion Funnel (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        {/* ========================================================================= */}
-        {/* 1. LEFT (5 COLS): LIVE ACTIVE CALL TELEMETRY & AUDIO WAVE MONITOR         */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-5 bg-slate-950 text-white rounded-2xl p-6 sm:p-7 shadow-xl flex flex-col justify-between relative overflow-hidden border border-slate-800">
+        {/* 1. LEFT (5 COLS): LIVE ACTIVE CALL TELEMETRY & AUDIO WAVE MONITOR */}
+        <div className="lg:col-span-5 bg-[#111111] text-white rounded-[26px] p-6 sm:p-7 shadow-xl flex flex-col justify-between relative overflow-hidden border border-black/10">
           <div>
             {/* Header: Live Status Badge + Mode Switcher */}
-            <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-800">
+            <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/10">
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 inline-block animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#C1F2D5]/15 text-[#C1F2D5] border border-[#C1F2D5]/30">
+                  <span className="w-2 h-2 rounded-full bg-[#C1F2D5] inline-block animate-pulse" />
                   LIVE HELPLINE ACTIVE
                 </span>
               </div>
 
-              <div className="flex items-center gap-1 bg-slate-900 border border-slate-700/60 p-1 rounded-xl">
+              <div className="flex items-center gap-1 bg-white/10 border border-white/10 p-1 rounded-full">
                 <button
                   onClick={() => setActiveTab("inbound")}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    activeTab === "inbound" ? "bg-indigo-600 text-white shadow-xs" : "text-slate-400 hover:text-white"
+                  className={`px-3.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    activeTab === "inbound" ? "bg-white text-[#111111] shadow-xs" : "text-white/60 hover:text-white"
                   }`}
                 >
-                  Inbound (Line 1)
+                  Inbound
                 </button>
                 <button
                   onClick={() => setActiveTab("outbound")}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    activeTab === "outbound" ? "bg-indigo-600 text-white shadow-xs" : "text-slate-400 hover:text-white"
+                  className={`px-3.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    activeTab === "outbound" ? "bg-white text-[#111111] shadow-xs" : "text-white/60 hover:text-white"
                   }`}
                 >
-                  Outbound Dialer
+                  Outbound
                 </button>
               </div>
             </div>
 
             {/* Active Caller Card */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 mb-4 shadow-sm">
+            <div className="bg-white/[0.06] border border-white/10 rounded-2xl p-4 mb-4 shadow-sm">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-md shadow-indigo-600/20">
+                  <div className="w-12 h-12 rounded-2xl bg-[#C1F2D5] text-[#111111] flex items-center justify-center font-bold text-base shrink-0 shadow-md">
                     <PhoneCall className="w-5 h-5 stroke-[2.5]" />
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-white tracking-tight">
+                    <h4 className="text-base font-bold text-white tracking-tight font-sans">
                       {currentActiveLead.name}
                     </h4>
-                    <span className="text-xs font-mono font-bold text-cyan-400">
+                    <span className="text-xs font-mono font-bold text-[#C1F2D5]">
                       {currentActiveLead.phone}
                     </span>
                   </div>
@@ -138,27 +136,27 @@ export default function LiveCallingOperationsHub({
 
                 {/* Call Duration Pill */}
                 <div className="text-right">
-                  <span className="inline-block bg-indigo-950 text-indigo-300 border border-indigo-800 px-3 py-1 rounded-lg text-xs font-mono font-bold shadow-xs">
+                  <span className="inline-block bg-white/10 text-white border border-white/10 px-3 py-1 rounded-full text-xs font-mono font-bold shadow-xs">
                     {formatSeconds(activeCallSeconds)}
                   </span>
                 </div>
               </div>
 
               {/* Course Tag */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 text-xs font-medium mt-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/90 border border-white/10 text-xs font-semibold mt-1">
                 <GraduationCap className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>{currentActiveLead.course}</span>
               </div>
             </div>
 
             {/* Live Audio Animated Waveform Visualizer */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 mb-4">
-              <div className="flex items-center justify-between text-xs font-bold text-slate-300 mb-2">
+            <div className="bg-white/[0.06] border border-white/10 rounded-2xl p-4 mb-4">
+              <div className="flex items-center justify-between text-xs font-bold text-white/80 mb-2">
                 <div className="flex items-center gap-1.5">
-                  <Volume2 className="w-4 h-4 text-cyan-400 stroke-[2.5]" />
+                  <Volume2 className="w-4 h-4 text-[#C1F2D5] stroke-[2.5]" />
                   <span>Maya AI Voice Stream</span>
                 </div>
-                <span className="text-xs text-cyan-400 font-bold font-mono">
+                <span className="text-xs text-[#C1F2D5] font-bold font-mono">
                   382ms Latency • HD Audio
                 </span>
               </div>
@@ -169,29 +167,29 @@ export default function LiveCallingOperationsHub({
                   <div
                     key={idx}
                     style={{ height: `${Math.max(20, (val * ((idx % 3) + 1)) % 100)}%` }}
-                    className="flex-1 bg-cyan-400 rounded-t animate-pulse opacity-95 transition-all duration-300"
+                    className="flex-1 bg-[#C1F2D5] rounded-t animate-pulse opacity-95 transition-all duration-300"
                   />
                 ))}
               </div>
             </div>
 
             {/* Live Synchronized Transcript Snippet */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-200">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-400 mb-1 uppercase tracking-wider">
+            <div className="bg-white/[0.06] border border-white/10 rounded-2xl p-4 text-xs text-white/90">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#C1F2D5] mb-1 uppercase tracking-wider">
                 <Bot className="w-4 h-4 stroke-[2.5]" />
                 <span>Maya (Speaking right now):</span>
               </div>
-              <p className="font-medium text-white leading-relaxed text-xs">
+              <p className="font-medium text-white/90 leading-relaxed text-xs">
                 &ldquo;Rahul, for 94% in CBSE, your 35% Chancellor Merit Scholarship is pre-approved for B.Tech CSE. Would you like me to book your campus visit pass for this Saturday?&rdquo;
               </p>
             </div>
           </div>
 
           {/* Bottom Controls */}
-          <div className="pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
+          <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
             <button
               onClick={() => onOpenLiveCallModal?.(currentActiveLead)}
-              className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/20 active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 py-2.5 rounded-full bg-[#C1F2D5] hover:bg-[#b0ecd0] text-[#111111] font-bold text-xs shadow-md active:translate-y-px transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Headphones className="w-4 h-4 stroke-[2.5]" />
               <span>Listen Live / Inspect</span>
@@ -199,7 +197,7 @@ export default function LiveCallingOperationsHub({
 
             <button
               onClick={() => onOpenLiveCallModal?.(currentActiveLead)}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/10 active:translate-y-px transition-all flex items-center gap-2 cursor-pointer"
             >
               <UserCheck className="w-4 h-4 stroke-[2.5]" />
               <span>Transfer to Dean</span>
@@ -207,68 +205,66 @@ export default function LiveCallingOperationsHub({
           </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* 2. RIGHT (7 COLS): VISUAL ADMISSIONS CALLING FUNNEL & TODAY'S YIELD       */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-7 shadow-xl border border-slate-200/90 flex flex-col justify-between">
+        {/* 2. RIGHT (7 COLS): VISUAL ADMISSIONS CALLING FUNNEL & TODAY'S YIELD */}
+        <div className="lg:col-span-7 bg-white rounded-[26px] p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-black/[0.06] flex flex-col justify-between">
           <div>
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-black/[0.05]">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
-                  <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#16856B] inline-block" />
+                  <h3 className="text-xl font-bold text-[#1A1A1A] tracking-tight font-sans">
                     Today&apos;s AI Calling Conversion Funnel
                   </h3>
                 </div>
-                <p className="text-xs font-medium text-slate-500">
-                  Real-time yield from <strong className="text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">{totalDialed.toLocaleString()} Total Contacts Dialed</strong> by Maya, Priya & Vikram
+                <p className="text-xs font-medium text-black/55">
+                  Real-time yield from <strong className="text-[#1A1A1A] bg-[#FAF3E4] px-2 py-0.5 rounded-full border border-black/[0.06]">{totalDialed.toLocaleString()} Total Contacts Dialed</strong> by Maya, Priya &amp; Vikram
                 </p>
               </div>
 
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 shadow-xs self-start sm:self-auto">
+              <span className="text-xs font-bold text-[#16856B] bg-[#C1F2D5] px-3.5 py-1.5 rounded-full shadow-2xs self-start sm:self-auto">
                 86.5% CONNECTION RATE
               </span>
             </div>
 
             {/* Visual Interactive Funnel Bars */}
-            <div className="space-y-3.5 mb-6">
+            <div className="space-y-3 mb-6">
               {/* Stage 1: Dialed & Connected */}
-              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+              <div className="p-3.5 rounded-2xl bg-[#FAF3E4]/40 border border-black/[0.05] shadow-2xs">
                 <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
-                  <span className="text-slate-800 flex items-center gap-2 font-bold">
-                    <PhoneOutgoing className="w-4 h-4 text-slate-600 stroke-[2.5]" />
-                    Total Connected & Answered
+                  <span className="text-[#1A1A1A] flex items-center gap-2 font-bold">
+                    <PhoneOutgoing className="w-4 h-4 text-black/60 stroke-[2.5]" />
+                    Total Connected &amp; Answered
                   </span>
-                  <span className="text-slate-900 font-mono font-bold text-sm">
+                  <span className="text-[#1A1A1A] font-bold text-sm">
                     {connectedCount} / {totalDialed} calls (86.5%)
                   </span>
                 </div>
-                <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
-                  <div style={{ width: "86.5%" }} className="h-full bg-slate-800 rounded-full" />
+                <div className="w-full h-2.5 bg-black/[0.06] rounded-full overflow-hidden">
+                  <div style={{ width: "86.5%" }} className="h-full bg-[#111111] rounded-full" />
                 </div>
               </div>
 
               {/* Stage 2: Interested Students */}
               <div
                 onClick={() => onFilterCategory?.("interested")}
-                className="p-3.5 rounded-xl bg-emerald-50/80 hover:bg-emerald-100/70 border border-emerald-200/80 shadow-xs hover:-translate-y-0.5 hover:shadow-md cursor-pointer transition-all group"
+                className="p-3.5 rounded-2xl bg-[#C1F2D5]/25 hover:bg-[#C1F2D5]/40 border border-[#C1F2D5]/60 shadow-2xs hover:-translate-y-0.5 hover:shadow-xs cursor-pointer transition-all group"
               >
                 <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
-                  <span className="text-emerald-900 flex items-center gap-2 font-bold">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 stroke-[2.5]" />
-                    Interested in Institute & Target Courses
+                  <span className="text-[#16856B] flex items-center gap-2 font-bold">
+                    <CheckCircle2 className="w-4 h-4 text-[#16856B] stroke-[2.5]" />
+                    Interested in Institute &amp; Target Courses
                   </span>
-                  <span className="text-emerald-900 font-mono font-bold text-sm">
+                  <span className="text-[#16856B] font-bold text-sm">
                     {interestedCount} Students (39.8% Yield)
                   </span>
                 </div>
-                <div className="w-full h-2.5 bg-emerald-200/50 rounded-full overflow-hidden mb-1.5">
-                  <div style={{ width: "39.8%" }} className="h-full bg-emerald-500 rounded-full" />
+                <div className="w-full h-2.5 bg-[#C1F2D5]/50 rounded-full overflow-hidden mb-1.5">
+                  <div style={{ width: "39.8%" }} className="h-full bg-[#16856B] rounded-full" />
                 </div>
-                <div className="flex items-center justify-between text-xs font-medium text-emerald-700">
+                <div className="flex items-center justify-between text-xs font-medium text-[#16856B]">
                   <span>Campus tours scheduled • Token fee offers sent</span>
-                  <span className="font-bold underline group-hover:text-emerald-900 flex items-center gap-1">
+                  <span className="font-bold underline flex items-center gap-1">
                     View List <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
                   </span>
                 </div>
@@ -277,23 +273,23 @@ export default function LiveCallingOperationsHub({
               {/* Stage 3: Call Later / Callbacks */}
               <div
                 onClick={() => onFilterCategory?.("call_later")}
-                className="p-3.5 rounded-xl bg-amber-50/80 hover:bg-amber-100/70 border border-amber-200/80 shadow-xs hover:-translate-y-0.5 hover:shadow-md cursor-pointer transition-all group"
+                className="p-3.5 rounded-2xl bg-[#FFD9A0]/25 hover:bg-[#FFD9A0]/40 border border-[#FFD9A0]/60 shadow-2xs hover:-translate-y-0.5 hover:shadow-xs cursor-pointer transition-all group"
               >
                 <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
-                  <span className="text-amber-900 flex items-center gap-2 font-bold">
-                    <Clock className="w-4 h-4 text-amber-600 stroke-[2.5]" />
-                    Callbacks & Follow-ups Scheduled
+                  <span className="text-[#9A5B00] flex items-center gap-2 font-bold">
+                    <Clock className="w-4 h-4 text-[#9A5B00] stroke-[2.5]" />
+                    Callbacks &amp; Follow-ups Scheduled
                   </span>
-                  <span className="text-amber-900 font-mono font-bold text-sm">
+                  <span className="text-[#9A5B00] font-bold text-sm">
                     {callbackCount} Students (18.1%)
                   </span>
                 </div>
-                <div className="w-full h-2.5 bg-amber-200/50 rounded-full overflow-hidden mb-1.5">
-                  <div style={{ width: "18.1%" }} className="h-full bg-amber-500 rounded-full" />
+                <div className="w-full h-2.5 bg-[#FFD9A0]/50 rounded-full overflow-hidden mb-1.5">
+                  <div style={{ width: "18.1%" }} className="h-full bg-[#9A5B00] rounded-full" />
                 </div>
-                <div className="flex items-center justify-between text-xs font-medium text-amber-700">
+                <div className="flex items-center justify-between text-xs font-medium text-[#9A5B00]">
                   <span>Parents at office • Queued for auto-dialer retry</span>
-                  <span className="font-bold underline group-hover:text-amber-900 flex items-center gap-1">
+                  <span className="font-bold underline flex items-center gap-1">
                     View Callbacks <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
                   </span>
                 </div>
@@ -302,30 +298,30 @@ export default function LiveCallingOperationsHub({
               {/* Stage 4: Not Interested */}
               <div
                 onClick={() => onFilterCategory?.("not_interested")}
-                className="p-3 rounded-xl bg-rose-50/80 hover:bg-rose-100/70 border border-rose-200/80 shadow-xs cursor-pointer transition-all flex items-center justify-between"
+                className="p-3 rounded-2xl bg-[#FFC0D3]/25 hover:bg-[#FFC0D3]/40 border border-[#FFC0D3]/60 shadow-2xs cursor-pointer transition-all flex items-center justify-between"
               >
-                <div className="flex items-center gap-2 text-xs font-bold text-rose-900">
-                  <XCircle className="w-4 h-4 text-rose-600 stroke-[2.5]" />
+                <div className="flex items-center gap-2 text-xs font-bold text-[#A81D47]">
+                  <XCircle className="w-4 h-4 text-[#A81D47] stroke-[2.5]" />
                   <span>Not Interested / Opt-Out List</span>
                 </div>
                 <div className="text-right flex items-center gap-2">
-                  <span className="text-xs font-bold text-rose-900 font-mono">
+                  <span className="text-xs font-bold text-[#A81D47]">
                     {notInterestedCount} (12.3%)
                   </span>
-                  <span className="text-xs font-semibold underline text-rose-700">View Reasons</span>
+                  <span className="text-xs font-semibold underline text-[#A81D47]">View Reasons</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Course Demand Breakdown */}
-          <div className="pt-4 border-t border-slate-100">
+          <div className="pt-4 border-t border-black/[0.05]">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                <BarChart3 className="w-4 h-4 text-indigo-600 stroke-[2.5]" />
+              <span className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider flex items-center gap-1.5">
+                <BarChart3 className="w-4 h-4 text-[#553C9A] stroke-[2.5]" />
                 Interested Students by Academic Program
               </span>
-              <span className="text-xs font-medium text-slate-400">Click any program to filter leads</span>
+              <span className="text-xs font-medium text-black/45">Click any program to filter leads</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -333,16 +329,16 @@ export default function LiveCallingOperationsHub({
                 <div
                   key={cd.key}
                   onClick={() => onFilterCourse?.(cd.key)}
-                  className="p-3 rounded-xl bg-slate-50/80 hover:bg-indigo-50/60 border border-slate-200/90 shadow-xs hover:border-indigo-300 hover:-translate-y-0.5 hover:shadow-md cursor-pointer transition-all"
+                  className="p-3.5 rounded-2xl bg-[#FAF3E4]/35 hover:bg-white border border-black/[0.05] hover:border-black/[0.12] shadow-2xs hover:shadow-xs hover:-translate-y-0.5 cursor-pointer transition-all"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="w-2 h-2 rounded-full bg-indigo-500 inline-block" />
-                    <span className="text-sm font-bold text-slate-900 font-mono">{cd.count}</span>
+                    <span className="w-2 h-2 rounded-full bg-[#111111] inline-block" />
+                    <span className="text-sm font-bold text-[#1A1A1A] font-sans">{cd.count}</span>
                   </div>
-                  <div className="text-xs font-bold text-slate-800 truncate" title={cd.name}>
+                  <div className="text-xs font-bold text-[#1A1A1A] truncate" title={cd.name}>
                     {cd.name.split(" ")[0]} {cd.name.split(" ")[1]}
                   </div>
-                  <div className="text-[11px] text-slate-500 font-medium">{cd.pct}% of leads</div>
+                  <div className="text-[11px] text-black/50 font-medium">{cd.pct}% of leads</div>
                 </div>
               ))}
             </div>

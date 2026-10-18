@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MoreHorizontal, Calendar } from "lucide-react";
 
 export interface WorkspaceCardProps {
   name: string;
@@ -13,7 +13,7 @@ export interface WorkspaceCardProps {
   metric: string;
   metricLabel?: string;
   status: string;
-  statusType?: "live" | "running" | "ready" | "neutral";
+  statusType?: "live" | "running" | "ready" | "neutral" | "warning";
   actionLabel?: string;
   tag?: string;
 }
@@ -28,69 +28,82 @@ export default function WorkspaceCard({
   metricLabel,
   status,
   statusType = "neutral",
-  actionLabel = "Open workspace →",
+  actionLabel = "Open section →",
   tag,
 }: WorkspaceCardProps) {
+  let tagBg = "bg-[#BCD0F5] text-[#1E3A8A]";
+  if (tag === "Commercial" || statusType === "warning") {
+    tagBg = "bg-[#FFA98B] text-[#7C2D12]";
+  } else if (tag === "Design" || statusType === "running") {
+    tagBg = "bg-[#D9C2FA] text-[#4C1D95]";
+  } else if (tag === "Internal Tasks" || statusType === "ready") {
+    tagBg = "bg-[#FFD9A0] text-[#78350F]";
+  }
+
   const content = (
-    <>
-      {/* Top Console Channel Header */}
-      <div className="relative flex items-center justify-between px-3.5 py-2.5 bg-[#121215] border-b border-[#27272A] group-hover:bg-[#18181B] transition-colors">
-        {/* Workspace Title & Icon */}
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-6 h-6 rounded-[2px] bg-white text-black flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-all">
-            <Icon className="w-3.5 h-3.5 stroke-[2.2]" />
-          </div>
-          <span className="font-display font-bold text-xs uppercase tracking-wider text-white truncate">
-            {name}
+    <div className="flex flex-col justify-between h-full space-y-3.5">
+      {/* Top Tag & More Menu */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className={`px-2.5 py-1 rounded-full text-[11px] font-semibold ${tagBg}`}>
+            {tag || "Operations"}
+          </span>
+          <span className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#FAF0D7] text-[#78350F]">
+            {status}
           </span>
         </div>
 
-        {/* Status Indicator */}
-        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-[1px] border border-[#27272A] bg-[#09090B] text-[10px] font-telemetry font-bold text-white shrink-0">
-          <span className="w-1.5 h-1.5 rounded-[1px] bg-white animate-pulse" />
-          <span className="truncate max-w-[120px]">{status}</span>
-        </div>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          className="w-6 h-6 rounded-full hover:bg-black/5 flex items-center justify-center text-black/40 hover:text-black transition-colors"
+        >
+          <MoreHorizontal className="w-4 h-4" />
+        </button>
       </div>
 
-      {/* Main Workspace Body Content */}
-      <div className="p-4 flex-1 flex flex-col justify-between space-y-3 bg-[#09090B]">
-        {/* One-Line Explanation */}
-        <p className="text-xs text-[#A1A1AA] leading-relaxed line-clamp-2 font-sans">
+      {/* Title & Description */}
+      <div className="space-y-1">
+        <h4 className="font-bold text-[15px] text-[#1A1A1A] tracking-tight leading-snug">
+          {name}
+        </h4>
+        <p className="text-xs text-black/60 leading-relaxed line-clamp-2">
           {description}
         </p>
+      </div>
 
-        {/* Primary Metric Block */}
+      {/* Date Chip */}
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-black/[0.08] text-[11px] font-medium text-black/60 self-start">
+        <Calendar className="w-3 h-3 text-black/40" />
+        <span>Today</span>
+      </div>
+
+      {/* Bottom Metric & Action */}
+      <div className="pt-2 border-t border-black/[0.06] flex items-center justify-between">
         <div>
-          <div className="text-xl sm:text-2xl font-black font-telemetry tracking-tight text-white flex items-baseline gap-2">
-            <span>{metric}</span>
-            {tag && (
-              <span className="text-[10px] font-telemetry font-bold text-black bg-white px-1.5 py-0.2 rounded-[1px]">
-                {tag}
-              </span>
-            )}
-          </div>
+          <span className="text-xl font-bold tracking-tight text-[#1A1A1A]">
+            {metric}
+          </span>
           {metricLabel && (
-            <span className="text-[11px] text-[#71717A] font-telemetry font-medium block mt-0.5 uppercase">
+            <span className="text-[11px] text-black/50 block -mt-0.5 font-medium">
               {metricLabel}
             </span>
           )}
         </div>
 
-        {/* Action Link Footer */}
-        <div className="pt-2.5 border-t border-[#27272A] flex items-center justify-between text-xs font-display font-bold text-[#A1A1AA] group-hover:text-white transition-colors">
-          <span className="group-hover:underline underline-offset-2">
-            {actionLabel}
-          </span>
-          <div className="w-5 h-5 rounded-[1px] bg-[#18181B] group-hover:bg-white group-hover:text-black flex items-center justify-center transition-all">
-            <ArrowRight className="w-3 h-3 text-[#A1A1AA] group-hover:text-black transform group-hover:translate-x-0.5 transition-transform" />
-          </div>
+        <div className="flex items-center gap-1 text-xs font-semibold text-[#1A1A1A] group-hover:translate-x-0.5 transition-transform">
+          <span>{actionLabel}</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </div>
       </div>
-    </>
+    </div>
   );
 
   const containerClasses =
-    "group relative flex flex-col justify-between bg-[#09090B] rounded-[2px] border border-[#27272A] hover:border-white transition-all duration-150 text-left overflow-hidden cursor-pointer w-full";
+    "group pastel-card p-4 sm:p-5 flex flex-col justify-between cursor-pointer text-left w-full";
 
   if (href) {
     return (

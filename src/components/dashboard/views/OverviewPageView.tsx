@@ -17,16 +17,29 @@ import {
   PhoneOutgoing,
   Radio,
   Sliders,
-  Terminal,
-  Shield,
-  Layers,
   Sparkles,
+  CheckCircle2,
+  Clock,
+  ArrowUpRight,
+  SlidersHorizontal,
+  ChevronRight,
+  MoreHorizontal,
+  Calendar,
+  MessageSquare,
+  ShieldCheck,
+  Plus,
+  ArrowUpDown,
+  Headphones,
+  Flame,
 } from "lucide-react";
 import TestCallModal from "../modals/TestCallModal";
 import TopUpCreditsModal from "../modals/TopUpCreditsModal";
 import CreateAgentModal from "../modals/CreateAgentModal";
 import StartCampaignModal from "../modals/StartCampaignModal";
+import CallDrawer from "./CallDrawer";
+import { RecentCallRecord, CallOutcome } from "@/types/dashboard";
 import { soundSynth } from "@/lib/audio-synth";
+import BuildAIEmployeeBanner from "../components/BuildAIEmployeeBanner";
 
 interface CallRecord {
   id: string;
@@ -40,10 +53,15 @@ interface CallRecord {
   sentiment: "positive" | "neutral" | "needs-followup";
   outcome: string;
   latencyMs: number;
+  extractedTags?: string[];
 }
 
 export default function OverviewPageView() {
   const router = useRouter();
+  const [selectedCallForDrawer, setSelectedCallForDrawer] = useState<RecentCallRecord | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Timeframe and Filtering
   const [timeframe, setTimeframe] = useState<"today" | "7d" | "30d">("today");
   const [selectedTrafficTab, setSelectedTrafficTab] = useState<"all" | "inbound" | "outbound">("all");
   const [callFilter, setCallFilter] = useState<"all" | "inbound" | "outbound">("all");
@@ -57,24 +75,25 @@ export default function OverviewPageView() {
   const [createAgentOpen, setCreateAgentOpen] = useState(false);
   const [startCampaignOpen, setStartCampaignOpen] = useState(false);
 
-  // User and Workspace context
+  // Context & Quotas
   const [workspaceName, setWorkspaceName] = useState("Apex Institute of Technology");
   const [availableMinutes, setAvailableMinutes] = useState(14.0);
 
-  // Seed telephony call archives
-  const initialDemoCalls: CallRecord[] = [
+  // Seed telephony calls
+  const initialCalls: CallRecord[] = [
     {
       id: "call_01",
-      phoneNumber: "+91 98492 10482",
+      phoneNumber: "+91 98401 22345",
       callerName: "Rahul Sharma",
       agentName: "Maya (Admissions)",
       direction: "inbound",
-      durationSeconds: 142,
+      durationSeconds: 144,
       timestamp: "10 mins ago",
       status: "completed",
       sentiment: "positive",
-      outcome: "Hostel Fee & Application Confirmed",
+      outcome: "B.Tech CSE Fee & Campus Tour Confirmed",
       latencyMs: 136,
+      extractedTags: ["Admissions", "High Intent"],
     },
     {
       id: "call_02",
@@ -82,29 +101,73 @@ export default function OverviewPageView() {
       callerName: "Ananya Iyer",
       agentName: "Priya (Tuition & Aid)",
       direction: "inbound",
-      durationSeconds: 88,
-      timestamp: "35 mins ago",
+      durationSeconds: 108,
+      timestamp: "28 mins ago",
       status: "completed",
       sentiment: "positive",
-      outcome: "Merit Scholarship Criteria Dispatched",
+      outcome: "Merit Scholarship Criteria & WhatsApp Brochure",
       latencyMs: 142,
+      extractedTags: ["Scholarship", "WhatsApp Sent"],
     },
     {
       id: "call_03",
-      phoneNumber: "+91 99880 23145",
-      callerName: "Vikram Malhotra",
-      agentName: "Arjun (Helpdesk RAG)",
+      phoneNumber: "+91 99880 44120",
+      callerName: "Vikramaditya Rao",
+      agentName: "Arjun (Outreach)",
       direction: "outbound",
-      durationSeconds: 65,
-      timestamp: "1 hr ago",
+      durationSeconds: 75,
+      timestamp: "45 mins ago",
       status: "completed",
       sentiment: "neutral",
-      outcome: "Entrance Exam Venue Details Shared",
+      outcome: "Entrance Registration Verified for Sunday Slot",
       latencyMs: 148,
+      extractedTags: ["Outreach", "Sunday Slot"],
+    },
+    {
+      id: "call_04",
+      phoneNumber: "+91 98210 55678",
+      callerName: "Meera Krishnan",
+      agentName: "Maya (Admissions)",
+      direction: "inbound",
+      durationSeconds: 185,
+      timestamp: "1 hr ago",
+      status: "completed",
+      sentiment: "positive",
+      outcome: "Sports Quota Inquiry Escalated to Senior Desk",
+      latencyMs: 140,
+      extractedTags: ["Sports Quota", "Escalated"],
+    },
+    {
+      id: "call_05",
+      phoneNumber: "+91 97123 45678",
+      callerName: "Kavita Rao",
+      agentName: "Maya (Admissions)",
+      direction: "inbound",
+      durationSeconds: 94,
+      timestamp: "2 hrs ago",
+      status: "completed",
+      sentiment: "positive",
+      outcome: "Campus Hostel Accommodation & Mess Fee",
+      latencyMs: 132,
+      extractedTags: ["Hostel", "AC Shared"],
+    },
+    {
+      id: "call_06",
+      phoneNumber: "+91 99120 77881",
+      callerName: "Nitin Varma",
+      agentName: "Arjun (Outreach)",
+      direction: "outbound",
+      durationSeconds: 120,
+      timestamp: "3 hrs ago",
+      status: "completed",
+      sentiment: "positive",
+      outcome: "Direct PRI SIP Trunk Connectivity Confirmed",
+      latencyMs: 138,
+      extractedTags: ["SIP Trunk", "SLA Confirmed"],
     },
   ];
 
-  const [callsList, setCallsList] = useState<CallRecord[]>(initialDemoCalls);
+  const [callsList, setCallsList] = useState<CallRecord[]>(initialCalls);
 
   useEffect(() => {
     try {
@@ -138,7 +201,7 @@ export default function OverviewPageView() {
   // Hourly Concurrency Slots for Telephony Traffic Meter
   const hourlySlots = [
     { hour: "08:00", inbound: 3, outbound: 1, total: 4 },
-    { hour: "10:00", inbound: 6, outbound: 3, total: 9 },
+    { hour: "10:00", inbound: 7, outbound: 3, total: 10 },
     { hour: "12:00", inbound: 8, outbound: 4, total: 12 },
     { hour: "14:00", inbound: 5, outbound: 2, total: 7 },
     { hour: "16:00", inbound: 9, outbound: 5, total: 14 },
@@ -151,7 +214,7 @@ export default function OverviewPageView() {
 
   // Simulate an inbound call with tactile audio feedback
   const handleSimulateInboundCall = () => {
-    soundSynth.playCallChime();
+    try { soundSynth.playCallChime(); } catch {}
 
     const sampleCallers = [
       { name: "Divya Reddy", phone: "+91 98765 43210", inquiry: "B.Tech CSE Admission Cutoff Query" },
@@ -173,6 +236,7 @@ export default function OverviewPageView() {
       sentiment: "positive",
       outcome: pick.inquiry,
       latencyMs: 132 + Math.floor(Math.random() * 12),
+      extractedTags: ["Inbound", "Verified"],
     };
 
     const updated = [newCall, ...callsList];
@@ -183,10 +247,35 @@ export default function OverviewPageView() {
       localStorage.setItem("swaram_calls", JSON.stringify(updated));
     } catch {}
 
-    soundSynth.speak(
-      `Inbound carrier session established from ${pick.name}. Maya admissions agent routed at ${newCall.latencyMs} millisecond latency.`,
-      { rate: 1.05 }
-    );
+    try {
+      soundSynth.speak(
+        `Inbound carrier session established from ${pick.name}. Maya admissions agent routed at ${newCall.latencyMs} millisecond latency.`,
+        { rate: 1.05 }
+      );
+    } catch {}
+  };
+
+  const openCallInDrawer = (call: CallRecord) => {
+    try { soundSynth.play("click"); } catch {}
+    const record: RecentCallRecord = {
+      id: call.id,
+      contactNumber: call.phoneNumber,
+      contactName: call.callerName,
+      agentName: call.agentName,
+      direction: call.direction,
+      duration: `${Math.floor(call.durationSeconds / 60)}m ${call.durationSeconds % 60}s`,
+      durationSeconds: call.durationSeconds,
+      outcome: (call.status === "completed" ? "Completed" : "Interested") as CallOutcome,
+      timestamp: call.timestamp,
+      timeAgo: call.timestamp,
+      summary: call.outcome,
+      sentimentScore: call.sentiment === "positive" ? 94 : 82,
+      qualification: "Qualified",
+      transcriptSnippet: `Candidate ${call.callerName} inquired about ${call.outcome} through ${call.agentName}.`,
+      audioRecordingUrl: "https://actions.google.com/sounds/v1/speech/female_affirmation.ogg",
+    };
+    setSelectedCallForDrawer(record);
+    setDrawerOpen(true);
   };
 
   // Filtered Telephony Call Ledger
@@ -202,305 +291,334 @@ export default function OverviewPageView() {
   });
 
   return (
-    <div className="space-y-4 pb-16 font-sans text-white select-none max-w-[1440px] mx-auto animate-in fade-in duration-150">
+    <div className="space-y-6 sm:space-y-7 font-sans text-[#1A1A1A] max-w-[1480px] mx-auto select-none">
       {/* ========================================================================= */}
-      {/* 1. 19-INCH TELECOM PATCH-BAY STATUS & CONCURRENCY BANNER                   */}
+      {/* 1. TOP CARRIER STATUS & QUICK ACTIONS CONSOLE                             */}
       {/* ========================================================================= */}
-      <div className="bg-[#09090B] border border-[#27272A] rounded-[2px] p-4 sm:p-5 relative overflow-hidden shadow-2xl">
-        {/* Subtle Machined Corner Details */}
-        <div className="absolute top-2 left-2 w-1.5 h-1.5 rounded-full border border-[#3F3F46] bg-[#18181B]" />
-        <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full border border-[#3F3F46] bg-[#18181B]" />
-        <div className="absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full border border-[#3F3F46] bg-[#18181B]" />
-        <div className="absolute bottom-2 right-2 w-1.5 h-1.5 rounded-full border border-[#3F3F46] bg-[#18181B]" />
-
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div>
-            {/* Telecom Channel Status Strip */}
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-[1px] bg-[#18181B] border border-[#27272A] text-[11px] font-telemetry font-bold text-white">
-                <span className="w-1.5 h-1.5 rounded-[1px] bg-white animate-pulse" />
-                <span>TRUNK GATEWAY: SIP/2.0 READY</span>
-              </div>
-              <span className="text-xs text-[#3F3F46] font-telemetry">|</span>
-              <span className="text-xs font-telemetry font-bold text-[#A1A1AA]">
-                ID: TRK-91-AIRTEL-PRI
-              </span>
-              <span className="text-xs text-[#3F3F46] font-telemetry">|</span>
-              <span className="text-xs font-telemetry text-white bg-[#121215] px-2 py-0.5 rounded-[1px] border border-[#27272A]">
-                {workspaceName}
-              </span>
-            </div>
-
-            {/* Headline with high-contrast typography */}
-            <h1 className="text-xl sm:text-2xl font-black font-display text-white tracking-tight mt-2 flex items-center gap-2">
-              <span>Voice Dispatch &amp; Telephony Operations Console</span>
-            </h1>
-            <p className="text-xs text-[#A1A1AA] mt-0.5 max-w-3xl font-sans">
-              Real-time SIP stream concurrency, multi-agent voice workforce routing, and neural acoustic latency telemetry.
-            </p>
-          </div>
-
-          {/* Master Control Deck Actions */}
+      <div className="bg-white rounded-[28px] border border-black/[0.06] p-4 sm:p-5 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          {/* Carrier Status Strip */}
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Stepped Timeframe Selector */}
-            <div className="flex bg-[#121215] border border-[#27272A] rounded-[2px] p-0.5 text-xs font-telemetry">
-              <button
-                onClick={() => setTimeframe("today")}
-                className={`px-2.5 py-1 rounded-[1px] transition-all cursor-pointer font-bold ${
-                  timeframe === "today"
-                    ? "bg-white text-black shadow-2xs"
-                    : "text-[#A1A1AA] hover:text-white"
-                }`}
-              >
-                Today
-              </button>
-              <button
-                onClick={() => setTimeframe("7d")}
-                className={`px-2.5 py-1 rounded-[1px] transition-all cursor-pointer font-bold ${
-                  timeframe === "7d"
-                    ? "bg-white text-black shadow-2xs"
-                    : "text-[#A1A1AA] hover:text-white"
-                }`}
-              >
-                7D
-              </button>
-              <button
-                onClick={() => setTimeframe("30d")}
-                className={`px-2.5 py-1 rounded-[1px] transition-all cursor-pointer font-bold ${
-                  timeframe === "30d"
-                    ? "bg-white text-black shadow-2xs"
-                    : "text-[#A1A1AA] hover:text-white"
-                }`}
-              >
-                30D
-              </button>
-            </div>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5EF] text-[#16856B] text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-[#16856B] animate-pulse" />
+              <span>TRUNK GATEWAY: SIP/2.0 READY</span>
+            </span>
+            <span className="text-black/20 text-xs">•</span>
+            <span className="text-xs font-semibold text-black/60">
+              TRK-91-AIRTEL-PRI
+            </span>
+            <span className="text-black/20 text-xs">•</span>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#FAF3E4] text-[#1A1A1A]">
+              {workspaceName}
+            </span>
+          </div>
 
-            {/* Split-label Button: Simulate Inbound Call */}
+          <h2 className="text-xl sm:text-[22px] font-bold text-[#1A1A1A] tracking-tight mt-1.5">
+            Voice Dispatch &amp; Telephony Operations
+          </h2>
+          <p className="text-xs text-black/55 mt-0.5">
+            Real-time SIP stream concurrency, multi-agent voice workforce routing, and neural acoustic latency telemetry.
+          </p>
+        </div>
+
+        {/* Operational Actions */}
+        <div className="flex items-center gap-2 flex-wrap self-start lg:self-center">
+          {/* Stepped Timeframe Selector Pills */}
+          <div className="flex bg-[#FBF7ED] border border-black/[0.06] rounded-full p-1 text-xs">
             <button
-              onClick={handleSimulateInboundCall}
-              className="inline-grid grid-auto-flow-column border border-white rounded-[2px] bg-[#121215] hover:bg-[#18181B] text-xs font-display font-bold text-white transition-all cursor-pointer active:translate-x-[1px] active:translate-y-[1px] overflow-hidden group shadow-2xs"
-              title="Trigger simulated inbound carrier call with real Web Audio chime"
+              onClick={() => {
+                try { soundSynth.play("click"); } catch {}
+                setTimeframe("today");
+              }}
+              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
+                timeframe === "today"
+                  ? "bg-[#111111] text-white shadow-2xs"
+                  : "text-black/60 hover:text-black"
+              }`}
             >
-              <div className="flex items-center">
-                <span className="px-2.5 py-1.5 flex items-center gap-1.5 border-r border-[#27272A]">
-                  <PhoneIncoming className="w-3.5 h-3.5 text-white" />
-                  <span>Simulate Inbound</span>
-                </span>
-                <span className="px-2 py-1.5 bg-white text-black font-telemetry font-bold text-[11px]">
-                  CH-01
-                </span>
-              </div>
+              Today
             </button>
-
-            {/* Inverted Brick Button: Test Voice Agent */}
             <button
-              onClick={() => setTestCallOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-xs font-display font-bold border border-white cursor-pointer active:translate-x-[1px] active:translate-y-[1px] transition-all shadow-2xs"
+              onClick={() => {
+                try { soundSynth.play("click"); } catch {}
+                setTimeframe("7d");
+              }}
+              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
+                timeframe === "7d"
+                  ? "bg-[#111111] text-white shadow-2xs"
+                  : "text-black/60 hover:text-black"
+              }`}
             >
-              <Volume2 className="w-3.5 h-3.5 text-black" />
-              <span>Test Voice Agent</span>
+              7D
+            </button>
+            <button
+              onClick={() => {
+                try { soundSynth.play("click"); } catch {}
+                setTimeframe("30d");
+              }}
+              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
+                timeframe === "30d"
+                  ? "bg-[#111111] text-white shadow-2xs"
+                  : "text-black/60 hover:text-black"
+              }`}
+            >
+              30D
             </button>
           </div>
+
+          {/* Simulate Inbound Call Button */}
+          <button
+            onClick={handleSimulateInboundCall}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-xs font-semibold text-[#1A1A1A] shadow-2xs transition-all cursor-pointer"
+            title="Simulate inbound carrier call"
+          >
+            <PhoneIncoming className="w-3.5 h-3.5 text-[#16856B]" />
+            <span>Simulate Inbound</span>
+          </button>
+
+          {/* Test Voice Agent Button */}
+          <button
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              setTestCallOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-2xs transition-all cursor-pointer"
+          >
+            <Volume2 className="w-3.5 h-3.5" />
+            <span>Test Voice Agent</span>
+          </button>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. CONTINUOUS MACHINED TELEMETRY METER BAY (4 PRECISE INSTRUMENT READINGS) */}
+      {/* 2. TOP METRIC CARDS (Solid pastel cards matching visual reference)       */}
       {/* ========================================================================= */}
-      <div className="bg-[#09090B] border border-[#27272A] rounded-[2px] p-0 overflow-hidden shadow-2xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#27272A]">
-          {/* Reading 1: Telephony Minutes Quota */}
-          <div className="p-4 bg-[#09090B] flex flex-col justify-between space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider">
-                METER 01 // MINUTES
-              </span>
-              <span className="text-[10px] font-telemetry font-bold px-1.5 py-0.2 bg-[#18181B] text-white border border-[#27272A] rounded-[1px]">
-                ALLOCATED: 100M
-              </span>
-            </div>
-
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black font-telemetry text-white tracking-tight">
-                  {availableMinutes.toFixed(1)}
-                </span>
-                <span className="text-xs font-telemetry text-[#A1A1AA]">MIN REMAINING</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        
+        {/* CARD 1: Lavender #C9A7F5 - Available Minutes */}
+        <div
+          onClick={() => setTopUpOpen(true)}
+          className="pastel-stat-card bg-[#C9A7F5] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
+                <Clock className="w-4 h-4 stroke-[2]" />
               </div>
-
-              {/* Stepped Telephony Gauge */}
-              <div className="w-full bg-[#18181B] h-2 rounded-[1px] border border-[#27272A] mt-2 overflow-hidden flex">
-                <div className="bg-white h-full w-[14%]" />
-                <div className="bg-[#121215] h-full w-[86%]" />
-              </div>
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
+                Minutes Quota
+              </span>
             </div>
-
-            <div className="flex items-center justify-between pt-1 text-xs font-sans">
-              <span className="text-[#A1A1AA] text-[11px] font-telemetry">Free Tier Active</span>
-              <button
-                onClick={() => setTopUpOpen(true)}
-                className="text-[11px] font-display font-bold text-white hover:underline cursor-pointer"
-              >
-                + Top Up Credits
-              </button>
-            </div>
+            <span className="px-2 py-0.5 rounded-full bg-white/70 text-[11px] font-bold text-[#3B0764]">
+              100m ALLOCATED
+            </span>
           </div>
 
-          {/* Reading 2: Telephony Traffic Volume */}
-          <div className="p-4 bg-[#09090B] flex flex-col justify-between space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider">
-                METER 02 // TRAFFIC
+          <div>
+            <div className="flex items-baseline gap-2 pt-2">
+              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+                {availableMinutes.toFixed(1)}
               </span>
-              <span className="text-[10px] font-telemetry font-bold px-1.5 py-0.2 bg-[#18181B] text-white border border-[#27272A] rounded-[1px]">
-                LIVE TRUNKS
+              <span className="text-xs text-black/65 font-medium">min remaining</span>
+            </div>
+
+            {/* Stepped Progress Bar */}
+            <div className="w-full bg-white/40 h-2 rounded-full mt-2.5 overflow-hidden flex">
+              <div className="bg-[#111111] h-full w-[14%]" />
+              <div className="bg-transparent h-full w-[86%]" />
+            </div>
+
+            <div className="flex items-center justify-between pt-2 text-[11px]">
+              <span className="text-black/60 font-medium">Free Tier Active</span>
+              <span className="font-bold text-[#1A1A1A] group-hover:underline">
+                + Top Up &rarr;
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 2: Coral / Peach #FFA98B - Traffic Volume */}
+        <div
+          onClick={() => router.push("/dashboard/calls")}
+          className="pastel-stat-card bg-[#FFA98B] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
+                <Phone className="w-4 h-4 stroke-[2]" />
+              </div>
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
+                Traffic Volume
+              </span>
+            </div>
+            <span className="px-2 py-0.5 rounded-full bg-white/70 text-[11px] font-bold text-[#7C2D12]">
+              LIVE TRUNKS
+            </span>
+          </div>
+
+          <div>
+            <div className="flex items-baseline gap-2 pt-2">
+              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+                {totalCalls}
+              </span>
+              <span className="text-xs text-black/65 font-medium">calls handled</span>
+            </div>
+
+            <div className="flex items-center gap-3 mt-2 text-xs font-semibold text-[#1A1A1A]">
+              <span className="flex items-center gap-1">
+                <PhoneIncoming className="w-3 h-3 text-[#16856B]" /> {inboundCallsCount} Inbound
+              </span>
+              <span className="text-black/30">&bull;</span>
+              <span className="flex items-center gap-1">
+                <PhoneOutgoing className="w-3 h-3 text-[#1E3A8A]" /> {outboundCallsCount} Outbound
               </span>
             </div>
 
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black font-telemetry text-white tracking-tight">
-                  {totalCalls}
-                </span>
-                <span className="text-xs font-telemetry text-[#A1A1AA]">CALLS TODAY</span>
-              </div>
-
-              <div className="flex items-center gap-3 mt-2 text-xs font-telemetry font-semibold">
-                <span className="flex items-center gap-1 text-white">
-                  <PhoneIncoming className="w-3 h-3" /> {inboundCallsCount} Inbound
-                </span>
-                <span className="flex items-center gap-1 text-[#A1A1AA]">
-                  <PhoneOutgoing className="w-3 h-3" /> {outboundCallsCount} Outbound
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-1 text-xs font-telemetry">
-              <span className="text-[#A1A1AA] text-[11px]">{minutesUsedToday} min consumed</span>
-              <span className="text-[10px] font-bold text-white bg-[#18181B] border border-[#27272A] px-1.5 py-0.2 rounded-[1px]">
+            <div className="flex items-center justify-between pt-2 text-[11px]">
+              <span className="text-black/60 font-medium">{minutesUsedToday} min consumed</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/80 font-bold text-[#16856B]">
                 100% RESOLVED
               </span>
             </div>
           </div>
+        </div>
 
-          {/* Reading 3: Acoustic Turnaround & Neural Latency */}
-          <div className="p-4 bg-[#09090B] flex flex-col justify-between space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider">
-                METER 03 // ACOUSTICS
-              </span>
-              <span className="text-[10px] font-telemetry font-bold px-1.5 py-0.2 bg-[#18181B] text-white border border-[#27272A] rounded-[1px]">
-                QOS TARGET &lt;300MS
-              </span>
-            </div>
-
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black font-telemetry text-white tracking-tight">
-                  {avgLatency}
-                </span>
-                <span className="text-xs font-telemetry text-[#A1A1AA]">MS TURNAROUND</span>
+        {/* CARD 3: Soft Periwinkle Blue #A8C3F0 - Turnaround Latency */}
+        <div
+          onClick={() => router.push("/dashboard/analytics")}
+          className="pastel-stat-card bg-[#A8C3F0] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
+                <Zap className="w-4 h-4 stroke-[2] fill-current" />
               </div>
-
-              <p className="text-[11px] font-telemetry text-[#A1A1AA] mt-2">
-                STT: 42ms • AI: 68ms • TTS: 26ms
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between pt-1 text-xs font-telemetry">
-              <span className="text-white font-bold flex items-center gap-1 text-[11px]">
-                <Check className="w-3 h-3" /> SLA Verified
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
+                Turnaround Latency
               </span>
-              <span className="text-[10px] font-telemetry text-[#A1A1AA]">Opus HD 16kHz</span>
             </div>
+            <span className="px-2 py-0.5 rounded-full bg-white/70 text-[11px] font-bold text-[#1E3A8A]">
+              &lt;200MS SLA
+            </span>
           </div>
 
-          {/* Reading 4: Active Voice Agent Channels */}
-          <div className="p-4 bg-[#09090B] flex flex-col justify-between space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider">
-                METER 04 // AGENTS
+          <div>
+            <div className="flex items-baseline gap-2 pt-2">
+              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+                {avgLatency}
               </span>
-              <span className="text-[10px] font-telemetry font-bold px-1.5 py-0.2 bg-[#18181B] text-white border border-[#27272A] rounded-[1px]">
-                DISPATCH READY
-              </span>
+              <span className="text-xs text-black/65 font-medium">ms turnaround</span>
             </div>
 
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-black font-telemetry text-white tracking-tight">
-                  3
-                </span>
-                <span className="text-xs font-telemetry text-[#A1A1AA]">PROVISIONED TRUNKS</span>
+            <p className="text-[11px] text-black/65 mt-2 font-medium">
+              STT: 42ms &bull; AI: 68ms &bull; TTS: 26ms
+            </p>
+
+            <div className="flex items-center justify-between pt-2 text-[11px]">
+              <span className="font-bold text-[#16856B] flex items-center gap-1">
+                <Check className="w-3 h-3 stroke-[2.5]" /> 99.99% Carrier SLA
+              </span>
+              <span className="text-black/55 font-medium">Opus HD 16kHz</span>
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 4: Soft Mint Green #C1F2D5 - Active Voice Agents */}
+        <div
+          onClick={() => router.push("/dashboard/agents")}
+          className="pastel-stat-card bg-[#C1F2D5] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
+                <Bot className="w-4 h-4 stroke-[2]" />
               </div>
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
+                AI Workforce
+              </span>
+            </div>
+            <span className="px-2 py-0.5 rounded-full bg-white/80 text-[11px] font-bold text-[#065F46]">
+              3 CHANNELS ONLINE
+            </span>
+          </div>
 
-              <p className="text-[11px] font-sans font-medium text-[#A1A1AA] mt-2 truncate">
-                Maya (Admissions) • Priya • Arjun
-              </p>
+          <div>
+            <div className="flex items-baseline gap-2 pt-2">
+              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+                3
+              </span>
+              <span className="text-xs text-black/65 font-medium">voice agents</span>
             </div>
 
-            <div className="flex items-center justify-between pt-1 text-xs font-sans">
-              <span className="text-[#A1A1AA] text-[11px] font-telemetry">Bilingual (Hindi/Eng)</span>
+            <p className="text-[11px] font-semibold text-[#1A1A1A] mt-2 truncate">
+              Maya (Admissions) &bull; Priya &bull; Arjun
+            </p>
+
+            <div className="flex items-center justify-between pt-2 text-[11px]">
+              <span className="text-black/60 font-medium">Hindi + English + Telugu</span>
               <button
-                onClick={() => setCreateAgentOpen(true)}
-                className="text-[11px] font-display font-bold text-white hover:underline cursor-pointer"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCreateAgentOpen(true);
+                }}
+                className="font-bold text-[#1A1A1A] group-hover:underline cursor-pointer"
               >
                 + Add Agent
               </button>
             </div>
           </div>
         </div>
+
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. CENTRAL TELEMETRY SECTION (CONCURRENCY INSPECTOR & AGENT CHANNEL STRIP)  */}
+      {/* 3. CENTRAL CONCURRENCY & ACTIVE AGENT WORKFORCE RACK                      */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* LEFT COLUMN: Hourly SIP Concurrency Inspector (8 cols) */}
-        <div className="lg:col-span-8 bg-[#09090B] border border-[#27272A] rounded-[2px] p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-2xl">
-          {/* Header Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#27272A]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* LEFT COLUMN: Hourly SIP Concurrency Distribution (8 cols) */}
+        <div className="lg:col-span-8 bg-white rounded-[28px] border border-black/[0.06] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col justify-between space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
             <div>
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-[1px] bg-white" />
-                <h2 className="text-sm font-black font-display text-white tracking-tight uppercase">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#16856B]" />
+                <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">
                   Hourly Telephony Concurrency Distribution
-                </h2>
+                </h3>
               </div>
-              <p className="text-[11px] text-[#A1A1AA] mt-0.5 font-sans">
+              <p className="text-xs text-black/55 mt-0.5">
                 Active carrier sessions and channel concurrency across standard institutional business hours.
               </p>
             </div>
 
-            {/* Stepped Filter Tabs */}
-            <div className="flex items-center gap-1 bg-[#121215] border border-[#27272A] rounded-[2px] p-0.5 text-xs font-telemetry">
+            {/* Stepped Filter Pills */}
+            <div className="flex items-center gap-1 bg-[#FBF7ED] border border-black/[0.06] rounded-full p-1 text-xs font-semibold">
               <button
                 onClick={() => setSelectedTrafficTab("all")}
-                className={`px-2.5 py-0.5 rounded-[1px] font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   selectedTrafficTab === "all"
-                    ? "bg-white text-black"
-                    : "text-[#A1A1AA] hover:text-white"
+                    ? "bg-[#111111] text-white shadow-2xs"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
                 ALL
               </button>
               <button
                 onClick={() => setSelectedTrafficTab("inbound")}
-                className={`px-2.5 py-0.5 rounded-[1px] font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   selectedTrafficTab === "inbound"
-                    ? "bg-white text-black"
-                    : "text-[#A1A1AA] hover:text-white"
+                    ? "bg-[#111111] text-white shadow-2xs"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
                 INBOUND
               </button>
               <button
                 onClick={() => setSelectedTrafficTab("outbound")}
-                className={`px-2.5 py-0.5 rounded-[1px] font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   selectedTrafficTab === "outbound"
-                    ? "bg-white text-black"
-                    : "text-[#A1A1AA] hover:text-white"
+                    ? "bg-[#111111] text-white shadow-2xs"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
                 OUTBOUND
@@ -509,19 +627,19 @@ export default function OverviewPageView() {
           </div>
 
           {/* Stepped Telephony Meter Chart */}
-          <div className="relative pt-4 pb-2 bg-[#040405] border border-[#27272A] rounded-[2px] p-3">
-            {/* Y-axis guidelines */}
-            <div className="absolute inset-x-3 inset-y-4 flex flex-col justify-between pointer-events-none opacity-40">
-              <div className="border-b border-dashed border-[#27272A] w-full flex justify-end">
-                <span className="text-[9px] font-telemetry text-[#71717A] -mt-2">15 CALLS</span>
+          <div className="relative pt-6 pb-2 bg-[#FAF7F0]/60 rounded-2xl p-4 border border-black/[0.04]">
+            {/* Guidelines */}
+            <div className="absolute inset-x-4 inset-y-6 flex flex-col justify-between pointer-events-none opacity-40">
+              <div className="border-b border-dashed border-black/15 w-full flex justify-end">
+                <span className="text-[10px] font-semibold text-black/40 -mt-2.5">15 CALLS</span>
               </div>
-              <div className="border-b border-dashed border-[#27272A] w-full flex justify-end">
-                <span className="text-[9px] font-telemetry text-[#71717A] -mt-2">10 CALLS</span>
+              <div className="border-b border-dashed border-black/15 w-full flex justify-end">
+                <span className="text-[10px] font-semibold text-black/40 -mt-2.5">10 CALLS</span>
               </div>
-              <div className="border-b border-dashed border-[#27272A] w-full flex justify-end">
-                <span className="text-[9px] font-telemetry text-[#71717A] -mt-2">5 CALLS</span>
+              <div className="border-b border-dashed border-black/15 w-full flex justify-end">
+                <span className="text-[10px] font-semibold text-black/40 -mt-2.5">5 CALLS</span>
               </div>
-              <div className="border-b border-[#27272A] w-full" />
+              <div className="border-b border-black/10 w-full" />
             </div>
 
             {/* Stepped Column Bars */}
@@ -542,35 +660,35 @@ export default function OverviewPageView() {
                   >
                     {/* Tooltip on hover */}
                     {isHovered && (
-                      <div className="absolute -top-12 z-20 px-2 py-1 bg-white text-black text-[10px] rounded-[1px] border border-white shadow-xl whitespace-nowrap animate-in fade-in duration-75">
-                        <span className="font-telemetry font-bold">{slot.hour}: </span>
-                        <span className="font-telemetry">{slot.total} calls</span>
-                        <div className="text-zinc-600 text-[9px] font-telemetry">
-                          {slot.inbound} in / {slot.outbound} out
+                      <div className="absolute -top-12 z-20 px-2.5 py-1 bg-[#111111] text-white text-[11px] rounded-xl shadow-lg whitespace-nowrap animate-in fade-in duration-75">
+                        <span className="font-bold">{slot.hour}: </span>
+                        <span>{slot.total} calls</span>
+                        <div className="text-white/70 text-[10px]">
+                          {slot.inbound} in &bull; {slot.outbound} out
                         </div>
                       </div>
                     )}
 
-                    {/* Industrial Stepped Bar */}
+                    {/* Stacked Pastel Bar */}
                     <div
                       style={{ height: `${heightPercentage}%` }}
-                      className={`w-full max-w-[32px] rounded-[1px] transition-all duration-150 overflow-hidden flex flex-col justify-end border border-[#3F3F46] ${
-                        isHovered ? "ring-2 ring-white" : ""
+                      className={`w-full max-w-[34px] rounded-t-xl transition-all duration-150 overflow-hidden flex flex-col justify-end shadow-xs ${
+                        isHovered ? "scale-105" : ""
                       }`}
                     >
-                      {/* Inbound Portion */}
+                      {/* Inbound Portion (Lavender) */}
                       <div
                         style={{
                           height: `${(slot.inbound / (slot.total || 1)) * 100}%`,
                         }}
-                        className="w-full bg-white"
+                        className="w-full bg-[#C9A7F5]"
                       />
-                      {/* Outbound Portion */}
+                      {/* Outbound Portion (Coral) */}
                       <div
                         style={{
                           height: `${(slot.outbound / (slot.total || 1)) * 100}%`,
                         }}
-                        className="w-full bg-[#3F3F46]"
+                        className="w-full bg-[#FFA98B]"
                       />
                     </div>
                   </div>
@@ -579,7 +697,7 @@ export default function OverviewPageView() {
             </div>
 
             {/* X-axis Labels */}
-            <div className="flex justify-between text-[10px] font-telemetry font-bold text-[#A1A1AA] mt-3 px-2">
+            <div className="flex justify-between text-[11px] font-semibold text-black/50 mt-3 px-2">
               {hourlySlots.map((slot) => (
                 <span key={slot.hour}>{slot.hour}</span>
               ))}
@@ -588,20 +706,20 @@ export default function OverviewPageView() {
 
           {/* Graph Legend and Summary Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 text-xs">
-            <div className="flex items-center gap-4 text-xs font-telemetry">
-              <span className="flex items-center gap-1.5 text-white">
-                <span className="w-2.5 h-2.5 rounded-[1px] bg-white border border-white" />
-                <span>Inbound Telephony (Attendant)</span>
+            <div className="flex items-center gap-4 text-xs">
+              <span className="flex items-center gap-1.5 text-black/70 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#C9A7F5]" />
+                <span>Inbound Calls (Admissions &amp; Support)</span>
               </span>
-              <span className="flex items-center gap-1.5 text-zinc-400">
-                <span className="w-2.5 h-2.5 rounded-[1px] bg-[#3F3F46] border border-[#71717A]" />
+              <span className="flex items-center gap-1.5 text-black/70 font-medium">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#FFA98B]" />
                 <span>Outbound Campaign Dialing</span>
               </span>
             </div>
 
             <Link
               href="/dashboard/calls"
-              className="text-white font-display font-bold hover:underline flex items-center gap-1 group text-xs"
+              className="text-[#1A1A1A] font-bold hover:underline flex items-center gap-1 group text-xs"
             >
               <span>View Verbatim Audio Transcripts</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -609,217 +727,219 @@ export default function OverviewPageView() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Voice Agent Channel Strips (Rack Mount Faceplate, 4 cols) */}
-        <div className="lg:col-span-4 bg-[#09090B] border border-[#27272A] rounded-[2px] p-4 sm:p-5 flex flex-col justify-between space-y-4 shadow-2xl">
+        {/* RIGHT COLUMN: Active Voice Agent Channels (4 cols) */}
+        <div className="lg:col-span-4 bg-white rounded-[28px] border border-black/[0.06] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col justify-between space-y-4">
           <div>
-            <div className="flex items-center justify-between pb-2.5 border-b border-[#27272A]">
+            <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-[1px] bg-white" />
-                <h2 className="text-sm font-black font-display text-white tracking-tight uppercase">
-                  Voice Agent Channel Rack
-                </h2>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#16856B]" />
+                <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">
+                  Voice Agent Workforce
+                </h3>
               </div>
-              <button
-                onClick={() => setCreateAgentOpen(true)}
-                className="text-xs font-display font-bold text-white hover:underline cursor-pointer"
-              >
-                + New Channel
-              </button>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E8F5EF] text-[#16856B] font-bold text-[11px]">
+                3 Channels Live
+              </span>
             </div>
 
-            {/* Agent Channel Faceplates */}
-            <div className="space-y-2.5 mt-3">
-              {/* Channel 01: Maya */}
-              <div className="p-3 bg-[#121215] border border-[#27272A] rounded-[2px] transition-all hover:border-white flex items-center justify-between">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-7 h-7 rounded-[2px] bg-white text-black flex items-center justify-center font-telemetry font-bold text-xs shrink-0 border border-white">
-                    CH-1
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-display font-bold text-xs text-white">Maya</span>
-                      <span className="text-[9px] font-telemetry font-bold px-1.5 py-0.2 rounded-[1px] bg-[#18181B] text-white border border-[#27272A]">
-                        ONLINE
-                      </span>
+            {/* Agent List */}
+            <div className="space-y-3 pt-3">
+              {/* Agent 1: Maya */}
+              <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.04] space-y-2 hover:bg-[#FAF3E4] transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative">
+                      <div className="w-8 h-8 rounded-full bg-[#C9A7F5] text-[#3B0764] font-bold text-xs flex items-center justify-center">
+                        M
+                      </div>
+                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#16856B] ring-2 ring-white" />
                     </div>
-                    <span className="text-[11px] text-[#A1A1AA] block truncate font-sans">
-                      Admissions &amp; Counseling
-                    </span>
-                    <span className="text-[10px] text-[#71717A] block font-telemetry">
-                      Hindi + English • 136ms
-                    </span>
+                    <div>
+                      <h4 className="font-bold text-xs text-[#1A1A1A]">Maya (Admissions)</h4>
+                      <p className="text-[11px] text-black/50">Hindi + English &bull; 136ms SLA</p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => {
+                      try { soundSynth.play("click"); } catch {}
+                      setTestCallOpen(true);
+                    }}
+                    className="px-2.5 py-1 rounded-full bg-white hover:bg-black hover:text-white border border-black/[0.08] text-[11px] font-semibold transition-all cursor-pointer"
+                  >
+                    Test Call
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => setTestCallOpen(true)}
-                  className="px-2.5 py-1 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-[11px] font-display font-bold border border-white transition-colors cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
-                >
-                  Patch Test
-                </button>
               </div>
 
-              {/* Channel 02: Priya */}
-              <div className="p-3 bg-[#121215] border border-[#27272A] rounded-[2px] transition-all hover:border-white flex items-center justify-between">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-7 h-7 rounded-[2px] bg-white text-black flex items-center justify-center font-telemetry font-bold text-xs shrink-0 border border-white">
-                    CH-2
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-display font-bold text-xs text-white">Priya</span>
-                      <span className="text-[9px] font-telemetry font-bold px-1.5 py-0.2 rounded-[1px] bg-[#18181B] text-white border border-[#27272A]">
-                        ONLINE
-                      </span>
+              {/* Agent 2: Priya */}
+              <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.04] space-y-2 hover:bg-[#FAF3E4] transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative">
+                      <div className="w-8 h-8 rounded-full bg-[#FFA98B] text-[#7C2D12] font-bold text-xs flex items-center justify-center">
+                        P
+                      </div>
+                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#16856B] ring-2 ring-white" />
                     </div>
-                    <span className="text-[11px] text-[#A1A1AA] block truncate font-sans">
-                      Tuition &amp; Financial Aid
-                    </span>
-                    <span className="text-[10px] text-[#71717A] block font-telemetry">
-                      English + Hinglish • 142ms
-                    </span>
+                    <div>
+                      <h4 className="font-bold text-xs text-[#1A1A1A]">Priya (Tuition &amp; Aid)</h4>
+                      <p className="text-[11px] text-black/50">Telugu + English &bull; 142ms SLA</p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => {
+                      try { soundSynth.play("click"); } catch {}
+                      setTestCallOpen(true);
+                    }}
+                    className="px-2.5 py-1 rounded-full bg-white hover:bg-black hover:text-white border border-black/[0.08] text-[11px] font-semibold transition-all cursor-pointer"
+                  >
+                    Test Call
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => setTestCallOpen(true)}
-                  className="px-2.5 py-1 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-[11px] font-display font-bold border border-white transition-colors cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
-                >
-                  Patch Test
-                </button>
               </div>
 
-              {/* Channel 03: Arjun */}
-              <div className="p-3 bg-[#121215] border border-[#27272A] rounded-[2px] transition-all hover:border-white flex items-center justify-between">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-7 h-7 rounded-[2px] bg-white text-black flex items-center justify-center font-telemetry font-bold text-xs shrink-0 border border-white">
-                    CH-3
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-display font-bold text-xs text-white">Arjun</span>
-                      <span className="text-[9px] font-telemetry font-bold px-1.5 py-0.2 rounded-[1px] bg-[#18181B] text-white border border-[#27272A]">
-                        ONLINE
-                      </span>
+              {/* Agent 3: Arjun */}
+              <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.04] space-y-2 hover:bg-[#FAF3E4] transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="relative">
+                      <div className="w-8 h-8 rounded-full bg-[#A8C3F0] text-[#1E3A8A] font-bold text-xs flex items-center justify-center">
+                        A
+                      </div>
+                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#16856B] ring-2 ring-white" />
                     </div>
-                    <span className="text-[11px] text-[#A1A1AA] block truncate font-sans">
-                      Campus Academic RAG
-                    </span>
-                    <span className="text-[10px] text-[#71717A] block font-telemetry">
-                      Multilingual Indic • 148ms
-                    </span>
+                    <div>
+                      <h4 className="font-bold text-xs text-[#1A1A1A]">Arjun (Outreach)</h4>
+                      <p className="text-[11px] text-black/50">Campaign Lead &bull; 148ms SLA</p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => {
+                      try { soundSynth.play("click"); } catch {}
+                      setTestCallOpen(true);
+                    }}
+                    className="px-2.5 py-1 rounded-full bg-white hover:bg-black hover:text-white border border-black/[0.08] text-[11px] font-semibold transition-all cursor-pointer"
+                  >
+                    Test Call
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => setTestCallOpen(true)}
-                  className="px-2.5 py-1 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-[11px] font-display font-bold border border-white transition-colors cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
-                >
-                  Patch Test
-                </button>
               </div>
             </div>
           </div>
 
-          {/* Quick Provisioning Brick Button */}
           <div className="pt-2">
             <button
-              onClick={() => setCreateAgentOpen(true)}
-              className="w-full py-2 px-3 rounded-[2px] border border-dashed border-[#3F3F46] hover:border-white bg-[#121215] hover:bg-[#18181B] text-white text-xs font-display font-bold transition-all flex items-center justify-center gap-2 cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
+              onClick={() => {
+                try { soundSynth.play("click"); } catch {}
+                setCreateAgentOpen(true);
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-white hover:bg-[#FAF3E4] border border-dashed border-black/20 text-xs font-semibold text-[#1A1A1A] transition-colors cursor-pointer"
             >
-              <span>+ Provision Voice Agent</span>
+              <Plus className="w-3.5 h-3.5" />
+              <span>Deploy New Voice Employee</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 4. REAL-TIME TELEPHONY CALL ACTIVITY & AUDIO TELEMETRY LEDGER (TABLE-FIRST)*/}
+      {/* 4. BUILD YOUR AI EMPLOYEE BANNER (PASTEL STYLE)                           */}
       {/* ========================================================================= */}
-      <div className="bg-[#09090B] border border-[#27272A] rounded-[2px] p-4 sm:p-5 space-y-3.5 shadow-2xl">
-        {/* Table Controls Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#27272A]">
+      <div>
+        <BuildAIEmployeeBanner
+          onOpenCreateModal={() => {
+            setCreateAgentOpen(true);
+          }}
+        />
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 5. REAL-TIME TELEPHONY CALL ACTIVITY & EXTRACTED OUTCOMES LEDGER          */}
+      {/* ========================================================================= */}
+      <div className="bg-white rounded-[28px] border border-black/[0.06] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] space-y-4">
+        {/* Header & Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-[1px] bg-white" />
-              <h2 className="text-sm font-black font-display text-white tracking-tight uppercase">
-                Real-Time Telephony Call Activity &amp; Telemetry Ledger
-              </h2>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#16856B]" />
+              <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">
+                Real-Time Telephony Call Activity &amp; Extracted Outcomes Ledger
+              </h3>
             </div>
-            <p className="text-[11px] text-[#A1A1AA] mt-0.5 font-sans">
-              Carrier session archives, acoustic roundtrip turnaround, caller intent classification, and resolution sentiment.
+            <p className="text-xs text-black/55 mt-0.5">
+              Live call records, speaker turn durations, carrier latencies, and candidate qualification details.
             </p>
           </div>
 
-          {/* Search & Direction Filtering */}
+          {/* Filter and Search controls */}
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Telemetry Search Input */}
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-2.5 top-1/2 -translate-y-1/2" />
+            {/* Search Input */}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-xs">
+              <Search className="w-3.5 h-3.5 text-black/40" />
               <input
                 type="text"
-                placeholder="Filter phone, caller, intent..."
+                placeholder="Filter caller, number, outcome..."
                 value={searchCallQuery}
                 onChange={(e) => setSearchCallQuery(e.target.value)}
-                className="pl-8 pr-2.5 py-1 text-xs bg-[#121215] border border-[#27272A] rounded-[2px] focus:outline-none focus:border-white text-white font-sans w-56"
+                className="bg-transparent outline-none text-xs text-[#1A1A1A] placeholder:text-black/40 w-36 sm:w-48"
               />
             </div>
 
-            {/* Filter Direction Tabs */}
-            <div className="flex bg-[#121215] border border-[#27272A] rounded-[2px] p-0.5 text-xs font-telemetry">
+            {/* Direction Filter Pills */}
+            <div className="flex bg-[#FBF7ED] border border-black/[0.06] rounded-full p-1 text-xs font-semibold">
               <button
                 onClick={() => setCallFilter("all")}
-                className={`px-2 py-0.5 rounded-[1px] font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   callFilter === "all"
-                    ? "bg-white text-black"
-                    : "text-[#A1A1AA] hover:text-white"
+                    ? "bg-[#111111] text-white shadow-2xs"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
-                ALL
+                All
               </button>
               <button
                 onClick={() => setCallFilter("inbound")}
-                className={`px-2 py-0.5 rounded-[1px] font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   callFilter === "inbound"
-                    ? "bg-white text-black"
-                    : "text-[#A1A1AA] hover:text-white"
+                    ? "bg-[#111111] text-white shadow-2xs"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
-                INBOUND
+                Inbound
               </button>
               <button
                 onClick={() => setCallFilter("outbound")}
-                className={`px-2 py-0.5 rounded-[1px] font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   callFilter === "outbound"
-                    ? "bg-white text-black"
-                    : "text-[#A1A1AA] hover:text-white"
+                    ? "bg-[#111111] text-white shadow-2xs"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
-                OUTBOUND
+                Outbound
               </button>
             </div>
           </div>
         </div>
 
-        {/* Dense Table View */}
-        <div className="overflow-x-auto border border-[#27272A] bg-[#09090B] rounded-[2px]">
-          <table className="w-full text-left text-xs text-white">
-            <thead className="text-[10px] font-telemetry font-bold uppercase tracking-wider text-[#A1A1AA] bg-[#121215] border-b border-[#27272A]">
-              <tr>
-                <th className="py-2.5 px-3">CALLER &amp; TRUNK NUMBER</th>
-                <th className="py-2.5 px-3">AGENT CHANNEL</th>
-                <th className="py-2.5 px-3">DIRECTION</th>
-                <th className="py-2.5 px-3">DURATION / LATENCY</th>
-                <th className="py-2.5 px-3">RESOLVED OUTCOME / INTENT</th>
-                <th className="py-2.5 px-3">STATUS</th>
-                <th className="py-2.5 px-3 text-right">TELEMETRY ACTION</th>
+        {/* Call Ledger Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-black/[0.06] text-black/45 uppercase tracking-wider text-[11px] font-semibold">
+                <th className="py-2.5 px-3">Caller &amp; Number</th>
+                <th className="py-2.5 px-3">Agent &amp; Time</th>
+                <th className="py-2.5 px-3">Direction</th>
+                <th className="py-2.5 px-3">Duration &amp; Latency</th>
+                <th className="py-2.5 px-3">Extracted Outcome / Intent</th>
+                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-3 text-right">Inspect</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#27272A]">
+            <tbody className="divide-y divide-black/[0.04]">
               {filteredCalls.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#71717A] font-telemetry">
-                    No active telephony records match the query.
+                  <td colSpan={7} className="py-8 text-center text-black/40 text-xs">
+                    No calls match the search query.
                   </td>
                 </tr>
               ) : (
@@ -829,75 +949,87 @@ export default function OverviewPageView() {
                   return (
                     <tr
                       key={call.id}
-                      className={`transition-colors ${
-                        isHighlighted
-                          ? "bg-[#18181B] font-medium"
-                          : "hover:bg-[#121215]"
+                      onClick={() => openCallInDrawer(call)}
+                      className={`hover:bg-[#FAF7F0] transition-colors cursor-pointer ${
+                        isHighlighted ? "bg-[#FAF3E4]" : ""
                       }`}
                     >
                       {/* Caller & Number */}
-                      <td className="py-2.5 px-3">
-                        <div className="font-display font-bold text-white">{call.callerName}</div>
-                        <div className="text-[11px] font-telemetry text-[#A1A1AA]">
-                          {call.phoneNumber}
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-full bg-[#FAF3E4] border border-black/[0.06] flex items-center justify-center font-bold text-[11px] text-[#1A1A1A]">
+                            {call.callerName.charAt(0)}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-[#1A1A1A]">{call.callerName}</div>
+                            <div className="text-[11px] text-black/45">{call.phoneNumber}</div>
+                          </div>
                         </div>
                       </td>
 
-                      {/* Agent */}
-                      <td className="py-2.5 px-3">
-                        <div className="font-display font-semibold text-white">{call.agentName}</div>
-                        <div className="text-[10px] font-telemetry text-[#71717A]">{call.timestamp}</div>
+                      {/* Agent & Time */}
+                      <td className="py-3 px-3">
+                        <div className="font-medium text-[#1A1A1A]">{call.agentName}</div>
+                        <div className="text-[11px] text-black/45">{call.timestamp}</div>
                       </td>
 
                       {/* Direction Badge */}
-                      <td className="py-2.5 px-3">
+                      <td className="py-3 px-3">
                         {call.direction === "inbound" ? (
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[1px] text-[10px] font-telemetry font-bold bg-[#18181B] text-white border border-[#27272A]">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#E8F5EF] text-[#16856B]">
                             <PhoneIncoming className="w-3 h-3" /> INBOUND
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[1px] text-[10px] font-telemetry font-bold bg-[#18181B] text-[#A1A1AA] border border-[#27272A]">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#BCD0F5] text-[#1E3A8A]">
                             <PhoneOutgoing className="w-3 h-3" /> OUTBOUND
                           </span>
                         )}
                       </td>
 
                       {/* Duration & Latency */}
-                      <td className="py-2.5 px-3">
-                        <div className="font-telemetry font-bold text-white">
-                          {Math.floor(call.durationSeconds / 60)}m{" "}
-                          {call.durationSeconds % 60}s
+                      <td className="py-3 px-3">
+                        <div className="font-semibold text-[#1A1A1A]">
+                          {Math.floor(call.durationSeconds / 60)}m {call.durationSeconds % 60}s
                         </div>
-                        <div className="text-[10px] font-telemetry text-[#A1A1AA]">
-                          {call.latencyMs} ms turnaround
-                        </div>
+                        <div className="text-[11px] text-black/45">{call.latencyMs} ms turnaround</div>
                       </td>
 
-                      {/* Outcome / Intent */}
-                      <td className="py-2.5 px-3">
-                        <div className="font-medium text-white max-w-sm truncate font-sans">
+                      {/* Extracted Outcome / Intent */}
+                      <td className="py-3 px-3">
+                        <div className="font-medium text-[#1A1A1A] max-w-xs sm:max-w-sm truncate">
                           {call.outcome}
                         </div>
-                        <span className="inline-block mt-0.5 text-[9px] font-telemetry font-bold text-white bg-[#18181B] border border-[#27272A] px-1 py-0.2 rounded-[1px] uppercase">
-                          {call.sentiment}
-                        </span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="px-2 py-0.2 rounded-full text-[10px] font-semibold bg-[#F7EEDA] text-[#78350F] uppercase">
+                            {call.sentiment}
+                          </span>
+                          {call.extractedTags?.map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/[0.04] text-black/60"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </td>
 
                       {/* Status */}
-                      <td className="py-2.5 px-3">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-telemetry font-bold text-white">
-                          <span className="w-1.5 h-1.5 rounded-[1px] bg-white" /> Completed
+                      <td className="py-3 px-3">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#16856B]">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Completed
                         </span>
                       </td>
 
                       {/* Action */}
-                      <td className="py-2.5 px-3 text-right">
+                      <td className="py-3 px-3 text-right">
                         <button
-                          onClick={() => {
-                            setLastInspectedId(call.id);
-                            soundSynth.speak(`Call record for ${call.callerName}: ${call.outcome}`, { rate: 1.0 });
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openCallInDrawer(call);
                           }}
-                          className="px-2.5 py-1 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-[11px] font-display font-bold border border-white transition-colors cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
+                          className="px-3 py-1.5 rounded-full bg-white hover:bg-[#FAF3E4] text-[#1A1A1A] text-[11px] font-semibold border border-black/[0.08] shadow-2xs transition-colors cursor-pointer"
                         >
                           Inspect Audio
                         </button>
@@ -912,71 +1044,72 @@ export default function OverviewPageView() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 5. CARRIER SIP INFRASTRUCTURE & ACOUSTIC STREAMING DIAGNOSTIC STRIP        */}
+      {/* 6. TELEPHONY SIP CARRIER INFRASTRUCTURE & ACOUSTICS DIAGNOSTIC STRIP      */}
       {/* ========================================================================= */}
-      <div className="bg-[#09090B] border border-[#27272A] rounded-[2px] p-4 sm:p-5 shadow-2xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#27272A]">
+      <div className="pastel-column-panel p-5 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-black/[0.06]">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-[1px] bg-white" />
-              <h3 className="text-sm font-black font-display text-white tracking-tight uppercase">
-                Carrier SIP Infrastructure &amp; Acoustic Stream Diagnostics
-              </h3>
-            </div>
-            <p className="text-[11px] text-[#A1A1AA] mt-0.5 font-sans">
-              Direct carrier trunk interconnects, Opus HD speech codecs, and voice activity barge-in telemetry.
+            <h3 className="font-bold text-sm text-[#1A1A1A]">
+              Telephony SIP Carrier Infrastructure
+            </h3>
+            <p className="text-xs text-black/60">
+              Direct PRI carrier trunk interconnects, Opus HD speech codecs, and voice activity barge-in telemetry.
             </p>
           </div>
-
-          <div className="flex items-center gap-2 text-xs font-telemetry">
-            <span className="text-white font-bold bg-[#18181B] border border-[#27272A] px-2 py-0.5 rounded-[1px]">
-              99.99% CARRIER SLA CONFIRMED
-            </span>
-          </div>
+          <span className="px-3 py-1 rounded-full bg-[#C1F2D5] text-[#065F46] font-semibold text-xs self-start sm:self-center">
+            99.99% Carrier SLA Verified
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3">
-          <div className="p-3 bg-[#121215] border border-[#27272A] rounded-[2px]">
-            <span className="text-[9px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider block">
-              AUDIO CODEC
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+          <div className="pastel-card p-3.5 space-y-0.5">
+            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
+              Audio Codec
             </span>
-            <span className="text-sm font-black font-telemetry text-white mt-0.5 block">
+            <span className="text-sm font-bold text-[#1A1A1A] block">
               Opus HD (16 kHz)
             </span>
-            <span className="text-[10px] text-[#71717A] font-sans">Wideband High Fidelity</span>
+            <span className="text-xs text-black/60">Wideband High Fidelity</span>
           </div>
 
-          <div className="p-3 bg-[#121215] border border-[#27272A] rounded-[2px]">
-            <span className="text-[9px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider block">
-              NETWORK JITTER
+          <div className="pastel-card p-3.5 space-y-0.5">
+            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
+              Network Jitter
             </span>
-            <span className="text-sm font-black font-telemetry text-white mt-0.5 block">
+            <span className="text-sm font-bold text-[#1A1A1A] block">
               1.2 ms
             </span>
-            <span className="text-[10px] text-white font-telemetry">Optimal Transmission</span>
+            <span className="text-xs text-[#16856B]">Optimal Transmission</span>
           </div>
 
-          <div className="p-3 bg-[#121215] border border-[#27272A] rounded-[2px]">
-            <span className="text-[9px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider block">
-              PACKET LOSS
+          <div className="pastel-card p-3.5 space-y-0.5">
+            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
+              Packet Loss
             </span>
-            <span className="text-sm font-black font-telemetry text-white mt-0.5 block">
+            <span className="text-sm font-bold text-[#1A1A1A] block">
               0.00%
             </span>
-            <span className="text-[10px] text-white font-telemetry">Zero Dropped Frames</span>
+            <span className="text-xs text-[#16856B]">Zero Dropped Frames</span>
           </div>
 
-          <div className="p-3 bg-[#121215] border border-[#27272A] rounded-[2px]">
-            <span className="text-[9px] font-telemetry font-bold text-[#A1A1AA] uppercase tracking-wider block">
-              VAD BARGE-IN
+          <div className="pastel-card p-3.5 space-y-0.5">
+            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
+              VAD Barge-In
             </span>
-            <span className="text-sm font-black font-telemetry text-white mt-0.5 block">
+            <span className="text-sm font-bold text-[#1A1A1A] block">
               0.85s
             </span>
-            <span className="text-[10px] text-[#A1A1AA] font-sans">Instant Interruption</span>
+            <span className="text-xs text-black/60">Instant Interruption</span>
           </div>
         </div>
       </div>
+
+      {/* Call Drawer */}
+      <CallDrawer
+        call={selectedCallForDrawer}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
 
       {/* Modals */}
       <TestCallModal

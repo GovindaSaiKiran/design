@@ -4,19 +4,11 @@ import React from "react";
 import { CampaignData } from "@/types/dashboard";
 import CampaignProgress from "../components/CampaignProgress";
 import {
-  Send,
   Plus,
-  Users,
-  Calendar,
-  CheckCircle2,
-  PhoneOff,
-  AlertTriangle,
   Sparkles,
-  Megaphone,
-  Check,
-  RotateCw,
-  Layers,
-  ArrowRight,
+  CheckCircle2,
+  Clock,
+  CircleDot,
 } from "lucide-react";
 
 interface CampaignsViewProps {
@@ -42,46 +34,44 @@ export default function CampaignsView({
   ];
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-300">
-      {/* ========================================================================= */}
-      {/* 1. SARVAM WORK AGENTS HERO: SET THE OUTCOME. DELEGATE THE PROCESS         */}
-      {/* ========================================================================= */}
-      <div className="liquid-glass-card p-8 sm:p-10 relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-black/10 text-xs font-semibold text-neutral-800">
-              <span className="text-amber-600 font-serif">~ 𑁍 ~</span>
+    <div className="space-y-6 animate-in fade-in duration-300 font-sans select-none text-[#1A1A1A]">
+      {/* 1. Header & Autonomous Outreach Goal */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] p-6 sm:p-8 shadow-2xs relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D9C2FA]/40 border border-[#D9C2FA] text-xs font-semibold text-[#5B21B6]">
+              <Sparkles className="w-3.5 h-3.5" />
               <span>Work Agents • Autonomous Outreach Orchestration</span>
             </div>
-            <h1 className="font-serif-display text-3xl sm:text-4xl font-normal text-neutral-900 tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] tracking-tight leading-tight">
               Set the outcome. Delegate the process.
             </h1>
-            <p className="text-sm text-neutral-600 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-black/60 leading-relaxed font-sans">
               Describe the admissions goal and connect candidate registers with the institutional knowledge base. Work Agents execute the calling pipeline autonomously and return qualified student enrollment results.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 liquid-glass-subtle px-4 py-2.5 rounded-2xl border border-black/10 text-xs text-neutral-600 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-semibold text-neutral-900">{campaigns.length} Batches</span>
-              <span className="text-neutral-400">•</span>
-              <span className="font-semibold text-neutral-900">{aggregatePct}% Overall Progress</span>
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#FAF3E4] border border-black/[0.06] text-xs text-black/70">
+              <span className="w-2 h-2 rounded-full bg-[#16856B] animate-pulse" />
+              <span className="font-semibold text-[#1A1A1A]">{campaigns.length} Batches</span>
+              <span className="text-black/20">•</span>
+              <span className="font-semibold text-[#1A1A1A]">{aggregatePct}% Overall Progress</span>
             </div>
             <button
               onClick={onStartCampaign}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-2xs transition-all duration-200 cursor-pointer active:scale-95"
             >
-              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Launch Outreach Goal</span>
             </button>
           </div>
         </div>
 
-        {/* Work Agents Step-by-Step Goal Plan (Directly from Sarvam Template 2 Pg 2) */}
-        <div className="mt-8 pt-6 border-t border-black/10">
-          <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+        {/* Work Agents Step-by-Step Goal Plan */}
+        <div className="mt-6 pt-6 border-t border-black/[0.06]">
+          <div className="text-xs font-semibold text-black/50 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-[#5B21B6]" />
             <span>Active Goal Execution Pipeline: September High-Rank Engineering Outreach</span>
           </div>
 
@@ -89,46 +79,44 @@ export default function CampaignsView({
             {goalDelegationSteps.map((step, idx) => (
               <div
                 key={idx}
-                className={`p-4 rounded-2xl border transition-all ${
+                className={`p-4 rounded-[20px] border transition-all ${
                   step.status === "completed"
-                    ? "bg-emerald-50/50 border-emerald-200/80 text-emerald-950 backdrop-blur-sm"
+                    ? "bg-[#C1F2D5]/30 border-[#C1F2D5] text-[#1A1A1A]"
                     : step.status === "in-progress"
-                    ? "bg-amber-50/60 border-amber-300 text-amber-950 ring-1 ring-amber-400/30 backdrop-blur-sm"
-                    : "liquid-glass-subtle border-black/10 text-neutral-600"
+                    ? "bg-[#FFD9A0]/30 border-[#FFD9A0] text-[#1A1A1A] ring-1 ring-[#FFD9A0]/60"
+                    : "bg-[#FAF3E4]/50 border-black/[0.06] text-black/60"
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded-md bg-black/5">
+                  <span className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded-full bg-black/5 text-black/60">
                     Step 0{idx + 1}
                   </span>
                   {step.status === "completed" && (
-                    <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px]">
+                    <span className="w-4 h-4 rounded-full bg-[#16856B] text-white flex items-center justify-center text-[10px] font-bold">
                       ✓
                     </span>
                   )}
                   {step.status === "in-progress" && (
-                    <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] animate-spin">
-                      ⟳
+                    <span className="w-4 h-4 rounded-full bg-[#FFD9A0] text-[#7A4B00] flex items-center justify-center text-[10px] font-bold animate-pulse">
+                      ●
                     </span>
                   )}
                   {step.status === "queued" && (
-                    <span className="w-4 h-4 rounded-full bg-neutral-300 text-white flex items-center justify-center text-[10px]">
+                    <span className="w-4 h-4 rounded-full bg-black/10 text-black/40 flex items-center justify-center text-[10px]">
                       ○
                     </span>
                   )}
                 </div>
-                <div className="font-semibold text-xs text-neutral-900 mb-1">{step.title}</div>
-                <p className="text-[11px] text-neutral-500 leading-snug">{step.desc}</p>
+                <div className="font-semibold text-xs text-[#1A1A1A] mb-1">{step.title}</div>
+                <p className="text-[11px] text-black/60 leading-snug">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2. CAMPAIGNS GRID (GENEROUS SPACING & CLEAN WHITE CARDS)                   */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* 2. Campaigns Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {campaigns.map((camp) => (
           <CampaignProgress
             key={camp.id}

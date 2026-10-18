@@ -2,24 +2,21 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Menu,
   Search,
-  Bell,
   User,
   Settings,
   LogOut,
   Zap,
   Mic,
-  RefreshCw,
-  Check,
-  Calendar,
-  Sparkles,
-  PhoneCall,
-  Activity,
-  Sun,
-  Moon,
+  CreditCard,
+  Share2,
+  SlidersHorizontal,
+  ArrowUpDown,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import TestCallModal from "./modals/TestCallModal";
 import TopUpCreditsModal from "./modals/TopUpCreditsModal";
@@ -28,6 +25,8 @@ import { soundSynth } from "@/lib/audio-synth";
 interface AppHeaderProps {
   onToggleMobileSidebar: () => void;
   onOpenSearch?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
   theme?: "dark" | "light";
   onToggleTheme?: () => void;
 }
@@ -35,15 +34,16 @@ interface AppHeaderProps {
 export default function AppHeader({
   onToggleMobileSidebar,
   onOpenSearch,
-  theme = "dark",
-  onToggleTheme,
+  isCollapsed = false,
+  onToggleCollapse,
 }: AppHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [profileOpen, setProfileOpen] = useState(false);
   const [testCallOpen, setTestCallOpen] = useState(false);
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [userName, setUserName] = useState("Govinda T.");
-  const [userEmail, setUserEmail] = useState("clinic@swaram.ai");
+  const [userEmail, setUserEmail] = useState("admin@swaram.ai");
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -70,236 +70,186 @@ export default function AppHeader({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSignOut = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("aeline_auth_token");
-    }
-    setProfileOpen(false);
-    router.push("/");
+  const getSectionTitle = () => {
+    if (pathname === "/dashboard") return "Voice Operations Console";
+    if (pathname?.startsWith("/dashboard/agents")) return "AI Voice Agents";
+    if (pathname?.startsWith("/dashboard/calls")) return "Conversations & Transcripts";
+    if (pathname?.startsWith("/dashboard/contacts")) return "Contacts & Audiences";
+    if (pathname?.startsWith("/dashboard/campaigns")) return "Campaigns & Bulk Calling";
+    if (pathname?.startsWith("/dashboard/data-vault")) return "Data Vault";
+    if (pathname?.startsWith("/dashboard/callbacks")) return "Callbacks & Follow-ups";
+    if (pathname?.startsWith("/dashboard/instant-leads")) return "WhatsApp & Instant Leads";
+    if (pathname?.startsWith("/dashboard/delegate")) return "Agent Playground";
+    if (pathname?.startsWith("/dashboard/knowledge")) return "Knowledge Base";
+    if (pathname?.startsWith("/dashboard/analytics")) return "Analytics & Reports";
+    if (pathname?.startsWith("/dashboard/reports")) return "Compliance Reports";
+    if (pathname?.startsWith("/dashboard/phone-numbers")) return "Telephony & SIP Trunks";
+    if (pathname?.startsWith("/dashboard/billing")) return "Minutes & Billing";
+    if (pathname?.startsWith("/dashboard/team")) return "Team & Access Roles";
+    if (pathname?.startsWith("/dashboard/settings")) return "Workspace Settings";
+    return "Operations";
   };
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center justify-between px-3 sm:px-5 lg:px-6 py-2.5 bg-[#09090B] border-b border-[#27272A] select-none text-white">
-        {/* LEFT: Mobile toggle & Breadcrumb / Status */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onToggleMobileSidebar}
-            className="lg:hidden p-1.5 rounded-[2px] bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-white transition-colors"
-            aria-label="Toggle navigation"
-          >
-            <Menu className="w-4 h-4" />
-          </button>
-
+      <header className="flex flex-col gap-3 pb-3 select-none">
+        {/* Top Row: Title, Carrier Status Pill, and Action Pills */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Left: Mobile hamburger & Section Title & Desktop Collapse Toggle */}
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 font-telemetry text-xs">
-              <span className="text-[#A1A1AA] uppercase font-bold tracking-wider">Trunk Deck</span>
-              <span className="text-[#3F3F46]">/</span>
-              <span className="font-bold text-white tracking-tight">Main Dispatcher</span>
-            </div>
+            <button
+              onClick={onToggleMobileSidebar}
+              className="lg:hidden p-2 rounded-2xl bg-white border border-black/[0.08] text-black shadow-xs cursor-pointer"
+              aria-label="Toggle navigation"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
 
-            {/* Carrier Status Indicator */}
-            <div className="flex items-center gap-2 px-2.5 py-0.5 rounded-[2px] bg-[#18181B] border border-[#27272A] text-[11px] font-telemetry text-white">
-              <span className="w-1.5 h-1.5 rounded-[1px] bg-white animate-pulse" />
-              <span className="font-bold">SIP/2.0: 200 OK</span>
+            {onToggleCollapse && (
+              <button
+                onClick={onToggleCollapse}
+                className="hidden lg:flex items-center justify-center p-2 rounded-2xl bg-white border border-black/[0.08] text-black/60 hover:text-black hover:bg-[#FAF3E4] transition-colors cursor-pointer shadow-2xs"
+                title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+                aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                {isCollapsed ? (
+                  <PanelLeftOpen className="w-4 h-4" />
+                ) : (
+                  <PanelLeftClose className="w-4 h-4" />
+                )}
+              </button>
+            )}
+
+            <h1 className="text-xl sm:text-[22px] font-semibold text-[#1A1A1A] tracking-tight">
+              {getSectionTitle()}
+            </h1>
+          </div>
+
+          {/* Center: Live SIP Carrier Status Pill */}
+          <div className="flex items-center gap-2 px-3.5 py-1.5 bg-white/80 border border-black/[0.06] rounded-full self-start sm:self-center shadow-2xs text-xs">
+            <span className="w-2 h-2 rounded-full bg-[#16856B] animate-pulse" />
+            <span className="font-semibold text-[#1A1A1A]">SIP Carrier Active</span>
+            <span className="text-black/25">•</span>
+            <span className="text-black/60 font-medium">136ms SLA (Opus HD)</span>
+          </div>
+
+          {/* Right: Secondary Action Pills (Simulate Call, Balance, Profile) */}
+          <div className="flex items-center gap-2 self-end sm:self-center">
+            {/* Share secondary button */}
+            <button
+              onClick={() => {
+                try { soundSynth.play("confirm"); } catch {}
+                if (navigator.clipboard) {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert("Dashboard link copied to clipboard!");
+                }
+              }}
+              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-xs font-medium text-[#1A1A1A] shadow-2xs transition-colors cursor-pointer"
+            >
+              <Share2 className="w-3.5 h-3.5 text-black/60" />
+              <span>Share</span>
+            </button>
+
+            {/* Simulate Call Button */}
+            <button
+              onClick={() => {
+                try { soundSynth.play("click"); } catch {}
+                setTestCallOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-xs font-semibold text-[#1A1A1A] shadow-2xs transition-all cursor-pointer"
+            >
+              <Mic className="w-3.5 h-3.5 text-black/70" />
+              <span className="hidden sm:inline">Simulate Call</span>
+            </button>
+
+            {/* Balance chip */}
+            <button
+              onClick={() => setTopUpOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#C1F2D5] text-[#065F46] border border-[#16856B]/20 text-xs font-semibold shadow-2xs cursor-pointer"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16856B]" />
+              <span>14.0 min</span>
+            </button>
+
+            {/* Profile Avatar Capsule */}
+            <div className="relative" ref={profileRef}>
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="w-8 h-8 rounded-full bg-[#C9A7F5] text-[#3B0764] font-bold text-xs flex items-center justify-center border border-black/10 shadow-2xs cursor-pointer hover:scale-105 transition-transform"
+                title={`Profile: ${userName}`}
+              >
+                {userName.charAt(0).toUpperCase()}
+              </button>
+
+              {profileOpen && (
+                <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-black/[0.08] shadow-xl py-2 z-50 animate-in fade-in duration-100 text-xs text-[#1A1A1A]">
+                  <div className="px-4 py-2 border-b border-black/[0.06] bg-[#FAF3E4]/50 rounded-t-2xl">
+                    <p className="font-semibold text-[#1A1A1A] text-xs">{userName}</p>
+                    <p className="text-[11px] text-black/50 truncate">{userEmail}</p>
+                  </div>
+                  <div className="py-1">
+                    <Link
+                      href="/dashboard/agents"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2 text-black/70 hover:text-black hover:bg-[#FAF3E4]/60 transition-colors"
+                    >
+                      <User className="w-3.5 h-3.5 text-black/50" />
+                      <span>Manage Voice Agents</span>
+                    </Link>
+                    <Link
+                      href="/dashboard/billing"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2 text-black/70 hover:text-black hover:bg-[#FAF3E4]/60 transition-colors"
+                    >
+                      <CreditCard className="w-3.5 h-3.5 text-black/50" />
+                      <span>Minutes &amp; Billing</span>
+                    </Link>
+                    <Link
+                      href="/dashboard/settings"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2 text-black/70 hover:text-black hover:bg-[#FAF3E4]/60 transition-colors"
+                    >
+                      <Settings className="w-3.5 h-3.5 text-black/50" />
+                      <span>Workspace Settings</span>
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        {/* CENTER: Quick Command Search */}
-        <div className="hidden md:flex items-center flex-1 max-w-md mx-6">
-          <button
-            onClick={onOpenSearch}
-            className="w-full flex items-center justify-between px-3 py-1.5 rounded-[2px] bg-[#121215] hover:bg-[#18181B] border border-[#27272A] hover:border-white text-xs text-[#A1A1AA] transition-all cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <Search className="w-3.5 h-3.5 text-[#71717A]" />
-              <span className="font-sans text-[12px]">Search channels, phone trunks, call logs...</span>
-            </div>
-            <kbd className="px-1.5 py-0.5 rounded-[2px] text-[10px] font-telemetry bg-[#18181B] border border-[#27272A] text-white">
-              ⌘K
-            </kbd>
-          </button>
-        </div>
+        {/* Bottom Toolbar: Full-width Search Bar with Filters & Sort controls on right (Reference style) */}
+        <div className="flex items-center justify-between gap-3 px-4 py-2 bg-white/70 border border-black/[0.06] rounded-2xl sm:rounded-full shadow-2xs backdrop-blur-xs">
+          {/* Search Input on Left */}
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <Search className="w-4 h-4 text-black/40 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search calls, transcripts, voice agents, campaigns... (⌘K)"
+              onClick={onOpenSearch}
+              readOnly
+              className="w-full text-xs font-medium outline-none bg-transparent text-[#1A1A1A] placeholder:text-black/40 cursor-pointer"
+            />
+          </div>
 
-        {/* RIGHT: Actions, Balance & Profile */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
-          {/* Mobile search button */}
-          <button
-            onClick={onOpenSearch}
-            className="md:hidden p-1.5 rounded-[2px] text-[#A1A1AA] hover:bg-[#18181B] transition-colors"
-            title="Search (⌘K)"
-          >
-            <Search className="w-4 h-4" />
-          </button>
-
-          {/* Custom Daymode / Nightmode Pill Toggle Switch (from user design) */}
-          <button
-            type="button"
-            onClick={() => {
-              soundSynth.playClick();
-              onToggleTheme?.();
-            }}
-            className={`relative w-[132px] h-[34px] rounded-full p-[2.5px] flex items-center select-none cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shrink-0 ${
-              theme === "light"
-                ? "daymode-pill-track justify-end"
-                : "nightmode-pill-track justify-start"
-            }`}
-            aria-label={theme === "light" ? "Switch to Nightmode" : "Switch to Daymode"}
-            title={theme === "light" ? "Switch to Nightmode" : "Switch to Daymode"}
-          >
-            {/* Sliding White Circular Thumb with Sun/Moon Icon */}
-            <div
-              className={`absolute top-[2.5px] left-[2.5px] w-[27px] h-[27px] rounded-full pill-thumb-white flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-10 ${
-                theme === "light" ? "translate-x-0" : "translate-x-[99px]"
-              }`}
-            >
-              {theme === "light" ? (
-                /* Crisp Sun Icon */
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-4 h-4 text-black transition-transform duration-500 rotate-0"
-                >
-                  <circle cx="12" cy="12" r="4.5" />
-                  <path d="M12 2v2.5" />
-                  <path d="M12 19.5v2.5" />
-                  <path d="M4.93 4.93l1.77 1.77" />
-                  <path d="M17.3 17.3l1.77 1.77" />
-                  <path d="M2 12h2.5" />
-                  <path d="M19.5 12h2.5" />
-                  <path d="M4.93 19.07l1.77-1.77" />
-                  <path d="M17.3 6.7l1.77-1.77" />
-                </svg>
-              ) : (
-                /* Crisp Crescent Moon & Sparkle Stars Icon */
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-4 h-4 text-black transition-transform duration-500 rotate-0"
-                >
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                  <path d="M19 2.5v3" />
-                  <path d="M20.5 4h-3" />
-                  <path d="M15.5 7.5v2" />
-                  <path d="M16.5 8.5h-2" />
-                </svg>
-              )}
-            </div>
-
-            {/* Mode Text Label */}
-            {theme === "light" ? (
-              <span className="font-sans font-black text-[10.5px] tracking-wider pill-text-day pr-3 select-none">
-                DAYMODE
-              </span>
-            ) : (
-              <span className="font-sans font-black text-[10.5px] tracking-wider pill-text-night pl-3 select-none">
-                NIGHTMODE
-              </span>
-            )}
-          </button>
-
-          {/* Balance Telemetry Meter */}
-          <button
-            onClick={() => setTopUpOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[2px] bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-xs font-telemetry font-bold text-white transition-all cursor-pointer"
-            title="Voice minutes remaining. Click to add more."
-          >
-            <span className="w-1.5 h-1.5 rounded-[1px] bg-white" />
-            <span>14.0 MIN</span>
-          </button>
-
-          {/* Live Test Call Inverted Brick Button */}
-          <button
-            onClick={() => setTestCallOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-xs font-bold transition-all border border-white cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
-          >
-            <Mic className="w-3.5 h-3.5 text-black" />
-            <span className="hidden sm:inline font-display">Test Voice Agent</span>
-          </button>
-
-          {/* User Profile Capsule */}
-          <div className="relative" ref={profileRef}>
+          {/* Filter & Sort Controls on Right */}
+          <div className="flex items-center gap-3 shrink-0 text-xs font-medium text-black/60">
             <button
-              onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 px-2 py-1 rounded-[2px] bg-[#121215] hover:bg-[#18181B] transition-all cursor-pointer border border-[#27272A]"
+              onClick={onOpenSearch}
+              className="flex items-center gap-1.5 hover:text-black transition-colors cursor-pointer"
             >
-              <div className="w-5 h-5 rounded-[2px] bg-white text-black font-telemetry font-bold text-[11px] flex items-center justify-center shrink-0">
-                {userName.charAt(0).toUpperCase()}
-              </div>
-              <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[90px] font-sans">
-                {userName}
-              </span>
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Filters</span>
             </button>
-
-            {profileOpen && (
-              <div className="absolute right-0 mt-1.5 w-56 bg-[#09090B] rounded-[2px] border border-[#3F3F46] shadow-2xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100 text-xs">
-                <div className="px-3.5 py-2 border-b border-[#27272A] bg-[#121215]">
-                  <p className="font-bold text-white font-display text-xs">{userName}</p>
-                  <p className="text-[11px] text-[#A1A1AA] font-telemetry truncate">{userEmail}</p>
-                </div>
-
-                <div className="py-1">
-                  <button
-                    onClick={() => {
-                      soundSynth.playClick();
-                      onToggleTheme?.();
-                    }}
-                    className="w-full flex items-center justify-between px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors text-left cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
-                      {theme === "light" ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
-                      <span>Theme: {theme === "light" ? "Stark White" : "Pitch Black"}</span>
-                    </div>
-                    <span className="text-[10px] font-telemetry font-bold px-1.5 py-0.5 rounded-[1px] bg-[#18181B] border border-[#27272A] text-white">
-                      {theme === "light" ? "LIGHT" : "DARK"}
-                    </span>
-                  </button>
-                  <Link
-                    href="/dashboard/agents"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors"
-                  >
-                    <User className="w-3.5 h-3.5 text-[#A1A1AA]" />
-                    <span>Manage Voice Agents</span>
-                  </Link>
-                  <Link
-                    href="/dashboard/billing"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors"
-                  >
-                    <Zap className="w-3.5 h-3.5 text-white" />
-                    <span>Credits & Billing (14 min)</span>
-                  </Link>
-                  <Link
-                    href="/dashboard/settings"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-1.5 text-zinc-300 hover:text-white hover:bg-[#18181B] transition-colors"
-                  >
-                    <Settings className="w-3.5 h-3.5 text-[#A1A1AA]" />
-                    <span>Workspace Settings</span>
-                  </Link>
-                </div>
-
-                <div className="pt-1 border-t border-[#27272A]">
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full flex items-center gap-2 px-3.5 py-1.5 text-red-400 hover:bg-red-950/40 transition-colors text-left font-medium cursor-pointer"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              </div>
-            )}
+            <span className="text-black/20">|</span>
+            <button
+              onClick={() => { try { soundSynth.play("click"); } catch {} }}
+              className="flex items-center gap-1.5 hover:text-black transition-colors cursor-pointer"
+            >
+              <ArrowUpDown className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Sort by</span>
+            </button>
           </div>
         </div>
       </header>

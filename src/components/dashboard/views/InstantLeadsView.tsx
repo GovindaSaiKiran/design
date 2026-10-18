@@ -6,16 +6,8 @@ import {
   Phone,
   Copy,
   Check,
-  Globe,
-  Share2,
-  Clock,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
   Code2,
-  Terminal,
-  Activity,
-  Layers,
+  CheckCircle2,
 } from "lucide-react";
 import { telephonyApi } from "@/lib/api";
 import { soundSynth } from "@/lib/audio-synth";
@@ -68,93 +60,99 @@ export default function InstantLeadsView() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 pb-12 font-sans select-none animate-in fade-in duration-300 text-white">
+    <div className="space-y-6 pb-12 animate-in fade-in duration-300 text-[#1A1A1A]">
       {/* Hero Banner */}
-      <div className="relative p-6 sm:p-8 rounded-[2px] bg-[#09090B] border border-[#27272A] text-white overflow-hidden shadow-2xl">
+      <div className="relative p-6 sm:p-7 rounded-[26px] bg-white border border-black/[0.06] shadow-[0_4px_24px_rgba(0,0,0,0.035)] overflow-hidden">
         <div className="relative z-10 max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-[2px] bg-[#121215] border border-[#27272A] text-[10px] font-mono uppercase tracking-[0.2em] text-[#A1A1AA]">
-            <Zap className="w-3.5 h-3.5 text-white fill-white" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD9A0] text-[#1A1A1A] text-xs font-semibold">
+            <Zap className="w-3.5 h-3.5 text-[#1A1A1A] fill-[#1A1A1A]" />
             <span>SUB-30-SECOND SPEED TO LEAD</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#1A1A1A]">
             Instant Lead Dialing Channel
           </h1>
-          <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
-            Call incoming leads from Meta Ads, Google Forms, or your website in <b>less than 30 seconds</b> of submission before they leave their screen.
+          <p className="text-xs sm:text-sm text-black/60 leading-relaxed">
+            Automatically initiate outbound calls to incoming leads from Meta Ads, Google Forms, or your website in <b>under 30 seconds</b> of submission.
           </p>
         </div>
       </div>
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-[2px] bg-[#09090B] border border-[#27272A] space-y-1 font-mono">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[#71717A]">Average Response Time</p>
+        <div className="p-5 rounded-[22px] bg-[#D9C2FA]/40 border border-[#C9A7F5]/50 shadow-2xs space-y-1">
+          <p className="text-xs font-medium text-black/60">Average Response Time</p>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-2xl font-extrabold text-white">18.4s</span>
-            <span className="text-xs text-[#A1A1AA]">from form submit</span>
+            <span className="text-2xl font-bold text-[#1A1A1A]">18.4s</span>
+            <span className="text-xs text-[#16856B] font-semibold">from form submit</span>
           </div>
-          <p className="text-[11px] text-[#71717A] mt-1">Industry standard is 4–6 hours</p>
+          <p className="text-[11px] text-black/50 mt-1">Industry standard is 4–6 hours</p>
         </div>
 
-        <div className="p-5 rounded-[2px] bg-[#09090B] border border-[#27272A] space-y-1 font-mono">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[#71717A]">Lead Pickup Rate</p>
+        <div className="p-5 rounded-[22px] bg-[#FFD9A0]/40 border border-[#FFA98B]/50 shadow-2xs space-y-1">
+          <p className="text-xs font-medium text-black/60">Lead Pickup Rate</p>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-2xl font-extrabold text-white">76.8%</span>
-            <span className="text-xs text-[#A1A1AA] font-bold">↑ 3.2X LIFT</span>
+            <span className="text-2xl font-bold text-[#1A1A1A]">76.8%</span>
+            <span className="text-xs text-[#16856B] font-bold">↑ 3.2X Lift</span>
           </div>
-          <p className="text-[11px] text-[#71717A] mt-1">Lead is still holding their device</p>
+          <p className="text-[11px] text-black/50 mt-1">Lead is still active on device</p>
         </div>
 
-        <div className="p-5 rounded-[2px] bg-[#09090B] border border-[#27272A] space-y-1 font-mono">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[#71717A]">Total Instant Dials</p>
+        <div className="p-5 rounded-[22px] bg-[#C1F2D5]/40 border border-[#16856B]/20 shadow-2xs space-y-1">
+          <p className="text-xs font-medium text-black/60">Total Instant Dials</p>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-2xl font-extrabold text-white">4,812</span>
-            <span className="text-xs text-[#A1A1AA] font-bold">THIS MONTH</span>
+            <span className="text-2xl font-bold text-[#1A1A1A]">4,812</span>
+            <span className="text-xs text-black/50">this month</span>
           </div>
-          <p className="text-[11px] text-[#71717A] mt-1">100% automated via Webhooks</p>
+          <p className="text-[11px] text-black/50 mt-1">100% automated via Webhooks</p>
         </div>
       </div>
 
       {/* Two Column Layout: Webhook URL & Simulator */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Webhook Endpoint */}
-        <div className="p-6 rounded-[2px] bg-[#09090B] border border-[#27272A] space-y-5">
+        <div className="p-6 rounded-[24px] bg-white border border-black/[0.06] shadow-2xs space-y-5">
           <div>
-            <h3 className="font-mono font-bold text-xs uppercase tracking-wider text-white flex items-center gap-2">
-              <Code2 className="w-4 h-4 text-white" />
+            <h3 className="font-semibold text-sm text-[#1A1A1A] flex items-center gap-2">
+              <Code2 className="w-4 h-4 text-[#1A1A1A]" />
               <span>Inbound Webhook Endpoint</span>
             </h3>
-            <p className="text-xs text-[#A1A1AA] mt-1">
+            <p className="text-xs text-black/55 mt-1">
               Connect this URL to Meta Lead Ads, Zapier, Make.com, or your web contact forms.
             </p>
           </div>
 
-          <div className="p-3 bg-[#121215] rounded-[2px] border border-[#27272A] flex items-center justify-between gap-3">
-            <span className="font-mono text-xs text-white truncate select-all">{webhookUrl}</span>
+          <div className="p-3.5 bg-[#FBF7ED] rounded-2xl border border-black/[0.06] flex items-center justify-between gap-3">
+            <span className="font-mono text-xs text-[#1A1A1A] truncate select-all">{webhookUrl}</span>
             <button
               onClick={handleCopyWebhook}
-              className="px-3 py-1.5 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider transition-colors flex items-center gap-1.5 shrink-0 shadow-xs cursor-pointer"
+              className="px-4 py-1.5 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-[#1A1A1A] text-xs font-semibold transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs cursor-pointer"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-black" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copied ? "COPIED" : "COPY"}</span>
+              {copied ? <Check className="w-3.5 h-3.5 text-[#16856B]" /> : <Copy className="w-3.5 h-3.5 text-black/40" />}
+              <span>{copied ? "Copied" : "Copy"}</span>
             </button>
           </div>
 
-          <div className="space-y-3 font-mono">
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#71717A]">Active Ingestion Bridges:</h4>
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold text-[#1A1A1A]">Active Ingestion Bridges</h4>
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-3 rounded-[2px] border border-[#27272A] bg-[#121215] flex items-center gap-2.5">
+              <div className="p-3.5 rounded-2xl border border-black/[0.06] bg-[#FBF7ED] flex items-center gap-2.5">
                 <span className="text-base">📘</span>
                 <div>
-                  <p className="font-bold text-white">Meta Lead Ads</p>
-                  <p className="text-[10px] text-[#A1A1AA]">Active & Listening</p>
+                  <p className="font-semibold text-[#1A1A1A]">Meta Lead Ads</p>
+                  <p className="text-[10px] text-[#16856B] flex items-center gap-1 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#16856B]" />
+                    Listening
+                  </p>
                 </div>
               </div>
-              <div className="p-3 rounded-[2px] border border-[#27272A] bg-[#121215] flex items-center gap-2.5">
+              <div className="p-3.5 rounded-2xl border border-black/[0.06] bg-[#FBF7ED] flex items-center gap-2.5">
                 <span className="text-base">📝</span>
                 <div>
-                  <p className="font-bold text-white">Google Forms / Sheets</p>
-                  <p className="text-[10px] text-[#A1A1AA]">Connected via Zapier</p>
+                  <p className="font-semibold text-[#1A1A1A]">Google Forms</p>
+                  <p className="text-[10px] text-[#16856B] flex items-center gap-1 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#16856B]" />
+                    Connected
+                  </p>
                 </div>
               </div>
             </div>
@@ -162,64 +160,64 @@ export default function InstantLeadsView() {
         </div>
 
         {/* Right: Instant Call Simulator */}
-        <div className="p-6 rounded-[2px] bg-[#09090B] border border-[#27272A] space-y-4">
+        <div className="p-6 rounded-[24px] bg-white border border-black/[0.06] shadow-2xs space-y-4">
           <div>
-            <h3 className="font-mono font-bold text-xs uppercase tracking-wider text-white flex items-center gap-2">
-              <Phone className="w-4 h-4 text-white" />
+            <h3 className="font-semibold text-sm text-[#1A1A1A] flex items-center gap-2">
+              <Phone className="w-4 h-4 text-[#1A1A1A]" />
               <span>Simulate Form Ingestion Trigger</span>
             </h3>
-            <p className="text-xs text-[#A1A1AA] mt-1">
+            <p className="text-xs text-black/55 mt-1">
               Verify real-world latency when a student submits their details on a lead page.
             </p>
           </div>
 
-          <form onSubmit={handleSimulateInstantCall} className="space-y-3 text-xs font-mono">
+          <form onSubmit={handleSimulateInstantCall} className="space-y-3.5 text-xs">
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">Lead Name:</label>
+              <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">Lead Name:</label>
               <input
                 type="text"
                 required
                 value={simName}
                 onChange={(e) => setSimName(e.target.value)}
-                className="w-full px-3 py-2 rounded-[2px] border border-[#27272A] bg-[#121215] text-white outline-none focus:border-white font-medium"
+                className="w-full px-4 py-2.5 rounded-full border border-black/[0.06] bg-[#FBF7ED] text-[#1A1A1A] outline-none focus:border-black/30 font-medium text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">Lead Mobile Phone:</label>
+              <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">Lead Mobile Phone:</label>
               <input
                 type="text"
                 required
                 value={simPhone}
                 onChange={(e) => setSimPhone(e.target.value)}
-                className="w-full px-3 py-2 rounded-[2px] border border-[#27272A] bg-[#121215] text-white outline-none focus:border-white font-medium"
+                className="w-full px-4 py-2.5 rounded-full border border-black/[0.06] bg-[#FBF7ED] text-[#1A1A1A] outline-none focus:border-black/30 font-medium text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">Inquired Course / Interest:</label>
+              <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">Inquired Course / Interest:</label>
               <input
                 type="text"
                 required
                 value={simCourse}
                 onChange={(e) => setSimCourse(e.target.value)}
-                className="w-full px-3 py-2 rounded-[2px] border border-[#27272A] bg-[#121215] text-white outline-none focus:border-white font-medium"
+                className="w-full px-4 py-2.5 rounded-full border border-black/[0.06] bg-[#FBF7ED] text-[#1A1A1A] outline-none focus:border-black/30 font-medium text-xs"
               />
             </div>
 
             <button
               type="submit"
               disabled={simulating}
-              className="w-full py-2.5 rounded-[2px] bg-white hover:bg-zinc-200 text-black font-mono font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-3 rounded-full bg-[#111111] hover:bg-black text-white font-semibold text-xs shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
-              <Zap className="w-4 h-4 fill-black text-black" />
+              <Zap className="w-4 h-4 fill-current" />
               <span>{simulating ? "Dispatching in < 10s..." : "Simulate Instant Lead Trigger"}</span>
             </button>
 
             {simResult && (
-              <div className="p-3 bg-[#121215] border border-white/40 rounded-[2px] text-xs font-mono text-white flex items-center gap-2 shadow-sm animate-in fade-in">
-                <Check className="w-4 h-4 text-white" />
-                <span>{simResult}</span>
+              <div className="p-3.5 bg-[#C1F2D5]/50 border border-[#16856B]/20 rounded-2xl text-xs text-[#16856B] flex items-center gap-2 shadow-2xs animate-in fade-in">
+                <CheckCircle2 className="w-4 h-4 text-[#16856B] shrink-0" />
+                <span className="font-medium">{simResult}</span>
               </div>
             )}
           </form>

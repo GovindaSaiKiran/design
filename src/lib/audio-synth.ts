@@ -128,6 +128,14 @@ class SoundSynthesizer {
     }
   }
 
+  playPop() {
+    this.playClick();
+  }
+
+  playSuccess() {
+    this.playConfirm();
+  }
+
   // Universal sound player dispatcher
   play(type: string = "click") {
     try {
@@ -146,17 +154,27 @@ class SoundSynthesizer {
   }
 
   // Voice speech synthesis
-  speak(text: string) {
+  speak(text: string, options?: { rate?: number; pitch?: number }) {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1.05;
-      utterance.pitch = 1.0;
+      utterance.rate = options?.rate ?? 1.05;
+      utterance.pitch = options?.pitch ?? 1.0;
       window.speechSynthesis.speak(utterance);
     } catch {
       // safe fail
     }
+  }
+
+  stop() {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  stopAudio() {
+    this.stop();
   }
 }
 

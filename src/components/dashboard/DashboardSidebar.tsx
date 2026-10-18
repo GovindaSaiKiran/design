@@ -40,6 +40,14 @@ interface DashboardSidebarProps {
   onCloseMobile?: () => void;
 }
 
+interface SidebarItem {
+  key: TabKey;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+  live?: boolean;
+}
+
 export default function DashboardSidebar({
   activeTab,
   onSelectTab,
@@ -47,7 +55,7 @@ export default function DashboardSidebar({
   isOpenMobile,
   onCloseMobile,
 }: DashboardSidebarProps) {
-  const sections = [
+  const sections: { title: string; items: SidebarItem[] }[] = [
     {
       title: "FEATURES & CONTROLS",
       items: [
@@ -71,7 +79,7 @@ export default function DashboardSidebar({
 
   return (
     <aside
-      className={`fixed lg:sticky top-0 lg:top-[61px] left-0 z-50 lg:z-30 h-screen lg:h-[calc(100vh-61px)] w-64 bg-white/80 backdrop-blur-2xl border-r border-black/10 p-4 flex flex-col justify-between font-sans select-none transition-transform duration-300 ${
+      className={`fixed lg:sticky top-0 lg:top-[61px] left-0 z-50 lg:z-30 h-screen lg:h-[calc(100vh-61px)] w-64 bg-[#FBF7ED] border-r border-black/[0.06] p-4 flex flex-col justify-between font-sans select-none transition-transform duration-300 ${
         isOpenMobile ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       }`}
     >
@@ -79,7 +87,7 @@ export default function DashboardSidebar({
       <div className="space-y-6 overflow-y-auto pr-1">
         {sections.map((section) => (
           <div key={section.title}>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 px-3 mb-2">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-black/40 px-3 mb-2">
               {section.title}
             </div>
 
@@ -92,15 +100,15 @@ export default function DashboardSidebar({
                   <button
                     key={item.key}
                     onClick={() => handleTabClick(item.key)}
-                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs transition-all duration-200 cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? "bg-neutral-900 text-white font-semibold shadow-xs"
-                        : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100/80 font-medium"
+                        ? "bg-[#111111] text-white font-semibold shadow-xs"
+                        : "text-black/70 hover:text-black hover:bg-black/[0.04] font-medium"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
                       <Icon
-                        className={`w-4 h-4 ${isActive ? "text-white" : "text-neutral-500"}`}
+                        className={`w-4 h-4 ${isActive ? "text-white" : "text-black/50"}`}
                       />
                       <span>{item.label}</span>
                     </div>
@@ -118,7 +126,7 @@ export default function DashboardSidebar({
                           className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                             isActive
                               ? "bg-white/20 text-white"
-                              : "bg-neutral-100 text-neutral-600 border border-black/5"
+                              : "bg-[#FFD9A0] text-[#7A4B00]"
                           }`}
                         >
                           {item.badge}
@@ -134,35 +142,35 @@ export default function DashboardSidebar({
       </div>
 
       {/* Bottom Organization Card */}
-      <div className="pt-3 border-t border-black/10">
-        <div className="p-4 rounded-2xl bg-neutral-900 text-white shadow-md relative overflow-hidden">
+      <div className="pt-3 border-t border-black/[0.06]">
+        <div className="p-4 rounded-[20px] bg-white border border-black/[0.06] shadow-2xs relative overflow-hidden">
           <div className="flex items-center justify-between gap-1.5 mb-1.5">
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[#16856B] bg-[#C1F2D5] px-2 py-0.5 rounded-full">
               <ShieldCheck className="w-3 h-3" />
               Verified Org
             </span>
           </div>
 
-          <div className="font-semibold text-white text-xs truncate mt-1">
+          <div className="font-semibold text-[#1A1A1A] text-xs truncate mt-1">
             {currentOrg.name}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-neutral-300 mt-2">
-            <span>Plan: <strong className="text-white font-semibold">{currentOrg.plan}</strong></span>
-            <span className="font-mono text-blue-300 font-semibold">{currentOrg.usagePercent}%</span>
+          <div className="flex items-center justify-between text-[11px] text-black/60 mt-2">
+            <span>Plan: <strong className="text-[#1A1A1A] font-semibold">{currentOrg.plan}</strong></span>
+            <span className="font-mono text-[#4A72B2] font-semibold">{currentOrg.usagePercent}%</span>
           </div>
 
           {/* Usage Progress Bar */}
-          <div className="w-full h-1.5 rounded-full bg-white/20 overflow-hidden mt-2">
+          <div className="w-full h-1.5 rounded-full bg-black/[0.06] overflow-hidden mt-2">
             <div
               style={{ width: `${currentOrg.usagePercent}%` }}
-              className="h-full bg-blue-500 rounded-full"
+              className="h-full bg-[#111111] rounded-full"
             />
           </div>
 
-          <div className="text-[10px] text-neutral-400 mt-2 flex justify-between items-center font-mono">
+          <div className="text-[10px] text-black/50 mt-2 flex justify-between items-center font-mono">
             <span>{currentOrg.usedMinutes.toLocaleString()} / {currentOrg.totalMinutes.toLocaleString()} min</span>
-            <span className="text-emerald-400 flex items-center gap-0.5">
+            <span className="text-[#16856B] flex items-center gap-0.5">
               <Zap className="w-3 h-3" /> High QoS
             </span>
           </div>

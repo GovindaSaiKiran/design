@@ -6,7 +6,6 @@ import {
   Bell,
   CheckCircle2,
   AlertTriangle,
-  Info,
   PhoneForwarded,
   Sparkles,
   X,
@@ -28,32 +27,18 @@ export default function NotificationsPanel({
 }: NotificationsPanelProps) {
   if (!isOpen) return null;
 
-  const renderIcon = (type: NotificationItem["type"], severity: NotificationItem["severity"]) => {
-    switch (type) {
-      case "handoff":
-        return <PhoneForwarded className="w-4 h-4 text-black stroke-[2.5]" />;
-      case "campaign":
-        return <CheckCircle2 className="w-4 h-4 text-black stroke-[2.5]" />;
-      case "knowledge":
-        return <Sparkles className="w-4 h-4 text-black stroke-[2.5]" />;
-      case "usage":
-      default:
-        return <AlertTriangle className="w-4 h-4 text-black stroke-[2.5]" />;
-    }
-  };
-
   return (
-    <div className="absolute right-0 top-12 w-80 sm:w-96 bg-white/95 backdrop-blur-2xl rounded-3xl border border-black/15 shadow-[0_12px_40px_rgba(0,0,0,0.12)] p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 select-none font-sans">
+    <div className="absolute right-0 top-12 w-80 sm:w-96 bg-white rounded-[26px] border border-black/[0.08] shadow-2xl p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 select-none font-sans text-[#1A1A1A]">
       {/* Panel Header */}
-      <div className="flex items-center justify-between pb-3.5 border-b border-black/10">
+      <div className="flex items-center justify-between pb-3.5 border-b border-black/[0.06]">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-800">
+          <div className="w-7 h-7 rounded-full bg-[#FAF3E4] flex items-center justify-center text-[#1A1A1A]">
             <Bell className="w-3.5 h-3.5 stroke-[2.2]" />
           </div>
-          <h4 className="font-bold text-slate-900 text-sm tracking-tight">
+          <h4 className="font-bold text-[#1A1A1A] text-sm tracking-tight">
             Notifications
           </h4>
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-black/10 shadow-xs">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#D9C2FA] text-[#5B21B6]">
             {notifications.filter((n) => !n.read).length} Unread
           </span>
         </div>
@@ -61,14 +46,14 @@ export default function NotificationsPanel({
         <div className="flex items-center gap-1.5">
           <button
             onClick={onMarkAllRead}
-            className="text-[11px] font-semibold text-slate-700 hover:text-slate-950 flex items-center gap-1 cursor-pointer bg-white/90 hover:bg-white px-2.5 py-1 rounded-xl border border-black/10 hover:border-black/30 shadow-xs transition-all"
+            className="text-[11px] font-semibold text-black/70 hover:text-black flex items-center gap-1 cursor-pointer bg-[#FAF3E4] hover:bg-[#FAF3E4]/80 px-2.5 py-1 rounded-full border border-black/[0.06] transition-all"
           >
             <Check className="w-3 h-3 stroke-[2.5]" />
             Mark Read
           </button>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-xl bg-white/90 hover:bg-white text-slate-500 hover:text-slate-950 border border-black/10 hover:border-black/30 flex items-center justify-center cursor-pointer transition-all shadow-xs"
+            className="w-7 h-7 rounded-full bg-[#FAF3E4] hover:bg-[#FAF3E4]/80 text-black/50 hover:text-black border border-black/[0.06] flex items-center justify-center cursor-pointer transition-all shadow-2xs"
           >
             <X className="w-3.5 h-3.5 stroke-[2]" />
           </button>
@@ -80,33 +65,33 @@ export default function NotificationsPanel({
         {notifications.map((notif) => (
           <div
             key={notif.id}
-            className={`p-3 rounded-2xl transition-all flex items-start gap-3 border ${
+            className={`p-3 rounded-[18px] transition-all flex items-start gap-3 border ${
               notif.read
-                ? "bg-slate-50/70 border-black/5 opacity-75"
-                : "bg-white border-black/15 hover:border-black/35 shadow-xs hover:shadow-sm"
+                ? "bg-[#FAF3E4]/30 border-black/[0.04] opacity-75"
+                : "bg-[#FAF3E4]/60 border-black/[0.06] hover:bg-[#FAF3E4] shadow-2xs"
             }`}
           >
-            <div className={`w-8 h-8 rounded-xl border border-black/10 flex items-center justify-center shrink-0 mt-0.5 shadow-xs ${
-              notif.type === "handoff" ? "bg-amber-50 text-amber-700" :
-              notif.type === "campaign" ? "bg-emerald-50 text-emerald-700" :
-              notif.type === "knowledge" ? "bg-sky-50 text-sky-700" : "bg-rose-50 text-rose-700"
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 shadow-2xs ${
+              notif.type === "handoff" ? "bg-[#FFD9A0] text-[#7A4B00]" :
+              notif.type === "campaign" ? "bg-[#C1F2D5] text-[#16856B]" :
+              notif.type === "knowledge" ? "bg-[#D9C2FA] text-[#5B21B6]" : "bg-[#FFC0D3] text-[#9F1239]"
             }`}>
-              {notif.type === "handoff" && <PhoneForwarded className="w-4 h-4 stroke-[2]" />}
-              {notif.type === "campaign" && <CheckCircle2 className="w-4 h-4 stroke-[2]" />}
-              {notif.type === "knowledge" && <Sparkles className="w-4 h-4 stroke-[2]" />}
-              {notif.type !== "handoff" && notif.type !== "campaign" && notif.type !== "knowledge" && <AlertTriangle className="w-4 h-4 stroke-[2]" />}
+              {notif.type === "handoff" && <PhoneForwarded className="w-3.5 h-3.5 stroke-[2]" />}
+              {notif.type === "campaign" && <CheckCircle2 className="w-3.5 h-3.5 stroke-[2]" />}
+              {notif.type === "knowledge" && <Sparkles className="w-3.5 h-3.5 stroke-[2]" />}
+              {notif.type !== "handoff" && notif.type !== "campaign" && notif.type !== "knowledge" && <AlertTriangle className="w-3.5 h-3.5 stroke-[2]" />}
             </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-1 mb-0.5">
-                <span className="font-semibold text-slate-900 text-xs truncate">
+                <span className="font-semibold text-[#1A1A1A] text-xs truncate">
                   {notif.title}
                 </span>
-                <span className="text-[10px] text-slate-400 shrink-0 font-mono font-medium">
+                <span className="text-[10px] text-black/40 shrink-0 font-mono font-medium">
                   {notif.timestamp}
                 </span>
               </div>
-              <p className="text-xs text-slate-600 font-normal leading-snug">
+              <p className="text-xs text-black/60 font-normal leading-snug">
                 {notif.message}
               </p>
             </div>
@@ -115,8 +100,8 @@ export default function NotificationsPanel({
       </div>
 
       {/* Footer */}
-      <div className="pt-3 border-t border-black/10 text-center">
-        <span className="text-[11px] font-medium text-slate-500">
+      <div className="pt-3 border-t border-black/[0.06] text-center">
+        <span className="text-[11px] font-medium text-black/50">
           ⚡ Real-time webhook notifications active
         </span>
       </div>

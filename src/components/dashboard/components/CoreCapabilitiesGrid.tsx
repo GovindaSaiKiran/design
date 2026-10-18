@@ -58,20 +58,20 @@ export default function CoreCapabilitiesGrid() {
 
   return (
     <section className="w-full mb-10 font-sans select-none" id="core-capabilities-hub">
-      <div className="bg-white/95 backdrop-blur-xl border border-neutral-200/90 rounded-3xl p-6 sm:p-8 lg:p-10 shadow-sm relative overflow-hidden">
+      <div className="bg-white border border-black/[0.06] rounded-[26px] p-6 sm:p-8 lg:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden">
         
         {/* Section Header (Matches PDF Page 10) */}
         <div className="max-w-3xl mx-auto text-center space-y-3 mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-neutral-100 border border-neutral-200 text-neutral-800">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-[#FAF3E4] border border-black/[0.06] text-[#1A1A1A]">
             <span>CORE CAPABILITIES</span>
           </div>
 
-          <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-neutral-900 leading-[1.15]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.15]">
             Comprehensive voice telephony and<br />
-            <span className="font-serif italic text-neutral-500">admissions intelligence</span>
+            <span className="text-black/55 font-medium">admissions intelligence</span>
           </h2>
 
-          <p className="text-xs sm:text-sm text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-black/60 max-w-2xl mx-auto leading-relaxed">
             Transform your admissions office from overwhelmed phone banks to an autonomous 24/7 student engagement powerhouse.
           </p>
         </div>
@@ -83,40 +83,40 @@ export default function CoreCapabilitiesGrid() {
             return (
               <div
                 key={c.num}
-                className="bg-neutral-50/70 border border-neutral-200/90 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-2xs hover:shadow-xs transition-all"
+                className="bg-[#FAF3E4]/50 border border-black/[0.06] rounded-[22px] p-6 flex flex-col justify-between space-y-6 hover:shadow-md transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-9 h-9 rounded-xl bg-white border border-neutral-200 flex items-center justify-center text-neutral-800 shadow-2xs">
-                      <Icon className="w-4 h-4 text-blue-600" />
+                    <div className="w-9 h-9 rounded-2xl bg-white border border-black/[0.06] flex items-center justify-center text-[#111111] shadow-xs">
+                      <Icon className="w-4 h-4 text-[#16856B]" />
                     </div>
-                    <span className="text-xs font-mono font-bold text-neutral-400">
+                    <span className="text-xs font-mono font-bold text-black/45">
                       {c.num}
                     </span>
                   </div>
 
-                  <h3 className="font-serif-display text-xl font-normal text-neutral-900 mb-2">
+                  <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">
                     {c.title}
                   </h3>
-                  <p className="text-xs text-neutral-600 leading-relaxed mb-4">
+                  <p className="text-xs text-black/60 leading-relaxed mb-4">
                     {c.desc}
                   </p>
 
-                  <div className="space-y-2.5 pt-3 border-t border-neutral-200/70">
+                  <div className="space-y-2.5 pt-3 border-t border-black/[0.06]">
                     {c.bullets.map((b, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-neutral-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <div key={i} className="flex items-start gap-2 text-xs text-black/75">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B] shrink-0 mt-0.5" />
                         <span>{b}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-neutral-200/70">
-                  <div className="font-serif-display text-3xl font-normal text-neutral-900">
+                <div className="pt-4 border-t border-black/[0.06]">
+                  <div className="text-3xl font-extrabold text-[#1A1A1A]">
                     {c.metric}
                   </div>
-                  <div className="text-[11px] text-neutral-500">
+                  <div className="text-[11px] text-black/50">
                     {c.metricLabel}
                   </div>
                 </div>

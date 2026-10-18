@@ -2,34 +2,37 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Bot,
-  UserPlus,
-  GraduationCap,
+  Activity,
+  MessageSquare,
+  Settings,
+  FolderKanban,
+  Calendar,
   Sparkles,
+  Megaphone,
+  Plus,
+  LogOut,
+  PanelLeftClose,
+  PanelLeftOpen,
   Phone,
   CreditCard,
-  UserCog,
   History,
-  PanelLeftClose,
-  Radio,
-  Layers,
-  ChevronRight,
-  ShieldCheck,
-  Zap,
-  Sun,
-  Moon,
+  GraduationCap,
+  Users,
+  Volume2,
 } from "lucide-react";
-import TopUpCreditsModal from "./modals/TopUpCreditsModal";
-import TestCallModal from "./modals/TestCallModal";
 import CreateAgentModal from "./modals/CreateAgentModal";
+import TopUpCreditsModal from "./modals/TopUpCreditsModal";
 import { soundSynth } from "@/lib/audio-synth";
 
 interface AppSidebarProps {
   isOpenMobile?: boolean;
   onCloseMobile?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
   theme?: "dark" | "light";
   onToggleTheme?: () => void;
 }
@@ -37,16 +40,15 @@ interface AppSidebarProps {
 export default function AppSidebar({
   isOpenMobile = false,
   onCloseMobile,
-  theme = "dark",
-  onToggleTheme,
+  isCollapsed = false,
+  onToggleCollapse,
 }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [createAgentOpen, setCreateAgentOpen] = useState(false);
   const [topUpOpen, setTopUpOpen] = useState(false);
-  const [testCallOpen, setTestCallOpen] = useState(false);
-  const [createEmployeeOpen, setCreateEmployeeOpen] = useState(false);
   const [userName, setUserName] = useState("Govinda T.");
-  const [userEmail, setUserEmail] = useState("clinic@swaram.ai");
-  const [workspaceName, setWorkspaceName] = useState("Swaram Voice HQ");
+  const [workspaceName, setWorkspaceName] = useState("Apex Global");
 
   useEffect(() => {
     try {
@@ -54,7 +56,6 @@ export default function AppSidebar({
       if (stored) {
         const u = JSON.parse(stored);
         if (u.name || u.fullName) setUserName(u.name || u.fullName);
-        if (u.email) setUserEmail(u.email);
         if (u.workspaceName) setWorkspaceName(u.workspaceName);
       }
     } catch {
@@ -62,62 +63,61 @@ export default function AppSidebar({
     }
   }, []);
 
-  const coreNavItems = [
-    {
-      label: "Operations Deck",
-      href: "/dashboard",
-      icon: LayoutDashboard,
-      exact: true,
-    },
-    {
-      label: "Call Logs & Audio",
-      href: "/dashboard/calls",
-      icon: History,
-      badge: "Live",
-    },
-    {
-      label: "Realtime Analytics",
-      href: "/dashboard/analytics",
-      icon: Radio,
-    },
+  const handleSignOut = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("aeline_auth_token");
+    }
+    router.push("/");
+  };
+
+  const mainNav = [
+    { label: "Overview", href: "/dashboard", icon: LayoutDashboard, exact: true },
+    { label: "AI Agents", href: "/dashboard/agents", icon: Bot },
+    { label: "Voice Library", href: "/dashboard/agents?tab=voices", icon: Volume2 },
+    { label: "Agent Playground", href: "/dashboard/delegate", icon: Sparkles },
+    { label: "Conversations", href: "/dashboard/calls", icon: Activity },
   ];
 
-  const agentStudioItems = [
-    {
-      label: "AI Voice Agents",
-      href: "/dashboard/agents",
-      icon: Bot,
-      badge: "3",
-    },
-    {
-      label: "Knowledge Base (RAG)",
-      href: "/dashboard/knowledge",
-      icon: GraduationCap,
-    },
-    {
-      label: "Autonomous Calling",
-      href: "/dashboard/delegate",
-      icon: Sparkles,
-    },
+  const campaignNav = [
+    { label: "Contacts & Lists", href: "/dashboard/contacts", icon: Users },
+    { label: "Campaigns & Bulk Calling", href: "/dashboard/campaigns", icon: Megaphone },
+    { label: "Callbacks & Follow-ups", href: "/dashboard/callbacks", icon: Calendar },
+    { label: "Data Vault", href: "/dashboard/data-vault", icon: FolderKanban },
+    { label: "WhatsApp Automation", href: "/dashboard/instant-leads", icon: MessageSquare },
   ];
 
-  const telecomItems = [
+  const platformNav = [
+    { label: "Knowledge & Integrations", href: "/dashboard/knowledge", icon: GraduationCap },
+    { label: "Analytics & Reports", href: "/dashboard/analytics", icon: History },
+    { label: "Telephony & SIP Trunks", href: "/dashboard/phone-numbers", icon: Phone },
+    { label: "Minutes & Billing", href: "/dashboard/billing", icon: CreditCard },
+    { label: "Workspace Settings", href: "/dashboard/settings", icon: Settings },
+  ];
+
+  const voiceMembers = [
     {
-      label: "Phone Numbers & SIP",
-      href: "/dashboard/phone-numbers",
-      icon: Phone,
+      name: "Maya (Admissions)",
+      role: "Hindi + English • 136ms",
+      avatarBg: "bg-[#D9C2FA] text-[#4C1D95]",
+      initial: "M",
     },
     {
-      label: "Voice Minutes & Billing",
-      href: "/dashboard/billing",
-      icon: CreditCard,
-      badge: "14 min",
-      badgeColor: "lime",
+      name: "Priya (Tuition & Aid)",
+      role: "Telugu + English • 142ms",
+      avatarBg: "bg-[#FFA98B] text-[#7C2D12]",
+      initial: "P",
     },
     {
-      label: "Workspace Settings",
-      href: "/dashboard/settings",
-      icon: UserCog,
+      name: "Arjun (Outreach)",
+      role: "Campaign Lead • 148ms",
+      avatarBg: "bg-[#A8C3F0] text-[#1E3A8A]",
+      initial: "A",
+    },
+    {
+      name: "Rajesh (Supervisor)",
+      role: "Escalation Desk • 120ms",
+      avatarBg: "bg-[#FFD9A0] text-[#78350F]",
+      initial: "R",
     },
   ];
 
@@ -126,340 +126,337 @@ export default function AppSidebar({
       {/* Mobile Backdrop */}
       {isOpenMobile && (
         <div
-          className="fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-xs lg:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs lg:hidden animate-in fade-in duration-200"
           onClick={onCloseMobile}
         />
       )}
 
-      {/* Persistent Enterprise Sidebar */}
+      {/* Floating White Sidebar Panel (Fixed to viewport so it remains 100% still when page scrolls) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#09090B] border-r border-[#27272A] flex flex-col justify-between transition-transform duration-200 ease-in-out font-sans select-none text-[13px] lg:translate-x-0 lg:static shrink-0 ${
-          isOpenMobile ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+        className={`fixed top-3 sm:top-4 lg:top-5 z-40 bg-white rounded-[28px] sm:rounded-[32px] border border-black/[0.06] shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col justify-between select-none font-sans text-xs transition-all duration-300 ease-in-out h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-2.5rem)] shrink-0 ${
+          isOpenMobile
+            ? "translate-x-0 left-3 sm:left-4 shadow-2xl w-64 sm:w-70 p-5"
+            : "-translate-x-full lg:translate-x-0 left-0 lg:left-5"
+        } ${
+          isCollapsed
+            ? "lg:w-[76px] lg:p-3"
+            : "lg:w-70 lg:p-5"
         }`}
       >
-        {/* Top Header: Brand & Carrier Status */}
-        <div className="h-14 px-3.5 flex items-center justify-between border-b border-[#27272A] shrink-0 bg-[#121215]">
-          <Link href="/dashboard" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-[2px] bg-white text-black flex items-center justify-center font-telemetry font-bold text-xs border border-white shadow-2xs">
-              <span className="font-black">SW</span>
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-display font-extrabold text-sm text-white tracking-tight">
-                  SWARAM TELECOM
-                </span>
-                <span className="w-1.5 h-1.5 rounded-[1px] bg-white animate-pulse" title="Carrier Online" />
+        {/* Brand & Collapse / Mobile Close */}
+        <div
+          className={`flex items-center pb-2 shrink-0 ${
+            isCollapsed ? "flex-col gap-2 justify-center" : "justify-between"
+          }`}
+        >
+          {isCollapsed ? (
+            <>
+              {/* Collapsed Brand Icon */}
+              <Link
+                href="/dashboard"
+                className="w-10 h-10 rounded-2xl bg-[#111111] text-white flex items-center justify-center font-bold text-xs shadow-xs hover:scale-105 transition-transform"
+                title="Swaram AI Voice Platform"
+              >
+                <span className="font-extrabold text-[13px] tracking-tight">SW</span>
+              </Link>
+
+              {/* Expand Button */}
+              <button
+                onClick={onToggleCollapse}
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-black/50 hover:text-black hover:bg-[#FAF3E4] transition-colors cursor-pointer"
+                title="Expand sidebar (Ctrl+B)"
+                aria-label="Expand sidebar"
+              >
+                <PanelLeftOpen className="w-4 h-4" />
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard" className="flex items-center gap-2.5 group min-w-0">
+                <div className="w-9 h-9 rounded-2xl bg-[#111111] text-white flex items-center justify-center font-bold text-xs shadow-xs transition-transform group-hover:scale-105 shrink-0">
+                  <span className="font-extrabold text-[13px] tracking-tight">SW</span>
+                </div>
+                <div className="min-w-0 truncate">
+                  <span className="font-bold text-[18px] text-[#1A1A1A] tracking-tight block leading-tight truncate">
+                    Swaram
+                  </span>
+                  <span className="text-[11px] font-medium text-black/40 block -mt-0.5 truncate">
+                    AI Voice Platform
+                  </span>
+                </div>
+              </Link>
+
+              <div className="flex items-center gap-1">
+                {/* Desktop Collapse Button */}
+                <button
+                  onClick={onToggleCollapse}
+                  className="hidden lg:flex p-1.5 rounded-xl text-black/45 hover:text-black hover:bg-black/5 transition-colors cursor-pointer"
+                  title="Collapse sidebar (Ctrl+B)"
+                  aria-label="Collapse sidebar"
+                >
+                  <PanelLeftClose className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Close Button */}
+                <button
+                  onClick={onCloseMobile}
+                  className="p-1.5 rounded-xl text-black/50 hover:text-black hover:bg-black/5 lg:hidden cursor-pointer"
+                  aria-label="Close sidebar"
+                >
+                  <PanelLeftClose className="w-4 h-4" />
+                </button>
               </div>
-              <span className="text-[10px] font-telemetry font-semibold text-[#A1A1AA] block -mt-0.5 tracking-wider uppercase">
-                RACK ID: TRK-01 / IN-HYD
-              </span>
-            </div>
-          </Link>
-
-          <button
-            onClick={onCloseMobile}
-            className="p-1 rounded-[2px] text-[#A1A1AA] hover:text-white hover:bg-[#18181B] transition-colors lg:hidden"
-            title="Collapse sidebar"
-          >
-            <PanelLeftClose className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Quick Action Inverted Brick Button */}
-        <div className="px-3 pt-3 pb-1">
-          <button
-            onClick={() => setCreateEmployeeOpen(true)}
-            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-[2px] bg-white hover:bg-zinc-200 text-black text-xs font-display font-bold transition-all border border-white cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
-          >
-            <span className="font-mono text-sm leading-none font-bold">
-              +
-            </span>
-            <span>Provision Voice Agent</span>
-          </button>
+            </>
+          )}
         </div>
 
         {/* Scrollable Navigation Sections */}
-        <div className="flex-1 overflow-y-auto px-2 py-2 space-y-3.5">
-          {/* Section 1: Core Operations */}
-          <div>
-            <div className="px-2.5 py-1 text-[10px] font-telemetry font-bold text-[#71717A] uppercase tracking-widest">
-              Core Operations
-            </div>
-            <div className="space-y-0.5 mt-0.5">
-              {coreNavItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = item.exact
-                  ? pathname === item.href
-                  : pathname?.startsWith(item.href);
+        <div className={`flex-1 overflow-y-auto space-y-4 my-2 scrollbar-none ${isCollapsed ? "px-0" : "pr-1"}`}>
+          {/* Group 1: Core Operations */}
+          <div className="space-y-1">
+            {isCollapsed ? (
+              <div className="w-6 h-[1px] bg-black/[0.08] mx-auto my-2" />
+            ) : (
+              <div className="px-3 pt-1 text-[11px] font-bold text-black/35 uppercase tracking-wider">
+                Operations
+              </div>
+            )}
+            {mainNav.map((item) => {
+              const Icon = item.icon;
+              const isActive = item.exact
+                ? pathname === item.href
+                : pathname === item.href || (item.href !== "/dashboard" && pathname?.startsWith(item.href.split("?")[0]));
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onCloseMobile}
-                    className={`flex items-center justify-between px-2.5 py-1.5 rounded-[2px] transition-all font-medium text-xs group ${
-                      isActive
-                        ? "bg-[#18181B] text-white font-bold border-l-2 border-white border-y border-r border-[#27272A]"
-                        : "text-[#A1A1AA] hover:text-white hover:bg-[#121215]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Icon
-                        className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                          isActive ? "text-white" : "text-[#71717A] group-hover:text-white"
-                        }`}
-                      />
-                      <span>{item.label}</span>
-                    </div>
-                    {item.badge && (
-                      <span
-                        className={`text-[9px] font-telemetry font-bold px-1.5 py-0.2 rounded-[1px] ${
-                          isActive
-                            ? "bg-white text-black"
-                            : "bg-[#18181B] text-white border border-[#27272A]"
-                        }`}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
+              return isCollapsed ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onCloseMobile}
+                  title={item.label}
+                  className={`w-10 h-10 rounded-2xl flex items-center justify-center mx-auto transition-all ${
+                    isActive
+                      ? "bg-[#F7EEDA] text-[#1A1A1A] font-semibold shadow-2xs"
+                      : "text-black/60 hover:text-[#1A1A1A] hover:bg-black/[0.04]"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 stroke-[1.8] ${isActive ? "text-[#1A1A1A]" : "text-black/50"}`} />
+                </Link>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onCloseMobile}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-2xl text-[13px] font-medium transition-all ${
+                    isActive
+                      ? "bg-[#F7EEDA] text-[#1A1A1A] font-semibold shadow-2xs"
+                      : "text-black/60 hover:text-[#1A1A1A] hover:bg-black/[0.03]"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 stroke-[1.8] ${isActive ? "text-[#1A1A1A]" : "text-black/50"}`} />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Section 2: Agent Studio */}
-          <div>
-            <div className="px-2.5 py-1 text-[10px] font-telemetry font-bold text-[#71717A] uppercase tracking-widest">
-              AI Voice Agents
-            </div>
-            <div className="space-y-0.5 mt-0.5">
-              {agentStudioItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname?.startsWith(item.href);
+          {/* Group 2: Campaigns & Outreach */}
+          <div className="space-y-1 pt-1">
+            {isCollapsed ? (
+              <div className="w-6 h-[1px] bg-black/[0.08] mx-auto my-2" />
+            ) : (
+              <div className="px-3 text-[11px] font-bold text-black/35 uppercase tracking-wider">
+                Campaigns &amp; Outreach
+              </div>
+            )}
+            {campaignNav.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname?.startsWith(item.href));
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onCloseMobile}
-                    className={`flex items-center justify-between px-2.5 py-1.5 rounded-[2px] transition-all font-medium text-xs group ${
-                      isActive
-                        ? "bg-[#18181B] text-white font-bold border-l-2 border-white border-y border-r border-[#27272A]"
-                        : "text-[#A1A1AA] hover:text-white hover:bg-[#121215]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Icon
-                        className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                          isActive ? "text-white" : "text-[#71717A] group-hover:text-white"
-                        }`}
-                      />
-                      <span>{item.label}</span>
-                    </div>
-                    {item.badge && (
-                      <span
-                        className={`text-[9px] font-telemetry font-bold px-1.5 py-0.2 rounded-[1px] ${
-                          isActive
-                            ? "bg-white text-black"
-                            : "bg-[#18181B] text-white border border-[#27272A]"
-                        }`}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
+              return isCollapsed ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onCloseMobile}
+                  title={item.label}
+                  className={`w-10 h-10 rounded-2xl flex items-center justify-center mx-auto transition-all ${
+                    isActive
+                      ? "bg-[#F7EEDA] text-[#1A1A1A] font-semibold shadow-2xs"
+                      : "text-black/60 hover:text-black hover:bg-black/[0.03]"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? "text-[#1A1A1A]" : "text-black/45"}`} />
+                </Link>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onCloseMobile}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-xl text-[12.5px] font-medium transition-colors ${
+                    isActive
+                      ? "bg-[#F7EEDA] text-[#1A1A1A] font-semibold shadow-2xs"
+                      : "text-black/60 hover:text-black hover:bg-black/[0.03]"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5 text-black/45" />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Section 3: Telephony & Settings */}
-          <div>
-            <div className="px-2.5 py-1 text-[10px] font-telemetry font-bold text-[#71717A] uppercase tracking-widest">
-              Telephony &amp; Infrastructure
-            </div>
-            <div className="space-y-0.5 mt-0.5">
-              {telecomItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname?.startsWith(item.href);
+          {/* Group 3: Infrastructure & Settings */}
+          <div className="space-y-1 pt-1">
+            {isCollapsed ? (
+              <div className="w-6 h-[1px] bg-black/[0.08] mx-auto my-2" />
+            ) : (
+              <div className="px-3 text-[11px] font-bold text-black/35 uppercase tracking-wider">
+                Platform &amp; Config
+              </div>
+            )}
+            {platformNav.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname?.startsWith(item.href));
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onCloseMobile}
-                    className={`flex items-center justify-between px-2.5 py-1.5 rounded-[2px] transition-all font-medium text-xs group ${
-                      isActive
-                        ? "bg-[#18181B] text-white font-bold border-l-2 border-white border-y border-r border-[#27272A]"
-                        : "text-[#A1A1AA] hover:text-white hover:bg-[#121215]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Icon
-                        className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                          isActive ? "text-white" : "text-[#71717A] group-hover:text-white"
-                        }`}
-                      />
-                      <span>{item.label}</span>
+              return isCollapsed ? (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onCloseMobile}
+                  title={item.label}
+                  className={`w-10 h-10 rounded-2xl flex items-center justify-center mx-auto transition-all ${
+                    isActive
+                      ? "bg-[#F7EEDA] text-[#1A1A1A] font-semibold shadow-2xs"
+                      : "text-black/60 hover:text-black hover:bg-black/[0.03]"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? "text-[#1A1A1A]" : "text-black/45"}`} />
+                </Link>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onCloseMobile}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-xl text-[12.5px] font-medium transition-colors ${
+                    isActive
+                      ? "bg-[#F7EEDA] text-[#1A1A1A] font-semibold shadow-2xs"
+                      : "text-black/60 hover:text-black hover:bg-black/[0.03]"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5 text-black/45" />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Group 4: Active Voice Agents with Online Indicators */}
+          <div className="space-y-1.5 pt-2 border-t border-black/[0.05]">
+            {isCollapsed ? (
+              <>
+                <button
+                  onClick={() => {
+                    try { soundSynth.play("click"); } catch {}
+                    setCreateAgentOpen(true);
+                  }}
+                  className="w-8 h-8 rounded-xl bg-black/[0.03] hover:bg-black/5 flex items-center justify-center text-black/50 hover:text-black transition-colors cursor-pointer mx-auto mb-2"
+                  title="Create AI Voice Agent"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+                <div className="space-y-2">
+                  {voiceMembers.map((member, i) => (
+                    <div
+                      key={i}
+                      onClick={() => router.push("/dashboard/agents")}
+                      className="w-8 h-8 rounded-full flex items-center justify-center mx-auto relative cursor-pointer hover:scale-105 transition-transform"
+                      title={`${member.name} • ${member.role}`}
+                    >
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-[11px] ${member.avatarBg}`}>
+                        {member.initial}
+                      </div>
+                      <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#16856B] ring-2 ring-white" />
                     </div>
-                    {item.badge && (
-                      <span
-                        className={`text-[9px] font-telemetry font-bold px-1.5 py-0.2 rounded-[1px] border border-[#27272A] ${
-                          isActive
-                            ? "bg-white text-black border-white"
-                            : "bg-[#18181B] text-white"
-                        }`}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between px-3 text-[11px] font-bold text-black/35 uppercase tracking-wider">
+                  <span>Active AI Agents</span>
+                  <button
+                    onClick={() => {
+                      try { soundSynth.play("click"); } catch {}
+                      setCreateAgentOpen(true);
+                    }}
+                    className="w-5 h-5 rounded-md hover:bg-black/5 flex items-center justify-center text-black/50 hover:text-black transition-colors cursor-pointer"
+                    title="Create voice agent"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="space-y-1">
+                  {voiceMembers.map((member, i) => (
+                    <div
+                      key={i}
+                      onClick={() => router.push("/dashboard/agents")}
+                      className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-black/[0.03] transition-colors cursor-pointer group"
+                    >
+                      <div className="relative shrink-0">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] ${member.avatarBg}`}>
+                          {member.initial}
+                        </div>
+                        {/* Small green online dot */}
+                        <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#16856B] ring-2 ring-white" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="font-semibold text-[12px] text-[#1A1A1A] block truncate leading-tight group-hover:text-black">
+                          {member.name}
+                        </span>
+                        <span className="text-[10px] text-black/45 block truncate leading-tight mt-0.5">
+                          {member.role}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
-        {/* Bottom Workspace Dock */}
-        <div className="p-2.5 border-t border-[#27272A] shrink-0 space-y-2 bg-[#121215]">
-          {/* Minutes Balance Telemetry Gauge */}
-          <div className="p-2 rounded-[2px] bg-[#09090B] border border-[#27272A] space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-display font-bold text-white truncate max-w-[120px]">
-                {workspaceName}
-              </span>
-              <span className="px-1.5 py-0.2 rounded-[1px] bg-[#18181B] text-white text-[10px] font-telemetry font-bold border border-[#27272A]">
-                14.0 MIN
-              </span>
-            </div>
-            <div className="w-full bg-[#18181B] h-1.5 rounded-[1px] overflow-hidden">
-              <div className="bg-white h-full w-[14%]" />
-            </div>
+        {/* BOTTOM: Pinned Logout Link */}
+        <div className="pt-3 border-t border-black/[0.06] shrink-0">
+          {isCollapsed ? (
             <button
-              onClick={() => setTopUpOpen(true)}
-              className="w-full py-1 text-center text-[10.5px] font-display font-bold text-white hover:bg-[#18181B] rounded-[2px] transition-colors cursor-pointer border border-[#27272A] hover:border-white flex items-center justify-center gap-1 active:translate-x-[1px] active:translate-y-[1px]"
+              onClick={handleSignOut}
+              className="w-10 h-10 rounded-2xl flex items-center justify-center mx-auto text-black/60 hover:text-rose-600 hover:bg-rose-50/50 transition-colors cursor-pointer"
+              title="Log out"
+              aria-label="Log out"
             >
-              <Zap className="w-3 h-3 text-white" />
-              <span>Add Telephony Minutes</span>
+              <LogOut className="w-4 h-4 text-black/50 hover:text-rose-600" />
             </button>
-          </div>
-
-          {/* Custom Daymode / Nightmode Pill Toggle Switch */}
-          <div className="flex items-center justify-center py-1">
+          ) : (
             <button
-              type="button"
-              onClick={() => {
-                soundSynth.playClick();
-                onToggleTheme?.();
-              }}
-              className={`relative w-[140px] h-[34px] rounded-full p-[2.5px] flex items-center select-none cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shrink-0 ${
-                theme === "light"
-                  ? "daymode-pill-track justify-end"
-                  : "nightmode-pill-track justify-start"
-              }`}
-              aria-label={theme === "light" ? "Switch to Nightmode" : "Switch to Daymode"}
-              title={theme === "light" ? "Switch to Nightmode" : "Switch to Daymode"}
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-2.5 px-3 py-2 text-black/60 hover:text-rose-600 transition-colors text-[13px] font-medium cursor-pointer rounded-xl hover:bg-rose-50/50"
             >
-              {/* Sliding White Circular Thumb with Sun/Moon Icon */}
-              <div
-                className={`absolute top-[2.5px] left-[2.5px] w-[27px] h-[27px] rounded-full pill-thumb-white flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-10 ${
-                  theme === "light" ? "translate-x-0" : "translate-x-[107px]"
-                }`}
-              >
-                {theme === "light" ? (
-                  /* Crisp Sun Icon */
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-4 h-4 text-black transition-transform duration-500 rotate-0"
-                  >
-                    <circle cx="12" cy="12" r="4.5" />
-                    <path d="M12 2v2.5" />
-                    <path d="M12 19.5v2.5" />
-                    <path d="M4.93 4.93l1.77 1.77" />
-                    <path d="M17.3 17.3l1.77 1.77" />
-                    <path d="M2 12h2.5" />
-                    <path d="M19.5 12h2.5" />
-                    <path d="M4.93 19.07l1.77-1.77" />
-                    <path d="M17.3 6.7l1.77-1.77" />
-                  </svg>
-                ) : (
-                  /* Crisp Crescent Moon & Sparkle Stars Icon */
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-4 h-4 text-black transition-transform duration-500 rotate-0"
-                  >
-                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                    <path d="M19 2.5v3" />
-                    <path d="M20.5 4h-3" />
-                    <path d="M15.5 7.5v2" />
-                    <path d="M16.5 8.5h-2" />
-                  </svg>
-                )}
-              </div>
-
-              {/* Mode Text Label */}
-              {theme === "light" ? (
-                <span className="font-sans font-black text-[10.5px] tracking-wider pill-text-day pr-3 select-none">
-                  DAYMODE
-                </span>
-              ) : (
-                <span className="font-sans font-black text-[10.5px] tracking-wider pill-text-night pl-3 select-none">
-                  NIGHTMODE
-                </span>
-              )}
+              <LogOut className="w-4 h-4 text-black/50 group-hover:text-rose-600" />
+              <span>Log out</span>
             </button>
-          </div>
-
-          {/* User Profile Mini Bar */}
-          <div className="flex items-center justify-between px-1">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-6 h-6 rounded-[2px] bg-white text-black font-telemetry font-bold text-[11px] flex items-center justify-center shrink-0">
-                {userName.charAt(0).toUpperCase()}
-              </div>
-              <div className="min-w-0">
-                <span className="font-bold text-white text-xs block truncate leading-tight font-display">
-                  {userName}
-                </span>
-                <span className="text-[10px] text-[#A1A1AA] block truncate leading-tight font-telemetry">
-                  {userEmail}
-                </span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setTestCallOpen(true)}
-              className="p-1 rounded-[2px] text-[#A1A1AA] hover:text-white hover:bg-[#18181B] transition-colors border border-transparent hover:border-[#27272A]"
-              title="Test Voice Agent"
-            >
-              <Zap className="w-3.5 h-3.5 text-white" />
-            </button>
-          </div>
+          )}
         </div>
       </aside>
 
       {/* Modals */}
+      <CreateAgentModal
+        isOpen={createAgentOpen}
+        onClose={() => setCreateAgentOpen(false)}
+      />
       <TopUpCreditsModal
         isOpen={topUpOpen}
         onClose={() => setTopUpOpen(false)}
-      />
-      <TestCallModal
-        isOpen={testCallOpen}
-        onClose={() => setTestCallOpen(false)}
-      />
-      <CreateAgentModal
-        isOpen={createEmployeeOpen}
-        onClose={() => setCreateEmployeeOpen(false)}
+        currentCredits={14}
       />
     </>
   );

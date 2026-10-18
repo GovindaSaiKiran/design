@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Users, Search, Filter, Upload, Download, Flame, CheckCircle2, RotateCw, Phone, ArrowUpRight, X, Sparkles } from "lucide-react";
+import { Users, Search, Upload, ArrowUpRight, X, Sparkles } from "lucide-react";
 import ContactIntelligence from "../components/ContactIntelligence";
 
 interface ContactsViewProps {
@@ -94,21 +94,19 @@ export default function ContactsView({
   });
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-300">
-      {/* ========================================================================= */}
-      {/* 1. SARVAM EDITORIAL HERO & CONTACTS DIRECTORY HEADER                     */}
-      {/* ========================================================================= */}
-      <div className="liquid-glass-card p-8 sm:p-10 relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-black/10 text-xs font-semibold text-neutral-800">
-              <span className="text-amber-600 font-serif">~ 𑁍 ~</span>
+    <div className="space-y-6 animate-in fade-in duration-300 font-sans select-none text-[#1A1A1A]">
+      {/* 1. Header Card */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] p-6 sm:p-8 shadow-2xs relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D9C2FA]/40 border border-[#D9C2FA] text-xs font-semibold text-[#5B21B6]">
+              <Sparkles className="w-3.5 h-3.5" />
               <span>Candidate Intelligence Directory</span>
             </div>
-            <h1 className="font-serif-display text-3xl sm:text-4xl font-normal text-neutral-900 tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] tracking-tight leading-tight">
               Applicants, Parents & Contact Intelligence
             </h1>
-            <p className="text-sm text-neutral-600 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-black/60 leading-relaxed font-sans">
               Auto-categorized student and parent profiles synthesized in real-time from autonomous admissions calls, board percentage verification, and merit scholarship consultations across India.
             </p>
           </div>
@@ -116,71 +114,67 @@ export default function ContactsView({
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={onUploadContacts}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-2xs transition-all duration-200 cursor-pointer active:scale-95"
             >
-              <Upload className="w-4 h-4 stroke-[2]" />
+              <Upload className="w-3.5 h-3.5 stroke-[2]" />
               <span>Import Candidate Register</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2. CONTACT INTELLIGENCE OVERVIEW WIDGET                                   */}
-      {/* ========================================================================= */}
+      {/* 2. Contact Intelligence Overview Widget */}
       <ContactIntelligence onViewContact={onViewContactDossier} />
 
-      {/* ========================================================================= */}
-      {/* 3. SEARCHABLE CONTACT TABLE WITH SARVAM STYLING                           */}
-      {/* ========================================================================= */}
-      <div className="liquid-glass-card p-8 hover:border-black/20 transition-all">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-black/10">
+      {/* 3. Searchable Contact Table */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] p-6 sm:p-8 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-black/[0.06]">
           <div>
-            <h3 className="font-serif-display text-2xl font-normal text-neutral-900 tracking-tight">
+            <h3 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
               Verified Candidate Registry
             </h3>
-            <p className="text-xs text-neutral-500 mt-0.5">
+            <p className="text-xs text-black/50 mt-0.5">
               Showing {filteredContacts.length} of {contactsList.length} verified applicant profiles with Indic phoneme tags
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="relative w-72">
-              <Search className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+              <Search className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
               <input
                 type="text"
                 placeholder="Search candidate, score, branch..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 rounded-xl text-xs bg-white/70 backdrop-blur-md border border-black/10 focus:border-black/30 focus:bg-white text-neutral-900 placeholder:text-neutral-400 focus:outline-none transition-all shadow-2xs"
+                className="w-full pl-9 pr-8 py-2 rounded-full text-xs bg-[#FAF3E4]/60 border border-black/[0.06] focus:border-black/20 focus:bg-white text-[#1A1A1A] placeholder:text-black/40 focus:outline-none transition-all shadow-2xs"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-black/40 hover:text-black"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
 
-            <div className="flex items-center gap-1 bg-neutral-100/80 p-1 rounded-xl border border-black/5 text-xs">
+            <div className="flex items-center gap-1 bg-[#FAF3E4] p-1 rounded-full border border-black/[0.06] text-xs">
               <button
                 onClick={() => setCategoryFilter("all")}
-                className={`px-3 py-1 rounded-lg font-medium transition-all ${
+                className={`px-3 py-1 rounded-full font-medium transition-all ${
                   categoryFilter === "all"
-                    ? "bg-white text-neutral-900 shadow-xs font-semibold"
-                    : "text-neutral-500 hover:text-neutral-900"
+                    ? "bg-white text-[#1A1A1A] shadow-xs font-semibold"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
                 All
               </button>
               <button
                 onClick={() => setCategoryFilter("high intent")}
-                className={`px-3 py-1 rounded-lg font-medium transition-all ${
+                className={`px-3 py-1 rounded-full font-medium transition-all ${
                   categoryFilter === "high intent"
-                    ? "bg-white text-neutral-900 shadow-xs font-semibold"
-                    : "text-neutral-500 hover:text-neutral-900"
+                    ? "bg-white text-[#1A1A1A] shadow-xs font-semibold"
+                    : "text-black/60 hover:text-black"
                 }`}
               >
                 High Intent
@@ -189,10 +183,10 @@ export default function ContactsView({
           </div>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-black/10 bg-white/40 backdrop-blur-md">
+        <div className="overflow-x-auto rounded-[20px] border border-black/[0.06]">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="bg-white/60 text-neutral-500 text-[11px] font-semibold tracking-wider uppercase border-b border-black/10">
+              <tr className="bg-[#FAF3E4]/70 text-black/50 text-[11px] font-semibold tracking-wider uppercase border-b border-black/[0.06]">
                 <th className="py-3.5 px-4">Candidate & Specialization</th>
                 <th className="py-3.5 px-4">Phone & Locale</th>
                 <th className="py-3.5 px-4">Score & Triage</th>
@@ -201,58 +195,58 @@ export default function ContactsView({
                 <th className="py-3.5 px-4 text-right">Dossier</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-black/5 bg-transparent font-medium text-neutral-800">
+            <tbody className="divide-y divide-black/[0.04] bg-white font-medium text-black/80">
               {filteredContacts.map((contact) => (
                 <tr
                   key={contact.id}
                   onClick={() => onViewContactDossier(contact.id)}
-                  className="hover:bg-neutral-50/80 transition-colors cursor-pointer group"
+                  className="hover:bg-[#FAF3E4]/40 transition-colors cursor-pointer group"
                 >
                   <td className="py-4 px-4">
-                    <div className="font-semibold text-neutral-900 group-hover:text-blue-600 transition-colors text-sm">
+                    <div className="font-semibold text-[#1A1A1A] group-hover:text-black transition-colors text-sm">
                       {contact.name}
                     </div>
-                    <div className="text-xs text-neutral-500 mt-0.5">{contact.organization}</div>
+                    <div className="text-xs text-black/50 mt-0.5">{contact.organization}</div>
                   </td>
                   <td className="py-4 px-4">
-                    <div className="font-mono text-neutral-700 text-xs">{contact.phone}</div>
-                    <div className="text-[10px] text-neutral-500 mt-0.5 font-sans">{contact.locale}</div>
+                    <div className="font-mono text-black/80 text-xs">{contact.phone}</div>
+                    <div className="text-[10px] text-black/50 mt-0.5 font-sans">{contact.locale}</div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="font-mono font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-[11px]">
+                    <span className="font-mono font-semibold text-[#16856B] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full text-[11px]">
                       {contact.score}
                     </span>
                   </td>
                   <td className="py-4 px-4">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold border ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
                         contact.category === "High Intent"
-                          ? "bg-amber-50 text-amber-800 border-amber-200"
+                          ? "bg-[#FFD9A0] text-[#7A4B00]"
                           : contact.category === "Resolved"
-                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                          : "bg-blue-50 text-blue-800 border-blue-200"
+                          ? "bg-[#C1F2D5] text-[#16856B]"
+                          : "bg-[#BCD0F5] text-[#1B365D]"
                       }`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${
                           contact.category === "High Intent"
-                            ? "bg-amber-500"
+                            ? "bg-[#7A4B00]"
                             : contact.category === "Resolved"
-                            ? "bg-emerald-500"
-                            : "bg-blue-500"
+                            ? "bg-[#16856B]"
+                            : "bg-[#1B365D]"
                         }`}
                       />
                       {contact.lastOutcome}
                     </span>
                   </td>
-                  <td className="py-4 px-4 text-neutral-600 font-sans">{contact.agent}</td>
+                  <td className="py-4 px-4 text-black/60 font-sans">{contact.agent}</td>
                   <td className="py-4 px-4 text-right">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onViewContactDossier(contact.id);
                       }}
-                      className="px-3.5 py-1.5 rounded-xl bg-neutral-100 hover:bg-neutral-900 hover:text-white text-neutral-800 border border-black/10 font-semibold text-xs shadow-xs transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95"
+                      className="px-3.5 py-1.5 rounded-full bg-[#FAF3E4] hover:bg-[#111111] hover:text-white text-[#1A1A1A] border border-black/[0.06] font-semibold text-xs shadow-2xs transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95"
                     >
                       <span>Inspect</span>
                       <ArrowUpRight className="w-3 h-3" />

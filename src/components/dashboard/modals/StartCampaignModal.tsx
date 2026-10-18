@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Send, Users, Calendar, Bot, Sparkles, Check, PhoneCall, Layers, ShieldCheck } from "lucide-react";
+import { X, Send, Sparkles, Check, PhoneCall, AlertCircle, ShieldCheck } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
 
 interface StartCampaignModalProps {
@@ -15,36 +15,40 @@ export default function StartCampaignModal({
   onClose,
   onCampaignStarted,
 }: StartCampaignModalProps) {
-  const [title, setTitle] = useState("JoSAA Round 1 Cutoff & Merit Scholarship Verification");
+  const [title, setTitle] = useState("JoSAA Round 1 Cutoff & Merit Verification");
   const [audience, setAudience] = useState("High-Percentile PCM Applicants (1,240 Verified Candidates)");
   const [selectedAgent, setSelectedAgent] = useState("Maya AI (Hindi/English) & Neha AI (Telugu)");
-  const [scheduleTime, setScheduleTime] = useState("Immediate");
   const [concurrentLines, setConcurrentLines] = useState(30);
+  const [consentAcknowledged, setConsentAcknowledged] = useState(false);
 
   if (!isOpen) return null;
 
   const handleLaunch = () => {
+    if (!consentAcknowledged) {
+      alert("Please confirm regulatory compliance and consent before initiating bulk calling.");
+      return;
+    }
     try { soundSynth.play("confirm"); } catch {}
     onCampaignStarted?.(title, 1240);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-lg bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl p-6 sm:p-7 overflow-hidden text-white font-mono">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-lg bg-white rounded-[28px] border border-black/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 sm:p-7 overflow-hidden text-[#1A1A1A]">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
+        <div className="flex items-center justify-between pb-4 border-b border-black/[0.06]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[2px] bg-white text-black flex items-center justify-center shadow-xs">
-              <Send className="w-5 h-5 text-black" />
+            <div className="w-10 h-10 rounded-2xl bg-[#D9C2FA] text-[#1A1A1A] flex items-center justify-center shadow-xs">
+              <Send className="w-4 h-4 text-[#1A1A1A]" />
             </div>
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#71717A]">OUTBOUND CADENCE</div>
-              <h3 className="text-lg font-bold text-white tracking-tight">
-                Launch Outreach Goal
+              <span className="text-[10px] font-bold uppercase tracking-wider text-black/40">OUTBOUND CAMPAIGN</span>
+              <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">
+                Launch Outbound Campaign
               </h3>
-              <p className="text-xs text-[#A1A1AA] font-sans">
-                Set the admissions outcome and delegate autonomous batch calling
+              <p className="text-xs text-black/55">
+                Configure autonomous bulk voice calls and scheduled follow-ups
               </p>
             </div>
           </div>
@@ -54,7 +58,7 @@ export default function StartCampaignModal({
               try { soundSynth.play("click"); } catch {}
               onClose();
             }}
-            className="p-1.5 rounded-[2px] text-[#71717A] hover:text-white hover:bg-[#121215] transition-colors cursor-pointer"
+            className="p-2 rounded-full text-black/40 hover:text-[#1A1A1A] hover:bg-[#FBF7ED] transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -63,25 +67,25 @@ export default function StartCampaignModal({
         {/* Form Fields */}
         <div className="space-y-4 my-5 text-xs">
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
-              Admissions Goal / Campaign Title
+            <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+              Campaign Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] text-white focus:outline-none focus:border-white transition-all"
+              className="w-full px-4 py-2.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all font-medium text-xs"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
-              Target Candidate Register
+            <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+              Target Candidate / Lead Register
             </label>
             <select
               value={audience}
               onChange={(e) => setAudience(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] text-white focus:outline-none focus:border-white cursor-pointer transition-all font-mono"
+              className="w-full px-4 py-2.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-[#1A1A1A] focus:outline-none focus:border-black/30 cursor-pointer transition-all text-xs font-medium"
             >
               <option value="High-Percentile PCM Applicants (1,240 Verified Candidates)">
                 High-Percentile PCM Applicants (1,240 Verified Candidates)
@@ -97,13 +101,13 @@ export default function StartCampaignModal({
 
           <div className="grid grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
-                Assigned Voice Engine
+              <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+                Assigned AI Agent
               </label>
               <select
                 value={selectedAgent}
                 onChange={(e) => setSelectedAgent(e.target.value)}
-                className="w-full px-3 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] text-white focus:outline-none focus:border-white cursor-pointer transition-all font-mono text-xs"
+                className="w-full px-4 py-2.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-[#1A1A1A] focus:outline-none focus:border-black/30 cursor-pointer transition-all text-xs font-medium"
               >
                 <option value="Maya AI (Hindi/English) & Neha AI (Telugu)">Maya (Hindi) + Neha (Telugu)</option>
                 <option value="Ishita AI (Kannada) & Suhani AI (Bengali)">Ishita (Kannada) + Suhani (Bengali)</option>
@@ -112,9 +116,12 @@ export default function StartCampaignModal({
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#A1A1AA] font-bold mb-1">
-                Concurrent Trunks ({concurrentLines} lines)
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold text-[#1A1A1A]">
+                  Concurrent Trunks
+                </label>
+                <span className="text-xs font-bold text-[#1A1A1A]">{concurrentLines} lines</span>
+              </div>
               <input
                 type="range"
                 min={5}
@@ -122,40 +129,56 @@ export default function StartCampaignModal({
                 step={5}
                 value={concurrentLines}
                 onChange={(e) => setConcurrentLines(Number(e.target.value))}
-                className="w-full accent-white mt-2 cursor-pointer"
+                className="w-full accent-[#111111] mt-2 cursor-pointer"
               />
             </div>
           </div>
 
-          <div className="p-3.5 rounded-[2px] bg-[#121215] border border-[#27272A] flex items-center justify-between text-xs text-zinc-300">
-            <span className="flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-              Automated WhatsApp Slot Passes & 3x Retry on No-Answer
-            </span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-[#18181B] px-2 py-0.5 rounded-[2px] border border-[#27272A]">
-              ARMED
-            </span>
+          <div className="p-3.5 rounded-2xl bg-[#BCD0F5]/40 border border-[#A8C3F0]/60 flex items-start gap-2.5 text-xs text-[#1A1A1A]">
+            <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-[11px] text-[#1A1A1A]">Automated Multichannel Delivery</p>
+              <p className="text-[11px] text-black/60 mt-0.5 leading-relaxed">
+                Includes automated WhatsApp confirmation dispatch and up to 3x smart redial attempts for unanswered calls.
+              </p>
+            </div>
           </div>
+
+          <label className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.06] cursor-pointer hover:border-black/20 transition-all">
+            <input
+              type="checkbox"
+              checked={consentAcknowledged}
+              onChange={(e) => setConsentAcknowledged(e.target.checked)}
+              className="mt-0.5 rounded accent-[#111111] cursor-pointer"
+            />
+            <span className="text-[11px] text-black/60 leading-tight">
+              I confirm these contacts have provided opt-in consent for transactional voice updates in compliance with regulatory and telecom standards.
+            </span>
+          </label>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#27272A]">
+        <div className="flex items-center justify-between pt-4 border-t border-black/[0.06]">
           <button
             onClick={() => {
               try { soundSynth.play("click"); } catch {}
               onClose();
             }}
-            className="px-4 py-2 rounded-[2px] text-xs uppercase tracking-wider text-[#A1A1AA] hover:text-white bg-transparent hover:bg-[#121215] border border-[#27272A] hover:border-white transition-all cursor-pointer"
+            className="px-5 py-2.5 rounded-full text-xs font-semibold text-black/60 hover:text-[#1A1A1A] bg-white border border-black/[0.08] hover:bg-[#FAF3E4] transition-all cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             onClick={handleLaunch}
-            className="px-5 py-2 rounded-[2px] text-xs font-bold uppercase tracking-wider text-black bg-white hover:bg-zinc-200 shadow-sm inline-flex items-center gap-2 cursor-pointer transition-all"
+            className={`px-6 py-2.5 rounded-full text-xs font-semibold inline-flex items-center gap-2 cursor-pointer transition-all shadow-sm ${
+              consentAcknowledged
+                ? "bg-[#111111] hover:bg-black text-white"
+                : "bg-black/10 text-black/30 cursor-not-allowed"
+            }`}
           >
-            <Check className="w-3.5 h-3.5 text-black" />
-            <span>Launch Outreach Goal</span>
+            <Check className="w-3.5 h-3.5" />
+            <span>Launch Campaign</span>
           </button>
         </div>
       </div>

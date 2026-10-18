@@ -104,7 +104,7 @@ export default function DashboardHeader({
               <span className="font-extrabold text-sm sm:text-base tracking-tight text-neutral-900">
                 Swaram
               </span>
-              <span className="text-[#0d5926] bg-[#cdfb56] text-[9px] sm:text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded-md shadow-xs">
+              <span className="text-[#16856B] bg-[#C1F2D5] text-[9px] sm:text-[10px] font-black tracking-widest px-1.5 py-0.5 rounded-md shadow-xs">
                 AI
               </span>
             </div>
@@ -228,7 +228,7 @@ export default function DashboardHeader({
                   <span
                     className={`px-1.5 py-0.2 rounded-md text-[9px] font-bold uppercase tracking-wider ${
                       isActive
-                        ? "bg-white/20 text-[#cdfb56]"
+                        ? "bg-white/20 text-[#C1F2D5]"
                         : tab.live
                         ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                         : "bg-black/5 text-neutral-600"
@@ -287,22 +287,22 @@ export default function DashboardHeader({
             )}
           </div>
 
-          {/* Front-Page Style Lime CTA Button (matches BOOK DEMO ↗) */}
+          {/* Primary Action Button */}
           <button
             onClick={onCreateAgent}
-            className="hidden sm:inline-flex bg-[#cdfb56] hover:bg-[#bef03f] active:scale-95 text-black text-xs font-black uppercase tracking-wider px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-[0_0_20px_rgba(205,251,86,0.35)] hover:shadow-[0_0_26px_rgba(205,251,86,0.55)] transition-all duration-200 cursor-pointer items-center gap-1.5 shrink-0"
+            className="hidden sm:inline-flex bg-[#111111] hover:bg-[#222222] active:scale-95 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full shadow-sm transition-all duration-200 cursor-pointer items-center gap-1.5 shrink-0"
           >
             <span>NEW AGENT</span>
-            <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+            <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] text-[#C1F2D5]" />
           </button>
 
           {/* Exit / Return to Front Page Link */}
           <Link
             href="/"
-            className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-300 text-neutral-700 hover:text-neutral-950 bg-neutral-100/60 hover:bg-neutral-200/60 transition-all cursor-pointer flex items-center gap-1 shrink-0"
+            className="text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-black/[0.06] text-[#1A1A1A] hover:text-black bg-[#FAF3E4] hover:bg-[#F3EBDA] transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
             title="Return to Swaram Front Page"
           >
-            <ArrowLeft className="w-3 h-3" />
+            <ArrowLeft className="w-3 h-3 text-black/60" />
             <span className="hidden md:inline">FRONT PAGE</span>
           </Link>
         </div>

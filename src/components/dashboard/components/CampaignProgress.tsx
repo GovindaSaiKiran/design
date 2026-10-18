@@ -25,40 +25,40 @@ export default function CampaignProgress({
   const remainingPct = 100 - (completedPct + noAnswerPct + failedPct);
 
   return (
-    <div className="liquid-glass-card p-7 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative">
+    <div className="bg-white rounded-[26px] border border-black/[0.06] p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_25px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all flex flex-col justify-between group relative">
       {/* Header */}
       <div>
         <div className="flex items-center justify-between gap-2 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold tracking-wide uppercase px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-700 border border-black/5">
+            <span className="text-[10.5px] font-bold tracking-wide uppercase px-2.5 py-0.5 rounded-full bg-[#FAF3E4] text-[#1A1A1A] border border-black/[0.06]">
               Outbound Batch
             </span>
             <span
-              className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border flex items-center gap-1.5 ${
+              className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold tracking-wide flex items-center gap-1.5 ${
                 isPaused
-                  ? "bg-amber-50 text-amber-700 border-amber-200"
-                  : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                  ? "bg-[#FFD9A0] text-[#9A5B00]"
+                  : "bg-[#C1F2D5] text-[#16856B]"
               }`}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
-                  isPaused ? "bg-amber-500" : "bg-emerald-500 animate-pulse"
+                  isPaused ? "bg-[#9A5B00]" : "bg-[#16856B] animate-pulse"
                 }`}
               />
               {isPaused ? "PAUSED" : "DIALING"}
             </span>
           </div>
 
-          <span className="text-[11px] font-mono text-neutral-500 bg-neutral-100/80 px-2.5 py-0.5 rounded-lg border border-black/5">
+          <span className="text-[11px] font-medium text-black/50 bg-[#FAF3E4]/70 px-2.5 py-0.5 rounded-full border border-black/[0.06]">
             {campaign.estTimeRemaining} left
           </span>
         </div>
 
-        <h3 className="text-lg font-semibold text-neutral-900 tracking-tight group-hover:text-blue-600 transition-colors">
+        <h3 className="text-lg font-bold text-[#1A1A1A] tracking-tight font-sans">
           {campaign.title}
         </h3>
-        <p className="text-xs text-neutral-500 mt-1">
-          Target: <span className="text-neutral-800 font-medium">{campaign.targetAudience}</span>
+        <p className="text-xs text-black/55 mt-1">
+          Target: <span className="text-[#1A1A1A] font-semibold">{campaign.targetAudience}</span>
         </p>
       </div>
 
@@ -66,36 +66,36 @@ export default function CampaignProgress({
       <div className="my-5">
         <div className="flex items-baseline justify-between mb-2.5">
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-semibold font-mono text-neutral-900 tracking-tight">
+            <span className="text-3xl font-bold text-[#1A1A1A] tracking-tight font-sans">
               {campaign.progressPercent}%
             </span>
-            <span className="text-xs text-neutral-500 font-medium">
+            <span className="text-xs text-black/55 font-medium">
               ({campaign.completedCount.toLocaleString()} / {campaign.totalContacts.toLocaleString()})
             </span>
           </div>
-          <span className="text-xs text-neutral-400 font-medium">
+          <span className="text-xs text-black/45 font-medium">
             Progress
           </span>
         </div>
 
         {/* Multi-segmented Apple Style Progress Bar */}
-        <div className="w-full h-3 rounded-full bg-neutral-100 border border-black/5 overflow-hidden flex p-0.5">
-          {/* Completed Segment (Emerald) */}
+        <div className="w-full h-3 rounded-full bg-[#FAF3E4] border border-black/[0.05] overflow-hidden flex p-0.5">
+          {/* Completed Segment (Mint) */}
           <div
             style={{ width: `${completedPct}%` }}
-            className="h-full bg-emerald-500 rounded-l-full transition-all duration-500"
+            className="h-full bg-[#C1F2D5] rounded-l-full transition-all duration-500"
             title={`Completed: ${campaign.completedCount}`}
           />
-          {/* No Answer Segment (Amber) */}
+          {/* No Answer Segment (Peach) */}
           <div
             style={{ width: `${noAnswerPct}%` }}
-            className="h-full bg-amber-400 transition-all duration-500"
+            className="h-full bg-[#FFD9A0] transition-all duration-500"
             title={`No Answer: ${campaign.noAnswerCount}`}
           />
           {/* Failed Segment (Rose) */}
           <div
             style={{ width: `${failedPct}%` }}
-            className="h-full bg-rose-400 rounded-r-full transition-all duration-500"
+            className="h-full bg-[#FFC0D3] rounded-r-full transition-all duration-500"
             title={`Failed: ${campaign.failedCount}`}
           />
           {/* Remaining in queue */}
@@ -105,34 +105,34 @@ export default function CampaignProgress({
           />
         </div>
 
-        {/* Sub-breakdown Stats Cards with Thin Black Borders */}
+        {/* Sub-breakdown Stats Cards with Pastel Surfaces */}
         <div className="grid grid-cols-3 gap-2.5 mt-4 text-center">
-          <div className="p-3 rounded-2xl bg-neutral-50 border border-black/5 hover:border-black/15 transition-colors">
-            <div className="flex items-center justify-center gap-1 text-[10px] font-semibold text-neutral-500 mb-1">
-              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+          <div className="p-3 rounded-2xl bg-[#FAF3E4]/40 border border-black/[0.05] hover:border-black/[0.12] transition-colors">
+            <div className="flex items-center justify-center gap-1 text-[10.5px] font-semibold text-black/50 mb-1">
+              <CheckCircle2 className="w-3 h-3 text-[#16856B]" />
               <span>Done</span>
             </div>
-            <div className="text-base font-semibold text-neutral-900 font-mono">
+            <div className="text-base font-bold text-[#1A1A1A] font-sans">
               {campaign.completedCount}
             </div>
           </div>
 
-          <div className="p-3 rounded-2xl bg-neutral-50 border border-black/5 hover:border-black/15 transition-colors">
-            <div className="flex items-center justify-center gap-1 text-[10px] font-semibold text-neutral-500 mb-1">
-              <PhoneOff className="w-3 h-3 text-amber-600" />
+          <div className="p-3 rounded-2xl bg-[#FAF3E4]/40 border border-black/[0.05] hover:border-black/[0.12] transition-colors">
+            <div className="flex items-center justify-center gap-1 text-[10.5px] font-semibold text-black/50 mb-1">
+              <PhoneOff className="w-3 h-3 text-[#9A5B00]" />
               <span>No Ans</span>
             </div>
-            <div className="text-base font-semibold text-neutral-900 font-mono">
+            <div className="text-base font-bold text-[#1A1A1A] font-sans">
               {campaign.noAnswerCount}
             </div>
           </div>
 
-          <div className="p-3 rounded-2xl bg-neutral-50 border border-black/5 hover:border-black/15 transition-colors">
-            <div className="flex items-center justify-center gap-1 text-[10px] font-semibold text-neutral-500 mb-1">
-              <AlertTriangle className="w-3 h-3 text-rose-600" />
+          <div className="p-3 rounded-2xl bg-[#FAF3E4]/40 border border-black/[0.05] hover:border-black/[0.12] transition-colors">
+            <div className="flex items-center justify-center gap-1 text-[10.5px] font-semibold text-black/50 mb-1">
+              <AlertTriangle className="w-3 h-3 text-[#A81D47]" />
               <span>Retry</span>
             </div>
-            <div className="text-base font-semibold text-neutral-900 font-mono">
+            <div className="text-base font-bold text-[#1A1A1A] font-sans">
               {campaign.failedCount}
             </div>
           </div>
@@ -140,10 +140,10 @@ export default function CampaignProgress({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center gap-2 pt-4 border-t border-black/10">
+      <div className="flex items-center gap-2 pt-4 border-t border-black/[0.05]">
         <button
           onClick={() => onViewCampaign?.(campaign)}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
         >
           <span>Inspect Batch</span>
           <ArrowUpRight className="w-3.5 h-3.5" />
@@ -151,16 +151,16 @@ export default function CampaignProgress({
 
         <button
           onClick={() => setIsPaused(!isPaused)}
-          className="px-3.5 py-2 rounded-xl text-xs font-semibold border border-black/10 hover:border-black/30 transition-all inline-flex items-center gap-1.5 cursor-pointer bg-white text-neutral-800 hover:bg-neutral-50 active:scale-95"
+          className="px-4 py-2.5 rounded-full text-xs font-semibold border border-black/[0.08] hover:bg-[#FAF3E4] transition-all inline-flex items-center gap-1.5 cursor-pointer bg-white text-[#1A1A1A] active:scale-95 shadow-2xs"
         >
           {isPaused ? (
             <>
-              <Play className="w-3.5 h-3.5 fill-current text-neutral-800" />
+              <Play className="w-3.5 h-3.5 fill-current text-[#1A1A1A]" />
               <span>Resume</span>
             </>
           ) : (
             <>
-              <Pause className="w-3.5 h-3.5 text-neutral-800" />
+              <Pause className="w-3.5 h-3.5 text-[#1A1A1A]" />
               <span>Pause</span>
             </>
           )}
@@ -168,7 +168,7 @@ export default function CampaignProgress({
 
         <button
           onClick={onExportResults}
-          className="p-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-black/5 text-neutral-700 hover:text-neutral-900 transition-colors cursor-pointer active:scale-95"
+          className="p-2.5 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-black/60 hover:text-black transition-colors cursor-pointer active:scale-95 shadow-2xs"
           title="Export CSV Results"
         >
           <Download className="w-4 h-4" />

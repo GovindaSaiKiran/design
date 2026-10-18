@@ -13,11 +13,11 @@ import {
   Activity,
   Layers,
   Sparkles,
+  PhoneIncoming,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import { TelephonyNumber } from "@/types/dashboard";
 import { mockTelephonyNumbers } from "@/data/mock/dashboardData";
-import { soundSynth } from "@/lib/audio-synth";
 
 export default function PhoneNumbersPage() {
   const [numbers, setNumbers] = useState<TelephonyNumber[]>(mockTelephonyNumbers);
@@ -25,11 +25,8 @@ export default function PhoneNumbersPage() {
 
   const handleTestInbound = (num?: TelephonyNumber) => {
     if (!num) return;
-    try {
-      soundSynth.play("confirm");
-    } catch {}
     setTestLineNotice(
-      `INBOUND SIP PING DISPATCHED → ${num.phoneNumber} (${num.label}). Routing verified to ${num.assignedAgent} with ${num.latencyMs}ms carrier latency.`
+      `Inbound SIP test ping dispatched to ${num.phoneNumber} (${num.label}). Routing verified to ${num.assignedAgent} with ${num.latencyMs}ms carrier latency.`
     );
     setTimeout(() => {
       setTestLineNotice(null);
@@ -37,66 +34,59 @@ export default function PhoneNumbersPage() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 select-none text-white">
-      {/* ======================================================================= */}
-      {/* WORKSPACE HEADER                                                        */}
-      {/* ======================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#27272A]">
+    <div className="space-y-6 font-sans text-[#1A1A1A]">
+      {/* Workspace Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-black/[0.06]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#71717A] hover:text-white transition-colors"
+              className="text-xs font-semibold text-black/45 hover:text-black transition-colors"
             >
-              TELEPHONY WORKSPACE
+              Overview
             </Link>
-            <span className="text-[#3F3F46]">/</span>
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-white bg-[#121215] px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              {numbers.length} CARRIER DIDS ROUTED
+            <span className="text-black/20">/</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4A2D78] bg-[#D9C2FA] px-3 py-0.5 rounded-full">
+              Telephony &amp; Numbers
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1.5">
-            Phone Numbers & Telephony Routing
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A] mt-2">
+            Phone Numbers &amp; Carrier Telephony
           </h1>
 
-          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 max-w-2xl leading-relaxed">
-            Direct Inbound DIDs, SIP trunk lines, regional carrier routing matrices, and concurrency limits.
+          <p className="text-sm text-black/55 mt-1 max-w-2xl leading-relaxed">
+            Direct Inbound DIDs, SIP trunk lines, carrier routing matrices, and concurrent channel allocations.
           </p>
         </div>
 
         {/* Workspace Actions */}
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap shrink-0">
+        <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
           <button
-            onClick={() => {
-              try { soundSynth.play("click"); } catch {}
-              alert("Enterprise SIP Trunk is healthy. 16 channels primed for concurrent inbound/outbound calls.");
-            }}
-            className="inline-flex items-center gap-2 bg-[#09090B] hover:bg-[#18181B] text-white text-xs font-mono uppercase tracking-wider px-3.5 py-2 rounded-[2px] border border-[#27272A] hover:border-white transition-all cursor-pointer"
+            onClick={() => alert("Enterprise SIP Trunk is healthy. 16 channels primed for concurrent inbound/outbound calls.")}
+            className="inline-flex items-center gap-2 bg-[#FBF7ED] hover:bg-[#FAF3E4] text-[#1A1A1A] text-xs font-semibold px-4 py-2.5 rounded-full border border-black/[0.06] transition-all cursor-pointer"
           >
-            <Settings className="w-3.5 h-3.5 text-[#A1A1AA]" />
+            <Settings className="w-3.5 h-3.5 text-black/50" />
             <span>Trunk Diagnostics</span>
           </button>
 
           <button
             onClick={() => {
-              try { soundSynth.play("confirm"); } catch {}
               const newNum: TelephonyNumber = {
                 id: `tel-${Date.now()}`,
-                phoneNumber: "+91 40 4590 1199",
-                label: "Inbound Customer Helpline",
-                assignedAgent: "AI Assistant",
+                phoneNumber: "+91 40 4590 1200",
+                label: "Admissions Escalation Desk",
+                assignedAgent: "Maya (Admissions)",
                 status: "active",
                 channelType: "Direct DID",
-                latencyMs: 40,
+                latencyMs: 38,
                 callsToday: 0,
               };
               setNumbers([...numbers, newNum]);
             }}
-            className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] transition-all cursor-pointer shadow-sm"
+            className="inline-flex items-center gap-2 bg-[#111111] hover:bg-black text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-all cursor-pointer shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5 text-black" />
+            <Plus className="w-3.5 h-3.5 text-white" />
             <span>Provision Inbound DID</span>
           </button>
         </div>
@@ -104,53 +94,51 @@ export default function PhoneNumbersPage() {
 
       {/* Test Line Banner */}
       {testLineNotice && (
-        <div className="bg-[#121215] border border-white/40 p-3.5 rounded-[2px] flex items-center gap-3 text-xs font-mono text-white shadow-lg animate-in fade-in duration-200">
-          <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
-          <span className="leading-snug">{testLineNotice}</span>
+        <div className="bg-[#C1F2D5]/40 border border-[#16856B]/20 p-4 rounded-[20px] flex items-center gap-3 text-xs text-[#0D593F] shadow-2xs animate-in fade-in duration-200">
+          <CheckCircle2 className="w-4 h-4 text-[#16856B] shrink-0" />
+          <span className="leading-snug font-medium">{testLineNotice}</span>
         </div>
       )}
 
-      {/* ======================================================================= */}
-      {/* WORKSPACE SUB-FOLDER CARDS                                              */}
-      {/* ======================================================================= */}
+      {/* 4 Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <WorkspaceCard
           name="Primary Helpline"
           icon={Radio}
-          description="Direct inbound line for customer inquiries and lead routing."
-          metric={numbers[0]?.phoneNumber || "None"}
-          metricLabel={numbers[0] ? `Routed to ${numbers[0].assignedAgent}` : "No inbound line provisioned"}
-          status={numbers[0] ? "Primary DID" : "Unassigned"}
-          statusType={numbers[0] ? "live" : "neutral"}
-          actionLabel="Provision DID →"
+          description="Direct inbound line for prospective student inquiries and campus tours."
+          metric={numbers[0]?.phoneNumber || "+91 40 4590 1199"}
+          metricLabel={numbers[0] ? `Routed to ${numbers[0].assignedAgent}` : "Primary DID"}
+          status="Primary DID"
+          statusType="live"
+          actionLabel="Test line ping →"
           onClick={() => {
             if (numbers[0]) handleTestInbound(numbers[0]);
           }}
         />
 
         <WorkspaceCard
-          name="Support Desk Line"
+          name="Finance Desk Line"
           icon={PhoneCall}
-          description="Helpline for queries, complaints, and general assistance."
-          metric={numbers[1]?.phoneNumber || "None"}
-          metricLabel={numbers[1] ? `Routed to ${numbers[1].assignedAgent}` : "No support DID provisioned"}
-          status={numbers[1] ? "Direct DID" : "Unassigned"}
-          statusType={numbers[1] ? "live" : "neutral"}
-          actionLabel="Provision DID →"
+          description="Dedicated line for fee breakdowns, installment queries, and aid."
+          metric={numbers[1]?.phoneNumber || "+91 40 4590 1198"}
+          metricLabel={numbers[1] ? `Routed to ${numbers[1].assignedAgent}` : "Direct DID"}
+          status="Direct DID"
+          statusType="live"
+          actionLabel="Test line ping →"
           onClick={() => {
             if (numbers[1]) handleTestInbound(numbers[1]);
           }}
         />
 
         <WorkspaceCard
-          name="Outreach Carrier"
+          name="Outreach Caller ID"
           icon={Layers}
-          description="National outbound caller ID for automated customer campaigns."
-          metric={numbers[2]?.phoneNumber || "None"}
-          metricLabel={numbers[2] ? `Outbound Channel` : "No outbound CID assigned"}
-          status={numbers[2] ? "Active line" : "Unassigned"}
-          statusType={numbers[2] ? "ready" : "neutral"}
-          actionLabel="Provision DID →"
+          description="National outbound caller ID for automated admissions follow-up cadences."
+          metric={numbers[2]?.phoneNumber || "+91 40 4590 1197"}
+          metricLabel={numbers[2] ? `Assigned to ${numbers[2].assignedAgent}` : "Outbound Channel"}
+          status="Active Route"
+          statusType="ready"
+          actionLabel="Test line ping →"
           onClick={() => {
             if (numbers[2]) handleTestInbound(numbers[2]);
           }}
@@ -159,30 +147,29 @@ export default function PhoneNumbersPage() {
         <WorkspaceCard
           name="SIP Concurrency"
           icon={Activity}
-          description="Enterprise SIP trunk allocation via cloud gateway."
+          description="Enterprise SIP trunk allocation via Airtel Direct Cloud Gateway."
           metric="16 channels"
-          metricLabel="Ready for SIP trunk provisioning"
+          metricLabel="Sub-45ms carrier handoff"
           status="Operational"
           statusType="live"
-          actionLabel="Trunk status →"
+          actionLabel="Trunk diagnostics →"
+          onClick={() => alert("All 16 SIP channels online and operational.")}
         />
       </div>
 
-      {/* ======================================================================= */}
-      {/* TELEPHONY ROUTING TABLE                                                 */}
-      {/* ======================================================================= */}
-      <div className="bg-[#09090B] rounded-[2px] border border-[#27272A] overflow-hidden">
+      {/* Telephony Routing Table */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] overflow-hidden shadow-2xs">
         {/* Top Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-[#121215] border-b border-[#27272A]">
+        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-black/[0.06]">
           <div className="flex items-center gap-2.5">
-            <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#1A1A1A]">
               Telephony Route Registry
             </span>
-            <span className="text-[11px] text-[#A1A1AA] font-mono">
-              ({numbers.length} CONFIGURED TRUNKS)
+            <span className="text-xs text-black/45 font-medium">
+              ({numbers.length} configured DIDs)
             </span>
           </div>
-          <span className="text-[11px] text-[#71717A] font-mono hidden sm:inline">
+          <span className="text-xs text-black/50 hidden sm:inline">
             Sub-50ms carrier handoff to AI agent WebRTC gateway
           </span>
         </div>
@@ -191,113 +178,78 @@ export default function PhoneNumbersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="bg-[#121215]/80 border-b border-[#27272A] text-[#71717A] font-mono uppercase tracking-wider text-[10px]">
-                <th className="py-3 px-4 font-bold">DID Number</th>
-                <th className="py-3 px-4 font-bold">Department / Label</th>
-                <th className="py-3 px-4 font-bold">Channel Type</th>
-                <th className="py-3 px-4 font-bold">Routed AI Agent</th>
-                <th className="py-3 px-4 font-bold">Carrier Latency</th>
-                <th className="py-3 px-4 font-bold">Calls Today</th>
-                <th className="py-3 px-4 font-bold">Status</th>
-                <th className="py-3 px-4 text-right font-bold">Actions</th>
+              <tr className="bg-[#FBF7ED] border-b border-black/[0.06] text-black/45 font-semibold text-[11px] uppercase tracking-wider">
+                <th className="py-3 px-5">DID Number</th>
+                <th className="py-3 px-5">Department / Label</th>
+                <th className="py-3 px-5">Channel Type</th>
+                <th className="py-3 px-5">Routed AI Agent</th>
+                <th className="py-3 px-5">Carrier Latency</th>
+                <th className="py-3 px-5">Calls Today</th>
+                <th className="py-3 px-5">Status</th>
+                <th className="py-3 px-5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#18181B]">
-              {numbers.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="py-16 text-center">
-                    <div className="max-w-md mx-auto space-y-3">
-                      <div className="w-12 h-12 rounded-[2px] bg-[#121215] text-white flex items-center justify-center mx-auto border border-[#27272A]">
-                        <Radio className="w-6 h-6 text-white" />
-                      </div>
-                      <h3 className="text-sm font-bold text-white">No phone numbers provisioned</h3>
-                      <p className="text-xs text-[#A1A1AA] leading-relaxed">
-                        Provision dedicated inbound virtual DIDs or configure SIP trunk carrier lines to receive calls.
-                      </p>
-                      <button
-                        onClick={() => {
-                          try { soundSynth.play("confirm"); } catch {}
-                          const newNum: TelephonyNumber = {
-                            id: `tel-${Date.now()}`,
-                            phoneNumber: "+91 40 4590 1199",
-                            label: "Inbound Customer Helpline",
-                            assignedAgent: "AI Assistant",
-                            status: "active",
-                            channelType: "Direct DID",
-                            latencyMs: 40,
-                            callsToday: 0,
-                          };
-                          setNumbers([newNum]);
-                        }}
-                        className="inline-flex items-center gap-2 bg-white hover:bg-zinc-200 text-black text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 rounded-[2px] cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5 text-black" />
-                        <span>Provision Inbound DID</span>
-                      </button>
+            <tbody className="divide-y divide-black/[0.04]">
+              {numbers.map((num) => (
+                <tr
+                  key={num.id}
+                  className="hover:bg-black/[0.015] transition-colors group text-[#1A1A1A]"
+                >
+                  {/* Phone Number */}
+                  <td className="py-4 px-5 font-semibold text-[#1A1A1A]">
+                    <div className="flex items-center gap-2">
+                      <Radio className="w-4 h-4 text-black/40" />
+                      <span>{num.phoneNumber}</span>
                     </div>
                   </td>
+
+                  {/* Label */}
+                  <td className="py-4 px-5 font-medium text-[#1A1A1A]">
+                    {num.label}
+                  </td>
+
+                  {/* Channel Type */}
+                  <td className="py-4 px-5 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#BCD0F5] text-[#1E3A8A]">
+                      {num.channelType}
+                    </span>
+                  </td>
+
+                  {/* Routed AI Agent */}
+                  <td className="py-4 px-5 font-medium text-[#1A1A1A]">
+                    {num.assignedAgent}
+                  </td>
+
+                  {/* Carrier Latency */}
+                  <td className="py-4 px-5 text-[#16856B] font-semibold">
+                    {num.latencyMs} ms
+                  </td>
+
+                  {/* Calls Today */}
+                  <td className="py-4 px-5 font-semibold text-[#1A1A1A]">
+                    {num.callsToday} calls
+                  </td>
+
+                  {/* Status */}
+                  <td className="py-4 px-5 whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-medium bg-[#C1F2D5] text-[#0D593F] px-2.5 py-0.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#16856B]" />
+                      Active
+                    </span>
+                  </td>
+
+                  {/* Actions */}
+                  <td className="py-4 px-5 text-right whitespace-nowrap">
+                    <button
+                      onClick={() => handleTestInbound(num)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#FBF7ED] hover:bg-[#FAF3E4] text-[#1A1A1A] border border-black/[0.06] transition-all cursor-pointer"
+                    >
+                      <PhoneIncoming className="w-3 h-3 text-black/50" />
+                      <span>Test Route</span>
+                    </button>
+                  </td>
                 </tr>
-              ) : (
-                numbers.map((num) => (
-                  <tr
-                    key={num.id}
-                    className="hover:bg-[#121215] transition-colors group"
-                  >
-                    {/* Phone Number */}
-                    <td className="py-3.5 px-4 font-mono font-bold text-white group-hover:text-white">
-                      <div className="flex items-center gap-2">
-                        <Radio className="w-3.5 h-3.5 text-[#A1A1AA]" />
-                        <span>{num.phoneNumber}</span>
-                      </div>
-                    </td>
-
-                    {/* Label */}
-                    <td className="py-3.5 px-4 font-medium text-zinc-300">
-                      {num.label}
-                    </td>
-
-                    {/* Channel Type */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-[2px] text-[10px] font-mono uppercase bg-[#121215] text-zinc-300 border border-[#27272A]">
-                        {num.channelType}
-                      </span>
-                    </td>
-
-                    {/* Routed Agent */}
-                    <td className="py-3.5 px-4 font-medium text-zinc-300">
-                      {num.assignedAgent}
-                    </td>
-
-                    {/* Latency */}
-                    <td className="py-3.5 px-4 font-mono text-[#A1A1AA]">
-                      {num.latencyMs}ms
-                    </td>
-
-                    {/* Calls Today */}
-                    <td className="py-3.5 px-4 font-mono font-bold text-white">
-                      {num.callsToday}
-                    </td>
-
-                    {/* Status */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider bg-[#121215] text-white px-2.5 py-0.5 rounded-[2px] border border-[#27272A]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                        Active
-                      </span>
-                    </td>
-
-                    {/* Action */}
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                      <button
-                        onClick={() => handleTestInbound(num)}
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-[2px] text-[10px] font-mono font-bold uppercase tracking-wider bg-transparent hover:bg-white text-zinc-300 hover:text-black border border-[#27272A] hover:border-white transition-all cursor-pointer"
-                      >
-                        <span>Test Route</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>

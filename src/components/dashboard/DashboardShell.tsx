@@ -164,9 +164,9 @@ export default function DashboardShell() {
   };
 
   return (
-    <div className="min-h-screen stitch-dot-grid font-sans select-none antialiased">
+    <div className="min-h-screen bg-[#FBF7ED] text-[#1A1A1A] font-sans select-none antialiased">
       {/* ========================================================================= */}
-      {/* MAIN UNIFIED DASHBOARD CANVAS (SINGLE SEAMLESS DOTTED BACKGROUND)         */}
+      {/* MAIN UNIFIED DASHBOARD CANVAS (WARM CREAM PASTEL BACKGROUND)              */}
       {/* ========================================================================= */}
       <div className="w-full max-w-[1560px] mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8 flex flex-col justify-between relative">
         <div>
@@ -186,36 +186,36 @@ export default function DashboardShell() {
           />
 
           {/* Sarvam AI Inspired Live Activity / Dynamic Capsule Telemetry Bar */}
-          <div className="w-full liquid-glass-subtle rounded-2xl px-5 py-3.5 mb-8 overflow-hidden flex items-center gap-3.5 font-sans select-none">
-            <div className="inline-flex items-center gap-2 bg-neutral-900 text-emerald-400 px-3 py-1.5 rounded-xl text-[11px] font-semibold shrink-0 border border-black/20 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse" />
+          <div className="w-full bg-white rounded-full border border-black/[0.06] shadow-[0_4px_20px_rgba(0,0,0,0.03)] px-5 py-2.5 mb-8 overflow-hidden flex items-center gap-3.5 font-sans select-none">
+            <div className="inline-flex items-center gap-2 bg-[#111111] text-[#C1F2D5] px-3.5 py-1.5 rounded-full text-[11px] font-bold shrink-0 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-[#16856B] inline-block animate-pulse" />
               <span className="tracking-wider uppercase text-[10px]">INDIC LIVE STREAM</span>
             </div>
 
             <div className="overflow-hidden whitespace-nowrap flex-1 relative">
-              <div className="animate-ticker flex items-center gap-8 text-xs font-medium text-neutral-700">
+              <div className="animate-ticker flex items-center gap-8 text-xs font-medium text-black/70">
                 <span className="flex items-center gap-2">
-                  <span className="bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-purple-100">🇮🇳 Ritu (Hindi)</span>
-                  <span>'प्रवेश पात्रता एवं छात्रवृत्ति की पूरी जानकारी' pre-approved for Rahul Verma (94.2% PCM)</span>
+                  <span className="bg-[#D9C2FA] text-[#4A2574] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🇮🇳 Ritu (Hindi)</span>
+                  <span>&apos;प्रवेश पात्रता एवं छात्रवृत्ति की पूरी जानकारी&apos; pre-approved for Rahul Verma (94.2% PCM)</span>
                 </span>
-                <span className="text-neutral-300 font-bold">•</span>
+                <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-blue-100">🇮🇳 Neha (Telugu)</span>
-                  <span>'క్యాంపస్ హాస్టల్ AC రూమ్స్ వివరాలు' sent via WhatsApp to Suresh (Vijayawada)</span>
+                  <span className="bg-[#BCD0F5] text-[#2C4875] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🇮🇳 Neha (Telugu)</span>
+                  <span>&apos;క్యాంపస్ హాస్టల్ AC రూమ్స్ వివరాలు&apos; sent via WhatsApp to Suresh (Vijayawada)</span>
                 </span>
-                <span className="text-neutral-300 font-bold">•</span>
+                <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-emerald-100">🇮🇳 Ishita (Kannada)</span>
-                  <span>'ಇಂಜಿನಿಯರಿಂಗ್ ಸೀಟ್ ಬುಕಿಂಗ್ ದೃಢಪಡಿಸಲಾಗಿದೆ' verified for Priya Rao (Bengaluru)</span>
+                  <span className="bg-[#C1F2D5] text-[#16856B] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🇮🇳 Ishita (Kannada)</span>
+                  <span>&apos;ಇಂಜಿನಿಯರಿಂಗ್ ಸೀಟ್ ಬುಕಿಂಗ್ ದೃಢಪಡಿಸಲಾಗಿದೆ&apos; verified for Priya Rao (Bengaluru)</span>
                 </span>
-                <span className="text-neutral-300 font-bold">•</span>
+                <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-amber-50 text-amber-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-amber-100">⚡ 140ms Latency</span>
+                  <span className="bg-[#FFD9A0] text-[#8C5300] px-2.5 py-0.5 rounded-full text-[11px] font-bold">⚡ 140ms Latency</span>
                   <span>WebSocket Full-Duplex • Zero interruption delay • Bulbul V3 Active</span>
                 </span>
-                <span className="text-neutral-300 font-bold">•</span>
+                <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-neutral-100 text-neutral-800 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-black/5">🏆 2.4M Chars</span>
+                  <span className="bg-[#FAF3E4] text-[#1A1A1A] px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-black/[0.04]">🏆 2.4M Chars</span>
                   <span>Synthesized Today across 11 Indian Languages • 96.7% Autonomous Yield</span>
                 </span>
                 {/* Seamless Loop Duplicate */}

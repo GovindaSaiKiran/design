@@ -39,7 +39,7 @@ export default function EduVoicePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#ffffff] text-slate-900 selection:bg-[#cdfb56] selection:text-black">
+    <main className="min-h-screen bg-[#ffffff] text-[#1A1A1A] selection:bg-[#FFD9A0]/60 selection:text-black">
       {/* 1. Hero Section with Framed Sky, Fluffy Clouds & 3D Admissions Perspective Cards */}
       <Hero
         onOpenDemo={() => setDemoOpen(true)}

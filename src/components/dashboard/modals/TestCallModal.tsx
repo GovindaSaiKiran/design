@@ -9,10 +9,9 @@ import {
   Languages,
   ShieldCheck,
   Check,
-  Terminal,
+  PhoneCall,
 } from "lucide-react";
 import { telephonyApi } from "@/lib/api";
-import { soundSynth } from "@/lib/audio-synth";
 
 interface TestCallModalProps {
   isOpen: boolean;
@@ -21,46 +20,25 @@ interface TestCallModalProps {
 
 const aiEmployeeOptions = [
   {
-    id: "anu-admissions",
-    name: "Anu (Admissions Counselor)",
-    role: "Higher Ed & Admissions",
-    languages: "Telugu, Hindi, English",
+    id: "maya-admissions",
+    name: "Maya (Admissions Counselor)",
+    role: "Admissions & Counseling Desk",
+    languages: "Hindi, English",
     code: "VOX-01",
   },
   {
-    id: "swara-hr",
-    name: "Swara (HR & Recruiter)",
-    role: "Job Screening & Interviews",
-    languages: "Hindi, English, Marathi",
+    id: "priya-finance",
+    name: "Priya (Tuition & Financial Aid)",
+    role: "Scholarship & Fee Structure",
+    languages: "Telugu, English",
     code: "VOX-02",
   },
   {
-    id: "rahul-realestate",
-    name: "Rahul (Real Estate Sales)",
-    role: "Property Site Visits & Discovery",
-    languages: "Hindi, English",
+    id: "arjun-outreach",
+    name: "Arjun (Verification & Outreach)",
+    role: "Entrance Guidance & Cadence",
+    languages: "Hindi, English, Hinglish",
     code: "VOX-03",
-  },
-  {
-    id: "pooja-ecommerce",
-    name: "Pooja (E-Commerce COD)",
-    role: "Order Verification & Address Check",
-    languages: "Hindi, Tamil, Telugu",
-    code: "VOX-04",
-  },
-  {
-    id: "dr-neha-clinic",
-    name: "Dr. Neha Assistant",
-    role: "Clinic & Hospital Appointments",
-    languages: "Hindi, English, Kannada",
-    code: "VOX-05",
-  },
-  {
-    id: "vikram-collections",
-    name: "Vikram (EMI & Collections)",
-    role: "Payment Reminders & Debt Recovery",
-    languages: "Hindi, Telugu, Tamil",
-    code: "VOX-06",
   },
 ];
 
@@ -76,13 +54,6 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
 
   if (!isOpen) return null;
 
-  const handleClose = () => {
-    try {
-      soundSynth.play("click");
-    } catch {}
-    onClose();
-  };
-
   const handleTriggerTestCall = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length < 10) {
@@ -90,7 +61,6 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
       return;
     }
 
-    soundSynth.play("confirm");
     setErrorMsg("");
     setCallState("dialing");
 
@@ -121,82 +91,80 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
   };
 
   const handleReset = () => {
-    soundSynth.play("click");
     setCallState("idle");
     setCallSid("");
     setErrorMsg("");
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none">
-      <div className="relative w-full max-w-lg bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl overflow-hidden font-sans text-white">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
+    >
+      <div className="relative w-full max-w-lg bg-white rounded-[28px] border border-black/[0.08] shadow-2xl overflow-hidden font-sans text-[#1A1A1A]">
         {/* Top Header */}
-        <div className="bg-[#121215] border-b border-[#27272A] px-5 py-4 text-white flex items-center justify-between">
+        <div className="border-b border-black/[0.06] px-6 py-4.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[2px] bg-white text-black flex items-center justify-center shrink-0 border border-white">
-              <Phone className="w-4 h-4 stroke-[2.5]" />
+            <div className="w-9 h-9 rounded-2xl bg-[#C9A7F5] text-[#3B0764] flex items-center justify-center shrink-0 font-bold shadow-2xs">
+              <Phone className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-sm tracking-tight uppercase font-mono">
-                  Test Call to Mobile Device
+                <h3 className="font-bold text-sm tracking-tight text-[#1A1A1A]">
+                  Test Voice Call Simulation
                 </h3>
-                <span className="text-[9px] font-mono font-bold uppercase tracking-wider bg-[#18181B] text-white px-2 py-0.5 rounded-[1px] border border-[#27272A]">
-                  INSTANT GATEWAY
+                <span className="text-[10px] font-bold bg-[#E8F5EF] text-[#16856B] px-2.5 py-0.5 rounded-full">
+                  Instant Gateway
                 </span>
               </div>
-              <p className="text-[11px] text-[#A1A1AA] font-mono mt-0.5">
-                Dispatch an immediate live carrier call with ~140ms response latency
+              <p className="text-[11px] text-black/50 mt-0.5">
+                Dispatch an immediate live carrier call to verify voice naturalness
               </p>
             </div>
           </div>
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onClose}
             aria-label="Close modal"
-            className="p-1.5 rounded-[2px] bg-[#18181B] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
+            className="p-1.5 rounded-full text-black/40 hover:text-black hover:bg-black/5 transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4 pointer-events-none" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-5">
+        <div className="p-6">
           {callState === "idle" ? (
             <form onSubmit={handleTriggerTestCall} className="space-y-4">
               {/* Select AI Employee */}
               <div>
-                <label className="block text-xs font-mono font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-[#1A1A1A] mb-2">
                   Select AI Employee Persona:
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
+                <div className="grid grid-cols-1 gap-2">
                   {aiEmployeeOptions.map((emp) => {
                     const isSelected = selectedEmployee === emp.id;
                     return (
                       <button
                         type="button"
                         key={emp.id}
-                        onClick={() => {
-                          soundSynth.play("click");
-                          setSelectedEmployee(emp.id);
-                        }}
-                        className={`p-2.5 rounded-[2px] border text-left transition-all flex items-start gap-2.5 cursor-pointer ${
+                        onClick={() => setSelectedEmployee(emp.id)}
+                        className={`p-3 rounded-2xl border text-left transition-all flex items-start gap-3 cursor-pointer ${
                           isSelected
-                            ? "border-white bg-white text-black shadow-2xs"
-                            : "border-[#27272A] hover:border-white bg-[#121215] text-white"
+                            ? "border-black/30 bg-[#FBF7ED] shadow-2xs ring-1 ring-black/5"
+                            : "border-black/[0.06] hover:border-black/20 bg-white"
                         }`}
                       >
-                        <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-[1px] shrink-0 border ${
-                          isSelected ? "bg-black text-white border-black" : "bg-[#18181B] text-[#A1A1AA] border-[#27272A]"
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                          isSelected ? "bg-[#C9A7F5] text-[#3B0764]" : "bg-black/5 text-black/60"
                         }`}>
                           {emp.code}
                         </span>
                         <div className="min-w-0">
-                          <p className={`text-xs font-bold font-mono truncate ${isSelected ? "text-black" : "text-white"}`}>{emp.name}</p>
-                          <p className={`text-[10px] font-mono truncate ${isSelected ? "text-zinc-600" : "text-[#71717A]"}`}>{emp.role}</p>
-                          <p className={`text-[9px] font-mono mt-0.5 truncate ${isSelected ? "text-black font-bold" : "text-[#A1A1AA]"}`}>
-                            {emp.languages}
-                          </p>
+                          <p className="text-xs font-bold text-[#1A1A1A]">{emp.name}</p>
+                          <p className="text-[11px] text-black/50 mt-0.5">{emp.role} • {emp.languages}</p>
                         </div>
                       </button>
                     );
@@ -206,8 +174,8 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
 
               {/* Language Selector */}
               <div>
-                <label className="block text-xs font-mono font-bold text-[#A1A1AA] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                  <Languages className="w-3.5 h-3.5 text-white" />
+                <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5 flex items-center gap-1.5">
+                  <Languages className="w-3.5 h-3.5 text-black/60" />
                   <span>Conversation Language:</span>
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -215,14 +183,11 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                     <button
                       type="button"
                       key={lang}
-                      onClick={() => {
-                        soundSynth.play("click");
-                        setSelectedLang(lang);
-                      }}
-                      className={`px-3 py-1 rounded-[2px] text-xs font-mono font-bold transition-all border cursor-pointer ${
+                      onClick={() => setSelectedLang(lang)}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                         selectedLang === lang
-                          ? "bg-white text-black border-white shadow-2xs"
-                          : "bg-[#121215] text-[#A1A1AA] hover:text-white border-[#27272A] hover:border-white"
+                          ? "bg-[#111111] text-white shadow-2xs"
+                          : "bg-[#FBF7ED] text-black/60 hover:text-black border border-black/[0.06]"
                       }`}
                     >
                       {lang}
@@ -233,11 +198,11 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
 
               {/* Mobile Number Input */}
               <div>
-                <label className="block text-xs font-mono font-bold text-[#A1A1AA] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
                   Destination Mobile Number:
                 </label>
-                <div className="flex items-center rounded-[2px] border border-[#27272A] focus-within:border-white bg-[#121215] overflow-hidden shadow-2xs">
-                  <span className="px-3 py-2 text-xs font-mono font-bold text-white bg-[#18181B] border-r border-[#27272A] shrink-0">
+                <div className="flex items-center rounded-full border border-black/[0.08] focus-within:border-black/40 bg-[#FBF7ED]/60 overflow-hidden shadow-2xs">
+                  <span className="px-4 py-2 text-xs font-bold text-[#1A1A1A] border-r border-black/[0.06] shrink-0">
                     +91
                   </span>
                   <input
@@ -246,26 +211,26 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                     placeholder="98765 43210"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="w-full px-3 py-2 text-xs font-mono font-semibold text-white bg-transparent outline-none placeholder:text-[#71717A]"
+                    className="w-full px-3.5 py-2 text-xs font-medium text-[#1A1A1A] bg-transparent outline-none placeholder:text-black/40"
                   />
                 </div>
                 {errorMsg && (
-                  <p className="text-[11px] font-mono text-zinc-300 mt-1 flex items-center gap-1">
+                  <p className="text-xs text-rose-600 mt-1 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errorMsg}</span>
                   </p>
                 )}
-                <p className="text-[11px] font-mono text-[#A1A1AA] mt-1.5">
-                  Carrier trunk will ring within 3–5 seconds. Answer to speak live.
+                <p className="text-[11px] text-black/50 mt-1.5">
+                  Your mobile phone will ring within 3–5 seconds. Answer to converse live.
                 </p>
               </div>
 
               {/* Submit CTA */}
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-[2px] bg-white hover:bg-zinc-200 text-black font-mono font-bold text-xs uppercase tracking-wider border border-white shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer active:translate-x-[1px] active:translate-y-[1px]"
+                className="w-full py-2.5 rounded-full bg-[#111111] hover:bg-black text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs mt-2"
               >
-                <Phone className="w-3.5 h-3.5 fill-black" />
+                <PhoneCall className="w-4 h-4 text-white" />
                 <span>Dispatch Carrier Test Call</span>
               </button>
             </form>
@@ -273,28 +238,28 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
             /* Live Call Telephony Progress Card */
             <div className="py-6 text-center space-y-4">
               <div className="relative inline-flex items-center justify-center">
-                <div className="w-16 h-16 rounded-[2px] bg-white text-black flex items-center justify-center border border-white shadow-2xl">
-                  <Phone className="w-7 h-7 animate-pulse" />
+                <div className="w-16 h-16 rounded-2xl bg-[#E8F5EF] text-[#16856B] flex items-center justify-center shadow-md">
+                  <Phone className="w-7 h-7 text-[#16856B] animate-pulse" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 bg-black text-white p-1 rounded-[1px] border border-white shadow-xs">
+                <div className="absolute -bottom-1 -right-1 bg-[#16856B] text-white p-1 rounded-full shadow-xs">
                   <Check className="w-3 h-3 stroke-[3]" />
                 </div>
               </div>
 
               <div>
-                <h4 className="text-sm font-mono font-bold text-white uppercase tracking-wider">
+                <h4 className="text-sm font-bold text-[#1A1A1A]">
                   {callState === "dialing" && "Routing through Telephony Gateway..."}
                   {callState === "ringing" && "SIP Trunk Ringing..."}
                   {callState === "connected" && "Active Session Connected"}
                 </h4>
-                <p className="text-xs font-mono text-[#A1A1AA] mt-1">
-                  Dialing <span className="font-bold text-white">+91 {phoneNumber}</span> via Airtel PRI
+                <p className="text-xs text-black/60 mt-1">
+                  Dialing <strong className="text-[#1A1A1A]">+91 {phoneNumber}</strong> via Airtel Direct PRI
                 </p>
               </div>
 
               {/* Status Pill */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[1px] bg-[#121215] border border-[#27272A] text-xs font-mono text-[#A1A1AA]">
-                <span className="w-2 h-2 rounded-[1px] bg-white animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FAF7F0] border border-black/[0.06] text-xs text-black/60 font-medium">
+                <span className="w-2 h-2 rounded-full bg-[#16856B] animate-pulse" />
                 <span>Call ID: {callSid || "EXO-CONNECT-LIVE"}</span>
               </div>
 
@@ -303,7 +268,7 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                 {[40, 75, 90, 60, 30, 85, 95, 50, 80, 65, 45].map((height, i) => (
                   <span
                     key={i}
-                    className="w-1 bg-white rounded-[1px] animate-pulse"
+                    className="w-1 bg-[#C9A7F5] rounded-full animate-pulse"
                     style={{
                       height: `${height}%`,
                       animationDelay: `${i * 100}ms`,
@@ -315,13 +280,13 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
               <div className="pt-2 flex justify-center gap-3">
                 <button
                   onClick={handleReset}
-                  className="px-4 py-2 rounded-[2px] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white bg-[#121215] text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-full border border-black/[0.08] hover:bg-[#FAF3E4] text-[#1A1A1A] text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Make Another Call
                 </button>
                 <button
-                  onClick={handleClose}
-                  className="px-4 py-2 rounded-[2px] bg-white text-black hover:bg-zinc-200 text-xs font-mono font-bold uppercase border border-white shadow-2xs transition-colors cursor-pointer"
+                  onClick={onClose}
+                  className="px-4 py-2 rounded-full bg-[#111111] text-white hover:bg-black text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                 >
                   Close Console
                 </button>
@@ -331,12 +296,12 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
         </div>
 
         {/* Footer Note */}
-        <div className="px-5 py-3 bg-[#121215] border-t border-[#27272A] flex items-center justify-between text-[11px] font-mono text-[#A1A1AA]">
+        <div className="px-6 py-3 bg-[#FAF7F0] border-t border-black/[0.06] flex items-center justify-between text-[11px] text-black/50">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-white" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[#16856B]" />
             <span>STIR/SHAKEN Tier A Verified Carrier Routing</span>
           </div>
-          <span className="font-bold text-white">Swaram Telephony</span>
+          <span className="font-semibold text-[#1A1A1A]">Swaram Telephony</span>
         </div>
       </div>
     </div>

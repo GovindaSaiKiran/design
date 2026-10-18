@@ -88,45 +88,45 @@ export default function ConnectorsGridSection() {
 
   return (
     <section className="w-full mb-10 font-sans select-none" id="connectors-hub">
-      <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xs relative overflow-hidden">
+      <div className="bg-white border border-black/[0.06] rounded-[26px] p-6 sm:p-8 lg:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden">
         
-        {/* Section Header (Matching Reference Image 1) */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-5 border-b border-slate-100">
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-5 border-b border-black/[0.05]">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-1">
+            <span className="text-[10.5px] font-bold uppercase tracking-wider text-black/45 block mb-1">
               INTEGRATED CONNECTORS
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight text-slate-900">
-              Connectors & Campus ERPs
+            <h2 className="font-sans text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A]">
+              Connectors &amp; Campus ERPs
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
+            <p className="text-xs sm:text-sm text-black/55 mt-1 max-w-2xl">
               Connect Google Drive, Notion, Slack, Microsoft Excel, and GitHub. Agents read updated records in real-time.
             </p>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100/80 px-3 py-1 rounded-full border border-slate-200/80">
+            <span className="text-xs font-semibold text-[#1A1A1A] bg-[#FAF3E4] px-3.5 py-1 rounded-full border border-black/[0.06]">
               5 Connected Apps
             </span>
             <button
               onClick={handleSyncAll}
               disabled={isSyncing}
-              className="px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+              className="px-4 py-1.5 rounded-full bg-[#111111] hover:bg-black text-xs font-semibold text-white flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin text-emerald-600" : "text-slate-500"}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin text-[#C1F2D5]" : "text-white/70"}`} />
               <span>{isSyncing ? "Syncing..." : "Sync All"}</span>
             </button>
           </div>
         </div>
 
-        {/* 5 Folder Cards Grid (Refined Digital Folder Design matching Reference Image 1) */}
+        {/* 5 Folder Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {connectors.map((c) => (
             <div
               key={c.id}
               className="relative p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:drop-shadow-md group cursor-pointer min-h-[220px]"
             >
-              {/* SVG Digital Folder Silhouette with Dual Tabs (Direct from Reference) */}
+              {/* SVG Digital Folder Silhouette with Dual Tabs */}
               <svg
                 className="absolute inset-0 w-full h-full pointer-events-none transition-all duration-300"
                 viewBox="0 0 240 220"
@@ -175,10 +175,10 @@ export default function ConnectorsGridSection() {
 
               {/* App Title & Subtitle */}
               <div className="relative z-10 mb-4">
-                <h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-snug">
+                <h3 className="text-sm sm:text-base font-bold text-[#1A1A1A] tracking-tight leading-snug font-sans">
                   {c.name}
                 </h3>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                <p className="text-xs text-black/55 font-medium mt-0.5">
                   {c.desc}
                 </p>
               </div>
@@ -186,15 +186,15 @@ export default function ConnectorsGridSection() {
               {/* Bottom Row: Status Pill (Left) & White Circle Arrow Action (Right) */}
               <div className="relative z-10 flex items-center justify-between pt-1">
                 {/* Status Indicator Pill */}
-                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border shadow-2xs ${c.statusColor}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${c.dotColor}`} />
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-bold bg-[#C1F2D5] text-[#16856B] shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#16856B]" />
                   <span>{c.status}</span>
                 </div>
 
                 {/* White Circle Arrow Action Button */}
                 <button
                   type="button"
-                  className="w-8 h-8 rounded-full bg-white text-slate-700 group-hover:text-slate-950 flex items-center justify-center shadow-2xs hover:shadow-xs group-hover:scale-105 transition-all cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-white text-[#1A1A1A] hover:bg-[#111111] hover:text-white flex items-center justify-center shadow-2xs hover:shadow-xs group-hover:scale-105 transition-all cursor-pointer"
                   title={`Configure ${c.name}`}
                 >
                   <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { X, Download, Check } from "lucide-react";
-import { soundSynth } from "@/lib/audio-synth";
 
 interface ExportReportModalProps {
   isOpen: boolean;
@@ -11,131 +10,113 @@ interface ExportReportModalProps {
 
 export default function ExportReportModal({ isOpen, onClose }: ExportReportModalProps) {
   const [format, setFormat] = useState<"csv" | "xlsx" | "pdf">("csv");
-  const [range, setRange] = useState("Past 7 Days (842 Calls)");
+  const [range, setRange] = useState("Today (24 Calls)");
   const [downloaded, setDownloaded] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleClose = () => {
-    try {
-      soundSynth.play("click");
-    } catch {}
-    onClose();
-  };
-
   const handleDownload = () => {
-    try {
-      soundSynth.play("confirm");
-    } catch {}
     setDownloaded(true);
     setTimeout(() => {
       onClose();
-    }, 1000);
+    }, 900);
   };
 
   return (
     <div
       onClick={(e) => {
-        if (e.target === e.currentTarget) handleClose();
+        if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs animate-in fade-in duration-150 select-none cursor-default"
     >
-      <div className="relative w-full max-w-md bg-[#09090B] rounded-[2px] border border-[#27272A] shadow-2xl p-6 overflow-hidden text-white font-sans">
+      <div className="relative w-full max-w-md bg-white rounded-[28px] border border-black/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 sm:p-7 overflow-hidden text-[#1A1A1A] font-sans">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-[#27272A]">
+        <div className="flex items-center justify-between pb-4 border-b border-black/[0.06]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[2px] bg-white text-black border border-white flex items-center justify-center shrink-0">
-              <Download className="w-4 h-4 stroke-[2.5]" />
+            <div className="w-10 h-10 rounded-2xl bg-[#A8C3F0]/40 text-[#1A1A1A] shadow-xs flex items-center justify-center shrink-0">
+              <Download className="w-4 h-4 text-[#1A1A1A]" />
             </div>
             <div>
-              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#A1A1AA]">
-                TELEMETRY ARCHIVE // EXPORT
-              </div>
-              <h3 className="text-sm font-bold text-white tracking-tight uppercase">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-black/40">DATA EXPORT</span>
+              <h3 className="text-sm font-bold text-[#1A1A1A]">
                 Export Telephony Records
               </h3>
-              <p className="text-[11px] text-[#A1A1AA] font-mono">
-                Download conversation logs, verbatim transcripts & WER scores
+              <p className="text-xs text-black/55">
+                Download conversation logs, verbatim transcripts &amp; telemetry
               </p>
             </div>
           </div>
 
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onClose}
             aria-label="Close modal"
-            className="p-1.5 rounded-[2px] bg-[#121215] border border-[#27272A] hover:border-white text-[#A1A1AA] hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-full text-black/40 hover:text-[#1A1A1A] hover:bg-[#FBF7ED] transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4 pointer-events-none" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Form */}
-        <div className="my-5 space-y-4 text-xs font-mono">
+        {/* Options */}
+        <div className="my-5 space-y-4">
           <div>
-            <label className="block font-bold text-[#A1A1AA] mb-1.5 text-xs uppercase tracking-wider">
-              Date Range &amp; Call Dataset
+            <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+              Export Date Range:
             </label>
             <select
               value={range}
               onChange={(e) => setRange(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-[2px] bg-[#121215] border border-[#27272A] text-white font-mono focus:border-white focus:outline-none transition-all cursor-pointer shadow-2xs"
+              className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all cursor-pointer font-medium"
             >
-              <option value="Today (128 Calls • 340K Chars)">Today (128 Calls • 340K Chars)</option>
-              <option value="Past 7 Days (842 Calls • 2.4M Chars)">Past 7 Days (842 Calls • 2.4M Chars)</option>
-              <option value="Past 30 Days (3,450 Calls • 9.8M Chars)">Past 30 Days (3,450 Calls • 9.8M Chars)</option>
-              <option value="All Time Complete Archive">All Time Complete Archive</option>
+              <option value="Today (24 Calls)">Today (24 Calls)</option>
+              <option value="Past 7 Days (142 Calls)">Past 7 Days (142 Calls)</option>
+              <option value="Past 30 Days (580 Calls)">Past 30 Days (580 Calls)</option>
+              <option value="Current Billing Cycle">Current Billing Cycle</option>
             </select>
           </div>
 
           <div>
-            <label className="block font-bold text-[#A1A1AA] mb-2 text-xs uppercase tracking-wider">
-              Dataset Format
+            <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">
+              File Format:
             </label>
             <div className="grid grid-cols-3 gap-2">
-              {(["csv", "xlsx", "pdf"] as const).map((f) => (
+              {[
+                { id: "csv", label: "CSV Ledger" },
+                { id: "xlsx", label: "Excel Sheet" },
+                { id: "pdf", label: "PDF Report" },
+              ].map((f) => (
                 <button
-                  key={f}
                   type="button"
-                  onClick={() => {
-                    soundSynth.play("click");
-                    setFormat(f);
-                  }}
-                  className={`py-2 rounded-[2px] text-xs uppercase font-bold transition-all cursor-pointer border ${
-                    format === f
-                      ? "bg-white text-black border-white shadow-2xs"
-                      : "bg-[#121215] text-[#A1A1AA] hover:text-white border-[#27272A] hover:border-white"
+                  key={f.id}
+                  onClick={() => setFormat(f.id as any)}
+                  className={`py-2 px-3 rounded-full border text-xs font-semibold transition-all cursor-pointer ${
+                    format === f.id
+                      ? "bg-[#111111] text-white border-[#111111] shadow-xs"
+                      : "bg-[#FBF7ED] text-black/60 hover:text-[#1A1A1A] border-black/[0.06] hover:bg-[#FAF3E4]"
                   }`}
                 >
-                  {f}
+                  {f.label}
                 </button>
               ))}
             </div>
           </div>
-
-          <div className="p-3.5 rounded-[2px] bg-[#121215] border border-[#27272A] text-white shadow-2xs">
-            <span className="font-bold block mb-1 text-xs text-white uppercase tracking-wider">Included In Dataset:</span>
-            <span className="text-[11px] text-[#A1A1AA] leading-relaxed">
-              Caller phone (+91), Indic dialect locale, Voice persona, First-byte latency (ms), PCM Score triage, and sentiment classification.
-            </span>
-          </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#27272A]">
+        <div className="flex items-center justify-between pt-4 border-t border-black/[0.06]">
           <button
-            onClick={handleClose}
-            className="px-4 py-2 rounded-[2px] text-xs font-mono font-bold text-[#A1A1AA] hover:text-white bg-transparent border border-[#27272A] hover:border-white transition-all cursor-pointer uppercase"
+            onClick={onClose}
+            className="px-5 py-2.5 rounded-full text-xs font-semibold text-black/60 hover:text-[#1A1A1A] bg-white border border-black/[0.08] hover:bg-[#FAF3E4] transition-all cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             onClick={handleDownload}
-            className="px-5 py-2 rounded-[2px] text-xs font-mono font-bold text-black bg-white hover:bg-zinc-200 border border-white shadow-2xs inline-flex items-center gap-2 cursor-pointer transition-all uppercase active:translate-x-[1px] active:translate-y-[1px]"
+            className="px-6 py-2.5 rounded-full text-xs font-semibold text-white bg-[#111111] hover:bg-black shadow-sm inline-flex items-center gap-2 cursor-pointer transition-all"
           >
-            <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>{downloaded ? "Dataset Ready" : "Download Archive"}</span>
+            <Check className="w-3.5 h-3.5" />
+            <span>{downloaded ? "Generating..." : "Download Report"}</span>
           </button>
         </div>
       </div>

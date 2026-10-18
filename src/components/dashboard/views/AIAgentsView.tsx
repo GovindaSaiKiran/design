@@ -1,34 +1,14 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { DashboardAgent } from "@/types/dashboard";
 import {
-  Search,
   ChevronDown,
-  Bot,
-  Plus,
-  Mic,
-  Globe,
-  Sparkles,
-  Phone,
   Play,
   Pause,
-  Settings2,
-  Volume2,
   CheckCircle2,
-  X,
-  Radio,
-  Zap,
-  Sliders,
-  Flame,
-  Layers,
-  FileText,
-  Check,
-  RotateCcw,
-  VolumeX,
+  Sparkles,
   ArrowRight,
-  Headphones,
-  SlidersHorizontal
 } from "lucide-react";
 
 interface AIAgentsViewProps {
@@ -48,9 +28,7 @@ export default function AIAgentsView({
     "भारत की सुबह का नज़ारा ही कुछ और होता है। चाय की चुस्की के साथ अख़बार, बच्चों की किलकारियां, और कॉलेज प्रवेश परामर्श की नई शुरुआत।"
   );
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [playbackSeconds, setPlaybackSeconds] = useState(0);
   const [speedVal, setSpeedVal] = useState("1.0");
-  const [expressionMode, setExpressionMode] = useState("Expressive");
   const [activeDiscPlaying, setActiveDiscPlaying] = useState<string | null>(null);
 
   // Language options with authentic sample Indic text
@@ -93,7 +71,7 @@ export default function AIAgentsView({
     }
   };
 
-  // Sarvam 3D claymorphic voice disc personas
+  // Voice personas
   const voiceDiscs = [
     {
       id: "ritu",
@@ -160,57 +138,53 @@ export default function AIAgentsView({
   };
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-300 font-sans select-none">
-      {/* ========================================================================= */}
-      {/* 1. SARVAM EDITORIAL HERO & ORNAMENTAL CREST                               */}
-      {/* ========================================================================= */}
-      <div className="text-center max-w-3xl mx-auto pt-4 pb-2 space-y-3">
-        {/* Subtle Ornamental Filigree Emblem */}
-        <div className="flex items-center justify-center gap-3 text-neutral-400">
-          <span className="w-8 h-px bg-neutral-300" />
-          <span className="text-xs font-serif tracking-widest uppercase">~ 𑁍 ~</span>
-          <span className="w-8 h-px bg-neutral-300" />
-        </div>
+    <div className="space-y-8 animate-in fade-in duration-300 font-sans select-none text-[#1A1A1A]">
+      {/* 1. Header Card */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] p-6 sm:p-8 shadow-2xs relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D9C2FA]/40 border border-[#D9C2FA] text-xs font-semibold text-[#5B21B6]">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Indic Voice Personas & Fleets</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] tracking-tight leading-tight">
+              AI Voice Agents &amp; Personas
+            </h1>
+            <p className="text-xs sm:text-sm text-black/60 leading-relaxed font-sans">
+              Configure, test, and deploy natural Indic voice personas for admissions counseling and student engagement.
+            </p>
+          </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-neutral-900 font-serif-display leading-[1.15]">
-          AI Voice Agents &amp; Personas
-        </h1>
-
-        <p className="text-sm sm:text-base text-neutral-500 font-normal max-w-2xl mx-auto leading-relaxed">
-          Configure, test, and deploy natural Indic voice personas for admissions counseling and student engagement.
-        </p>
-
-        <div className="flex items-center justify-center gap-3 pt-2">
-          <button
-            onClick={onCreateAgent}
-            className="px-6 py-2.5 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-medium shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95"
-          >
-            Deploy New Voice Persona
-          </button>
-          <button
-            onClick={() => {
-              const el = document.getElementById("speech-playground");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="px-6 py-2.5 rounded-full bg-white hover:bg-neutral-50 text-neutral-800 text-xs font-medium border border-black/10 transition-all cursor-pointer shadow-xs"
-          >
-            Try Interactive Playground
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={onCreateAgent}
+              className="px-5 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-2xs transition-all cursor-pointer active:scale-95"
+            >
+              Deploy New Voice Persona
+            </button>
+            <button
+              onClick={() => {
+                const el = document.getElementById("speech-playground");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="px-5 py-2.5 rounded-full bg-[#FAF3E4] hover:bg-[#FAF3E4]/80 text-[#1A1A1A] text-xs font-semibold border border-black/[0.06] transition-all cursor-pointer shadow-2xs"
+            >
+              Try Interactive Playground
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2. SARVAM SPEECH PLAYGROUND SANDBOX (FROM TEMPLATE 1)                     */}
-      {/* ========================================================================= */}
-      <div id="speech-playground" className="max-w-4xl mx-auto liquid-glass-card rounded-3xl overflow-hidden">
+      {/* 2. Speech Playground Sandbox */}
+      <div id="speech-playground" className="bg-white rounded-[26px] border border-black/[0.06] shadow-2xs overflow-hidden">
         {/* Top Playground Bar: Language Dropdown + Character Count */}
-        <div className="p-5 sm:p-6 border-b border-black/5 flex flex-wrap items-center justify-between gap-4">
+        <div className="p-5 sm:p-6 border-b border-black/[0.06] flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="relative">
               <select
                 value={selectedLanguage}
                 onChange={(e) => handleLanguageChange(e.target.value)}
-                className="appearance-none bg-neutral-50 hover:bg-neutral-100 text-neutral-800 border border-black/10 rounded-2xl pl-4 pr-10 py-2 text-xs font-medium focus:outline-none focus:border-black cursor-pointer transition-all"
+                className="appearance-none bg-[#FAF3E4] text-[#1A1A1A] border border-black/[0.06] rounded-full pl-4 pr-10 py-2 text-xs font-semibold focus:outline-none focus:border-black/20 cursor-pointer transition-all"
               >
                 {Object.keys(languagePresets).map((lang) => (
                   <option key={lang} value={lang}>
@@ -218,18 +192,18 @@ export default function AIAgentsView({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-neutral-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-black/40 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
-            <span className="text-[11px] text-neutral-400 font-medium hidden sm:inline-block">
+            <span className="text-[11px] text-black/50 font-medium hidden sm:inline-block">
               Bulbul V3 Indic Neural TTS
             </span>
           </div>
 
-          <div className="flex items-center gap-3 font-mono text-xs text-neutral-400">
+          <div className="flex items-center gap-3 font-mono text-xs text-black/50">
             <span>{customPrompt.length} / 2000 chars</span>
-            <span className="text-neutral-300">•</span>
-            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100 text-[11px] font-medium">
+            <span className="text-black/20">•</span>
+            <span className="text-[#16856B] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full text-[11px] font-semibold">
               ~140ms TTFB
             </span>
           </div>
@@ -241,16 +215,16 @@ export default function AIAgentsView({
             rows={3}
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            className="w-full text-base sm:text-lg text-neutral-800 font-normal leading-relaxed bg-transparent border-0 focus:outline-none resize-none placeholder:text-neutral-400"
+            className="w-full text-base sm:text-lg text-[#1A1A1A] font-normal leading-relaxed bg-transparent border-0 focus:outline-none resize-none placeholder:text-black/30"
             placeholder="Type text in any Indian language or select a voice..."
           />
         </div>
 
         {/* Voice Selection & Sliders Bar */}
-        <div className="p-5 sm:p-6 bg-neutral-50/70 border-t border-black/5 flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="p-5 sm:p-6 bg-[#FAF3E4]/50 border-t border-black/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-5">
           {/* Voices Pills */}
           <div className="space-y-1.5">
-            <div className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+            <div className="text-[11px] font-semibold text-black/50 uppercase tracking-wider">
               Voices ({languagePresets[selectedLanguage]?.voices.length || 4} available)
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -260,14 +234,14 @@ export default function AIAgentsView({
                   <button
                     key={v}
                     onClick={() => setSelectedVoice(v)}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer border flex items-center gap-1.5 ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border flex items-center gap-1.5 ${
                       isSelected
-                        ? "bg-neutral-900 text-white border-neutral-900 shadow-xs"
-                        : "bg-white text-neutral-700 hover:bg-neutral-100 border-black/10"
+                        ? "bg-[#111111] text-white border-[#111111] shadow-2xs"
+                        : "bg-white text-black/70 hover:bg-black/5 border-black/[0.06]"
                     }`}
                   >
                     <span>{v}</span>
-                    <span className="text-[10px] text-neutral-400">
+                    <span className="text-[10px] text-black/40">
                       {v.includes("a") || v.includes("i") || v.includes("Ritu") || v.includes("Neha") || v.includes("Suhani") || v.includes("Ishita") ? "Female" : "Male"}
                     </span>
                   </button>
@@ -276,14 +250,14 @@ export default function AIAgentsView({
             </div>
           </div>
 
-          {/* Controls: Speed, Expression & Play */}
+          {/* Controls: Speed & Play */}
           <div className="flex items-center gap-3 self-end md:self-center">
-            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-black/10 text-xs">
-              <span className="text-neutral-400 text-[11px]">Speed:</span>
+            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-black/[0.06] text-xs">
+              <span className="text-black/40 text-[11px]">Speed:</span>
               <select
                 value={speedVal}
                 onChange={(e) => setSpeedVal(e.target.value)}
-                className="bg-transparent font-mono text-neutral-800 font-medium focus:outline-none cursor-pointer"
+                className="bg-transparent font-mono text-[#1A1A1A] font-semibold focus:outline-none cursor-pointer"
               >
                 <option value="0.8">0.8x</option>
                 <option value="1.0">1.0x</option>
@@ -294,7 +268,7 @@ export default function AIAgentsView({
 
             <button
               onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-              className="px-5 py-2.5 rounded-2xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-medium inline-flex items-center gap-2 shadow-md transition-all cursor-pointer active:scale-95"
+              className="px-5 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold inline-flex items-center gap-2 shadow-2xs transition-all cursor-pointer active:scale-95"
             >
               {isPlayingAudio ? (
                 <>
@@ -312,67 +286,70 @@ export default function AIAgentsView({
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 3. SARVAM 3D CLAYMORPHIC ORGANIC AUDIO DISCS (FROM TEMPLATE 1, PAGE 6)    */}
-      {/* ========================================================================= */}
-      <div className="space-y-6">
-        <div className="text-center space-y-1">
-          <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
-            Explore Voice Personas
+      {/* 3. Voice Personas */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
+              Emotion-rich Indic Voices
+            </h2>
+            <p className="text-xs text-black/50">
+              Low-latency neural acoustic models calibrated for Indian dialects and educational terminology
+            </p>
+          </div>
+          <span className="text-xs font-mono text-black/60 bg-white px-3 py-1 rounded-full border border-black/[0.06]">
+            {voiceDiscs.length} Models
           </span>
-          <h2 className="text-2xl sm:text-3xl font-normal text-neutral-900 font-serif-display">
-            Emotion-rich and human-like Indic voices
-          </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {voiceDiscs.map((disc) => {
             const isPlaying = activeDiscPlaying === disc.id;
 
             return (
               <div
                 key={disc.id}
-                className="liquid-glass-card rounded-3xl p-7 flex flex-col justify-between group relative overflow-hidden"
+                className="bg-white rounded-[26px] border border-black/[0.06] p-6 flex flex-col justify-between group relative overflow-hidden shadow-2xs hover:border-black/15 transition-all"
               >
                 {/* 3D Organic Audio Disc Graphic */}
-                <div className="flex items-center justify-center my-4 py-2">
+                <div className="flex items-center justify-center my-3 py-2">
                   <div
                     onClick={() => toggleDiscPlay(disc.id)}
-                    className={`w-36 h-36 rounded-full ${disc.discClass} flex items-center justify-center cursor-pointer transition-transform duration-500 relative group-hover:scale-105 shadow-xl ${
+                    className={`w-32 h-32 rounded-full ${disc.discClass} flex items-center justify-center cursor-pointer transition-transform duration-500 relative group-hover:scale-105 shadow-md ${
                       isPlaying ? "animate-spin-slow" : ""
                     }`}
                   >
                     {/* Inner Central Indent with White Play Button */}
-                    <div className="w-12 h-12 rounded-full bg-white/95 backdrop-blur-md flex items-center justify-center text-neutral-900 shadow-md border border-white/60">
+                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#1A1A1A] shadow-md border border-white/60">
                       {isPlaying ? (
-                        <Pause className="w-4 h-4 fill-neutral-900" />
+                        <Pause className="w-3.5 h-3.5 fill-[#1A1A1A]" />
                       ) : (
-                        <Play className="w-4 h-4 fill-neutral-900 ml-0.5" />
+                        <Play className="w-3.5 h-3.5 fill-[#1A1A1A] ml-0.5" />
                       )}
                     </div>
 
-                    {/* Outer Organic Radial Rings */}
+                    {/* Outer Radial Ring */}
                     <div className="absolute inset-0 rounded-full border border-white/30 pointer-events-none" />
                   </div>
                 </div>
 
                 {/* Disc Info */}
-                <div className="pt-4 border-t border-black/5">
+                <div className="pt-4 border-t border-black/[0.06]">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-lg font-semibold text-neutral-900 font-serif-display">
+                    <h3 className="text-base font-bold text-[#1A1A1A]">
                       {disc.name}
                     </h3>
-                    <span className="text-xs font-mono font-medium text-neutral-700 bg-neutral-100 px-2.5 py-0.5 rounded-full border border-black/5">
+                    <span className="text-xs font-mono font-semibold text-black/70 bg-[#FAF3E4] px-2.5 py-0.5 rounded-full border border-black/[0.06]">
                       {disc.lang}
                     </span>
                   </div>
 
-                  <p className="text-xs text-neutral-500 mb-3">
+                  <p className="text-xs text-black/50 mb-3">
                     {disc.style} • {disc.accent}
                   </p>
 
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                    <span className="text-[11px] font-semibold text-[#16856B] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full">
                       {disc.tag}
                     </span>
 
@@ -383,7 +360,7 @@ export default function AIAgentsView({
                         const el = document.getElementById("speech-playground");
                         if (el) el.scrollIntoView({ behavior: "smooth" });
                       }}
-                      className="text-xs font-medium text-neutral-800 hover:text-blue-600 inline-flex items-center gap-1 cursor-pointer transition-colors"
+                      className="text-xs font-semibold text-[#1A1A1A] hover:text-black inline-flex items-center gap-1 cursor-pointer transition-colors"
                     >
                       <span>Test in Playground</span>
                       <ArrowRight className="w-3 h-3" />
@@ -396,71 +373,70 @@ export default function AIAgentsView({
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 4. WORK AGENTS GOAL DELEGATION (FROM TEMPLATE 2, PAGE 1-3)                */}
-      {/* ========================================================================= */}
-      <div className="bg-neutral-50/90 rounded-3xl p-8 sm:p-10 border border-black/10 space-y-8">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
-            Autonomous Workflows
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-normal text-neutral-900 font-serif-display">
+      {/* 4. Autonomous Workflows */}
+      <div className="bg-white rounded-[26px] border border-black/[0.06] p-6 sm:p-8 shadow-2xs space-y-6">
+        <div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D9C2FA]/40 border border-[#D9C2FA] text-[11px] font-semibold text-[#5B21B6] mb-2">
+            <Sparkles className="w-3 h-3" />
+            <span>Autonomous Workflows</span>
+          </div>
+          <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
             Set the outcome. Delegate the process.
           </h2>
-          <p className="text-xs sm:text-sm text-neutral-500">
-            Describe the admissions counseling task and connect university knowledge documents. Voice Agents follows the process and logs verified results.
+          <p className="text-xs sm:text-sm text-black/60 mt-0.5">
+            Describe the admissions counseling task and connect university knowledge documents. Voice Agents follow the process and log verified results.
           </p>
         </div>
 
         {/* 2 Flow Cards: Chat & Work */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Chat Card */}
-          <div className="liquid-glass-subtle rounded-3xl p-6 space-y-4">
+          {/* Inbound Voice Card */}
+          <div className="bg-[#FAF3E4]/50 border border-black/[0.06] rounded-[20px] p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-50/80 px-2.5 py-0.5 rounded-md border border-amber-200/80">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#7A4B00] bg-[#FFD9A0] px-2.5 py-0.5 rounded-full">
                 Inbound Voice Inquiries
               </span>
-              <span className="text-xs font-mono text-neutral-400">Direct Answering</span>
+              <span className="text-xs font-mono text-black/40">Direct Answering</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-black/5 text-xs text-neutral-800 italic shadow-2xs">
+            <div className="p-4 rounded-xl bg-white border border-black/[0.06] text-xs text-[#1A1A1A] italic shadow-2xs">
               &ldquo;What is the cutoff score for B.Tech AI & Data Science and can I pay tuition in 3-part zero interest EMI?&rdquo;
             </div>
 
-            <p className="text-xs text-neutral-500 leading-relaxed">
+            <p className="text-xs text-black/60 leading-relaxed">
               Synthesizes real-time verified answers from college prospectus and scholarship slabs with zero hallucination.
             </p>
           </div>
 
-          {/* Work Card */}
-          <div className="liquid-glass-subtle rounded-3xl p-6 space-y-4">
+          {/* Outbound Calling Card */}
+          <div className="bg-[#FAF3E4]/50 border border-black/[0.06] rounded-[20px] p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#16856B] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full">
                 Outbound Calling Batches
               </span>
-              <span className="text-xs font-mono text-neutral-400">Multi-Step Execution</span>
+              <span className="text-xs font-mono text-black/40">Multi-Step Execution</span>
             </div>
 
-            <div className="p-4 rounded-xl bg-neutral-50 border border-black/5 space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-neutral-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="p-4 rounded-xl bg-white border border-black/[0.06] space-y-2 text-xs">
+              <div className="flex items-center gap-2 text-black/80 font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
                 <span>Verify student 12th Board PCM marks</span>
               </div>
-              <div className="flex items-center gap-2 text-neutral-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="flex items-center gap-2 text-black/80 font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
                 <span>Qualify for 35% Chancellor Merit Scholarship</span>
               </div>
-              <div className="flex items-center gap-2 text-neutral-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="flex items-center gap-2 text-black/80 font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
                 <span>Book campus visit slot for Saturday 11:00 AM</span>
               </div>
-              <div className="flex items-center gap-2 text-neutral-400">
-                <span className="w-3.5 h-3.5 rounded-full border border-neutral-300 inline-block" />
+              <div className="flex items-center gap-2 text-black/40">
+                <span className="w-3.5 h-3.5 rounded-full border border-black/20 inline-block" />
                 <span>Trigger WhatsApp confirmation pass with QR</span>
               </div>
             </div>
 
-            <p className="text-xs text-neutral-500 leading-relaxed">
+            <p className="text-xs text-black/60 leading-relaxed">
               Executes autonomous multi-step admissions campaigns and syncs candidate dossiers into CRM.
             </p>
           </div>
