@@ -40,6 +40,7 @@ import CallDrawer from "./CallDrawer";
 import { RecentCallRecord, CallOutcome } from "@/types/dashboard";
 import { soundSynth } from "@/lib/audio-synth";
 import BuildAIEmployeeBanner from "../components/BuildAIEmployeeBanner";
+import TelephonyActivityHeatmap from "../components/TelephonyActivityHeatmap";
 
 interface CallRecord {
   id: string;
@@ -63,10 +64,8 @@ export default function OverviewPageView() {
 
   // Timeframe and Filtering
   const [timeframe, setTimeframe] = useState<"today" | "7d" | "30d">("today");
-  const [selectedTrafficTab, setSelectedTrafficTab] = useState<"all" | "inbound" | "outbound">("all");
   const [callFilter, setCallFilter] = useState<"all" | "inbound" | "outbound">("all");
   const [searchCallQuery, setSearchCallQuery] = useState("");
-  const [activeHoverBar, setActiveHoverBar] = useState<number | null>(null);
   const [lastInspectedId, setLastInspectedId] = useState<string | null>(null);
 
   // Modals state
@@ -198,19 +197,6 @@ export default function OverviewPageView() {
     callsList.reduce((acc, c) => acc + (c.latencyMs || 136), 0) / (callsList.length || 1)
   );
 
-  // Hourly Concurrency Slots for Telephony Traffic Meter
-  const hourlySlots = [
-    { hour: "08:00", inbound: 3, outbound: 1, total: 4 },
-    { hour: "10:00", inbound: 7, outbound: 3, total: 10 },
-    { hour: "12:00", inbound: 8, outbound: 4, total: 12 },
-    { hour: "14:00", inbound: 5, outbound: 2, total: 7 },
-    { hour: "16:00", inbound: 9, outbound: 5, total: 14 },
-    { hour: "18:00", inbound: 7, outbound: 3, total: 10 },
-    { hour: "20:00", inbound: 4, outbound: 1, total: 5 },
-    { hour: "22:00", inbound: 2, outbound: 0, total: 2 },
-  ];
-
-  const maxSlotValue = Math.max(...hourlySlots.map((s) => s.total), 15);
 
   // Simulate an inbound call with tactile audio feedback
   const handleSimulateInboundCall = () => {
@@ -573,272 +559,23 @@ export default function OverviewPageView() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. CENTRAL CONCURRENCY & ACTIVE AGENT WORKFORCE RACK                      */}
+      {/* 3. CENTRAL CONCURRENCY HEATMAP & HOURLY TELEPHONY TRACKS                  */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* LEFT COLUMN: Hourly SIP Concurrency Distribution (8 cols) */}
-        <div className="lg:col-span-8 bg-white rounded-[28px] border border-black/[0.06] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col justify-between space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#16856B]" />
-                <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">
-                  Hourly Telephony Concurrency Distribution
-                </h3>
-              </div>
-              <p className="text-xs text-black/55 mt-0.5">
-                Active carrier sessions and channel concurrency across standard institutional business hours.
-              </p>
-            </div>
+      <div className="w-full space-y-2">
+        <TelephonyActivityHeatmap currentCallsCount={callsList.length} />
 
-            {/* Stepped Filter Pills */}
-            <div className="flex items-center gap-1 bg-[#FBF7ED] border border-black/[0.06] rounded-full p-1 text-xs font-semibold">
-              <button
-                onClick={() => setSelectedTrafficTab("all")}
-                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
-                  selectedTrafficTab === "all"
-                    ? "bg-[#111111] text-white shadow-2xs"
-                    : "text-black/60 hover:text-black"
-                }`}
-              >
-                ALL
-              </button>
-              <button
-                onClick={() => setSelectedTrafficTab("inbound")}
-                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
-                  selectedTrafficTab === "inbound"
-                    ? "bg-[#111111] text-white shadow-2xs"
-                    : "text-black/60 hover:text-black"
-                }`}
-              >
-                INBOUND
-              </button>
-              <button
-                onClick={() => setSelectedTrafficTab("outbound")}
-                className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
-                  selectedTrafficTab === "outbound"
-                    ? "bg-[#111111] text-white shadow-2xs"
-                    : "text-black/60 hover:text-black"
-                }`}
-              >
-                OUTBOUND
-              </button>
-            </div>
-          </div>
-
-          {/* Stepped Telephony Meter Chart */}
-          <div className="relative pt-6 pb-2 bg-[#FAF7F0]/60 rounded-2xl p-4 border border-black/[0.04]">
-            {/* Guidelines */}
-            <div className="absolute inset-x-4 inset-y-6 flex flex-col justify-between pointer-events-none opacity-40">
-              <div className="border-b border-dashed border-black/15 w-full flex justify-end">
-                <span className="text-[10px] font-semibold text-black/40 -mt-2.5">15 CALLS</span>
-              </div>
-              <div className="border-b border-dashed border-black/15 w-full flex justify-end">
-                <span className="text-[10px] font-semibold text-black/40 -mt-2.5">10 CALLS</span>
-              </div>
-              <div className="border-b border-dashed border-black/15 w-full flex justify-end">
-                <span className="text-[10px] font-semibold text-black/40 -mt-2.5">5 CALLS</span>
-              </div>
-              <div className="border-b border-black/10 w-full" />
-            </div>
-
-            {/* Stepped Column Bars */}
-            <div className="relative h-44 flex items-end justify-between gap-2 sm:gap-4 px-2">
-              {hourlySlots.map((slot, index) => {
-                const heightPercentage = Math.min(
-                  Math.round((slot.total / maxSlotValue) * 100),
-                  100
-                );
-                const isHovered = activeHoverBar === index;
-
-                return (
-                  <div
-                    key={slot.hour}
-                    onMouseEnter={() => setActiveHoverBar(index)}
-                    onMouseLeave={() => setActiveHoverBar(null)}
-                    className="flex-1 flex flex-col items-center justify-end h-full relative cursor-pointer"
-                  >
-                    {/* Tooltip on hover */}
-                    {isHovered && (
-                      <div className="absolute -top-12 z-20 px-2.5 py-1 bg-[#111111] text-white text-[11px] rounded-xl shadow-lg whitespace-nowrap animate-in fade-in duration-75">
-                        <span className="font-bold">{slot.hour}: </span>
-                        <span>{slot.total} calls</span>
-                        <div className="text-white/70 text-[10px]">
-                          {slot.inbound} in &bull; {slot.outbound} out
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Stacked Pastel Bar */}
-                    <div
-                      style={{ height: `${heightPercentage}%` }}
-                      className={`w-full max-w-[34px] rounded-t-xl transition-all duration-150 overflow-hidden flex flex-col justify-end shadow-xs ${
-                        isHovered ? "scale-105" : ""
-                      }`}
-                    >
-                      {/* Inbound Portion (Lavender) */}
-                      <div
-                        style={{
-                          height: `${(slot.inbound / (slot.total || 1)) * 100}%`,
-                        }}
-                        className="w-full bg-[#C9A7F5]"
-                      />
-                      {/* Outbound Portion (Coral) */}
-                      <div
-                        style={{
-                          height: `${(slot.outbound / (slot.total || 1)) * 100}%`,
-                        }}
-                        className="w-full bg-[#FFA98B]"
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* X-axis Labels */}
-            <div className="flex justify-between text-[11px] font-semibold text-black/50 mt-3 px-2">
-              {hourlySlots.map((slot) => (
-                <span key={slot.hour}>{slot.hour}</span>
-              ))}
-            </div>
-          </div>
-
-          {/* Graph Legend and Summary Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 text-xs">
-            <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1.5 text-black/70 font-medium">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#C9A7F5]" />
-                <span>Inbound Calls (Admissions &amp; Support)</span>
-              </span>
-              <span className="flex items-center gap-1.5 text-black/70 font-medium">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FFA98B]" />
-                <span>Outbound Campaign Dialing</span>
-              </span>
-            </div>
-
-            <Link
-              href="/dashboard/calls"
-              className="text-[#1A1A1A] font-bold hover:underline flex items-center gap-1 group text-xs"
-            >
-              <span>View Verbatim Audio Transcripts</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: Active Voice Agent Channels (4 cols) */}
-        <div className="lg:col-span-4 bg-white rounded-[28px] border border-black/[0.06] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col justify-between space-y-4">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#16856B]" />
-                <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">
-                  Voice Agent Workforce
-                </h3>
-              </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#E8F5EF] text-[#16856B] font-bold text-[11px]">
-                3 Channels Live
-              </span>
-            </div>
-
-            {/* Agent List */}
-            <div className="space-y-3 pt-3">
-              {/* Agent 1: Maya */}
-              <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.04] space-y-2 hover:bg-[#FAF3E4] transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="relative">
-                      <div className="w-8 h-8 rounded-full bg-[#C9A7F5] text-[#3B0764] font-bold text-xs flex items-center justify-center">
-                        M
-                      </div>
-                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#16856B] ring-2 ring-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-xs text-[#1A1A1A]">Maya (Admissions)</h4>
-                      <p className="text-[11px] text-black/50">Hindi + English &bull; 136ms SLA</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      try { soundSynth.play("click"); } catch {}
-                      setTestCallOpen(true);
-                    }}
-                    className="px-2.5 py-1 rounded-full bg-white hover:bg-black hover:text-white border border-black/[0.08] text-[11px] font-semibold transition-all cursor-pointer"
-                  >
-                    Test Call
-                  </button>
-                </div>
-              </div>
-
-              {/* Agent 2: Priya */}
-              <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.04] space-y-2 hover:bg-[#FAF3E4] transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="relative">
-                      <div className="w-8 h-8 rounded-full bg-[#FFA98B] text-[#7C2D12] font-bold text-xs flex items-center justify-center">
-                        P
-                      </div>
-                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#16856B] ring-2 ring-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-xs text-[#1A1A1A]">Priya (Tuition &amp; Aid)</h4>
-                      <p className="text-[11px] text-black/50">Telugu + English &bull; 142ms SLA</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      try { soundSynth.play("click"); } catch {}
-                      setTestCallOpen(true);
-                    }}
-                    className="px-2.5 py-1 rounded-full bg-white hover:bg-black hover:text-white border border-black/[0.08] text-[11px] font-semibold transition-all cursor-pointer"
-                  >
-                    Test Call
-                  </button>
-                </div>
-              </div>
-
-              {/* Agent 3: Arjun */}
-              <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.04] space-y-2 hover:bg-[#FAF3E4] transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="relative">
-                      <div className="w-8 h-8 rounded-full bg-[#A8C3F0] text-[#1E3A8A] font-bold text-xs flex items-center justify-center">
-                        A
-                      </div>
-                      <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#16856B] ring-2 ring-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-xs text-[#1A1A1A]">Arjun (Outreach)</h4>
-                      <p className="text-[11px] text-black/50">Campaign Lead &bull; 148ms SLA</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      try { soundSynth.play("click"); } catch {}
-                      setTestCallOpen(true);
-                    }}
-                    className="px-2.5 py-1 rounded-full bg-white hover:bg-black hover:text-white border border-black/[0.08] text-[11px] font-semibold transition-all cursor-pointer"
-                  >
-                    Test Call
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2">
-            <button
-              onClick={() => {
-                try { soundSynth.play("click"); } catch {}
-                setCreateAgentOpen(true);
-              }}
-              className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-white hover:bg-[#FAF3E4] border border-dashed border-black/20 text-xs font-semibold text-[#1A1A1A] transition-colors cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Deploy New Voice Employee</span>
-            </button>
-          </div>
+        {/* Bottom Link Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-2 pt-1 text-xs">
+          <span className="text-black/50 text-[11px]">
+            Carrier trunk telemetry synced with sub-140ms voice latency SLA.
+          </span>
+          <Link
+            href="/dashboard/calls"
+            className="text-[#1A1A1A] font-bold hover:underline flex items-center gap-1 group text-xs self-start sm:self-center"
+          >
+            <span>View Verbatim Audio Transcripts</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
         </div>
       </div>
 
@@ -1043,66 +780,6 @@ export default function OverviewPageView() {
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 6. TELEPHONY SIP CARRIER INFRASTRUCTURE & ACOUSTICS DIAGNOSTIC STRIP      */}
-      {/* ========================================================================= */}
-      <div className="pastel-column-panel p-5 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-black/[0.06]">
-          <div>
-            <h3 className="font-bold text-sm text-[#1A1A1A]">
-              Telephony SIP Carrier Infrastructure
-            </h3>
-            <p className="text-xs text-black/60">
-              Direct PRI carrier trunk interconnects, Opus HD speech codecs, and voice activity barge-in telemetry.
-            </p>
-          </div>
-          <span className="px-3 py-1 rounded-full bg-[#C1F2D5] text-[#065F46] font-semibold text-xs self-start sm:self-center">
-            99.99% Carrier SLA Verified
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-          <div className="pastel-card p-3.5 space-y-0.5">
-            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
-              Audio Codec
-            </span>
-            <span className="text-sm font-bold text-[#1A1A1A] block">
-              Opus HD (16 kHz)
-            </span>
-            <span className="text-xs text-black/60">Wideband High Fidelity</span>
-          </div>
-
-          <div className="pastel-card p-3.5 space-y-0.5">
-            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
-              Network Jitter
-            </span>
-            <span className="text-sm font-bold text-[#1A1A1A] block">
-              1.2 ms
-            </span>
-            <span className="text-xs text-[#16856B]">Optimal Transmission</span>
-          </div>
-
-          <div className="pastel-card p-3.5 space-y-0.5">
-            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
-              Packet Loss
-            </span>
-            <span className="text-sm font-bold text-[#1A1A1A] block">
-              0.00%
-            </span>
-            <span className="text-xs text-[#16856B]">Zero Dropped Frames</span>
-          </div>
-
-          <div className="pastel-card p-3.5 space-y-0.5">
-            <span className="text-[11px] font-semibold text-black/45 uppercase tracking-wider block">
-              VAD Barge-In
-            </span>
-            <span className="text-sm font-bold text-[#1A1A1A] block">
-              0.85s
-            </span>
-            <span className="text-xs text-black/60">Instant Interruption</span>
-          </div>
-        </div>
-      </div>
 
       {/* Call Drawer */}
       <CallDrawer

@@ -58,10 +58,10 @@ export default function Hero({
           {/* Main Headline */}
           <h1
             style={{ color: "#000000" }}
-            className="text-black font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[76px] leading-[1.08] sm:leading-[1.06] tracking-[-0.03em] mb-6 max-w-4xl mx-auto text-center"
+            className="font-display text-black font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[72px] xl:text-[76px] leading-[1.08] sm:leading-[1.06] tracking-[-0.03em] mb-6 max-w-4xl mx-auto text-center"
           >
             Let AI Handle the Calls.<br />
-            Your Team Handles What<br className="hidden sm:inline" /> Matters.
+            Your Team Handles <span className="font-serif-editorial italic font-normal text-slate-900">What Matters.</span>
           </h1>
 
           {/* Subtitle */}

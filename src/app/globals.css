@@ -1,7 +1,27 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-sans), "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-sans), "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-ui: var(--font-sans), "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+  --font-bricolage: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+  --font-syne: var(--font-syne), "Syne", sans-serif;
+  --font-space: var(--font-space), "Space Grotesk", sans-serif;
+  --font-serif: var(--font-serif), "Instrument Serif", Georgia, serif;
+  --font-serif-editorial: var(--font-serif), "Instrument Serif", Georgia, serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+  --font-telemetry: var(--font-mono), "JetBrains Mono", monospace;
+}
+
 @layer base {
   :root {
+    --font-display: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+    --font-body: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+    --font-ui: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+    --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+    --font-editorial: var(--font-serif), "Instrument Serif", Georgia, serif;
+
     --background: #ffffff;
     --foreground: #0f172a;
     --aeline-blue: #cdfb56;
@@ -83,13 +103,35 @@
     --console-line-strong: rgba(0, 0, 0, 0.15);
   }
 
-  .font-display {
-    font-family: var(--font-bricolage), sans-serif;
+  /* Human-Centered Typography Foundation */
+  html {
+    font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   }
 
-  .font-telemetry {
-    font-family: var(--font-mono), monospace;
+  h1, h2, h3, .font-display {
+    font-family: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  button, input, select, textarea, nav {
+    font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  }
+
+  code, pre, .font-mono, .font-telemetry {
+    font-family: var(--font-mono), "JetBrains Mono", monospace;
     font-variant-numeric: tabular-nums;
+  }
+
+  .font-serif-editorial, .font-serif {
+    font-family: var(--font-serif), "Instrument Serif", Georgia, serif;
+  }
+
+  .font-space {
+    font-family: var(--font-space), "Space Grotesk", sans-serif;
+  }
+
+  .font-syne {
+    font-family: var(--font-syne), "Syne", sans-serif;
   }
 
   /* Pastel SaaS Design System Utility Classes */
