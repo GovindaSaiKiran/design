@@ -11,6 +11,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
+import { usePalette } from "@/context/PaletteContext";
 
 export interface HourlyActivity {
   hour: number;
@@ -271,6 +272,7 @@ export default function TelephonyActivityHeatmap({
     [currentCallsCount]
   );
 
+  const { palette } = usePalette();
   const [selectedDay, setSelectedDay] = useState<DayActivity>(todayDay);
   const [hoveredDay, setHoveredDay] = useState<DayActivity | null>(null);
   const [hoveredHour, setHoveredHour] = useState<number | null>(null);
@@ -298,22 +300,19 @@ export default function TelephonyActivityHeatmap({
     setSelectedHour((prev) => (prev === hour ? null : hour));
   };
 
-  // Exact 4-Tier Green Palette from inspiration image
-  const getEmeraldDayColor = (count: number) => {
+  // 4-Tier Palette matching active selected palette
+  const getDayTierStyle = (count: number) => {
+    const tiers = palette.colors.heatmapTiers;
     if (count <= 6) {
-      // Tier 1: Soft Mint Sage (Inspiration image lightest green)
-      return "bg-[#A3DCB4] border border-[#86CF9B]";
+      return { backgroundColor: tiers[0] };
     }
     if (count <= 14) {
-      // Tier 2: Fresh Leafy Green (Inspiration image medium green)
-      return "bg-[#48BC71] border border-[#3CA760]";
+      return { backgroundColor: tiers[1] };
     }
     if (count <= 22) {
-      // Tier 3: Rich Forest Green (Inspiration image rich dark green)
-      return "bg-[#208843] border border-[#197538]";
+      return { backgroundColor: tiers[2] };
     }
-    // Tier 4: Deep Bottle Pine Green (Inspiration image darkest green)
-    return "bg-[#134A23] border border-[#0F3D1C]";
+    return { backgroundColor: tiers[3] };
   };
 
   // Inbound Hourly Palette (4 Tiers matching Inspiration Rose aesthetic)
@@ -527,7 +526,7 @@ export default function TelephonyActivityHeatmap({
                           }
 
                           // 4. ACTIVE CALL DAY
-                          const tileClass = getEmeraldDayColor(day.total);
+                          const dayStyle = getDayTierStyle(day.total);
 
                           return (
                             <div
@@ -536,9 +535,10 @@ export default function TelephonyActivityHeatmap({
                               onMouseEnter={() => setHoveredDay(day)}
                               onMouseLeave={() => setHoveredDay(null)}
                               title={`${day.fullDateString}: ${day.total} calls (${day.inbound} in, ${day.outbound} out)`}
-                              className={`aspect-square w-full rounded-[4.5px] cursor-pointer transition-all duration-150 relative ${tileClass} ${
+                              style={dayStyle}
+                              className={`aspect-square w-full rounded-[4.5px] cursor-pointer transition-all duration-150 relative ${
                                 isSelected
-                                  ? "ring-2 ring-[#134A23] ring-offset-2 ring-offset-[#F2F4F2] scale-110 z-20 shadow-md"
+                                  ? "ring-2 ring-slate-900 ring-offset-2 ring-offset-[#F2F4F2] scale-110 z-20 shadow-md"
                                   : "hover:scale-105 hover:brightness-105 z-10"
                               }`}
                             >
@@ -593,19 +593,23 @@ export default function TelephonyActivityHeatmap({
               </div>
               <span
                 title="1–6 Calls"
-                className="w-3 h-3 rounded-[2.5px] bg-[#A3DCB4] border border-[#86CF9B]"
+                style={{ backgroundColor: palette.colors.heatmapTiers[0] }}
+                className="w-3 h-3 rounded-[2.5px]"
               />
               <span
                 title="7–14 Calls"
-                className="w-3 h-3 rounded-[2.5px] bg-[#48BC71] border border-[#3CA760]"
+                style={{ backgroundColor: palette.colors.heatmapTiers[1] }}
+                className="w-3 h-3 rounded-[2.5px]"
               />
               <span
                 title="15–22 Calls"
-                className="w-3 h-3 rounded-[2.5px] bg-[#208843] border border-[#197538]"
+                style={{ backgroundColor: palette.colors.heatmapTiers[2] }}
+                className="w-3 h-3 rounded-[2.5px]"
               />
               <span
                 title="23+ Calls"
-                className="w-3 h-3 rounded-[2.5px] bg-[#134A23] border border-[#0F3D1C]"
+                style={{ backgroundColor: palette.colors.heatmapTiers[3] }}
+                className="w-3 h-3 rounded-[2.5px]"
               />
             </div>
             <span>More</span>

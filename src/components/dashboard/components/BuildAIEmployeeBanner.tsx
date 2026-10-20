@@ -14,6 +14,7 @@ import {
   Car,
 } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
+import { usePalette } from "@/context/PaletteContext";
 
 interface BuildAIEmployeeBannerProps {
   onOpenCreateModal?: (initialData?: { prompt: string; mode: string; language: string }) => void;
@@ -22,6 +23,7 @@ interface BuildAIEmployeeBannerProps {
 export default function BuildAIEmployeeBanner({
   onOpenCreateModal,
 }: BuildAIEmployeeBannerProps) {
+  const { palette } = usePalette();
   const [callMode, setCallMode] = useState<"instant" | "bulk">("instant");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("English");
   const [promptText, setPromptText] = useState("");
@@ -102,25 +104,32 @@ export default function BuildAIEmployeeBanner({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[24px] bg-white border border-black/[0.06] shadow-[0_4px_24px_rgba(0,0,0,0.035)] p-5 sm:p-6 text-[#1A1A1A]">
+    <div className="relative overflow-hidden rounded-[28px] bg-white border-2 border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.035)] p-5 sm:p-6 text-[#1A1A1A]">
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* LEFT SECTION (Col 1 to 9) */}
         <div className="lg:col-span-8 flex flex-col justify-between space-y-4">
           {/* Top Tag & App Button */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-[#D9C2FA] text-[#4C1D95] flex items-center gap-1.5">
+              <span
+                className="px-3 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 shadow-2xs border border-black/10"
+                style={{ backgroundColor: palette.colors.metricCard1.bg, color: palette.colors.metricCard1.text }}
+              >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>AI VOICE EMPLOYEE BUILDER</span>
               </span>
-              <span className="text-[10.5px] font-bold uppercase tracking-wider text-[#065F46] bg-[#C1F2D5] px-2 py-0.5 rounded-full">
+              <span
+                className="text-[10.5px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-black/10"
+                style={{ backgroundColor: palette.colors.successBg, color: palette.colors.successText }}
+              >
                 FREE SETUP
               </span>
             </div>
 
             <button
               onClick={() => { try { soundSynth.play("click"); } catch {} }}
-              className="w-7 h-7 rounded-xl bg-[#FAF3E4] hover:bg-[#F6EBC8] flex items-center justify-center text-black/50 hover:text-black transition-colors cursor-pointer"
+              className="w-7 h-7 rounded-xl flex items-center justify-center text-black/50 hover:text-black transition-colors cursor-pointer"
+              style={{ backgroundColor: palette.colors.surfaceAlt }}
               title="Workforce Templates"
             >
               <LayoutGrid className="w-3.5 h-3.5" />
@@ -150,8 +159,9 @@ export default function BuildAIEmployeeBanner({
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                   callMode === "instant"
                     ? "bg-[#111111] text-white shadow-xs"
-                    : "bg-[#FAF3E4] text-black/60 hover:text-black border border-black/[0.06]"
+                    : "text-black/60 hover:text-black border border-black/[0.06]"
                 }`}
+                style={callMode !== "instant" ? { backgroundColor: palette.colors.surfaceAlt } : {}}
               >
                 <Zap className="w-3.5 h-3.5 fill-current" />
                 <span>Instant Inbound</span>
@@ -166,8 +176,9 @@ export default function BuildAIEmployeeBanner({
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                   callMode === "bulk"
                     ? "bg-[#111111] text-white shadow-xs"
-                    : "bg-[#FAF3E4] text-black/60 hover:text-black border border-black/[0.06]"
+                    : "text-black/60 hover:text-black border border-black/[0.06]"
                 }`}
+                style={callMode !== "bulk" ? { backgroundColor: palette.colors.surfaceAlt } : {}}
               >
                 <Megaphone className="w-3.5 h-3.5" />
                 <span>Outbound Campaign</span>
@@ -175,7 +186,10 @@ export default function BuildAIEmployeeBanner({
             </div>
 
             {/* Language Selector */}
-            <div className="flex items-center gap-1 bg-[#FAF3E4] border border-black/[0.06] rounded-full px-2.5 py-1">
+            <div
+              className="flex items-center gap-1 border border-black/[0.06] rounded-full px-2.5 py-1"
+              style={{ backgroundColor: palette.colors.surfaceAlt }}
+            >
               <span className="text-[10px] font-bold text-black/40 uppercase mr-1">
                 LANG
               </span>
@@ -192,9 +206,14 @@ export default function BuildAIEmployeeBanner({
                       }}
                       className={`text-xs px-2.5 py-0.5 rounded-full transition-all whitespace-nowrap cursor-pointer ${
                         isSelected
-                          ? "bg-[#FFA98B] text-[#7C2D12] font-bold shadow-2xs"
+                          ? "font-bold shadow-2xs"
                           : "text-black/60 hover:text-black font-medium"
                       }`}
+                      style={
+                        isSelected
+                          ? { backgroundColor: palette.colors.metricCard2.bg, color: palette.colors.metricCard2.text }
+                          : {}
+                      }
                     >
                       {lang.label}
                     </button>
@@ -211,7 +230,8 @@ export default function BuildAIEmployeeBanner({
               value={promptText}
               onChange={(e) => setPromptText(e.target.value)}
               placeholder="e.g. Call every new enquiry from Meta Ads in under 30s, qualify their 2BHK/3BHK budget, and book a weekend site visit."
-              className="w-full bg-[#FAF3E4]/50 border border-black/[0.08] focus:border-black/30 rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm text-[#1A1A1A] placeholder:text-black/40 focus:outline-none transition-all resize-none shadow-inner leading-relaxed"
+              className="w-full border border-black/[0.08] focus:border-black/30 rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm text-[#1A1A1A] placeholder:text-black/40 focus:outline-none transition-all resize-none shadow-inner leading-relaxed"
+              style={{ backgroundColor: palette.colors.surfaceAlt }}
             />
           </div>
 
@@ -221,7 +241,8 @@ export default function BuildAIEmployeeBanner({
               <button
                 type="button"
                 onClick={handleTalkToSwara}
-                className="w-8 h-8 rounded-full bg-[#D9C2FA] hover:bg-[#C9A7F5] text-[#4C1D95] flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:opacity-90"
+                style={{ backgroundColor: palette.colors.metricCard1.bg, color: palette.colors.metricCard1.text }}
                 title="Dictate with voice"
               >
                 <Mic className="w-4 h-4" />
@@ -238,8 +259,9 @@ export default function BuildAIEmployeeBanner({
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                       isCurrent
                         ? "bg-[#111111] text-white font-semibold"
-                        : "bg-[#FAF3E4] hover:bg-[#F6EBC8] text-black/70 border border-black/[0.06]"
+                        : "text-black/70 border border-black/[0.06] hover:opacity-80"
                     }`}
+                    style={!isCurrent ? { backgroundColor: palette.colors.surfaceAlt } : {}}
                   >
                     <Icon className="w-3.5 h-3.5" />
                     <span>{preset.label}</span>
@@ -251,9 +273,10 @@ export default function BuildAIEmployeeBanner({
             <button
               type="button"
               onClick={handleBuild}
-              className="bg-[#111111] hover:bg-black text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-md flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-md flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] hover:opacity-95"
+              style={{ backgroundColor: palette.colors.accent, color: palette.colors.accentText }}
             >
-              <Sparkles className="w-4 h-4 text-[#FFA98B]" />
+              <Sparkles className="w-4 h-4" style={{ color: palette.colors.metricCard2.bg }} />
               <span>Build my employee</span>
             </button>
           </div>
@@ -268,10 +291,16 @@ export default function BuildAIEmployeeBanner({
         </div>
 
         {/* RIGHT SECTION: Talk to Swara (Col 10 to 12) */}
-        <div className="lg:col-span-3 flex flex-col items-center justify-center p-4 text-center border-t lg:border-t-0 border-black/[0.06] pt-4 lg:pt-0 bg-[#FAF3E4]/30 rounded-2xl">
+        <div
+          className="lg:col-span-3 flex flex-col items-center justify-center p-4 text-center border-t lg:border-t-0 border-black/[0.06] pt-4 lg:pt-0 rounded-2xl"
+          style={{ backgroundColor: palette.colors.surfaceAlt }}
+        >
           <div className="mb-2">
-            <span className="text-[10.5px] font-bold uppercase tracking-wider text-[#7C2D12] bg-[#FFA98B] px-3 py-1 rounded-full flex items-center gap-1.5 shadow-2xs">
-              <Sparkles className="w-3 h-3 text-[#7C2D12]" />
+            <span
+              className="text-[10.5px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-2xs"
+              style={{ backgroundColor: palette.colors.metricCard2.bg, color: palette.colors.metricCard2.text }}
+            >
+              <Sparkles className="w-3 h-3" />
               <span>BEST RESULT</span>
             </span>
           </div>
@@ -280,20 +309,30 @@ export default function BuildAIEmployeeBanner({
           <div className="relative my-3">
             {isTalkingToSwara && (
               <>
-                <span className="absolute -inset-2.5 rounded-full bg-[#C9A7F5]/40 animate-ping" />
-                <span className="absolute -inset-5 rounded-full bg-[#FFA98B]/30 animate-pulse" />
+                <span
+                  className="absolute -inset-2.5 rounded-full animate-ping"
+                  style={{ backgroundColor: `${palette.previewSwatches[0]}40` }}
+                />
+                <span
+                  className="absolute -inset-5 rounded-full animate-pulse"
+                  style={{ backgroundColor: `${palette.previewSwatches[3]}30` }}
+                />
               </>
             )}
 
             <button
               type="button"
               onClick={handleTalkToSwara}
-              className={`relative w-20 h-20 rounded-full bg-gradient-to-tr from-[#C9A7F5] via-[#A8C3F0] to-[#FFA98B] shadow-[0_8px_24px_rgba(201,167,245,0.4)] flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95 group ${
-                isTalkingToSwara ? "ring-4 ring-[#FFA98B] scale-105" : ""
+              className={`relative w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95 group ${
+                isTalkingToSwara ? "ring-4 ring-offset-2 scale-105" : ""
               }`}
+              style={{
+                background: `linear-gradient(135deg, ${palette.previewSwatches[0]} 0%, ${palette.previewSwatches[2]} 50%, ${palette.previewSwatches[3]} 100%)`,
+                boxShadow: `0 8px 24px ${palette.previewSwatches[0]}40`,
+              }}
               title="Click to speak with Swara"
             >
-              <Mic className="w-8 h-8 text-[#1A1A1A] stroke-[2.2] group-hover:scale-110 transition-transform" />
+              <Mic className="w-8 h-8 text-white stroke-[2.2] group-hover:scale-110 transition-transform drop-shadow" />
             </button>
           </div>
 
@@ -302,7 +341,7 @@ export default function BuildAIEmployeeBanner({
           </h4>
           <p className="text-xs text-black/60 mt-0.5 max-w-[170px] leading-tight">
             {isTalkingToSwara ? (
-              <span className="text-[#D97706] font-semibold flex items-center justify-center gap-1">
+              <span className="font-semibold flex items-center justify-center gap-1" style={{ color: palette.colors.warning }}>
                 <Volume2 className="w-3.5 h-3.5 animate-bounce" />
                 Listening to you...
               </span>

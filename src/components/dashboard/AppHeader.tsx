@@ -45,6 +45,15 @@ export default function AppHeader({
   const [userName, setUserName] = useState("Govinda T.");
   const [userEmail, setUserEmail] = useState("admin@swaram.ai");
 
+  const searchPrompts = [
+    "Search calls, ask Swara AI, or jump anywhere...",
+    "Filter calls by 'fee inquiry', 'positive sentiment'...",
+    "Lookup Maya's transcripts, student leads, or SIP trunks...",
+    "Search voice workforce, campaign queues, or dial a contact...",
+  ];
+  const [promptIndex, setPromptIndex] = useState(0);
+  const [isMac, setIsMac] = useState(false);
+
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,6 +67,15 @@ export default function AppHeader({
     } catch {
       // Keep defaults
     }
+
+    if (typeof navigator !== "undefined") {
+      setIsMac(/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent));
+    }
+
+    const interval = setInterval(() => {
+      setPromptIndex((prev) => (prev + 1) % searchPrompts.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -92,7 +110,7 @@ export default function AppHeader({
 
   return (
     <>
-      <header className="flex flex-col gap-3 pb-3 select-none">
+      <header className="w-full flex flex-col gap-3 pb-3 select-none">
         {/* Top Row: Title, Carrier Status Pill, and Action Pills */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Left: Mobile hamburger & Section Title & Desktop Collapse Toggle */}
@@ -219,35 +237,45 @@ export default function AppHeader({
           </div>
         </div>
 
-        {/* Bottom Toolbar: Full-width Search Bar with Filters & Sort controls on right (Reference style) */}
-        <div className="flex items-center justify-between gap-3 px-4 py-2 bg-white/70 border border-black/[0.06] rounded-2xl sm:rounded-full shadow-2xs backdrop-blur-xs">
+        {/* Bottom Toolbar: Full-width Interactive Search Bar with Attractive Rotating Prompts */}
+        <div
+          onClick={onOpenSearch}
+          className="w-full flex items-center justify-between gap-4 px-4 sm:px-5 py-2.5 sm:py-3 bg-white/85 hover:bg-white border-2 border-black/[0.08] hover:border-black/20 rounded-2xl sm:rounded-full shadow-xs backdrop-blur-xs transition-all duration-200 cursor-pointer group select-none"
+        >
           {/* Search Input on Left */}
-          <div className="flex items-center gap-2.5 flex-1 min-w-0">
-            <Search className="w-4 h-4 text-black/40 shrink-0" />
-            <input
-              type="text"
-              placeholder="Search calls, transcripts, voice agents, campaigns... (⌘K)"
-              onClick={onOpenSearch}
-              readOnly
-              className="w-full text-xs font-medium outline-none bg-transparent text-[#1A1A1A] placeholder:text-black/40 cursor-pointer"
-            />
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-[#FFF4ED] border border-[#FF6B08]/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
+              <Search className="w-4 h-4 text-[#FF6B08]" />
+            </div>
+            <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
+              <span className="text-xs sm:text-sm font-medium text-black/75 tracking-tight truncate transition-all duration-300">
+                {searchPrompts[promptIndex]}
+              </span>
+            </div>
+            {/* Keyboard shortcut keycap pill */}
+            <div className="hidden md:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/[0.04] border border-black/[0.08] text-[11px] font-mono font-bold text-black/50 shadow-2xs shrink-0">
+              <span>{isMac ? "⌘" : "Ctrl"}</span>
+              <span>K</span>
+            </div>
           </div>
 
           {/* Filter & Sort Controls on Right */}
-          <div className="flex items-center gap-3 shrink-0 text-xs font-medium text-black/60">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-2 shrink-0 text-xs sm:text-sm font-semibold text-black/70"
+          >
             <button
               onClick={onOpenSearch}
-              className="flex items-center gap-1.5 hover:text-black transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] hover:text-black transition-all cursor-pointer"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-black/50" />
               <span className="hidden sm:inline">Filters</span>
             </button>
-            <span className="text-black/20">|</span>
             <button
               onClick={() => { try { soundSynth.play("click"); } catch {} }}
-              className="flex items-center gap-1.5 hover:text-black transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] hover:text-black transition-all cursor-pointer"
             >
-              <ArrowUpDown className="w-3.5 h-3.5" />
+              <ArrowUpDown className="w-3.5 h-3.5 text-black/50" />
               <span className="hidden sm:inline">Sort by</span>
             </button>
           </div>

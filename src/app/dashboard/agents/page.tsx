@@ -397,7 +397,7 @@ export default function AgentsPage() {
           {[
             { id: "overview", label: "Overview", icon: Bot },
             { id: "instructions", label: "Instructions", icon: Terminal },
-            { id: "voice", label: "Voice", icon: Volume2 },
+            { id: "voice", label: "Voice & Library", icon: Volume2 },
             { id: "languages", label: "Languages", icon: Globe },
             { id: "knowledge", label: "Knowledge", icon: FileText },
             { id: "data-extraction", label: "Data Extraction", icon: Database },

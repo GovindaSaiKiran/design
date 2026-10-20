@@ -42,6 +42,7 @@ import { RecentCallRecord, CallOutcome } from "@/types/dashboard";
 import { soundSynth } from "@/lib/audio-synth";
 import BuildAIEmployeeBanner from "../components/BuildAIEmployeeBanner";
 import TelephonyActivityHeatmap from "../components/TelephonyActivityHeatmap";
+import { usePalette } from "@/context/PaletteContext";
 
 interface CallRecord {
   id: string;
@@ -60,6 +61,7 @@ interface CallRecord {
 
 export default function OverviewPageView() {
   const router = useRouter();
+  const { palette } = usePalette();
   const [selectedCallForDrawer, setSelectedCallForDrawer] = useState<RecentCallRecord | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -282,12 +284,17 @@ export default function OverviewPageView() {
       {/* ========================================================================= */}
       {/* 1. TOP CARRIER STATUS & QUICK ACTIONS CONSOLE                             */}
       {/* ========================================================================= */}
-      <div className="bg-white rounded-[28px] border border-black/[0.06] p-4 sm:p-5 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="relative overflow-hidden bg-white rounded-[28px] border-2 border-black/[0.08] p-4 sm:p-5 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+
+
         <div>
           {/* Carrier Status Strip */}
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5EF] text-[#16856B] text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-[#16856B] animate-pulse" />
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-2xs"
+              style={{ backgroundColor: palette.colors.successBg, color: palette.colors.successText }}
+            >
+              <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: palette.colors.success }} />
               <span>TRUNK GATEWAY: SIP/2.0 READY</span>
             </span>
             <span className="text-black/20 text-xs">•</span>
@@ -295,7 +302,10 @@ export default function OverviewPageView() {
               TRK-91-AIRTEL-PRI
             </span>
             <span className="text-black/20 text-xs">•</span>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#FAF3E4] text-[#1A1A1A]">
+            <span
+              className="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-black/[0.06]"
+              style={{ backgroundColor: palette.colors.surfaceAlt, color: palette.colors.textPrimary }}
+            >
               {workspaceName}
             </span>
           </div>
@@ -311,17 +321,21 @@ export default function OverviewPageView() {
         {/* Operational Actions */}
         <div className="flex items-center gap-2 flex-wrap self-start lg:self-center">
           {/* Stepped Timeframe Selector Pills */}
-          <div className="flex bg-[#FBF7ED] border border-black/[0.06] rounded-full p-1 text-xs">
+          <div
+            className="flex border-2 border-black/[0.08] rounded-full p-1 text-xs"
+            style={{ backgroundColor: palette.colors.surfaceAlt }}
+          >
             <button
               onClick={() => {
                 try { soundSynth.play("click"); } catch {}
                 setTimeframe("today");
               }}
-              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
                 timeframe === "today"
-                  ? "bg-[#111111] text-white shadow-2xs"
+                  ? "shadow-xs"
                   : "text-black/60 hover:text-black"
               }`}
+              style={timeframe === "today" ? { backgroundColor: palette.colors.accent, color: palette.colors.accentText } : {}}
             >
               Today
             </button>
@@ -330,11 +344,12 @@ export default function OverviewPageView() {
                 try { soundSynth.play("click"); } catch {}
                 setTimeframe("7d");
               }}
-              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
                 timeframe === "7d"
-                  ? "bg-[#111111] text-white shadow-2xs"
+                  ? "shadow-xs"
                   : "text-black/60 hover:text-black"
               }`}
+              style={timeframe === "7d" ? { backgroundColor: palette.colors.accent, color: palette.colors.accentText } : {}}
             >
               7D
             </button>
@@ -343,11 +358,12 @@ export default function OverviewPageView() {
                 try { soundSynth.play("click"); } catch {}
                 setTimeframe("30d");
               }}
-              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
                 timeframe === "30d"
-                  ? "bg-[#111111] text-white shadow-2xs"
+                  ? "shadow-xs"
                   : "text-black/60 hover:text-black"
               }`}
+              style={timeframe === "30d" ? { backgroundColor: palette.colors.accent, color: palette.colors.accentText } : {}}
             >
               30D
             </button>
@@ -356,10 +372,10 @@ export default function OverviewPageView() {
           {/* Simulate Inbound Call Button */}
           <button
             onClick={handleSimulateInboundCall}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-xs font-semibold text-[#1A1A1A] shadow-2xs transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:opacity-90 border-2 border-black/[0.08] text-xs font-bold text-[#1A1A1A] shadow-xs transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
             title="Simulate inbound carrier call"
           >
-            <PhoneIncoming className="w-3.5 h-3.5 text-[#16856B]" />
+            <PhoneIncoming className="w-3.5 h-3.5" style={{ color: palette.colors.success }} />
             <span>Simulate Inbound</span>
           </button>
 
@@ -369,7 +385,8 @@ export default function OverviewPageView() {
               try { soundSynth.play("click"); } catch {}
               setTestCallOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-2xs transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold shadow-md transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            style={{ backgroundColor: palette.colors.accent, color: palette.colors.accentText }}
           >
             <Volume2 className="w-3.5 h-3.5" />
             <span>Test Voice Agent</span>
@@ -378,138 +395,260 @@ export default function OverviewPageView() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. TOP METRIC CARDS (Solid pastel cards matching visual reference)       */}
+      {/* 2. TOP METRIC CARDS (Vibrant High-Voltage Cards with Borders & Shapes)   */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         
-        {/* CARD 1: Lavender #C9A7F5 - Available Minutes */}
+        {/* CARD 1: Minutes Quota */}
         <div
           onClick={() => setTopUpOpen(true)}
-          className="pastel-stat-card bg-[#C9A7F5] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+          style={{
+            backgroundColor: palette.colors.metricCard1.bg,
+            color: palette.colors.metricCard1.text,
+            borderColor: palette.colors.metricCard1.border,
+            boxShadow: palette.colors.metricCard1.shadow,
+          }}
+          className="relative overflow-hidden rounded-[26px] border-2 p-5 sm:p-6 flex flex-col justify-between min-h-[185px] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:brightness-[1.02] group select-none"
         >
-          <div className="flex items-center justify-between gap-2">
+          {/* Decorative geometric shapes */}
+          <div
+            className="absolute -right-8 -bottom-8 w-36 h-36 rounded-full pointer-events-none transition-transform duration-500 group-hover:scale-110"
+            style={{
+              backgroundColor: palette.colors.metricCard1.shapeFill,
+              border: `2px solid ${palette.colors.metricCard1.shapeStroke}`,
+            }}
+          />
+          <div
+            className="absolute right-10 -bottom-3 w-16 h-16 rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-125"
+            style={{ backgroundColor: palette.colors.metricCard1.shapeFill }}
+          />
+          <div
+            className="absolute right-3.5 top-3 w-8 h-8 rounded-xl rotate-12 pointer-events-none opacity-40 transition-transform duration-500 group-hover:rotate-45"
+            style={{ border: `1.5px solid ${palette.colors.metricCard1.shapeStroke}` }}
+          />
+
+          {/* Top Row */}
+          <div className="relative z-10 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0">
-                <Clock className="w-4 h-4 stroke-[2]" />
+              <div
+                style={{
+                  backgroundColor: palette.colors.metricCard1.iconBg,
+                  color: palette.colors.metricCard1.iconColor,
+                  borderColor: palette.colors.metricCard1.iconBorder || "rgba(255, 255, 255, 0.7)",
+                }}
+                className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md border-2 shrink-0 group-hover:scale-105 transition-transform"
+              >
+                <Clock className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
+              <span className="font-extrabold text-xs sm:text-[13px] tracking-tight whitespace-nowrap" style={{ color: palette.colors.metricCard1.text }}>
                 Minutes Quota
               </span>
             </div>
-            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/70 text-[10px] sm:text-[11px] font-bold text-[#3B0764] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
-              100m ALLOCATED
+            <span
+              style={{
+                backgroundColor: palette.colors.metricCard1.badgeBg,
+                color: palette.colors.metricCard1.badgeText,
+                borderColor: palette.colors.metricCard1.badgeBorder || "transparent",
+              }}
+              className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
+            >
+              100m MAX
             </span>
           </div>
 
-          <div>
-            <div className="flex items-baseline gap-2 pt-2">
-              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+          {/* Value & Progress */}
+          <div className="relative z-10 pt-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-[40px] sm:text-[46px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard1.text }}>
                 {availableMinutes.toFixed(1)}
               </span>
-              <span className="text-xs text-black/65 font-medium">min remaining</span>
+              <span className="text-xs font-bold opacity-80">min remaining</span>
             </div>
 
             {/* Stepped Progress Bar */}
-            <div className="w-full bg-white/40 h-2 rounded-full mt-2.5 overflow-hidden flex">
-              <div className="bg-[#111111] h-full w-[14%]" />
+            <div className="w-full bg-black/15 h-2 rounded-full mt-3 overflow-hidden flex p-0.5 border border-black/10">
+              <div className="bg-current h-full w-[14%] rounded-full opacity-90" />
               <div className="bg-transparent h-full w-[86%]" />
             </div>
 
-            <div className="flex items-center justify-between pt-2 text-[11px]">
-              <span className="text-black/60 font-medium">Free Tier Active</span>
-              <span className="font-bold text-[#1A1A1A] group-hover:underline">
+            <div className="flex items-center justify-between pt-2.5 text-[11px]">
+              <span className="opacity-80 font-bold">Free Tier Active</span>
+              <span className="font-black group-hover:underline">
                 + Top Up &rarr;
               </span>
             </div>
           </div>
         </div>
 
-        {/* CARD 2: Coral / Peach #FFA98B - Traffic Volume */}
+        {/* CARD 2: Traffic Volume */}
         <div
           onClick={() => router.push("/dashboard/calls")}
-          className="pastel-stat-card bg-[#FFA98B] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+          style={{
+            backgroundColor: palette.colors.metricCard2.bg,
+            color: palette.colors.metricCard2.text,
+            borderColor: palette.colors.metricCard2.border,
+            boxShadow: palette.colors.metricCard2.shadow,
+          }}
+          className="relative overflow-hidden rounded-[26px] border-2 p-5 sm:p-6 flex flex-col justify-between min-h-[185px] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:brightness-[1.02] group select-none"
         >
-          <div className="flex items-center justify-between gap-2">
+          {/* Decorative geometric shapes */}
+          <div
+            className="absolute -right-8 -bottom-8 w-36 h-36 rounded-full pointer-events-none transition-transform duration-500 group-hover:scale-110"
+            style={{
+              backgroundColor: palette.colors.metricCard2.shapeFill,
+              border: `2px solid ${palette.colors.metricCard2.shapeStroke}`,
+            }}
+          />
+          <div
+            className="absolute right-10 -bottom-3 w-16 h-16 rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-125"
+            style={{ backgroundColor: palette.colors.metricCard2.shapeFill }}
+          />
+          <div
+            className="absolute right-3.5 top-3 w-8 h-8 rounded-xl rotate-12 pointer-events-none opacity-40 transition-transform duration-500 group-hover:rotate-45"
+            style={{ border: `1.5px solid ${palette.colors.metricCard2.shapeStroke}` }}
+          />
+
+          {/* Top Row */}
+          <div className="relative z-10 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0">
-                <Phone className="w-4 h-4 stroke-[2]" />
+              <div
+                style={{
+                  backgroundColor: palette.colors.metricCard2.iconBg,
+                  color: palette.colors.metricCard2.iconColor,
+                  borderColor: palette.colors.metricCard2.iconBorder || "rgba(255, 255, 255, 0.7)",
+                }}
+                className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md border-2 shrink-0 group-hover:scale-105 transition-transform"
+              >
+                <Phone className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
+              <span className="font-extrabold text-xs sm:text-sm whitespace-nowrap" style={{ color: palette.colors.metricCard2.text }}>
                 Traffic Volume
               </span>
             </div>
-            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/70 text-[10px] sm:text-[11px] font-bold text-[#7C2D12] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
+            <span
+              style={{
+                backgroundColor: palette.colors.metricCard2.badgeBg,
+                color: palette.colors.metricCard2.badgeText,
+                borderColor: palette.colors.metricCard2.badgeBorder || "transparent",
+              }}
+              className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
+            >
               LIVE TRUNKS
             </span>
           </div>
 
-          <div>
-            <div className="flex items-baseline gap-2 pt-2">
-              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+          {/* Content */}
+          <div className="relative z-10 pt-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-[40px] sm:text-[46px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard2.text }}>
                 {totalCalls}
               </span>
-              <span className="text-xs text-black/65 font-medium">calls handled</span>
+              <span className="text-xs font-bold opacity-80">calls handled</span>
             </div>
 
-            <div className="flex items-center gap-3 mt-2 text-xs font-semibold text-[#1A1A1A]">
-              <span className="flex items-center gap-1">
-                <PhoneIncoming className="w-3 h-3 text-[#16856B]" /> {inboundCallsCount} Inbound
+            <div className="flex items-center gap-2.5 mt-2.5 text-xs font-bold">
+              <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                <PhoneIncoming className="w-3 h-3" /> {inboundCallsCount} In
               </span>
-              <span className="text-black/30">&bull;</span>
-              <span className="flex items-center gap-1">
-                <PhoneOutgoing className="w-3 h-3 text-[#1E3A8A]" /> {outboundCallsCount} Outbound
+              <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                <PhoneOutgoing className="w-3 h-3" /> {outboundCallsCount} Out
               </span>
             </div>
 
-            <div className="flex items-center justify-between pt-2 text-[11px]">
-              <span className="text-black/60 font-medium">{minutesUsedToday} min consumed</span>
-              <span className="px-2 py-0.5 rounded-full bg-white/80 font-bold text-[#16856B]">
+            <div className="flex items-center justify-between pt-2.5 text-[11px]">
+              <span className="opacity-80 font-bold">{minutesUsedToday} min consumed</span>
+              <span
+                style={{
+                  backgroundColor: palette.colors.metricCard2.badgeBg,
+                  color: palette.colors.metricCard2.badgeText,
+                }}
+                className="px-2 py-0.5 rounded-full font-black text-[10px] border border-white/20"
+              >
                 100% RESOLVED
               </span>
             </div>
           </div>
         </div>
 
-        {/* CARD 3: Soft Periwinkle Blue #A8C3F0 - AI Workforce */}
+        {/* CARD 3: AI Workforce */}
         <div
           onClick={() => router.push("/dashboard/agents")}
-          className="pastel-stat-card bg-[#A8C3F0] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+          style={{
+            backgroundColor: palette.colors.metricCard3.bg,
+            color: palette.colors.metricCard3.text,
+            borderColor: palette.colors.metricCard3.border,
+            boxShadow: palette.colors.metricCard3.shadow,
+          }}
+          className="relative overflow-hidden rounded-[26px] border-2 p-5 sm:p-6 flex flex-col justify-between min-h-[185px] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:brightness-[1.02] group select-none"
         >
-          <div className="flex items-center justify-between gap-2">
+          {/* Decorative geometric shapes */}
+          <div
+            className="absolute -right-8 -bottom-8 w-36 h-36 rounded-full pointer-events-none transition-transform duration-500 group-hover:scale-110"
+            style={{
+              backgroundColor: palette.colors.metricCard3.shapeFill,
+              border: `2px solid ${palette.colors.metricCard3.shapeStroke}`,
+            }}
+          />
+          <div
+            className="absolute right-10 -bottom-3 w-16 h-16 rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-125"
+            style={{ backgroundColor: palette.colors.metricCard3.shapeFill }}
+          />
+          <div
+            className="absolute right-3.5 top-3 w-8 h-8 rounded-xl rotate-12 pointer-events-none opacity-40 transition-transform duration-500 group-hover:rotate-45"
+            style={{ border: `1.5px solid ${palette.colors.metricCard3.shapeStroke}` }}
+          />
+
+          {/* Top Row */}
+          <div className="relative z-10 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0">
-                <Bot className="w-4 h-4 stroke-[2]" />
+              <div
+                style={{
+                  backgroundColor: palette.colors.metricCard3.iconBg,
+                  color: palette.colors.metricCard3.iconColor,
+                  borderColor: palette.colors.metricCard3.iconBorder || "rgba(255, 255, 255, 0.7)",
+                }}
+                className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md border-2 shrink-0 group-hover:scale-105 transition-transform"
+              >
+                <Bot className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
+              <span className="font-extrabold text-xs sm:text-sm whitespace-nowrap" style={{ color: palette.colors.metricCard3.text }}>
                 AI Workforce
               </span>
             </div>
-            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/80 text-[10px] sm:text-[11px] font-bold text-[#065F46] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
-              3 CHANNELS ONLINE
+            <span
+              style={{
+                backgroundColor: palette.colors.metricCard3.badgeBg,
+                color: palette.colors.metricCard3.badgeText,
+                borderColor: palette.colors.metricCard3.badgeBorder || "transparent",
+              }}
+              className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
+            >
+              3 ONLINE
             </span>
           </div>
 
-          <div>
-            <div className="flex items-baseline gap-2 pt-2">
-              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+          {/* Content */}
+          <div className="relative z-10 pt-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-[40px] sm:text-[46px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard3.text }}>
                 3
               </span>
-              <span className="text-xs text-black/65 font-medium">voice agents</span>
+              <span className="text-xs font-bold opacity-80">voice agents</span>
             </div>
 
-            <p className="text-[11px] font-semibold text-[#1A1A1A] mt-2 truncate">
+            <p className="text-[11px] font-bold mt-2 truncate opacity-90">
               Maya (Admissions) &bull; Priya &bull; Arjun
             </p>
 
-            <div className="flex items-center justify-between pt-2 text-[11px]">
-              <span className="text-black/60 font-medium">Hindi + English + Telugu</span>
+            <div className="flex items-center justify-between pt-2.5 text-[11px]">
+              <span className="opacity-80 font-semibold">Hindi + Telugu + English</span>
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   setCreateAgentOpen(true);
                 }}
-                className="font-bold text-[#1A1A1A] group-hover:underline cursor-pointer"
+                className="font-black group-hover:underline cursor-pointer"
               >
                 + Add Agent
               </button>
@@ -517,40 +656,79 @@ export default function OverviewPageView() {
           </div>
         </div>
 
-        {/* CARD 4: Soft Mint Green #C1F2D5 - Workspace Settings */}
+        {/* CARD 4: Workspace Settings */}
         <div
           onClick={() => router.push("/dashboard/settings")}
-          className="pastel-stat-card bg-[#C1F2D5] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+          style={{
+            backgroundColor: palette.colors.metricCard4.bg,
+            color: palette.colors.metricCard4.text,
+            borderColor: palette.colors.metricCard4.border,
+            boxShadow: palette.colors.metricCard4.shadow,
+          }}
+          className="relative overflow-hidden rounded-[26px] border-2 p-5 sm:p-6 flex flex-col justify-between min-h-[185px] cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:brightness-[1.02] group select-none"
         >
-          <div className="flex items-center justify-between gap-2">
+          {/* Decorative geometric shapes */}
+          <div
+            className="absolute -right-8 -bottom-8 w-36 h-36 rounded-full pointer-events-none transition-transform duration-500 group-hover:scale-110"
+            style={{
+              backgroundColor: palette.colors.metricCard4.shapeFill,
+              border: `2px solid ${palette.colors.metricCard4.shapeStroke}`,
+            }}
+          />
+          <div
+            className="absolute right-10 -bottom-3 w-16 h-16 rounded-full pointer-events-none transition-transform duration-700 group-hover:scale-125"
+            style={{ backgroundColor: palette.colors.metricCard4.shapeFill }}
+          />
+          <div
+            className="absolute right-3.5 top-3 w-8 h-8 rounded-xl rotate-12 pointer-events-none opacity-40 transition-transform duration-500 group-hover:rotate-45"
+            style={{ border: `1.5px solid ${palette.colors.metricCard4.shapeStroke}` }}
+          />
+
+          {/* Top Row */}
+          <div className="relative z-10 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0 group-hover:rotate-45 transition-transform duration-300">
-                <Settings className="w-4 h-4 stroke-[2]" />
+              <div
+                style={{
+                  backgroundColor: palette.colors.metricCard4.iconBg,
+                  color: palette.colors.metricCard4.iconColor,
+                  borderColor: palette.colors.metricCard4.iconBorder || "rgba(255, 255, 255, 0.7)",
+                }}
+                className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-md border-2 shrink-0 group-hover:rotate-45 transition-transform duration-300"
+              >
+                <Settings className="w-5 h-5 stroke-[2.2]" />
               </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
-                Workspace Settings
+              <span className="font-extrabold text-xs sm:text-[13px] tracking-tight whitespace-nowrap" style={{ color: palette.colors.metricCard4.text }}>
+                Workspace
               </span>
             </div>
-            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/80 text-[10px] sm:text-[11px] font-bold text-[#065F46] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
+            <span
+              style={{
+                backgroundColor: palette.colors.metricCard4.badgeBg,
+                color: palette.colors.metricCard4.badgeText,
+                borderColor: palette.colors.metricCard4.badgeBorder || "transparent",
+              }}
+              className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
+            >
               CONFIGURED
             </span>
           </div>
 
-          <div>
-            <div className="flex items-baseline gap-2 pt-2">
-              <span className="text-[34px] sm:text-[38px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+          {/* Content */}
+          <div className="relative z-10 pt-2">
+            <div className="flex items-baseline gap-2">
+              <span className="text-[34px] sm:text-[40px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard4.text }}>
                 Settings
               </span>
             </div>
 
-            <p className="text-[11px] font-semibold text-[#1A1A1A] mt-2 truncate">
+            <p className="text-[11px] font-bold mt-2 truncate opacity-90">
               SIP Trunks &bull; API Keys &bull; Webhooks
             </p>
 
-            <div className="flex items-center justify-between pt-2 text-[11px]">
-              <span className="text-black/60 font-medium">Telecom & Governance</span>
-              <span className="font-bold text-[#1A1A1A] flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                Configure <ArrowRight className="w-3 h-3 stroke-[2.5]" />
+            <div className="flex items-center justify-between pt-2.5 text-[11px]">
+              <span className="opacity-80 font-semibold">Telecom &amp; Governance</span>
+              <span className="font-black flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                Configure <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
               </span>
             </div>
           </div>
@@ -593,12 +771,14 @@ export default function OverviewPageView() {
       {/* ========================================================================= */}
       {/* 5. REAL-TIME TELEPHONY CALL ACTIVITY & EXTRACTED OUTCOMES LEDGER          */}
       {/* ========================================================================= */}
-      <div className="bg-white rounded-[28px] border border-black/[0.06] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] space-y-4">
+      <div className="relative overflow-hidden bg-white rounded-[28px] border-2 border-black/[0.08] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] space-y-4">
+
+
         {/* Header & Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#16856B]" />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: palette.colors.success }} />
               <h3 className="text-base font-bold text-[#1A1A1A] tracking-tight">
                 Real-Time Telephony Call Activity &amp; Extracted Outcomes Ledger
               </h3>
@@ -611,24 +791,30 @@ export default function OverviewPageView() {
           {/* Filter and Search controls */}
           <div className="flex items-center gap-2 flex-wrap">
             {/* Search Input */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-xs">
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-black/[0.08] text-xs"
+              style={{ backgroundColor: palette.colors.surfaceAlt }}
+            >
               <Search className="w-3.5 h-3.5 text-black/40" />
               <input
                 type="text"
                 placeholder="Filter caller, number, outcome..."
                 value={searchCallQuery}
                 onChange={(e) => setSearchCallQuery(e.target.value)}
-                className="bg-transparent outline-none text-xs text-[#1A1A1A] placeholder:text-black/40 w-36 sm:w-48"
+                className="bg-transparent outline-none text-xs text-[#1A1A1A] placeholder:text-black/40 w-48 sm:w-72 md:w-80 font-medium"
               />
             </div>
 
             {/* Direction Filter Pills */}
-            <div className="flex bg-[#FBF7ED] border border-black/[0.06] rounded-full p-1 text-xs font-semibold">
+            <div
+              className="flex border-2 border-black/[0.08] rounded-full p-1 text-xs font-bold"
+              style={{ backgroundColor: palette.colors.surfaceAlt }}
+            >
               <button
                 onClick={() => setCallFilter("all")}
                 className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   callFilter === "all"
-                    ? "bg-[#111111] text-white shadow-2xs"
+                    ? "bg-[#111111] text-white shadow-xs"
                     : "text-black/60 hover:text-black"
                 }`}
               >
@@ -638,7 +824,7 @@ export default function OverviewPageView() {
                 onClick={() => setCallFilter("inbound")}
                 className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   callFilter === "inbound"
-                    ? "bg-[#111111] text-white shadow-2xs"
+                    ? "bg-[#111111] text-white shadow-xs"
                     : "text-black/60 hover:text-black"
                 }`}
               >
@@ -648,7 +834,7 @@ export default function OverviewPageView() {
                 onClick={() => setCallFilter("outbound")}
                 className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
                   callFilter === "outbound"
-                    ? "bg-[#111111] text-white shadow-2xs"
+                    ? "bg-[#111111] text-white shadow-xs"
                     : "text-black/60 hover:text-black"
                 }`}
               >
@@ -687,14 +873,17 @@ export default function OverviewPageView() {
                     <tr
                       key={call.id}
                       onClick={() => openCallInDrawer(call)}
-                      className={`hover:bg-[#FAF7F0] transition-colors cursor-pointer ${
-                        isHighlighted ? "bg-[#FAF3E4]" : ""
+                      className={`hover:bg-black/[0.02] transition-colors cursor-pointer ${
+                        isHighlighted ? "bg-black/[0.04]" : ""
                       }`}
                     >
                       {/* Caller & Number */}
                       <td className="py-3 px-3">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-full bg-[#FAF3E4] border border-black/[0.06] flex items-center justify-center font-bold text-[11px] text-[#1A1A1A]">
+                          <div
+                            className="w-7 h-7 rounded-full border border-black/[0.08] flex items-center justify-center font-bold text-[11px] text-[#1A1A1A] shadow-2xs"
+                            style={{ backgroundColor: palette.colors.surfaceAlt }}
+                          >
                             {call.callerName.charAt(0)}
                           </div>
                           <div>
@@ -713,11 +902,25 @@ export default function OverviewPageView() {
                       {/* Direction Badge */}
                       <td className="py-3 px-3">
                         {call.direction === "inbound" ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#E8F5EF] text-[#16856B]">
+                          <span
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-2xs border"
+                            style={{
+                              backgroundColor: palette.colors.successBg,
+                              color: palette.colors.successText,
+                              borderColor: `${palette.colors.success}35`,
+                            }}
+                          >
                             <PhoneIncoming className="w-3 h-3" /> INBOUND
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#BCD0F5] text-[#1E3A8A]">
+                          <span
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-2xs border"
+                            style={{
+                              backgroundColor: palette.colors.metricCard4.bg,
+                              color: palette.colors.metricCard4.text,
+                              borderColor: `${palette.colors.metricCard4.border}45`,
+                            }}
+                          >
                             <PhoneOutgoing className="w-3 h-3" /> OUTBOUND
                           </span>
                         )}
