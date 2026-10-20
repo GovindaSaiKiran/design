@@ -31,6 +31,7 @@ import {
   ArrowUpDown,
   Headphones,
   Flame,
+  Settings,
 } from "lucide-react";
 import TestCallModal from "../modals/TestCallModal";
 import TopUpCreditsModal from "../modals/TopUpCreditsModal";
@@ -386,16 +387,16 @@ export default function OverviewPageView() {
           onClick={() => setTopUpOpen(true)}
           className="pastel-stat-card bg-[#C9A7F5] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0">
                 <Clock className="w-4 h-4 stroke-[2]" />
               </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
                 Minutes Quota
               </span>
             </div>
-            <span className="px-2 py-0.5 rounded-full bg-white/70 text-[11px] font-bold text-[#3B0764]">
+            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/70 text-[10px] sm:text-[11px] font-bold text-[#3B0764] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
               100m ALLOCATED
             </span>
           </div>
@@ -428,16 +429,16 @@ export default function OverviewPageView() {
           onClick={() => router.push("/dashboard/calls")}
           className="pastel-stat-card bg-[#FFA98B] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0">
                 <Phone className="w-4 h-4 stroke-[2]" />
               </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
                 Traffic Volume
               </span>
             </div>
-            <span className="px-2 py-0.5 rounded-full bg-white/70 text-[11px] font-bold text-[#7C2D12]">
+            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/70 text-[10px] sm:text-[11px] font-bold text-[#7C2D12] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
               LIVE TRUNKS
             </span>
           </div>
@@ -469,61 +470,21 @@ export default function OverviewPageView() {
           </div>
         </div>
 
-        {/* CARD 3: Soft Periwinkle Blue #A8C3F0 - Turnaround Latency */}
-        <div
-          onClick={() => router.push("/dashboard/analytics")}
-          className="pastel-stat-card bg-[#A8C3F0] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
-                <Zap className="w-4 h-4 stroke-[2] fill-current" />
-              </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
-                Turnaround Latency
-              </span>
-            </div>
-            <span className="px-2 py-0.5 rounded-full bg-white/70 text-[11px] font-bold text-[#1E3A8A]">
-              &lt;200MS SLA
-            </span>
-          </div>
-
-          <div>
-            <div className="flex items-baseline gap-2 pt-2">
-              <span className="text-[40px] sm:text-[44px] font-bold tracking-tight text-[#1A1A1A] leading-none">
-                {avgLatency}
-              </span>
-              <span className="text-xs text-black/65 font-medium">ms turnaround</span>
-            </div>
-
-            <p className="text-[11px] text-black/65 mt-2 font-medium">
-              STT: 42ms &bull; AI: 68ms &bull; TTS: 26ms
-            </p>
-
-            <div className="flex items-center justify-between pt-2 text-[11px]">
-              <span className="font-bold text-[#16856B] flex items-center gap-1">
-                <Check className="w-3 h-3 stroke-[2.5]" /> 99.99% Carrier SLA
-              </span>
-              <span className="text-black/55 font-medium">Opus HD 16kHz</span>
-            </div>
-          </div>
-        </div>
-
-        {/* CARD 4: Soft Mint Green #C1F2D5 - Active Voice Agents */}
+        {/* CARD 3: Soft Periwinkle Blue #A8C3F0 - AI Workforce */}
         <div
           onClick={() => router.push("/dashboard/agents")}
-          className="pastel-stat-card bg-[#C1F2D5] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+          className="pastel-stat-card bg-[#A8C3F0] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0">
                 <Bot className="w-4 h-4 stroke-[2]" />
               </div>
-              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A]">
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
                 AI Workforce
               </span>
             </div>
-            <span className="px-2 py-0.5 rounded-full bg-white/80 text-[11px] font-bold text-[#065F46]">
+            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/80 text-[10px] sm:text-[11px] font-bold text-[#065F46] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
               3 CHANNELS ONLINE
             </span>
           </div>
@@ -552,6 +513,45 @@ export default function OverviewPageView() {
               >
                 + Add Agent
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* CARD 4: Soft Mint Green #C1F2D5 - Workspace Settings */}
+        <div
+          onClick={() => router.push("/dashboard/settings")}
+          className="pastel-stat-card bg-[#C1F2D5] flex flex-col justify-between min-h-[175px] cursor-pointer hover:shadow-md transition-shadow group"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-white text-[#1A1A1A] flex items-center justify-center shadow-2xs shrink-0 group-hover:rotate-45 transition-transform duration-300">
+                <Settings className="w-4 h-4 stroke-[2]" />
+              </div>
+              <span className="font-semibold text-xs sm:text-[13px] text-[#1A1A1A] truncate">
+                Workspace Settings
+              </span>
+            </div>
+            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/80 text-[10px] sm:text-[11px] font-bold text-[#065F46] uppercase tracking-wide leading-none flex items-center text-center whitespace-nowrap">
+              CONFIGURED
+            </span>
+          </div>
+
+          <div>
+            <div className="flex items-baseline gap-2 pt-2">
+              <span className="text-[34px] sm:text-[38px] font-bold tracking-tight text-[#1A1A1A] leading-none">
+                Settings
+              </span>
+            </div>
+
+            <p className="text-[11px] font-semibold text-[#1A1A1A] mt-2 truncate">
+              SIP Trunks &bull; API Keys &bull; Webhooks
+            </p>
+
+            <div className="flex items-center justify-between pt-2 text-[11px]">
+              <span className="text-black/60 font-medium">Telecom & Governance</span>
+              <span className="font-bold text-[#1A1A1A] flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                Configure <ArrowRight className="w-3 h-3 stroke-[2.5]" />
+              </span>
             </div>
           </div>
         </div>
