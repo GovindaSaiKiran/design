@@ -9,9 +9,16 @@ import {
   Check,
   Activity,
   RotateCcw,
+  Sparkles,
+  Sun,
+  Moon,
+  Sunrise,
+  Sunset,
+  Radio,
 } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
 import { usePalette } from "@/context/PaletteContext";
+import { Blob, Shape, Sparkle } from "@/components/ui/Shapes";
 
 export interface HourlyActivity {
   hour: number;
@@ -277,6 +284,49 @@ export default function TelephonyActivityHeatmap({
   const [hoveredDay, setHoveredDay] = useState<DayActivity | null>(null);
   const [hoveredHour, setHoveredHour] = useState<number | null>(null);
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
+  const [hourlyViewMode, setHourlyViewMode] = useState<"all" | "inbound" | "outbound">("all");
+
+  // Calculate metrics for hourly concurrency
+  const hourlyMetrics = useMemo(() => {
+    const hourly = selectedDay.hourly;
+    let peak = hourly[0];
+    let inPeak = hourly[0];
+    let outPeak = hourly[0];
+
+    for (const h of hourly) {
+      if (h.total > peak.total) peak = h;
+      if (h.inbound > inPeak.inbound) inPeak = h;
+      if (h.outbound > outPeak.outbound) outPeak = h;
+    }
+
+    return { peak, inPeak, outPeak };
+  }, [selectedDay]);
+
+  const amHours = useMemo(() => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], []);
+  const pmHours = useMemo(() => [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], []);
+
+  const amLabels = useMemo(() => ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a"], []);
+  const pmLabels = useMemo(() => ["12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"], []);
+
+  const amTotals = useMemo(() => {
+    let inbound = 0;
+    let outbound = 0;
+    for (const h of amHours) {
+      inbound += selectedDay.hourly[h].inbound;
+      outbound += selectedDay.hourly[h].outbound;
+    }
+    return { inbound, outbound, total: inbound + outbound };
+  }, [selectedDay, amHours]);
+
+  const pmTotals = useMemo(() => {
+    let inbound = 0;
+    let outbound = 0;
+    for (const h of pmHours) {
+      inbound += selectedDay.hourly[h].inbound;
+      outbound += selectedDay.hourly[h].outbound;
+    }
+    return { inbound, outbound, total: inbound + outbound };
+  }, [selectedDay, pmHours]);
 
   const handleDayClick = (day: DayActivity) => {
     if (day.isFuture) return;
@@ -363,7 +413,7 @@ export default function TelephonyActivityHeatmap({
       {/* 1. LEFT CARD: 6-MONTH DAILY TELEPHONY MATRIX                              */}
       {/* 31 columns stretch edge-to-edge naturally with NO empty space on 2 sides!  */}
       {/* ========================================================================= */}
-      <div className="lg:col-span-7 xl:col-span-7 bg-[#FAFBF9] text-[#1A1A1A] rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-black/[0.06] shadow-sm flex flex-col justify-between space-y-3.5">
+      <div id="telephony-matrix" className="lg:col-span-7 xl:col-span-7 bg-[#FAFBF9] text-[#1A1A1A] rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-black/[0.06] shadow-sm flex flex-col justify-between space-y-3.5 scroll-mt-24">
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
           <div className="flex items-center gap-2.5">
@@ -619,13 +669,13 @@ export default function TelephonyActivityHeatmap({
 
       {/* ========================================================================= */}
       {/* 2. RIGHT CARD: HOURLY CONCURRENCY (24h of Selected Day)                   */}
-      {/* Real-time sync with clicked day on left                                    */}
+      {/* Direct AM/PM 24-hour matrix - Simple, clean, intuitive                   */}
       {/* ========================================================================= */}
-      <div className="lg:col-span-5 xl:col-span-5 bg-[#FAFBF9] text-[#1A1A1A] rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-black/[0.06] shadow-sm flex flex-col justify-between space-y-3.5">
+      <div id="hourly-concurrency" className="lg:col-span-5 xl:col-span-5 bg-[#FAFBF9] text-[#1A1A1A] rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-black/[0.06] shadow-sm flex flex-col justify-between space-y-3 scroll-mt-24">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
+        <div className="flex items-center justify-between pb-2.5 border-b border-black/[0.06]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#FAF3E4] border border-[#FFA98B]/30 flex items-center justify-center text-[#1A1A1A] shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-[#FAF0D7] border border-[#FFA98B]/40 flex items-center justify-center text-[#D9532F] shrink-0">
               <Clock className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div>
@@ -633,214 +683,352 @@ export default function TelephonyActivityHeatmap({
                 <h3 className="font-bold text-sm sm:text-base tracking-tight text-[#1A1A1A]">
                   Hourly Concurrency
                 </h3>
-                <span className="text-[10px] font-semibold text-black/60 bg-black/[0.05] px-2 py-0.5 rounded-full">
-                  1 Dot = 1h
+                <span className="text-[10px] font-bold text-[#16856B] bg-[#E8F5EF] px-2 py-0.5 rounded-full border border-[#16856B]/25">
+                  1 Cell = 1 Hour
                 </span>
               </div>
-              <p className="text-[11px] text-black/55 mt-0.5">
+              <p className="text-[11px] text-black/55 mt-0.5 font-medium">
                 {selectedDay.fullDateString}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#E8F5EF] border border-[#16856B]/30 text-[#16856B] text-xs font-bold shadow-2xs">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-black/[0.08] text-[#1A1A1A] text-xs font-black shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-[#16856B] animate-pulse" />
             <span>{selectedDay.total} Calls</span>
           </div>
         </div>
 
-        {/* 2 Mini Side-by-Side Concurrency Panels: Inbound (Rose) & Outbound (Purple) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
-          {/* INBOUND MINI CARD */}
-          <div className="bg-[#FBF4F5] p-2.5 rounded-xl sm:rounded-2xl border border-rose-200/40 space-y-2 flex flex-col justify-between">
-            <div className="flex items-center justify-between pb-1.5 border-b border-rose-200/40">
-              <div className="flex items-center gap-1.5">
-                <PhoneIncoming className="w-3.5 h-3.5 text-rose-600 stroke-[2.2]" />
-                <span className="font-bold text-xs text-rose-900">Inbound</span>
-              </div>
-              <span className="text-[10.5px] font-bold text-rose-700 bg-white/80 px-2 py-0.5 rounded-full border border-rose-200/60">
-                {selectedDay.inbound}
+        {/* 24-HOUR CLEAN MATRIX CANVAS (AM 12h & PM 12h) */}
+        <div className="bg-[#F2F4F2] p-3 rounded-xl border border-black/[0.04] w-full space-y-3.5">
+          {/* 1. AM HOURS (12 AM to 11 AM) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[11px] font-bold text-black/75 px-0.5">
+              <span className="px-2 py-0.5 rounded-md bg-white border border-black/[0.08] text-[10px] sm:text-[10.5px] font-extrabold text-[#1A1A1A] shadow-2xs flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                AM (12 AM – 11 AM)
+              </span>
+              <span className="text-[10.5px] font-medium text-black/55">
+                {amTotals.total} Calls <span className="text-black/30">&bull;</span> <span className="text-rose-700 font-bold">{amTotals.inbound} In</span> <span className="text-black/30">&bull;</span> <span className="text-purple-700 font-bold">{amTotals.outbound} Out</span>
               </span>
             </div>
 
-            {/* 24 Hours in 6 Cols x 4 Rows */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-                gap: "4px",
-              }}
-              className="w-full"
-            >
-              {selectedDay.hourly.map((slot) => {
-                const isHovered = activeHourIndex === slot.hour;
-                const isQuiet = slot.inbound === 0;
+            <div className="w-full">
+              {/* Hour Headers */}
+              <div className="flex items-center w-full">
+                <div className="w-16 sm:w-18 shrink-0" />
+                <div className="grid grid-cols-12 gap-1 flex-1">
+                  {amLabels.map((lbl, idx) => {
+                    const h = amHours[idx];
+                    const isColActive = activeHourIndex === h;
+                    const hasActivity = selectedDay.hourly[h].total > 0;
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => handleHourClick(h)}
+                        onMouseEnter={() => setHoveredHour(h)}
+                        onMouseLeave={() => setHoveredHour(null)}
+                        className={`text-center text-[10px] cursor-pointer transition-colors select-none ${
+                          isColActive
+                            ? "font-black text-[#16856B]"
+                            : hasActivity
+                            ? "font-extrabold text-[#1A1A1A]"
+                            : "font-semibold text-black/45 hover:text-black/70"
+                        }`}
+                      >
+                        {lbl}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                if (isQuiet) {
-                  return (
-                    <div
-                      key={`in_${slot.hour}`}
-                      onClick={() => handleHourClick(slot.hour)}
-                      onMouseEnter={() => setHoveredHour(slot.hour)}
-                      onMouseLeave={() => setHoveredHour(null)}
-                      title={`${slot.formattedHour}: 0 Inbound`}
-                      className={`h-8 rounded-[5px] p-0.5 flex flex-col justify-between items-center cursor-pointer transition-all ${
-                        isHovered
-                          ? "bg-rose-100 border border-rose-300 ring-1 ring-rose-400 scale-105 z-10"
-                          : "bg-white/60 hover:bg-white border border-rose-100/60"
-                      }`}
-                    >
-                      <span className="text-[7.5px] font-medium text-black/35 leading-none">
-                        {String(slot.hour).padStart(2, "0")}h
-                      </span>
-                      <span className="w-1 h-1 rounded-full bg-rose-300/70" />
-                    </div>
-                  );
-                }
+              {/* Inbound Row */}
+              <div className="flex items-center w-full mt-1">
+                <div className="w-16 sm:w-18 shrink-0 flex items-center select-none">
+                  <span className="px-1.5 py-0.5 rounded bg-rose-100/60 border border-rose-200/60 text-[9.5px] sm:text-[10px] font-extrabold text-rose-800 flex items-center gap-1">
+                    <PhoneIncoming className="w-2.5 h-2.5 text-rose-600 stroke-[2.5]" />
+                    Inbound
+                  </span>
+                </div>
+                <div className="grid grid-cols-12 gap-1 flex-1">
+                  {amHours.map((h) => {
+                    const slot = selectedDay.hourly[h];
+                    const count = slot.inbound;
+                    const isHovered = activeHourIndex === h;
+                    const isSelected = selectedHour === h;
 
-                const tileClass = getInboundHourColor(slot.inbound);
+                    return (
+                      <div
+                        key={h}
+                        onClick={() => handleHourClick(h)}
+                        onMouseEnter={() => setHoveredHour(h)}
+                        onMouseLeave={() => setHoveredHour(null)}
+                        title={`${slot.formattedHour}: ${count} Inbound Calls`}
+                        className={`h-7.5 sm:h-8 w-full rounded-[5px] flex items-center justify-center cursor-pointer transition-all duration-150 text-[11px] font-bold ${
+                          count === 0
+                            ? isHovered || isSelected
+                              ? "bg-rose-100 ring-2 ring-rose-500 scale-105 z-10"
+                              : "bg-white/70 hover:bg-white border border-black/[0.04] text-black/20 hover:scale-105"
+                            : isHovered || isSelected
+                            ? `${getInboundHourColor(count)} ring-2 ring-rose-700 ring-offset-1 scale-105 z-20 shadow-xs`
+                            : `${getInboundHourColor(count)} hover:scale-105 shadow-2xs`
+                        }`}
+                      >
+                        {count > 0 ? (
+                          count
+                        ) : (
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-400/35" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                return (
-                  <div
-                    key={`in_${slot.hour}`}
-                    onClick={() => handleHourClick(slot.hour)}
-                    onMouseEnter={() => setHoveredHour(slot.hour)}
-                    onMouseLeave={() => setHoveredHour(null)}
-                    title={`${slot.formattedHour}: ${slot.inbound} Inbound Calls`}
-                    className={`h-8 rounded-[5px] p-0.5 flex flex-col justify-between items-center cursor-pointer transition-all relative ${tileClass} ${
-                      isHovered
-                        ? "ring-2 ring-rose-600 scale-105 z-20 shadow-xs"
-                        : "hover:scale-105"
-                    }`}
-                  >
-                    <span className="text-[7.5px] font-bold leading-none opacity-85">
-                      {String(slot.hour).padStart(2, "0")}h
-                    </span>
-                    <span className="text-[10.5px] font-black leading-none">
-                      {slot.inbound}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+              {/* Outbound Row */}
+              <div className="flex items-center w-full mt-1">
+                <div className="w-16 sm:w-18 shrink-0 flex items-center select-none">
+                  <span className="px-1.5 py-0.5 rounded bg-purple-100/60 border border-purple-200/60 text-[9.5px] sm:text-[10px] font-extrabold text-purple-800 flex items-center gap-1">
+                    <PhoneOutgoing className="w-2.5 h-2.5 text-purple-600 stroke-[2.5]" />
+                    Outbound
+                  </span>
+                </div>
+                <div className="grid grid-cols-12 gap-1 flex-1">
+                  {amHours.map((h) => {
+                    const slot = selectedDay.hourly[h];
+                    const count = slot.outbound;
+                    const isHovered = activeHourIndex === h;
+                    const isSelected = selectedHour === h;
 
-            {/* Time labels */}
-            <div className="flex justify-between text-[8px] font-semibold text-black/40 pt-0.5 px-0.5">
-              <span>00h</span>
-              <span>06h</span>
-              <span>12h</span>
-              <span>18h</span>
+                    return (
+                      <div
+                        key={h}
+                        onClick={() => handleHourClick(h)}
+                        onMouseEnter={() => setHoveredHour(h)}
+                        onMouseLeave={() => setHoveredHour(null)}
+                        title={`${slot.formattedHour}: ${count} Outbound Calls`}
+                        className={`h-7.5 sm:h-8 w-full rounded-[5px] flex items-center justify-center cursor-pointer transition-all duration-150 text-[11px] font-bold ${
+                          count === 0
+                            ? isHovered || isSelected
+                              ? "bg-purple-100 ring-2 ring-purple-500 scale-105 z-10"
+                              : "bg-white/70 hover:bg-white border border-black/[0.04] text-black/20 hover:scale-105"
+                            : isHovered || isSelected
+                            ? `${getOutboundHourColor(count)} ring-2 ring-purple-700 ring-offset-1 scale-105 z-20 shadow-xs`
+                            : `${getOutboundHourColor(count)} hover:scale-105 shadow-2xs`
+                        }`}
+                      >
+                        {count > 0 ? (
+                          count
+                        ) : (
+                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400/35" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* OUTBOUND MINI CARD */}
-          <div className="bg-[#F8F4FA] p-2.5 rounded-xl sm:rounded-2xl border border-purple-200/40 space-y-2 flex flex-col justify-between">
-            <div className="flex items-center justify-between pb-1.5 border-b border-purple-200/40">
-              <div className="flex items-center gap-1.5">
-                <PhoneOutgoing className="w-3.5 h-3.5 text-purple-600 stroke-[2.2]" />
-                <span className="font-bold text-xs text-purple-900">Outbound</span>
-              </div>
-              <span className="text-[10.5px] font-bold text-purple-700 bg-white/80 px-2 py-0.5 rounded-full border border-purple-200/60">
-                {selectedDay.outbound}
+          {/* Clean Thin Divider */}
+          <div className="w-full h-[1px] bg-black/[0.06]" />
+
+          {/* 2. PM HOURS (12 PM to 11 PM) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[11px] font-bold text-black/75 px-0.5">
+              <span className="px-2 py-0.5 rounded-md bg-white border border-black/[0.08] text-[10px] sm:text-[10.5px] font-extrabold text-[#1A1A1A] shadow-2xs flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                PM (12 PM – 11 PM)
+              </span>
+              <span className="text-[10.5px] font-medium text-black/55">
+                {pmTotals.total} Calls <span className="text-black/30">&bull;</span> <span className="text-rose-700 font-bold">{pmTotals.inbound} In</span> <span className="text-black/30">&bull;</span> <span className="text-purple-700 font-bold">{pmTotals.outbound} Out</span>
               </span>
             </div>
 
-            {/* 24 Hours in 6 Cols x 4 Rows */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-                gap: "4px",
-              }}
-              className="w-full"
-            >
-              {selectedDay.hourly.map((slot) => {
-                const isHovered = activeHourIndex === slot.hour;
-                const isQuiet = slot.outbound === 0;
+            <div className="w-full">
+              {/* Hour Headers */}
+              <div className="flex items-center w-full">
+                <div className="w-16 sm:w-18 shrink-0" />
+                <div className="grid grid-cols-12 gap-1 flex-1">
+                  {pmLabels.map((lbl, idx) => {
+                    const h = pmHours[idx];
+                    const isColActive = activeHourIndex === h;
+                    const hasActivity = selectedDay.hourly[h].total > 0;
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => handleHourClick(h)}
+                        onMouseEnter={() => setHoveredHour(h)}
+                        onMouseLeave={() => setHoveredHour(null)}
+                        className={`text-center text-[10px] cursor-pointer transition-colors select-none ${
+                          isColActive
+                            ? "font-black text-[#16856B]"
+                            : hasActivity
+                            ? "font-extrabold text-[#1A1A1A]"
+                            : "font-semibold text-black/45 hover:text-black/70"
+                        }`}
+                      >
+                        {lbl}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                if (isQuiet) {
-                  return (
-                    <div
-                      key={`out_${slot.hour}`}
-                      onClick={() => handleHourClick(slot.hour)}
-                      onMouseEnter={() => setHoveredHour(slot.hour)}
-                      onMouseLeave={() => setHoveredHour(null)}
-                      title={`${slot.formattedHour}: 0 Outbound`}
-                      className={`h-8 rounded-[5px] p-0.5 flex flex-col justify-between items-center cursor-pointer transition-all ${
-                        isHovered
-                          ? "bg-purple-100 border border-purple-300 ring-1 ring-purple-400 scale-105 z-10"
-                          : "bg-white/60 hover:bg-white border border-purple-100/60"
-                      }`}
-                    >
-                      <span className="text-[7.5px] font-medium text-black/35 leading-none">
-                        {String(slot.hour).padStart(2, "0")}h
-                      </span>
-                      <span className="w-1 h-1 rounded-full bg-purple-300/70" />
-                    </div>
-                  );
-                }
+              {/* Inbound Row */}
+              <div className="flex items-center w-full mt-1">
+                <div className="w-16 sm:w-18 shrink-0 flex items-center select-none">
+                  <span className="px-1.5 py-0.5 rounded bg-rose-100/60 border border-rose-200/60 text-[9.5px] sm:text-[10px] font-extrabold text-rose-800 flex items-center gap-1">
+                    <PhoneIncoming className="w-2.5 h-2.5 text-rose-600 stroke-[2.5]" />
+                    Inbound
+                  </span>
+                </div>
+                <div className="grid grid-cols-12 gap-1 flex-1">
+                  {pmHours.map((h) => {
+                    const slot = selectedDay.hourly[h];
+                    const count = slot.inbound;
+                    const isHovered = activeHourIndex === h;
+                    const isSelected = selectedHour === h;
 
-                const tileClass = getOutboundHourColor(slot.outbound);
+                    return (
+                      <div
+                        key={h}
+                        onClick={() => handleHourClick(h)}
+                        onMouseEnter={() => setHoveredHour(h)}
+                        onMouseLeave={() => setHoveredHour(null)}
+                        title={`${slot.formattedHour}: ${count} Inbound Calls`}
+                        className={`h-7.5 sm:h-8 w-full rounded-[5px] flex items-center justify-center cursor-pointer transition-all duration-150 text-[11px] font-bold ${
+                          count === 0
+                            ? isHovered || isSelected
+                              ? "bg-rose-100 ring-2 ring-rose-500 scale-105 z-10"
+                              : "bg-white/70 hover:bg-white border border-black/[0.04] text-black/20 hover:scale-105"
+                            : isHovered || isSelected
+                            ? `${getInboundHourColor(count)} ring-2 ring-rose-700 ring-offset-1 scale-105 z-20 shadow-xs`
+                            : `${getInboundHourColor(count)} hover:scale-105 shadow-2xs`
+                        }`}
+                      >
+                        {count > 0 ? (
+                          count
+                        ) : (
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-400/35" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                return (
-                  <div
-                    key={`out_${slot.hour}`}
-                    onClick={() => handleHourClick(slot.hour)}
-                    onMouseEnter={() => setHoveredHour(slot.hour)}
-                    onMouseLeave={() => setHoveredHour(null)}
-                    title={`${slot.formattedHour}: ${slot.outbound} Outbound Calls`}
-                    className={`h-8 rounded-[5px] p-0.5 flex flex-col justify-between items-center cursor-pointer transition-all relative ${tileClass} ${
-                      isHovered
-                        ? "ring-2 ring-purple-600 scale-105 z-20 shadow-xs"
-                        : "hover:scale-105"
-                    }`}
-                  >
-                    <span className="text-[7.5px] font-bold leading-none opacity-85">
-                      {String(slot.hour).padStart(2, "0")}h
-                    </span>
-                    <span className="text-[10.5px] font-black leading-none">
-                      {slot.outbound}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+              {/* Outbound Row */}
+              <div className="flex items-center w-full mt-1">
+                <div className="w-16 sm:w-18 shrink-0 flex items-center select-none">
+                  <span className="px-1.5 py-0.5 rounded bg-purple-100/60 border border-purple-200/60 text-[9.5px] sm:text-[10px] font-extrabold text-purple-800 flex items-center gap-1">
+                    <PhoneOutgoing className="w-2.5 h-2.5 text-purple-600 stroke-[2.5]" />
+                    Outbound
+                  </span>
+                </div>
+                <div className="grid grid-cols-12 gap-1 flex-1">
+                  {pmHours.map((h) => {
+                    const slot = selectedDay.hourly[h];
+                    const count = slot.outbound;
+                    const isHovered = activeHourIndex === h;
+                    const isSelected = selectedHour === h;
 
-            {/* Time labels */}
-            <div className="flex justify-between text-[8px] font-semibold text-black/40 pt-0.5 px-0.5">
-              <span>00h</span>
-              <span>06h</span>
-              <span>12h</span>
-              <span>18h</span>
+                    return (
+                      <div
+                        key={h}
+                        onClick={() => handleHourClick(h)}
+                        onMouseEnter={() => setHoveredHour(h)}
+                        onMouseLeave={() => setHoveredHour(null)}
+                        title={`${slot.formattedHour}: ${count} Outbound Calls`}
+                        className={`h-7.5 sm:h-8 w-full rounded-[5px] flex items-center justify-center cursor-pointer transition-all duration-150 text-[11px] font-bold ${
+                          count === 0
+                            ? isHovered || isSelected
+                              ? "bg-purple-100 ring-2 ring-purple-500 scale-105 z-10"
+                              : "bg-white/70 hover:bg-white border border-black/[0.04] text-black/20 hover:scale-105"
+                            : isHovered || isSelected
+                            ? `${getOutboundHourColor(count)} ring-2 ring-purple-700 ring-offset-1 scale-105 z-20 shadow-xs`
+                            : `${getOutboundHourColor(count)} hover:scale-105 shadow-2xs`
+                        }`}
+                      >
+                        {count > 0 ? (
+                          count
+                        ) : (
+                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400/35" />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Concurrency Telemetry Bar */}
-        <div className="flex items-center justify-between pt-1 border-t border-black/[0.06] text-[11px] font-semibold text-black/60 w-full">
+        <div className="pt-2 border-t border-black/[0.06] w-full">
           {activeHourSlot ? (
-            <div className="flex items-center justify-between w-full">
-              <span className="text-[#1A1A1A]">
-                <span className="font-bold">{activeHourSlot.label}:</span>{" "}
-                <span className="text-[#16856B] font-bold">{activeHourSlot.total} concurrent</span>{" "}
-                <span className="text-black/45 font-normal">
-                  ({activeHourSlot.inbound} In &bull; {activeHourSlot.outbound} Out)
-                </span>
-              </span>
+            <div className="bg-[#F2F4F2] rounded-xl p-2.5 border border-black/[0.05] flex items-center justify-between shadow-2xs">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 border border-emerald-300/60 flex items-center justify-center text-emerald-800 shrink-0 font-extrabold text-xs">
+                  {activeHourSlot.formattedHour}
+                </div>
+                <div className="leading-tight">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#1A1A1A]">
+                    <span>{activeHourSlot.formattedHour} Telemetry</span>
+                    <span className="text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.2 rounded-md text-[10px]">
+                      {activeHourSlot.total} Total Calls
+                    </span>
+                  </div>
+                  <div className="text-[10.5px] text-black/60 flex items-center gap-2 mt-0.5">
+                    <span className="text-rose-700 font-semibold flex items-center gap-1">
+                      <PhoneIncoming className="w-3 h-3 text-rose-500" />
+                      {activeHourSlot.inbound} Inbound
+                    </span>
+                    <span>&bull;</span>
+                    <span className="text-purple-700 font-semibold flex items-center gap-1">
+                      <PhoneOutgoing className="w-3 h-3 text-purple-500" />
+                      {activeHourSlot.outbound} Outbound
+                    </span>
+                    <span>&bull;</span>
+                    <span className="text-emerald-700 font-semibold">114ms Latency</span>
+                  </div>
+                </div>
+              </div>
               <button
-                onClick={() => setSelectedHour(null)}
-                className="text-[10px] text-black/50 hover:text-black underline cursor-pointer"
+                type="button"
+                onClick={() => {
+                  setSelectedHour(null);
+                  setHoveredHour(null);
+                }}
+                className="px-2.5 py-1 text-[10.5px] rounded-lg bg-white border border-black/10 text-black/70 hover:text-black hover:border-black/30 font-bold cursor-pointer transition-all shadow-2xs"
               >
                 Clear
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-between w-full">
-              <span className="text-black/55 text-[10.5px]">
-                Hover any 1h slot to inspect concurrent SIP trunks
-              </span>
-              <span className="text-[#16856B] text-[10.5px] font-bold flex items-center gap-1">
-                <Check className="w-3 h-3 stroke-[2.5]" /> Sub-140ms SLA
-              </span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[10.5px] font-semibold text-black/60 px-1">
+              <div className="flex items-center gap-1.5">
+                <span>
+                  Peak: <strong className="text-[#1A1A1A] font-extrabold">{hourlyMetrics.peak.total > 0 ? `${hourlyMetrics.peak.formattedHour} (${hourlyMetrics.peak.total} calls)` : "None"}</strong>
+                </span>
+              </div>
+
+              {/* Inbound & Outbound Dual Legends */}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <span className="text-[9.5px] font-bold text-rose-800">Inbound</span>
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-[#FFE4E6] border border-[#FECDD3]" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-[#FDA4AF] border border-[#FB7185]" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-[#F43F5E]" />
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[9.5px] font-bold text-purple-800">Outbound</span>
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-[#F3E8FF] border border-[#E9D5FF]" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-[#D8B4FE] border border-[#C084FC]" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-[#A855F7]" />
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -848,5 +1036,4 @@ export default function TelephonyActivityHeatmap({
     </div>
   );
 }
-
 

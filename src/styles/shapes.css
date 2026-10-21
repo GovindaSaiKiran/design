@@ -1,0 +1,247 @@
+/* ========================================================================= */
+/* SHAPES LIBRARY FOR SWARAM AI / VIBE CODING TOOLS                         */
+/* Style Language: Soft & Organic (Pastel SaaS / Squircles / Blobs / Pills)  */
+/* ========================================================================= */
+
+:root {
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 40px;
+  --radius-pill: 999px;
+
+  --shape-fill: #E9DEFA;
+  --shape-fill-2: #FFD9C9;
+  --shape-opacity: 0.9;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 1. Border-radius Shapes (No clip-path needed; shadows & borders work)      */
+/* ------------------------------------------------------------------------- */
+.shape-circle {
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
+
+.shape-pill {
+  border-radius: var(--radius-pill);
+}
+
+.shape-arch {
+  border-radius: var(--radius-pill) var(--radius-pill) var(--radius-md) var(--radius-md);
+}
+
+.shape-arch-top {
+  border-radius: var(--radius-pill) var(--radius-pill) 0 0;
+}
+
+.shape-halfcircle {
+  border-radius: var(--radius-pill) var(--radius-pill) 0 0;
+  aspect-ratio: 2 / 1;
+}
+
+.shape-quarter {
+  border-radius: 100% 0 0 0;
+  aspect-ratio: 1;
+}
+
+.shape-leaf {
+  border-radius: 0 100% 0 100%;
+  aspect-ratio: 1;
+}
+
+.shape-petal {
+  border-radius: 100% 0 100% 0;
+  aspect-ratio: 1;
+}
+
+.shape-tall-oval {
+  border-radius: 50%;
+  aspect-ratio: 3 / 4;
+}
+
+.shape-drop {
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  aspect-ratio: 1;
+}
+
+.shape-squircle-fallback {
+  border-radius: 32%;
+  aspect-ratio: 1;
+}
+
+/* Organic Blobs */
+.blob-1 {
+  border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+}
+
+.blob-2 {
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+.blob-3 {
+  border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+}
+
+.blob-4 {
+  border-radius: 70% 30% 30% 70% / 60% 40% 60% 40%;
+}
+
+/* Morphing Blob Animation */
+@keyframes blob-morph {
+  0%, 100% {
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+  }
+  33% {
+    border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
+  }
+  66% {
+    border-radius: 30% 70% 45% 55% / 45% 60% 40% 55%;
+  }
+}
+
+.blob-morph {
+  animation: blob-morph 14s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 2. True Squircle (Smooth iOS-Style Curvature)                              */
+/* ------------------------------------------------------------------------- */
+.squircle {
+  border-radius: var(--radius-lg);
+}
+
+@supports (corner-shape: squircle) {
+  .squircle {
+    corner-shape: squircle;
+    border-radius: var(--radius-xl);
+  }
+}
+
+.squircle-card {
+  border-radius: 24px;
+}
+
+@supports (corner-shape: squircle) {
+  .squircle-card {
+    corner-shape: squircle;
+    border-radius: 32px;
+  }
+}
+
+.squircle-badge {
+  border-radius: 14px;
+}
+
+@supports (corner-shape: squircle) {
+  .squircle-badge {
+    corner-shape: squircle;
+    border-radius: 18px;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* 3. Clip-Path Polygon Shapes                                               */
+/* ------------------------------------------------------------------------- */
+.shape-hexagon {
+  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+}
+
+.shape-octagon {
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+}
+
+.shape-diamond {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.shape-star {
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.shape-ticket {
+  --r: 14px;
+  -webkit-mask:
+    radial-gradient(circle var(--r) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--r) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--r) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--r) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+}
+
+.bite-br {
+  --b: 36px;
+  -webkit-mask: radial-gradient(circle at 100% 100%, #0000 calc(var(--b) - 0.5px), #000 var(--b));
+  mask: radial-gradient(circle at 100% 100%, #0000 calc(var(--b) - 0.5px), #000 var(--b));
+}
+
+/* ------------------------------------------------------------------------- */
+/* 4. Background Patterns                                                    */
+/* ------------------------------------------------------------------------- */
+.pattern-dots {
+  background-image: radial-gradient(currentColor 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+.pattern-grid {
+  background-image:
+    linear-gradient(currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.pattern-rings {
+  background: repeating-radial-gradient(circle at 50% 50%, transparent 0 20px, currentColor 20px 22px);
+}
+
+/* ------------------------------------------------------------------------- */
+/* 5. Subtle Organic Animations                                              */
+/* ------------------------------------------------------------------------- */
+@keyframes float-y {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+.shape-float {
+  animation: float-y 8s ease-in-out infinite;
+}
+
+.shape-spin {
+  animation: spin-slow 32s linear infinite;
+}
+
+.shape-pulse {
+  animation: pulse-soft 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shape-float,
+  .shape-spin,
+  .shape-pulse,
+  .blob-morph {
+    animation: none !important;
+  }
+}

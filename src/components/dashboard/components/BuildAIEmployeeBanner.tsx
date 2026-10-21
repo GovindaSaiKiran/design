@@ -104,7 +104,10 @@ export default function BuildAIEmployeeBanner({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] bg-white border-2 border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.035)] p-5 sm:p-6 text-[#1A1A1A]">
+    <div
+      suppressHydrationWarning
+      className="relative overflow-hidden rounded-[28px] bg-white border-2 border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.035)] p-5 sm:p-6 text-[#1A1A1A]"
+    >
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* LEFT SECTION (Col 1 to 9) */}
         <div className="lg:col-span-8 flex flex-col justify-between space-y-4">
@@ -127,6 +130,7 @@ export default function BuildAIEmployeeBanner({
             </div>
 
             <button
+              suppressHydrationWarning
               onClick={() => { try { soundSynth.play("click"); } catch {} }}
               className="w-7 h-7 rounded-xl flex items-center justify-center text-black/50 hover:text-black transition-colors cursor-pointer"
               style={{ backgroundColor: palette.colors.surfaceAlt }}

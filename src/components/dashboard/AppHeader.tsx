@@ -10,16 +10,14 @@ import {
   Settings,
   LogOut,
   Zap,
-  Mic,
   CreditCard,
-  Share2,
-  SlidersHorizontal,
-  ArrowUpDown,
+  Bell,
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
-import TestCallModal from "./modals/TestCallModal";
 import TopUpCreditsModal from "./modals/TopUpCreditsModal";
+import NotificationsPanel from "./components/NotificationsPanel";
+import { NotificationItem } from "@/types/dashboard";
 import { soundSynth } from "@/lib/audio-synth";
 
 interface AppHeaderProps {
@@ -40,7 +38,6 @@ export default function AppHeader({
   const router = useRouter();
   const pathname = usePathname();
   const [profileOpen, setProfileOpen] = useState(false);
-  const [testCallOpen, setTestCallOpen] = useState(false);
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [userName, setUserName] = useState("Govinda T.");
   const [userEmail, setUserEmail] = useState("admin@swaram.ai");
@@ -54,7 +51,49 @@ export default function AppHeader({
   const [promptIndex, setPromptIndex] = useState(0);
   const [isMac, setIsMac] = useState(false);
 
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notificationsList, setNotificationsList] = useState<NotificationItem[]>([
+    {
+      id: "notif-001",
+      type: "campaign",
+      title: "Outbound Batch Milestone",
+      message: "Batch 'Round 2 Entrance Follow-up' reached 100% resolution with 63% conversion.",
+      timestamp: "10 mins ago",
+      read: false,
+      severity: "info",
+    },
+    {
+      id: "notif-002",
+      type: "handoff",
+      title: "Warm Transfer Escalated",
+      message: "Agent Maya escalated student Rahul Sharma (+91 98401 22345) to Senior Admissions Desk.",
+      timestamp: "25 mins ago",
+      read: false,
+      severity: "warning",
+    },
+    {
+      id: "notif-003",
+      type: "knowledge",
+      title: "SIP Carrier SLA Optimal",
+      message: "TRK-91-AIRTEL-PRI operating at 136ms SLA (Opus HD codec verified).",
+      timestamp: "1 hr ago",
+      read: true,
+      severity: "info",
+    },
+    {
+      id: "notif-004",
+      type: "usage",
+      title: "Sandbox Balance Quota",
+      message: "14.0 minutes remaining in Free Sandbox tier. Auto-recharge standby.",
+      timestamp: "2 hrs ago",
+      read: true,
+      severity: "info",
+    },
+  ]);
+  const unreadCount = notificationsList.filter((n) => !n.read).length;
+
   const profileRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -82,6 +121,9 @@ export default function AppHeader({
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setProfileOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+        setNotificationsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -143,42 +185,47 @@ export default function AppHeader({
             </h1>
           </div>
 
-          {/* Center: Live SIP Carrier Status Pill */}
-          <div className="flex items-center gap-2 px-3.5 py-1.5 bg-white/80 border border-black/[0.06] rounded-full self-start sm:self-center shadow-2xs text-xs">
-            <span className="w-2 h-2 rounded-full bg-[#16856B] animate-pulse" />
-            <span className="font-semibold text-[#1A1A1A]">SIP Carrier Active</span>
-            <span className="text-black/25">•</span>
-            <span className="text-black/60 font-medium">136ms SLA (Opus HD)</span>
-          </div>
-
-          {/* Right: Secondary Action Pills (Simulate Call, Balance, Profile) */}
+          {/* Right: Secondary Action Pills (Balance, Profile) */}
           <div className="flex items-center gap-2 self-end sm:self-center">
-            {/* Share secondary button */}
-            <button
-              onClick={() => {
-                try { soundSynth.play("confirm"); } catch {}
-                if (navigator.clipboard) {
-                  navigator.clipboard.writeText(window.location.href);
-                  alert("Dashboard link copied to clipboard!");
-                }
-              }}
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-xs font-medium text-[#1A1A1A] shadow-2xs transition-colors cursor-pointer"
-            >
-              <Share2 className="w-3.5 h-3.5 text-black/60" />
-              <span>Share</span>
-            </button>
+            {/* Notifications Trigger & Panel */}
+            <div className="relative" ref={notificationsRef}>
+              <button
+                onClick={() => {
+                  try { soundSynth.play("click"); } catch {}
+                  setNotificationsOpen(!notificationsOpen);
+                }}
+                className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full border text-xs font-semibold shadow-2xs transition-all cursor-pointer ${
+                  notificationsOpen
+                    ? "bg-[#FAF3E4] border-black/25 text-[#1A1A1A]"
+                    : "bg-white hover:bg-[#FAF3E4] border-black/[0.08] text-[#1A1A1A]"
+                }`}
+                title="System Notifications & Alerts"
+                aria-label="Open notifications"
+              >
+                <div className="relative flex items-center justify-center">
+                  <Bell className="w-3.5 h-3.5 text-black/75" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#EF4444] ring-1 ring-white animate-pulse" />
+                  )}
+                </div>
+                <span className="hidden sm:inline">Notifications</span>
+                {unreadCount > 0 && (
+                  <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-[#EF4444] text-white leading-tight shadow-xs">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
 
-            {/* Simulate Call Button */}
-            <button
-              onClick={() => {
-                try { soundSynth.play("click"); } catch {}
-                setTestCallOpen(true);
-              }}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#FAF3E4] border border-black/[0.08] text-xs font-semibold text-[#1A1A1A] shadow-2xs transition-all cursor-pointer"
-            >
-              <Mic className="w-3.5 h-3.5 text-black/70" />
-              <span className="hidden sm:inline">Simulate Call</span>
-            </button>
+              <NotificationsPanel
+                notifications={notificationsList}
+                isOpen={notificationsOpen}
+                onClose={() => setNotificationsOpen(false)}
+                onMarkAllRead={() => {
+                  try { soundSynth.play("confirm"); } catch {}
+                  setNotificationsList((prev) => prev.map((n) => ({ ...n, read: true })));
+                }}
+              />
+            </div>
 
             {/* Balance chip */}
             <button
@@ -252,41 +299,17 @@ export default function AppHeader({
                 {searchPrompts[promptIndex]}
               </span>
             </div>
-            {/* Keyboard shortcut keycap pill */}
-            <div className="hidden md:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/[0.04] border border-black/[0.08] text-[11px] font-mono font-bold text-black/50 shadow-2xs shrink-0">
-              <span>{isMac ? "⌘" : "Ctrl"}</span>
-              <span>K</span>
-            </div>
           </div>
 
-          {/* Filter & Sort Controls on Right */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-2 shrink-0 text-xs sm:text-sm font-semibold text-black/70"
-          >
-            <button
-              onClick={onOpenSearch}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] hover:text-black transition-all cursor-pointer"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-black/50" />
-              <span className="hidden sm:inline">Filters</span>
-            </button>
-            <button
-              onClick={() => { try { soundSynth.play("click"); } catch {} }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] hover:text-black transition-all cursor-pointer"
-            >
-              <ArrowUpDown className="w-3.5 h-3.5 text-black/50" />
-              <span className="hidden sm:inline">Sort by</span>
-            </button>
+          {/* Keyboard shortcut keycap pill on Right */}
+          <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/[0.04] border border-black/[0.08] text-[11px] font-mono font-bold text-black/50 shadow-2xs shrink-0 group-hover:bg-black/[0.07] group-hover:text-black/70 transition-colors">
+            <span>{isMac ? "⌘" : "Ctrl"}</span>
+            <span>K</span>
           </div>
         </div>
       </header>
 
-      {/* Modals */}
-      <TestCallModal
-        isOpen={testCallOpen}
-        onClose={() => setTestCallOpen(false)}
-      />
+
       <TopUpCreditsModal
         isOpen={topUpOpen}
         onClose={() => setTopUpOpen(false)}

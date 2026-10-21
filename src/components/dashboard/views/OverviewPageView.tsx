@@ -32,7 +32,9 @@ import {
   Headphones,
   Flame,
   Settings,
+  Users,
 } from "lucide-react";
+import ScheduleCallModal from "../modals/ScheduleCallModal";
 import TestCallModal from "../modals/TestCallModal";
 import TopUpCreditsModal from "../modals/TopUpCreditsModal";
 import CreateAgentModal from "../modals/CreateAgentModal";
@@ -72,10 +74,13 @@ export default function OverviewPageView() {
   const [lastInspectedId, setLastInspectedId] = useState<string | null>(null);
 
   // Modals state
-  const [testCallOpen, setTestCallOpen] = useState(false);
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [createAgentOpen, setCreateAgentOpen] = useState(false);
   const [startCampaignOpen, setStartCampaignOpen] = useState(false);
+  const [scheduleCallOpen, setScheduleCallOpen] = useState(false);
+  const [testCallOpen, setTestCallOpen] = useState(false);
+
+
 
   // Context & Quotas
   const [workspaceName, setWorkspaceName] = useState("Apex Institute of Technology");
@@ -190,6 +195,8 @@ export default function OverviewPageView() {
     }
   }, []);
 
+
+
   // Telephony Metrics Calculations
   const totalCalls = callsList.length;
   const inboundCallsCount = callsList.filter((c) => c.direction === "inbound").length;
@@ -201,48 +208,6 @@ export default function OverviewPageView() {
   );
 
 
-  // Simulate an inbound call with tactile audio feedback
-  const handleSimulateInboundCall = () => {
-    try { soundSynth.playCallChime(); } catch {}
-
-    const sampleCallers = [
-      { name: "Divya Reddy", phone: "+91 98765 43210", inquiry: "B.Tech CSE Admission Cutoff Query" },
-      { name: "Kavita Rao", phone: "+91 97123 45678", inquiry: "Campus Hostel Accommodation & Fee" },
-      { name: "Siddharth Jain", phone: "+91 98220 11223", inquiry: "Merit Scholarship Form Verification" },
-      { name: "Nitin Varma", phone: "+91 99120 77881", inquiry: "Document Verification & Fee Challan" },
-    ];
-    const pick = sampleCallers[Math.floor(Math.random() * sampleCallers.length)];
-
-    const newCall: CallRecord = {
-      id: "call_" + Date.now(),
-      phoneNumber: pick.phone,
-      callerName: pick.name,
-      agentName: "Maya (Admissions)",
-      direction: "inbound",
-      durationSeconds: Math.floor(Math.random() * 80) + 40,
-      timestamp: "Just now",
-      status: "completed",
-      sentiment: "positive",
-      outcome: pick.inquiry,
-      latencyMs: 132 + Math.floor(Math.random() * 12),
-      extractedTags: ["Inbound", "Verified"],
-    };
-
-    const updated = [newCall, ...callsList];
-    setCallsList(updated);
-    setLastInspectedId(newCall.id);
-
-    try {
-      localStorage.setItem("swaram_calls", JSON.stringify(updated));
-    } catch {}
-
-    try {
-      soundSynth.speak(
-        `Inbound carrier session established from ${pick.name}. Maya admissions agent routed at ${newCall.latencyMs} millisecond latency.`,
-        { rate: 1.05 }
-      );
-    } catch {}
-  };
 
   const openCallInDrawer = (call: CallRecord) => {
     try { soundSynth.play("click"); } catch {}
@@ -284,112 +249,59 @@ export default function OverviewPageView() {
       {/* ========================================================================= */}
       {/* 1. TOP CARRIER STATUS & QUICK ACTIONS CONSOLE                             */}
       {/* ========================================================================= */}
-      <div className="relative overflow-hidden bg-white rounded-[28px] border-2 border-black/[0.08] p-4 sm:p-5 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div id="quick-actions-console" className="relative overflow-hidden bg-white rounded-[28px] border-2 border-black/[0.08] p-4 sm:p-5 shadow-[0_4px_24px_rgba(0,0,0,0.035)] flex flex-col lg:flex-row lg:items-center justify-between gap-4 scroll-mt-24">
 
 
         <div>
-          {/* Carrier Status Strip */}
+          {/* Workspace Badge */}
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold shadow-2xs"
-              style={{ backgroundColor: palette.colors.successBg, color: palette.colors.successText }}
-            >
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: palette.colors.success }} />
-              <span>TRUNK GATEWAY: SIP/2.0 READY</span>
-            </span>
-            <span className="text-black/20 text-xs">•</span>
-            <span className="text-xs font-semibold text-black/60">
-              TRK-91-AIRTEL-PRI
-            </span>
-            <span className="text-black/20 text-xs">•</span>
-            <span
-              className="text-xs font-semibold px-2.5 py-0.5 rounded-full border border-black/[0.06]"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border border-black/[0.08] shadow-2xs"
               style={{ backgroundColor: palette.colors.surfaceAlt, color: palette.colors.textPrimary }}
             >
-              {workspaceName}
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: palette.colors.accent }} />
+              <span>{workspaceName}</span>
             </span>
           </div>
 
           <h2 className="text-xl sm:text-[22px] font-bold text-[#1A1A1A] tracking-tight mt-1.5">
-            Voice Dispatch &amp; Telephony Operations
+            AI Voice Operations Overview
           </h2>
           <p className="text-xs text-black/55 mt-0.5">
-            Real-time SIP stream concurrency, multi-agent voice workforce routing, and neural acoustic latency telemetry.
+            Real-time call performance, agent utilization, and live telephony telemetry.
           </p>
         </div>
 
         {/* Operational Actions */}
-        <div className="flex items-center gap-2 flex-wrap self-start lg:self-center">
-          {/* Stepped Timeframe Selector Pills */}
-          <div
-            className="flex border-2 border-black/[0.08] rounded-full p-1 text-xs"
-            style={{ backgroundColor: palette.colors.surfaceAlt }}
-          >
-            <button
-              onClick={() => {
-                try { soundSynth.play("click"); } catch {}
-                setTimeframe("today");
-              }}
-              className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
-                timeframe === "today"
-                  ? "shadow-xs"
-                  : "text-black/60 hover:text-black"
-              }`}
-              style={timeframe === "today" ? { backgroundColor: palette.colors.accent, color: palette.colors.accentText } : {}}
-            >
-              Today
-            </button>
-            <button
-              onClick={() => {
-                try { soundSynth.play("click"); } catch {}
-                setTimeframe("7d");
-              }}
-              className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
-                timeframe === "7d"
-                  ? "shadow-xs"
-                  : "text-black/60 hover:text-black"
-              }`}
-              style={timeframe === "7d" ? { backgroundColor: palette.colors.accent, color: palette.colors.accentText } : {}}
-            >
-              7D
-            </button>
-            <button
-              onClick={() => {
-                try { soundSynth.play("click"); } catch {}
-                setTimeframe("30d");
-              }}
-              className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
-                timeframe === "30d"
-                  ? "shadow-xs"
-                  : "text-black/60 hover:text-black"
-              }`}
-              style={timeframe === "30d" ? { backgroundColor: palette.colors.accent, color: palette.colors.accentText } : {}}
-            >
-              30D
-            </button>
-          </div>
-
-          {/* Simulate Inbound Call Button */}
-          <button
-            onClick={handleSimulateInboundCall}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:opacity-90 border-2 border-black/[0.08] text-xs font-bold text-[#1A1A1A] shadow-xs transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-            title="Simulate inbound carrier call"
-          >
-            <PhoneIncoming className="w-3.5 h-3.5" style={{ color: palette.colors.success }} />
-            <span>Simulate Inbound</span>
-          </button>
-
+        <div className="flex items-center gap-3 flex-wrap self-start lg:self-center">
           {/* Test Voice Agent Button */}
           <button
             onClick={() => {
               try { soundSynth.play("click"); } catch {}
               setTestCallOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold shadow-md transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            className="group/test flex items-center gap-2 pl-3 pr-3.5 py-2.5 rounded-2xl text-xs font-bold bg-white hover:bg-[#FAF6EE] text-[#1A1A1A] border-2 border-black/[0.08] hover:border-black/20 shadow-xs transition-all cursor-pointer hover:scale-[1.03] active:scale-[0.97]"
+          >
+            <span className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 bg-[#FFF4ED] border border-[#FF6B08]/25 text-[#FF6B08] transition-transform group-hover/test:scale-110 shadow-2xs">
+              <Volume2 className="w-3.5 h-3.5 stroke-[2.2]" />
+            </span>
+            <span className="tracking-tight">Test Voice Agent</span>
+          </button>
+
+          {/* Schedule Calls Button — primary accent style */}
+          <button
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              setScheduleCallOpen(true);
+            }}
+            className="group/sch flex items-center gap-2.5 pl-3.5 pr-4 py-2.5 rounded-2xl text-xs font-bold shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-all cursor-pointer hover:scale-[1.03] active:scale-[0.97] hover:shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
             style={{ backgroundColor: palette.colors.accent, color: palette.colors.accentText }}
           >
-            <Volume2 className="w-3.5 h-3.5" />
-            <span>Test Voice Agent</span>
+            <span className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 bg-white/20 transition-transform group-hover/sch:scale-110">
+              <Calendar className="w-3.5 h-3.5 stroke-[2.5]" />
+            </span>
+            <span className="tracking-tight">Schedule Calls</span>
+            <ChevronRight className="w-3.5 h-3.5 text-white/70 -ml-0.5 transition-transform group-hover/sch:translate-x-0.5" />
           </button>
         </div>
       </div>
@@ -397,7 +309,7 @@ export default function OverviewPageView() {
       {/* ========================================================================= */}
       {/* 2. TOP METRIC CARDS (Vibrant High-Voltage Cards with Borders & Shapes)   */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div id="overview-metric-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 scroll-mt-24">
         
         {/* CARD 1: Minutes Quota */}
         <div
@@ -739,7 +651,7 @@ export default function OverviewPageView() {
       {/* ========================================================================= */}
       {/* 3. CENTRAL CONCURRENCY HEATMAP & HOURLY TELEPHONY TRACKS                  */}
       {/* ========================================================================= */}
-      <div className="w-full space-y-2">
+      <div id="central-concurrency-section" className="w-full space-y-2 scroll-mt-24">
         <TelephonyActivityHeatmap currentCallsCount={callsList.length} />
 
         {/* Bottom Link Bar */}
@@ -760,7 +672,7 @@ export default function OverviewPageView() {
       {/* ========================================================================= */}
       {/* 4. BUILD YOUR AI EMPLOYEE BANNER (PASTEL STYLE)                           */}
       {/* ========================================================================= */}
-      <div>
+      <div id="build-ai-employee" className="scroll-mt-24">
         <BuildAIEmployeeBanner
           onOpenCreateModal={() => {
             setCreateAgentOpen(true);
@@ -771,7 +683,7 @@ export default function OverviewPageView() {
       {/* ========================================================================= */}
       {/* 5. REAL-TIME TELEPHONY CALL ACTIVITY & EXTRACTED OUTCOMES LEDGER          */}
       {/* ========================================================================= */}
-      <div className="relative overflow-hidden bg-white rounded-[28px] border-2 border-black/[0.08] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] space-y-4">
+      <div id="recent-calls-ledger" className="relative overflow-hidden bg-white rounded-[28px] border-2 border-black/[0.08] p-5 sm:p-6 shadow-[0_4px_24px_rgba(0,0,0,0.035)] space-y-4 scroll-mt-24">
 
 
         {/* Header & Controls */}
@@ -991,11 +903,7 @@ export default function OverviewPageView() {
         onClose={() => setDrawerOpen(false)}
       />
 
-      {/* Modals */}
-      <TestCallModal
-        isOpen={testCallOpen}
-        onClose={() => setTestCallOpen(false)}
-      />
+
       <TopUpCreditsModal
         isOpen={topUpOpen}
         onClose={() => setTopUpOpen(false)}
@@ -1009,6 +917,16 @@ export default function OverviewPageView() {
         isOpen={startCampaignOpen}
         onClose={() => setStartCampaignOpen(false)}
       />
+      <ScheduleCallModal
+        isOpen={scheduleCallOpen}
+        onClose={() => setScheduleCallOpen(false)}
+      />
+      <TestCallModal
+        isOpen={testCallOpen}
+        onClose={() => setTestCallOpen(false)}
+      />
+
+
     </div>
   );
 }
