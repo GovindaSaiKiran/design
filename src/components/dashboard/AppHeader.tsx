@@ -284,29 +284,31 @@ export default function AppHeader({
           </div>
         </div>
 
-        {/* Bottom Toolbar: Full-width Interactive Search Bar with Attractive Rotating Prompts */}
-        <div
-          onClick={onOpenSearch}
-          className="w-full flex items-center justify-between gap-4 px-4 sm:px-5 py-2.5 sm:py-3 bg-white/85 hover:bg-white border-2 border-black/[0.08] hover:border-black/20 rounded-2xl sm:rounded-full shadow-xs backdrop-blur-xs transition-all duration-200 cursor-pointer group select-none"
-        >
-          {/* Search Input on Left */}
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="w-8 h-8 rounded-xl bg-[#FFF4ED] border border-[#FF6B08]/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
-              <Search className="w-4 h-4 text-[#FF6B08]" />
+        {/* Bottom Toolbar: Full-width Interactive Search Bar with Attractive Rotating Prompts (hidden on AI Agents page) */}
+        {!pathname?.startsWith("/dashboard/agents") && (
+          <div
+            onClick={onOpenSearch}
+            className="w-full flex items-center justify-between gap-4 px-4 sm:px-5 py-2.5 sm:py-3 bg-white/85 hover:bg-white border-2 border-black/[0.08] hover:border-black/20 rounded-2xl sm:rounded-full shadow-xs backdrop-blur-xs transition-all duration-200 cursor-pointer group select-none"
+          >
+            {/* Search Input on Left */}
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-[#FFF4ED] border border-[#FF6B08]/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-2xs">
+                <Search className="w-4 h-4 text-[#FF6B08]" />
+              </div>
+              <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
+                <span className="text-xs sm:text-sm font-medium text-black/75 tracking-tight truncate transition-all duration-300">
+                  {searchPrompts[promptIndex]}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
-              <span className="text-xs sm:text-sm font-medium text-black/75 tracking-tight truncate transition-all duration-300">
-                {searchPrompts[promptIndex]}
-              </span>
-            </div>
-          </div>
 
-          {/* Keyboard shortcut keycap pill on Right */}
-          <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/[0.04] border border-black/[0.08] text-[11px] font-mono font-bold text-black/50 shadow-2xs shrink-0 group-hover:bg-black/[0.07] group-hover:text-black/70 transition-colors">
-            <span>{isMac ? "⌘" : "Ctrl"}</span>
-            <span>K</span>
+            {/* Keyboard shortcut keycap pill on Right */}
+            <div className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/[0.04] border border-black/[0.08] text-[11px] font-mono font-bold text-black/50 shadow-2xs shrink-0 group-hover:bg-black/[0.07] group-hover:text-black/70 transition-colors">
+              <span>{isMac ? "⌘" : "Ctrl"}</span>
+              <span>K</span>
+            </div>
           </div>
-        </div>
+        )}
       </header>
 
 
