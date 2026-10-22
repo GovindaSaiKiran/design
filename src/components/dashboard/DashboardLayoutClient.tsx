@@ -449,16 +449,12 @@ export default function DashboardLayoutClient({
           onToggleCollapse={handleToggleCollapse}
         />
 
-        {/* Desktop Spacer */}
+        {/* Main Content Area with guaranteed desktop margin clear of fixed sidebar */}
         <div
-          className={`hidden lg:block shrink-0 transition-all duration-200 ease-in-out ${
-            isCollapsed ? "w-[92px]" : "w-[280px]"
+          className={`dashboard-main-content flex-1 flex flex-col min-w-0 bg-transparent relative z-10 py-3 sm:py-4 lg:py-5 px-4 sm:px-6 lg:pl-6 lg:pr-8 ${
+            isCollapsed ? "is-collapsed" : ""
           }`}
-          aria-hidden="true"
-        />
-
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0 bg-transparent relative z-10 py-3 sm:py-4 lg:py-5 px-3 sm:px-4 lg:px-0 lg:pr-6">
+        >
           <AppHeader
             onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
             onOpenSearch={() => {

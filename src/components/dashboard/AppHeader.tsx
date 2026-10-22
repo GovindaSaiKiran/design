@@ -133,7 +133,7 @@ export default function AppHeader({
   const getSectionTitle = () => {
     if (pathname === "/dashboard") return "Voice Operations Console";
     if (pathname?.startsWith("/dashboard/agents")) return "AI Voice Agents";
-    if (pathname?.startsWith("/dashboard/calls")) return "Conversations & Transcripts";
+    if (pathname?.startsWith("/dashboard/calls")) return "Live Calling";
     if (pathname?.startsWith("/dashboard/contacts")) return "Contacts & Audiences";
     if (pathname?.startsWith("/dashboard/campaigns")) return "Campaigns & Bulk Calling";
     if (pathname?.startsWith("/dashboard/data-vault")) return "Data Vault";

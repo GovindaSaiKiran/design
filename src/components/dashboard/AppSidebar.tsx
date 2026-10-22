@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   Bot,
-  Sparkles,
   Radio,
   Users,
   Megaphone,
@@ -22,6 +21,7 @@ import {
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
+  History,
 } from "lucide-react";
 import CreateAgentModal from "./modals/CreateAgentModal";
 import TopUpCreditsModal from "./modals/TopUpCreditsModal";
@@ -94,16 +94,18 @@ export default function AppSidebar({
       badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
     },
     {
-      label: "Agent Playground",
-      href: "/dashboard/delegate",
-      icon: Sparkles,
-    },
-    {
-      label: "Live Telephony",
+      label: "Live Calling",
       href: "/dashboard/calls",
       icon: Radio,
-      badge: "Active",
+      badge: "2 Live",
       badgeColor: "bg-rose-50 text-rose-700 border-rose-200/60 animate-pulse",
+    },
+    {
+      label: "Call History & Transcripts",
+      href: "/dashboard/call-history",
+      icon: History,
+      badge: "6 Logs",
+      badgeColor: "bg-indigo-50 text-indigo-700 border-indigo-200/60",
     },
   ];
 

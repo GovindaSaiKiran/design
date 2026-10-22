@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Bot,
@@ -49,13 +49,15 @@ import {
   Smartphone,
   Lock,
   Zap,
+  Square,
+  Trash2,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import CreateAgentModal from "@/components/dashboard/modals/CreateAgentModal";
 import LiveCallModal from "@/components/dashboard/modals/LiveCallModal";
 import { DashboardAgent, LiveCallItem } from "@/types/dashboard";
 import { mockAgents } from "@/data/mock/dashboardData";
-import { readyMadeVoices, VoiceItem } from "@/data/mock/voiceLibrary";
+import { readyMadeVoices, initialClonedVoices, VoiceItem } from "@/data/mock/voiceLibrary";
 import { soundSynth } from "@/lib/audio-synth";
 import { usePalette } from "@/context/PaletteContext";
 
@@ -100,24 +102,108 @@ export const getAgentTheme = (agentId: string) => {
       glowColor: "rgba(139, 92, 246, 0.15)",
     };
   }
-  return {
-    name: "Arjun",
-    accent: "#0284C7",
-    accentLight: "#F0F9FF",
-    gradient: "from-[#F0F9FF] via-white to-[#E0F2FE]",
-    border: "border-[#BAE6FD]",
-    borderActive: "border-[#0284C7]",
-    ring: "ring-2 ring-[#0284C7]/30",
-    shadow: "shadow-[0_8px_24px_rgba(2,132,199,0.18)]",
-    avatarBg: "bg-gradient-to-br from-[#38BDF8] to-[#0284C7]",
-    avatarText: "text-white",
-    badgeBg: "bg-[#F0F9FF]",
-    badgeText: "text-[#0369A1]",
-    badgeBorder: "border-[#7DD3FC]/50",
-    heroBg: "bg-gradient-to-r from-[#F0F9FF] via-[#F8FAFC] to-white",
-    heroBorder: "border-[#0284C7]/20",
-    glowColor: "rgba(2, 132, 199, 0.15)",
-  };
+  if (agentId.includes("arjun")) {
+    return {
+      name: "Arjun",
+      accent: "#0284C7",
+      accentLight: "#F0F9FF",
+      gradient: "from-[#F0F9FF] via-white to-[#E0F2FE]",
+      border: "border-[#BAE6FD]",
+      borderActive: "border-[#0284C7]",
+      ring: "ring-2 ring-[#0284C7]/30",
+      shadow: "shadow-[0_8px_24px_rgba(2,132,199,0.18)]",
+      avatarBg: "bg-gradient-to-br from-[#38BDF8] to-[#0284C7]",
+      avatarText: "text-white",
+      badgeBg: "bg-[#F0F9FF]",
+      badgeText: "text-[#0369A1]",
+      badgeBorder: "border-[#7DD3FC]/50",
+      heroBg: "bg-gradient-to-r from-[#F0F9FF] via-[#F8FAFC] to-white",
+      heroBorder: "border-[#0284C7]/20",
+      glowColor: "rgba(2, 132, 199, 0.15)",
+    };
+  }
+
+  // Dynamic themes for custom created agents based on char code sum
+  const charSum = agentId.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const themeIndex = charSum % 4;
+
+  if (themeIndex === 0) {
+    return {
+      name: "Emerald",
+      accent: "#10B981",
+      accentLight: "#ECFDF5",
+      gradient: "from-[#ECFDF5] via-white to-[#D1FAE5]",
+      border: "border-[#A7F3D0]",
+      borderActive: "border-[#10B981]",
+      ring: "ring-2 ring-[#10B981]/30",
+      shadow: "shadow-[0_8px_24px_rgba(16,185,129,0.18)]",
+      avatarBg: "bg-gradient-to-br from-[#34D399] to-[#059669]",
+      avatarText: "text-white",
+      badgeBg: "bg-[#ECFDF5]",
+      badgeText: "text-[#065F46]",
+      badgeBorder: "border-[#6EE7B7]/50",
+      heroBg: "bg-gradient-to-r from-[#ECFDF5] via-[#F0FDF4] to-white",
+      heroBorder: "border-[#10B981]/20",
+      glowColor: "rgba(16, 185, 129, 0.15)",
+    };
+  } else if (themeIndex === 1) {
+    return {
+      name: "Rose",
+      accent: "#F43F5E",
+      accentLight: "#FFF1F2",
+      gradient: "from-[#FFF1F2] via-white to-[#FFE4E6]",
+      border: "border-[#FECDD3]",
+      borderActive: "border-[#F43F5E]",
+      ring: "ring-2 ring-[#F43F5E]/30",
+      shadow: "shadow-[0_8px_24px_rgba(244,63,94,0.18)]",
+      avatarBg: "bg-gradient-to-br from-[#FB7185] to-[#E11D48]",
+      avatarText: "text-white",
+      badgeBg: "bg-[#FFF1F2]",
+      badgeText: "text-[#9F1239]",
+      badgeBorder: "border-[#FDA4AF]/50",
+      heroBg: "bg-gradient-to-r from-[#FFF1F2] via-[#FFF5F5] to-white",
+      heroBorder: "border-[#F43F5E]/20",
+      glowColor: "rgba(244, 63, 94, 0.15)",
+    };
+  } else if (themeIndex === 2) {
+    return {
+      name: "Amber",
+      accent: "#F59E0B",
+      accentLight: "#FFFBEB",
+      gradient: "from-[#FFFBEB] via-white to-[#FEF3C7]",
+      border: "border-[#FDE68A]",
+      borderActive: "border-[#F59E0B]",
+      ring: "ring-2 ring-[#F59E0B]/30",
+      shadow: "shadow-[0_8px_24px_rgba(245,158,11,0.18)]",
+      avatarBg: "bg-gradient-to-br from-[#FBBF24] to-[#D97706]",
+      avatarText: "text-white",
+      badgeBg: "bg-[#FFFBEB]",
+      badgeText: "text-[#92400E]",
+      badgeBorder: "border-[#FCD34D]/50",
+      heroBg: "bg-gradient-to-r from-[#FFFBEB] via-[#FEF9C3] to-white",
+      heroBorder: "border-[#F59E0B]/20",
+      glowColor: "rgba(245, 158, 11, 0.15)",
+    };
+  } else {
+    return {
+      name: "Indigo",
+      accent: "#6366F1",
+      accentLight: "#EEF2FF",
+      gradient: "from-[#EEF2FF] via-white to-[#E0E7FF]",
+      border: "border-[#C7D2FE]",
+      borderActive: "border-[#6366F1]",
+      ring: "ring-2 ring-[#6366F1]/30",
+      shadow: "shadow-[0_8px_24px_rgba(99,102,241,0.18)]",
+      avatarBg: "bg-gradient-to-br from-[#818CF8] to-[#4F46E5]",
+      avatarText: "text-white",
+      badgeBg: "bg-[#EEF2FF]",
+      badgeText: "text-[#3730A3]",
+      badgeBorder: "border-[#A5B4FC]/50",
+      heroBg: "bg-gradient-to-r from-[#EEF2FF] via-[#F5F3FF] to-white",
+      heroBorder: "border-[#6366F1]/20",
+      glowColor: "rgba(99, 102, 241, 0.15)",
+    };
+  }
 };
 
 export interface StoredConversation {
@@ -246,11 +332,15 @@ export default function AgentsPage() {
     | "voice"
     | "languages"
     | "knowledge"
-    | "data-extraction"
     | "call-rules"
     | "playground"
     | "history"
   >("overview");
+
+  // Cloned voices registry & filter
+  const [clonedVoices, setClonedVoices] = useState<VoiceItem[]>(initialClonedVoices);
+  const [voiceSourceTab, setVoiceSourceTab] = useState<"all" | "ready" | "cloned">("all");
+  const [creationSuccessToast, setCreationSuccessToast] = useState<string | null>(null);
 
   // Voice tab states
   const [voiceSearch, setVoiceSearch] = useState("");
@@ -259,11 +349,78 @@ export default function AgentsPage() {
   const [voiceGenderFilter, setVoiceGenderFilter] = useState("all");
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
 
-  // Voice cloning states
+  // Voice cloning studio states
   const [cloneConsentConfirmed, setCloneConsentConfirmed] = useState(false);
   const [cloneFileName, setCloneFileName] = useState<string | null>(null);
   const [cloneStatus, setCloneStatus] = useState<"idle" | "uploading" | "analyzing" | "ready">("idle");
   const [cloneVoiceName, setCloneVoiceName] = useState("Campus Dean Voice Clone");
+  const [cloneSpeakerGender, setCloneSpeakerGender] = useState<"Female" | "Male" | "Neutral">("Male");
+  const [cloneSpeakerAccent, setCloneSpeakerAccent] = useState("Pan-Indian Corporate English");
+  const [cloneInputMode, setCloneInputMode] = useState<"mic" | "upload">("mic");
+  const [isCloneRecording, setIsCloneRecording] = useState(false);
+  const [cloneRecordingSecs, setCloneRecordingSecs] = useState(0);
+  const [cloneRecordedBlob, setCloneRecordedBlob] = useState<string | null>(null);
+  const [cloneTestSentence, setCloneTestSentence] = useState(
+    "Hello! Welcome to Apex Global University. I am testing my newly cloned neural voice model."
+  );
+  const cloneMicTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Freedom to edit Context, Rules, Purposes for the selected agent
+  const [editPurpose, setEditPurpose] = useState(
+    selectedAgent.purpose ||
+      "Counsel prospective students on admissions, fee matrices, merit scholarships, and book campus counseling tours."
+  );
+  const [editGreetingPhrase, setEditGreetingPhrase] = useState(
+    selectedAgent.greetingPhrase ||
+      `Hello! Welcome to Apex Global Admissions. I am ${selectedAgent.name.split("—")[0].trim()}. How may I assist you today?`
+  );
+  const [editSystemPrompt, setEditSystemPrompt] = useState(selectedAgent.systemPromptPreview);
+  const [editGroundingFacts, setEditGroundingFacts] = useState<string[]>([
+    "B.Tech Computer Science tuition is ₹5.18 Lakhs/year.",
+    "Chancellor's Merit Scholarship: >90% in PCM qualifies for 35% tuition fee waiver.",
+    "Air-conditioned Twin-sharing hostel is ₹1.10 Lakhs/year inclusive of 4 meals and laundry.",
+    "Direct Helpline: +91 40 4590 1199 • WhatsApp Catalog Dispatch active.",
+  ]);
+  const [newContextFactInput, setNewContextFactInput] = useState("");
+  const [editDosRules, setEditDosRules] = useState<string[]>([
+    "Always greet callers with warmth, empathy, and active listening.",
+    "Keep answers under 25 words per turn for natural phone conversational latency.",
+    "Promptly offer to reserve a Saturday 11:00 AM counseling tour.",
+  ]);
+  const [newDoInput, setNewDoInput] = useState("");
+  const [editDontsRules, setEditDontsRules] = useState<string[]>([
+    "Never invent or guess cutoff ranks not in official records.",
+    "Do not offer unapproved fee discounts outside the merit matrix.",
+    "Never discuss competitor institutions negatively.",
+  ]);
+  const [newDontInput, setNewDontInput] = useState("");
+  const [editEscalationDesk, setEditEscalationDesk] = useState(
+    selectedAgent.escalationDesk || "Admissions Counselor Desk (+91 40 4590 1100)"
+  );
+  const [saveSuccessNotice, setSaveSuccessNotice] = useState(false);
+
+  // Keep editor state in sync when selected agent changes
+  useEffect(() => {
+    setEditPurpose(
+      selectedAgent.purpose ||
+        "Counsel prospective students on admissions, fee matrices, merit scholarships, and book campus counseling tours."
+    );
+    setEditGreetingPhrase(
+      selectedAgent.greetingPhrase ||
+        `Hello! Welcome to Apex Global Admissions. I am ${selectedAgent.name.split("—")[0].trim()}. How may I assist you today?`
+    );
+    setEditSystemPrompt(selectedAgent.systemPromptPreview);
+    if (selectedAgent.rules && selectedAgent.rules.length > 0) {
+      setEditDosRules(selectedAgent.rules);
+    }
+    if (selectedAgent.guardrails && selectedAgent.guardrails.length > 0) {
+      setEditDontsRules(selectedAgent.guardrails);
+    }
+    if (selectedAgent.contextKnowledge) {
+      const facts = selectedAgent.contextKnowledge.split("\n").filter((f) => f.trim().length > 0);
+      if (facts.length > 0) setEditGroundingFacts(facts);
+    }
+  }, [selectedAgent]);
 
   // Language tab states (12+ Indian Languages with Native Scripts)
   const [activeDialects, setActiveDialects] = useState<string[]>([
@@ -528,31 +685,44 @@ export default function AgentsPage() {
   const [liveModalOpen, setLiveModalOpen] = useState(false);
   const [testCallItem, setTestCallItem] = useState<LiveCallItem | null>(null);
 
+  // Unified voices list (cloned + ready-made)
+  const allAvailableVoices = useMemo(() => {
+    return [...clonedVoices, ...readyMadeVoices];
+  }, [clonedVoices]);
+
   // Voice selector filtering
   const filteredVoices = useMemo(() => {
-    return readyMadeVoices.filter((v) => {
+    return allAvailableVoices.filter((v) => {
       const matchesSearch =
         v.name.toLowerCase().includes(voiceSearch.toLowerCase()) ||
         v.accent.toLowerCase().includes(voiceSearch.toLowerCase()) ||
         v.language.toLowerCase().includes(voiceSearch.toLowerCase());
-      const matchesLang = voiceLangFilter === "all" || v.language.toLowerCase().includes(voiceLangFilter.toLowerCase());
+      const matchesLang =
+        voiceLangFilter === "all" || v.language.toLowerCase().includes(voiceLangFilter.toLowerCase());
       const matchesTone = voiceToneFilter === "all" || v.tone === voiceToneFilter;
-      const matchesGender = voiceGenderFilter === "all" || v.gender.toLowerCase() === voiceGenderFilter.toLowerCase();
-      return matchesSearch && matchesLang && matchesTone && matchesGender;
+      const matchesGender =
+        voiceGenderFilter === "all" || v.gender.toLowerCase() === voiceGenderFilter.toLowerCase();
+      const matchesSource =
+        voiceSourceTab === "all" ||
+        (voiceSourceTab === "ready" && !v.isCloned) ||
+        (voiceSourceTab === "cloned" && v.isCloned);
+      return matchesSearch && matchesLang && matchesTone && matchesGender && matchesSource;
     });
-  }, [voiceSearch, voiceLangFilter, voiceToneFilter, voiceGenderFilter]);
+  }, [allAvailableVoices, voiceSearch, voiceLangFilter, voiceToneFilter, voiceGenderFilter, voiceSourceTab]);
 
   const handlePlayVoiceSample = (v: VoiceItem) => {
     if (playingVoiceId === v.id) {
+      soundSynth.stop();
       setPlayingVoiceId(null);
     } else {
       try {
         soundSynth.play("affirm");
       } catch {}
       setPlayingVoiceId(v.id);
+      soundSynth.speak(v.sampleTranscript);
       setTimeout(() => {
         setPlayingVoiceId(null);
-      }, 3500);
+      }, 4000);
     }
   };
 
@@ -560,15 +730,84 @@ export default function AgentsPage() {
     try {
       soundSynth.play("click");
     } catch {}
-    setSelectedAgent((prev) => ({
-      ...prev,
+    const updatedAgent: DashboardAgent = {
+      ...selectedAgent,
       voice: {
         name: v.name,
         gender: v.gender,
         accent: `${v.accent} (${v.tone})`,
         sampleUrl: v.sampleAudio,
+        isCloned: v.isCloned,
       },
-    }));
+    };
+    setSelectedAgent(updatedAgent);
+    setAgents((prev) => prev.map((a) => (a.id === selectedAgent.id ? updatedAgent : a)));
+    try {
+      soundSynth.speak(`Voice updated to ${v.name}.`, { rate: 1.05 });
+    } catch {}
+  };
+
+  const handleAgentCreated = (newAgent: DashboardAgent) => {
+    try {
+      soundSynth.play("confirm");
+    } catch {}
+    setAgents((prev) => [newAgent, ...prev]);
+    setSelectedAgent(newAgent);
+    setCreationSuccessToast(
+      `Autonomous Voice Agent "${newAgent.name}" deployed successfully! Active with voice "${newAgent.voice.name}".`
+    );
+    setTimeout(() => setCreationSuccessToast(null), 7000);
+  };
+
+  const handleVoiceCloned = (newVoice: VoiceItem) => {
+    setClonedVoices((prev) => [newVoice, ...prev]);
+  };
+
+  const startCloneMicRecord = () => {
+    try {
+      soundSynth.play("confirm");
+    } catch {}
+    setIsCloneRecording(true);
+    setCloneRecordingSecs(0);
+    setCloneRecordedBlob(null);
+    cloneMicTimerRef.current = setInterval(() => {
+      setCloneRecordingSecs((prev) => prev + 1);
+    }, 1000);
+  };
+
+  const stopCloneMicRecord = () => {
+    try {
+      soundSynth.play("pop");
+    } catch {}
+    setIsCloneRecording(false);
+    if (cloneMicTimerRef.current) {
+      clearInterval(cloneMicTimerRef.current);
+    }
+    setCloneRecordedBlob("mic-live-clean-capture.wav");
+    setCloneFileName("mic-live-clean-capture.wav");
+  };
+
+  const handleSaveAgentInstructions = () => {
+    try {
+      soundSynth.play("confirm");
+    } catch {}
+    const updated: DashboardAgent = {
+      ...selectedAgent,
+      purpose: editPurpose,
+      greetingPhrase: editGreetingPhrase,
+      systemPromptPreview: editSystemPrompt,
+      contextKnowledge: editGroundingFacts.join("\n"),
+      rules: editDosRules,
+      guardrails: editDontsRules,
+      escalationDesk: editEscalationDesk,
+    };
+    setSelectedAgent(updated);
+    setAgents((prev) => prev.map((a) => (a.id === selectedAgent.id ? updated : a)));
+    setSaveSuccessNotice(true);
+    setTimeout(() => setSaveSuccessNotice(false), 4000);
+    try {
+      soundSynth.speak("Agent instructions, purpose, and guardrails updated successfully.");
+    } catch {}
   };
 
   const handleSimulateCall = (agent: DashboardAgent, forceDirection?: "inbound" | "outbound") => {
@@ -672,6 +911,10 @@ export default function AgentsPage() {
 
   const handleStartCloningProcess = () => {
     if (!cloneConsentConfirmed) return;
+    if (!cloneVoiceName.trim()) {
+      alert("Please enter a voice identifier name.");
+      return;
+    }
     try {
       soundSynth.play("confirm");
     } catch {}
@@ -680,8 +923,45 @@ export default function AgentsPage() {
       setCloneStatus("analyzing");
       setTimeout(() => {
         setCloneStatus("ready");
-      }, 1500);
-    }, 1200);
+        const newCloned: VoiceItem = {
+          id: `cloned-${Date.now()}`,
+          name: `${cloneVoiceName.trim()} (Cloned)`,
+          gender: cloneSpeakerGender,
+          language: cloneSpeakerAccent,
+          accent: "Custom Neural Clone",
+          tone: "Warm & Reassuring",
+          sampleAudio: "https://actions.google.com/sounds/v1/speech/female_affirmation.ogg",
+          latencyMs: 122,
+          sampleTranscript: cloneTestSentence,
+          tag: "Cloned Neural Model",
+          recommendedFor: "Personalized Admissions Guidance",
+          isCloned: true,
+          cloneFidelity: 98.6,
+          clonedAt: "Just now",
+          provider: "Custom Cloned Neural Engine",
+        };
+        setClonedVoices((prev) => [newCloned, ...prev]);
+        const updatedAgent: DashboardAgent = {
+          ...selectedAgent,
+          voice: {
+            name: newCloned.name,
+            gender: newCloned.gender,
+            accent: `${newCloned.accent} (${newCloned.tone})`,
+            sampleUrl: newCloned.sampleAudio,
+            isCloned: true,
+          },
+        };
+        setSelectedAgent(updatedAgent);
+        setAgents((prev) => prev.map((a) => (a.id === selectedAgent.id ? updatedAgent : a)));
+        try {
+          soundSynth.play("affirm");
+          soundSynth.speak(
+            `Voice model ${cloneVoiceName} cloned and assigned to ${selectedAgent.name.split("—")[0].trim()}!`,
+            { rate: 1.05 }
+          );
+        } catch {}
+      }, 1400);
+    }, 1000);
   };
 
   const handlePublishAgent = () => {
@@ -751,6 +1031,36 @@ export default function AgentsPage() {
         </div>
       </div>
 
+      {/* Creation Success Toast Banner */}
+      {creationSuccessToast && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-2 border-emerald-400 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md animate-in fade-in duration-200">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-2xs shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <strong className="text-xs font-black block text-emerald-950">New Autonomous Voice Agent Deployed!</strong>
+              <span className="text-[11.5px] text-emerald-800 font-medium">{creationSuccessToast}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setActiveTab("playground")}
+            className="text-xs font-black px-4 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs cursor-pointer shrink-0 transition-all hover:scale-105 active:scale-95"
+          >
+            Test Call in Playground →
+          </button>
+        </div>
+      )}
+
+      {/* Save Success Notice */}
+      {saveSuccessNotice && (
+        <div className="p-3.5 rounded-2xl bg-[#C1F2D5]/70 border-2 border-[#16856B]/40 flex items-center gap-3 text-xs text-[#0D593F] font-bold animate-in fade-in duration-200 shadow-xs">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16856B]" />
+          <span>Agent purpose, context knowledge, and behavioral guardrails successfully updated and saved!</span>
+        </div>
+      )}
+
       {/* Publish Notification Banner */}
       {publishSuccessNotice && (
         <div className="p-3.5 rounded-2xl bg-[#C1F2D5]/40 border border-[#16856B]/20 flex items-center gap-3 text-xs text-[#0D593F] font-semibold animate-in fade-in duration-200">
@@ -762,7 +1072,7 @@ export default function AgentsPage() {
       {/* ======================================================================= */}
       {/* AGENT SELECTOR CARDS (Persona-Specific Color System)                    */}
       {/* ======================================================================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {agents.map((agent) => {
           const isSelected = selectedAgent.id === agent.id;
           const theme = getAgentTheme(agent.id);
@@ -811,16 +1121,35 @@ export default function AgentsPage() {
               </div>
 
               <div className="relative z-10 mt-4 pt-3 border-t border-black/[0.06] flex items-center justify-between text-[11px]">
-                <span className="text-black/60 font-medium">
+                <span className="text-black/60 font-medium truncate mr-1">
                   Voice: <strong className="text-[#1A1A1A] font-bold">{agent.voice.name}</strong>
                 </span>
-                <span className="px-2 py-0.5 rounded-lg bg-black/[0.04] border border-black/[0.06] font-mono font-bold text-[10.5px] text-black/75">
+                <span className="px-2 py-0.5 rounded-lg bg-black/[0.04] border border-black/[0.06] font-mono font-bold text-[10.5px] text-black/75 shrink-0">
                   DID: {agent.assignedNumber.slice(-4)}
                 </span>
               </div>
             </div>
           );
         })}
+
+        {/* Quick Provision New Agent Card */}
+        <div
+          onClick={() => {
+            try { soundSynth.play("click"); } catch {}
+            setCreateModalOpen(true);
+          }}
+          className="relative overflow-hidden p-5 rounded-[24px] border-2 border-dashed border-black/15 hover:border-[#FF6B08] bg-black/[0.01] hover:bg-orange-50/40 transition-all text-left cursor-pointer flex flex-col items-center justify-center gap-2.5 select-none min-h-[120px] group shadow-2xs"
+        >
+          <div className="w-11 h-11 rounded-2xl bg-orange-100 text-[#FF6B08] group-hover:bg-[#FF6B08] group-hover:text-white transition-all flex items-center justify-center font-bold shadow-2xs">
+            <Plus className="w-6 h-6 stroke-[2.5]" />
+          </div>
+          <div className="text-center">
+            <strong className="text-xs font-black text-[#1A1A1A] group-hover:text-[#FF6B08] transition-colors block">
+              + Create New Agent
+            </strong>
+            <span className="text-[11px] text-black/50">Custom Voice, Context &amp; Rules</span>
+          </div>
+        </div>
       </div>
 
       {/* ======================================================================= */}
@@ -878,7 +1207,7 @@ export default function AgentsPage() {
           </div>
         </div>
 
-        {/* 9 Tab Navigation Strip with Jewel-Toned Icons */}
+        {/* 8 Tab Navigation Strip with Jewel-Toned Icons */}
         <div className="px-5 border-b border-black/[0.06] bg-[#FAF8F3] flex items-center gap-1.5 overflow-x-auto scrollbar-none py-2.5">
           {[
             { id: "overview", label: "Overview", icon: Bot, color: "text-purple-600" },
@@ -886,7 +1215,6 @@ export default function AgentsPage() {
             { id: "voice", label: "Voice & Library", icon: Volume2, color: "text-amber-600" },
             { id: "languages", label: "Languages", icon: Globe, color: "text-cyan-600" },
             { id: "knowledge", label: "Knowledge", icon: FileText, color: "text-blue-600" },
-            { id: "data-extraction", label: "Data Extraction", icon: Database, color: "text-indigo-600" },
             { id: "call-rules", label: "Call Rules", icon: ShieldCheck, color: "text-rose-600" },
             { id: "playground", label: "Test Playground", icon: Activity, color: "text-orange-600" },
             { id: "history", label: "History", icon: HistoryIcon, color: "text-purple-600", badge: conversationHistory.length },
@@ -1233,55 +1561,300 @@ export default function AgentsPage() {
           {/* =================================================================== */}
           {activeTab === "instructions" && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#1A1A1A] flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>System Prompt & Conversational Guardrails</span>
+                    <span>Purpose, Context &amp; Conversational Rules Studio</span>
                   </h3>
                   <p className="text-xs text-black/60 mt-0.5">
-                    Define the agent's identity, communication style, greeting message, and fallback criteria.
+                    Customize the core mission, institutional context facts, behavioral rules, and voice greeting for {selectedAgent.name.split("—")[0].trim()}.
                   </p>
                 </div>
-                <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 font-mono shadow-2xs">
-                  SPEC V3.4 • PRODUCTION
-                </span>
-              </div>
-
-              {/* Greeting phrase card with warm amber gradient */}
-              <div className="p-5 rounded-[22px] bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-rose-500/10 border-2 border-amber-400/30 space-y-3 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-extrabold text-[#1A1A1A] flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#FF8800] to-[#FF6B08] text-white flex items-center justify-center shadow-2xs">
-                      <Volume2 className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Greeting Phrase (First turn audio packet)</span>
-                  </label>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 border border-amber-300">
-                    &lt; 150ms First Byte
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 font-mono shadow-2xs">
+                    SPEC V3.5 • PRODUCTION
                   </span>
                 </div>
-                <input
-                  type="text"
-                  defaultValue={`Hello! Welcome to Apex Global Admissions. I am ${selectedAgent.name.split("—")[0].trim()}. How may I assist you with your campus inquiry today?`}
-                  className="w-full text-xs p-3.5 bg-white border-2 border-amber-300/60 rounded-xl text-[#1A1A1A] font-medium focus:outline-none focus:border-[#FF6B08] focus:ring-2 focus:ring-[#FF6B08]/20 shadow-xs"
+              </div>
+
+              {/* SECTION 1: PURPOSE & CORE OBJECTIVE FREEDOM */}
+              <div className="p-5 rounded-[24px] bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-white border-2 border-amber-400/30 space-y-3.5 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-extrabold text-[#1A1A1A] flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#FF8800] to-[#FF6B08] text-white flex items-center justify-center shadow-2xs font-bold">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                    <span>Agent Purpose &amp; Core Mission (Full Freedom)</span>
+                  </label>
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-900 border border-amber-300">
+                    Autonomous Scope
+                  </span>
+                </div>
+                <textarea
+                  rows={3}
+                  value={editPurpose}
+                  onChange={(e) => setEditPurpose(e.target.value)}
+                  placeholder="Define this agent's core purpose, decision rights, target audience, and primary KPIs..."
+                  className="w-full text-xs p-3.5 bg-white border-2 border-amber-300/60 rounded-xl text-[#1A1A1A] font-medium focus:outline-none focus:border-[#FF6B08] shadow-xs leading-relaxed"
                 />
               </div>
 
-              {/* Terminal-style Core Instructions */}
+              {/* SECTION 2: CONTEXT & GROUNDING KNOWLEDGE POINTS */}
+              <div className="p-5 rounded-[24px] bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-white border-2 border-blue-400/30 space-y-3.5 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-extrabold text-[#1A1A1A] flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center shadow-2xs font-bold">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <span>Institutional Context &amp; Grounding Facts ({editGroundingFacts.length})</span>
+                  </label>
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 border border-blue-200">
+                    Zero-Hallucination Vector Store
+                  </span>
+                </div>
+
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  {editGroundingFacts.map((fact, idx) => (
+                    <div
+                      key={idx}
+                      className="p-2.5 rounded-xl bg-white border border-blue-200/80 flex items-center justify-between gap-2 shadow-2xs"
+                    >
+                      <span className="text-xs text-[#1A1A1A] font-medium leading-relaxed">
+                        • {fact}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setEditGroundingFacts((prev) => prev.filter((_, i) => i !== idx))}
+                        className="text-black/35 hover:text-rose-600 p-1 rounded-lg transition-colors cursor-pointer shrink-0"
+                        title="Remove Fact"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add New Fact Input */}
+                <div className="flex items-center gap-2 pt-1">
+                  <input
+                    type="text"
+                    placeholder="Add verified institutional fact (e.g. Hostels feature 24/7 solar water heating and Wi-Fi)..."
+                    value={newContextFactInput}
+                    onChange={(e) => setNewContextFactInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (newContextFactInput.trim()) {
+                          setEditGroundingFacts((prev) => [...prev, newContextFactInput.trim()]);
+                          setNewContextFactInput("");
+                          try { soundSynth.play("pop"); } catch {}
+                        }
+                      }
+                    }}
+                    className="flex-1 px-3.5 py-2 rounded-xl bg-white border-2 border-blue-200/80 focus:border-blue-600 text-xs font-medium focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (newContextFactInput.trim()) {
+                        setEditGroundingFacts((prev) => [...prev, newContextFactInput.trim()]);
+                        setNewContextFactInput("");
+                        try { soundSynth.play("pop"); } catch {}
+                      }
+                    }}
+                    className="px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add Fact</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* SECTION 3: CONVERSATIONAL RULES & STRICT GUARDRAILS */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Behavioral DO's */}
+                <div className="p-5 rounded-[24px] bg-emerald-50/60 border-2 border-emerald-300/80 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-extrabold text-emerald-950 flex items-center gap-1.5">
+                      <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />
+                      <span>Behavioral DO's ({editDosRules.length})</span>
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                    {editDosRules.map((rule, idx) => (
+                      <div
+                        key={idx}
+                        className="p-2.5 rounded-xl bg-white border border-emerald-200/70 flex items-center justify-between gap-2 text-xs shadow-2xs"
+                      >
+                        <span className="text-emerald-950 font-medium">✓ {rule}</span>
+                        <button
+                          type="button"
+                          onClick={() => setEditDosRules((prev) => prev.filter((_, i) => i !== idx))}
+                          className="text-black/30 hover:text-rose-600 cursor-pointer p-0.5 shrink-0"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-1.5 pt-1">
+                    <input
+                      type="text"
+                      placeholder="Add mandatory rule..."
+                      value={newDoInput}
+                      onChange={(e) => setNewDoInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          if (newDoInput.trim()) {
+                            setEditDosRules((prev) => [...prev, newDoInput.trim()]);
+                            setNewDoInput("");
+                            try { soundSynth.play("pop"); } catch {}
+                          }
+                        }
+                      }}
+                      className="flex-1 px-3 py-1.5 rounded-xl bg-white border border-emerald-300 text-xs focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (newDoInput.trim()) {
+                          setEditDosRules((prev) => [...prev, newDoInput.trim()]);
+                          setNewDoInput("");
+                          try { soundSynth.play("pop"); } catch {}
+                        }
+                      }}
+                      className="px-3.5 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs cursor-pointer"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {/* Strict DON'Ts */}
+                <div className="p-5 rounded-[24px] bg-rose-50/60 border-2 border-rose-300/80 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-extrabold text-rose-950 flex items-center gap-1.5">
+                      <AlertTriangle className="w-4 h-4 text-rose-600" />
+                      <span>Strict DON'Ts &amp; Guardrails ({editDontsRules.length})</span>
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+                    {editDontsRules.map((rule, idx) => (
+                      <div
+                        key={idx}
+                        className="p-2.5 rounded-xl bg-white border border-rose-200/70 flex items-center justify-between gap-2 text-xs shadow-2xs"
+                      >
+                        <span className="text-rose-950 font-medium">✕ {rule}</span>
+                        <button
+                          type="button"
+                          onClick={() => setEditDontsRules((prev) => prev.filter((_, i) => i !== idx))}
+                          className="text-black/30 hover:text-rose-600 cursor-pointer p-0.5 shrink-0"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-1.5 pt-1">
+                    <input
+                      type="text"
+                      placeholder="Add forbidden policy..."
+                      value={newDontInput}
+                      onChange={(e) => setNewDontInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          if (newDontInput.trim()) {
+                            setEditDontsRules((prev) => [...prev, newDontInput.trim()]);
+                            setNewDontInput("");
+                            try { soundSynth.play("pop"); } catch {}
+                          }
+                        }
+                      }}
+                      className="flex-1 px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-xs focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (newDontInput.trim()) {
+                          setEditDontsRules((prev) => [...prev, newDontInput.trim()]);
+                          setNewDontInput("");
+                          try { soundSynth.play("pop"); } catch {}
+                        }
+                      }}
+                      className="px-3.5 py-1.5 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-xs cursor-pointer"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 4: GREETING PHRASE & ESCALATION DESK */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-5 rounded-[22px] bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-rose-500/10 border-2 border-amber-400/30 space-y-2.5 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-extrabold text-[#1A1A1A] flex items-center gap-2">
+                      <Volume2 className="w-4 h-4 text-[#FF6B08]" />
+                      <span>Greeting Phrase (Turn 1 Audio Packet)</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundSynth.speak(editGreetingPhrase);
+                      }}
+                      className="text-[11px] font-bold text-[#FF6B08] hover:underline cursor-pointer flex items-center gap-1"
+                    >
+                      <Play className="w-3 h-3 fill-[#FF6B08]" />
+                      <span>Listen</span>
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={editGreetingPhrase}
+                    onChange={(e) => setEditGreetingPhrase(e.target.value)}
+                    className="w-full text-xs p-3 bg-white border-2 border-amber-300/60 rounded-xl text-[#1A1A1A] font-medium focus:outline-none focus:border-[#FF6B08] shadow-xs"
+                  />
+                </div>
+
+                <div className="p-5 rounded-[22px] bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-blue-500/10 border-2 border-purple-400/30 space-y-2.5 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-extrabold text-[#1A1A1A] flex items-center gap-2">
+                      <PhoneCall className="w-4 h-4 text-purple-700" />
+                      <span>Human Escalation Desk</span>
+                    </label>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-900">
+                      SIP Zero-Wait
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={editEscalationDesk}
+                    onChange={(e) => setEditEscalationDesk(e.target.value)}
+                    className="w-full text-xs p-3 bg-white border-2 border-purple-300/60 rounded-xl text-[#1A1A1A] font-medium focus:outline-none focus:border-purple-600 shadow-xs"
+                  />
+                </div>
+              </div>
+
+              {/* Terminal-style Core System Prompt */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-extrabold text-[#1A1A1A] flex items-center gap-2">
                     <div className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center border border-emerald-300 shadow-2xs">
                       <Terminal className="w-3.5 h-3.5 stroke-[2.5]" />
                     </div>
-                    <span>Core Instructions & Behavioral Rules</span>
+                    <span>Full Compiled System Prompt (Markdown)</span>
                   </label>
-                  <span className="text-[10.5px] font-mono text-black/50">Markdown / System Prompt</span>
+                  <span className="text-[10.5px] font-mono text-black/50">Runtime Instruction Engine</span>
                 </div>
 
                 <div className="rounded-[22px] border-2 border-black/[0.08] overflow-hidden shadow-xs">
-                  {/* Terminal Header */}
                   <div className="px-4 py-2.5 bg-[#1F2937] border-b border-black/20 flex items-center justify-between text-white text-xs">
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1.5">
@@ -1297,39 +1870,33 @@ export default function AgentsPage() {
                   </div>
 
                   <textarea
-                    rows={8}
-                    defaultValue={selectedAgent.systemPromptPreview}
+                    rows={6}
+                    value={editSystemPrompt}
+                    onChange={(e) => setEditSystemPrompt(e.target.value)}
                     className="w-full font-mono text-xs p-4 bg-[#FDFBF7] text-[#1A1A1A] focus:outline-none focus:bg-white leading-relaxed resize-y border-none"
                   />
                 </div>
               </div>
 
-              {/* Zero-Hallucination Policy Card in Vibrant Cyan/Sky Blue */}
-              <div className="p-4.5 rounded-[22px] bg-gradient-to-r from-cyan-50 via-sky-50 to-blue-50 border-2 border-cyan-200/80 flex items-start gap-3.5 text-xs text-[#0369A1] shadow-xs">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                  <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-[#0C4A6E] text-xs">Zero-Hallucination Grounded Policy Active</h4>
-                  <p className="text-[11.5px] text-[#0369A1] mt-0.5 leading-relaxed">
-                    The agent is strictly instructed to reply: <em>"I do not have verified documentation for that specific detail, let me connect you with counselor Mr. Sharma"</em> whenever a requested piece of information is missing from the institutional vector store.
-                  </p>
-                </div>
-              </div>
-
+              {/* Save & Apply Revisions Controls */}
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button
                   type="button"
+                  onClick={() => {
+                    setEditPurpose(selectedAgent.purpose || "");
+                    setEditGreetingPhrase(selectedAgent.greetingPhrase || "");
+                    setEditSystemPrompt(selectedAgent.systemPromptPreview);
+                  }}
                   className="rounded-full px-5 py-2.5 text-xs font-bold text-black/60 hover:text-[#1A1A1A] hover:bg-[#FBF7ED] border border-black/10 transition-all cursor-pointer"
                 >
-                  Discard Changes
+                  Reset to Current
                 </button>
                 <button
                   type="button"
-                  onClick={() => setPublishModalOpen(true)}
+                  onClick={handleSaveAgentInstructions}
                   className="rounded-full px-6 py-2.5 text-xs font-bold bg-gradient-to-r from-[#10B981] via-[#059669] to-[#047857] hover:brightness-110 text-white shadow-[0_4px_16px_rgba(16,185,129,0.35)] transition-all cursor-pointer hover:scale-102 active:scale-98"
                 >
-                  Save &amp; Stage Revision
+                  Save &amp; Apply Revisions
                 </button>
               </div>
             </div>
@@ -1394,6 +1961,75 @@ export default function AgentsPage() {
                       High-fidelity, ultra low-latency neural acoustic models optimized for Indian English and regional Indic dialects.
                     </p>
                   </div>
+                </div>
+
+                {/* Source Filter Switcher Tabs */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-1.5 p-1.5 bg-black/[0.04] rounded-2xl border border-black/[0.06]">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVoiceSourceTab("all");
+                        try { soundSynth.play("click"); } catch {}
+                      }}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        voiceSourceTab === "all"
+                          ? "bg-white text-[#1A1A1A] shadow-xs"
+                          : "text-black/60 hover:text-black"
+                      }`}
+                    >
+                      All Voices ({allAvailableVoices.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVoiceSourceTab("ready");
+                        try { soundSynth.play("click"); } catch {}
+                      }}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        voiceSourceTab === "ready"
+                          ? "bg-white text-[#1A1A1A] shadow-xs"
+                          : "text-black/60 hover:text-black"
+                      }`}
+                    >
+                      <span>Ready-Made</span>
+                      <span className="px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 text-[10px]">
+                        {readyMadeVoices.length}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVoiceSourceTab("cloned");
+                        try { soundSynth.play("click"); } catch {}
+                      }}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        voiceSourceTab === "cloned"
+                          ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs"
+                          : "text-purple-700 hover:text-purple-900"
+                      }`}
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Cloned Vault</span>
+                      <span className={`px-1.5 py-0.2 rounded-md text-[10px] ${
+                        voiceSourceTab === "cloned" ? "bg-white/20 text-white" : "bg-purple-100 text-purple-900"
+                      }`}>
+                        {clonedVoices.length}
+                      </span>
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try { soundSynth.play("click"); } catch {}
+                      setCreateModalOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110 text-white shadow-xs transition-all cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Create Agent with Cloned Voice</span>
+                  </button>
                 </div>
 
                 {/* Filters */}
@@ -1469,17 +2105,27 @@ export default function AgentsPage() {
                             <div className="flex items-center gap-2.5">
                               <div
                                 className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shrink-0 shadow-2xs ${
-                                  isFemale
+                                  v.isCloned
+                                    ? "bg-gradient-to-br from-purple-600 via-pink-600 to-indigo-600 shadow-[0_4px_12px_rgba(147,51,234,0.3)]"
+                                    : isFemale
                                     ? "bg-gradient-to-br from-pink-500 to-purple-600"
                                     : "bg-gradient-to-br from-cyan-500 to-blue-600"
                                 }`}
                               >
-                                <Volume2 className="w-5 h-5 stroke-[2.2]" />
+                                {v.isCloned ? (
+                                  <Sparkles className="w-5 h-5 stroke-[2.2]" />
+                                ) : (
+                                  <Volume2 className="w-5 h-5 stroke-[2.2]" />
+                                )}
                               </div>
                               <div>
                                 <div className="flex items-center gap-1.5 flex-wrap">
                                   <h4 className="font-extrabold text-xs text-[#1A1A1A]">{v.name}</h4>
-                                  {v.tag && (
+                                  {v.isCloned ? (
+                                    <span className="text-[9.5px] font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-2 py-0.5 rounded-full shadow-2xs">
+                                      Neural Clone
+                                    </span>
+                                  ) : v.tag && (
                                     <span className="text-[9.5px] font-extrabold bg-purple-100 text-purple-900 px-2 py-0.5 rounded-full border border-purple-200">
                                       {v.tag}
                                     </span>
@@ -1491,7 +2137,9 @@ export default function AgentsPage() {
 
                             <span
                               className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full shrink-0 border ${
-                                isFemale
+                                v.isCloned
+                                  ? "bg-purple-50 text-purple-700 border-purple-200"
+                                  : isFemale
                                   ? "bg-pink-50 text-pink-700 border-pink-200"
                                   : "bg-cyan-50 text-cyan-700 border-cyan-200"
                               }`}
@@ -1501,7 +2149,7 @@ export default function AgentsPage() {
                           </div>
 
                           <div className="p-3 rounded-xl bg-black/[0.02] border-l-3 border-[#FF6B08] text-[11px] text-black/75 italic leading-snug line-clamp-2">
-                            "{v.sampleTranscript}"
+                            &ldquo;{v.sampleTranscript}&rdquo;
                           </div>
 
                           <div className="flex items-center justify-between text-[10.5px]">
@@ -1554,101 +2202,287 @@ export default function AgentsPage() {
                 </div>
               </div>
 
-              {/* Section 2: Custom Consent-Based Voice Cloning (Optional & Separate) */}
+              {/* Section 2: Full-Featured Custom Voice Cloning Studio */}
               <div className="pt-6 border-t border-black/[0.06] space-y-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">
-                      Custom Voice Cloning (Optional)
-                    </h3>
-                    <span className="text-[10px] font-semibold bg-[#FFD9A0]/50 text-[#8C4A00] px-2.5 py-0.5 rounded-full border border-[#FFD9A0]">
-                      Consent Required
-                    </span>
-                  </div>
-                  <p className="text-xs text-black/60 mt-0.5">
-                    Clone an executive or counselor voice with verified legal consent. Only available with an enterprise provider license.
-                  </p>
-                </div>
-
-                <div className="p-5 rounded-[24px] border border-black/[0.06] bg-white space-y-4 shadow-2xs">
-                  {/* Provider Verification Notice */}
-                  <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.05] text-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
                     <div className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-[#16856B]" />
-                      <span className="text-[#1A1A1A]">
-                        <strong>Configured Engine:</strong> ElevenLabs Enterprise Telephony Integration
+                      <div className="w-6 h-6 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+                        <Sparkles className="w-3.5 h-3.5" />
+                      </div>
+                      <h3 className="text-xs font-black uppercase tracking-wider text-[#1A1A1A]">
+                        Custom Voice Cloning Studio
+                      </h3>
+                      <span className="text-[10px] font-extrabold bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-900 px-2.5 py-0.5 rounded-full border border-purple-300">
+                        Zero Shot Neural Acoustic Embeddings
                       </span>
                     </div>
-                    <span className="text-[11px] font-semibold text-[#0D593F] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full">
-                      Provider Ready
-                    </span>
+                    <p className="text-xs text-black/60 mt-1">
+                      Capture or upload audio to clone any voice (Dean, counselor, ambassador, or founder) with verifiable legal consent.
+                    </p>
                   </div>
+                </div>
 
-                  {/* Mandatory Consent Checkbox */}
-                  <div className="p-4 rounded-2xl bg-[#FFD9A0]/25 border border-[#FFD9A0]/50 space-y-2">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={cloneConsentConfirmed}
-                        onChange={(e) => setCloneConsentConfirmed(e.target.checked)}
-                        className="mt-0.5 rounded text-[#111111] focus:ring-black accent-black"
-                      />
-                      <span className="text-xs text-[#1A1A1A] leading-relaxed">
-                        <strong>Mandatory Legal & Ethical Consent:</strong> I confirm and certify under penalty of policy violation that I have obtained explicit, recorded, written authorization from the individual whose voice is being cloned. I understand that unauthorized voice cloning is strictly prohibited under DPDP and platform acceptable use guidelines.
-                      </span>
+                <div className="p-6 rounded-[28px] border-2 border-purple-200/80 bg-gradient-to-br from-purple-50/40 via-white to-indigo-50/40 space-y-5 shadow-xs">
+                  {/* Step A: Input Mode Choice (Microphone vs Audio File) */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-extrabold text-[#1A1A1A] block">
+                      1. Audio Capture Method
                     </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCloneInputMode("mic");
+                          try { soundSynth.play("click"); } catch {}
+                        }}
+                        className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3.5 ${
+                          cloneInputMode === "mic"
+                            ? "bg-purple-100/70 border-purple-600 shadow-sm"
+                            : "bg-white border-black/10 hover:border-purple-300"
+                        }`}
+                      >
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold shrink-0 ${
+                          cloneInputMode === "mic"
+                            ? "bg-purple-600 text-white"
+                            : "bg-black/5 text-black/60"
+                        }`}>
+                          <Mic className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-[#1A1A1A]">Live Microphone Record</h4>
+                          <p className="text-[11px] text-black/60 mt-0.5">Read a 30-60 sec prompt into your microphone</p>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCloneInputMode("upload");
+                          try { soundSynth.play("click"); } catch {}
+                        }}
+                        className={`p-4 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-center gap-3.5 ${
+                          cloneInputMode === "upload"
+                            ? "bg-purple-100/70 border-purple-600 shadow-sm"
+                            : "bg-white border-black/10 hover:border-purple-300"
+                        }`}
+                      >
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold shrink-0 ${
+                          cloneInputMode === "upload"
+                            ? "bg-purple-600 text-white"
+                            : "bg-black/5 text-black/60"
+                        }`}>
+                          <Upload className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-[#1A1A1A]">Upload Audio File</h4>
+                          <p className="text-[11px] text-black/60 mt-0.5">WAV, MP3, M4A or OGG studio speech recording</p>
+                        </div>
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Upload and Configuration Form */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Step B: Live Mic Recording or Upload Box */}
+                  {cloneInputMode === "mic" ? (
+                    <div className="p-5 rounded-2xl bg-white border-2 border-purple-300/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="space-y-1 text-center sm:text-left">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-purple-900 block">
+                          Microphone Audio Capture Session
+                        </span>
+                        <p className="text-xs text-black/65">
+                          {isCloneRecording
+                            ? `Recording in progress... (${cloneRecordingSecs} seconds elapsed)`
+                            : cloneRecordedBlob
+                            ? `Live recording captured (${cloneFileName}). Ready for neural vector processing.`
+                            : "Press Record and speak naturally in a quiet room."}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3 shrink-0">
+                        {isCloneRecording ? (
+                          <>
+                            <div className="flex items-center gap-1.5 h-6">
+                              {[30, 80, 100, 60, 90, 45, 75, 55].map((h, i) => (
+                                <div
+                                  key={i}
+                                  style={{ height: `${h}%` }}
+                                  className="w-1 bg-rose-500 rounded-full animate-pulse"
+                                />
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={stopCloneMicRecord}
+                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md cursor-pointer transition-all hover:scale-105 active:scale-95"
+                            >
+                              <Square className="w-3.5 h-3.5 fill-white stroke-none" />
+                              <span>Stop Recording ({cloneRecordingSecs}s)</span>
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={startCloneMicRecord}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110 text-white font-bold text-xs shadow-md cursor-pointer transition-all hover:scale-105 active:scale-95"
+                          >
+                            <Mic className="w-3.5 h-3.5" />
+                            <span>{cloneRecordedBlob ? "Re-Record Sample" : "Start Live Mic Record"}</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-5 rounded-2xl bg-white border-2 border-purple-300/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="space-y-1">
+                        <span className="text-[11px] font-black uppercase tracking-wider text-purple-900 block">
+                          Speech Audio File Attachment
+                        </span>
+                        <p className="text-xs text-black/65">
+                          {cloneFileName ? `Selected: ${cloneFileName}` : "Choose a clear speech clip of at least 30-60 seconds."}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCloneFileName("dean_speech_60s_sample.wav");
+                            try { soundSynth.play("confirm"); } catch {}
+                          }}
+                          className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FAF9F6] hover:bg-purple-100 text-purple-900 border border-purple-200 cursor-pointer transition-all"
+                        >
+                          Use Studio Sample File
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCloneFileName("counselor_ananya_audio_90s.wav");
+                            try { soundSynth.play("confirm"); } catch {}
+                          }}
+                          className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FAF9F6] hover:bg-purple-100 text-purple-900 border border-purple-200 cursor-pointer transition-all"
+                        >
+                          Use Counselor Sample
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Speaker Details Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-[#1A1A1A] block">
-                        Voice Persona Identifier
+                      <label className="text-xs font-bold text-[#1A1A1A] block">
+                        Voice Persona Name
                       </label>
                       <input
                         type="text"
                         value={cloneVoiceName}
                         onChange={(e) => setCloneVoiceName(e.target.value)}
-                        placeholder="e.g. Dean Vikram Rao Voice Model"
-                        className="w-full text-xs px-3.5 py-2.5 bg-white border border-black/[0.08] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-black"
+                        placeholder="e.g. Dean Vikram Rao Voice"
+                        className="w-full text-xs px-3.5 py-2.5 bg-white border border-black/[0.08] rounded-xl text-[#1A1A1A] font-semibold focus:outline-none focus:border-purple-600 shadow-2xs"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-[#1A1A1A] block">
-                        Upload Sample (Min 60 seconds clean audio, WAV/MP3)
+                      <label className="text-xs font-bold text-[#1A1A1A] block">
+                        Speaker Gender
                       </label>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setCloneFileName("dean_speech_60s_sample.wav")}
-                          className="flex-1 flex items-center justify-center gap-2 p-2.5 border border-dashed border-black/20 rounded-xl text-xs text-black/60 hover:border-black hover:text-[#1A1A1A] transition-colors cursor-pointer bg-[#FBF7ED]"
-                        >
-                          <Upload className="w-3.5 h-3.5" />
-                          <span>{cloneFileName || "Choose audio file..."}</span>
-                        </button>
-                      </div>
+                      <select
+                        value={cloneSpeakerGender}
+                        onChange={(e) => setCloneSpeakerGender(e.target.value as "female" | "male")}
+                        className="w-full text-xs px-3.5 py-2.5 bg-white border border-black/[0.08] rounded-xl text-[#1A1A1A] font-semibold focus:outline-none focus:border-purple-600 shadow-2xs cursor-pointer"
+                      >
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-[#1A1A1A] block">
+                        Accent / Language Dialect
+                      </label>
+                      <input
+                        type="text"
+                        value={cloneSpeakerAccent}
+                        onChange={(e) => setCloneSpeakerAccent(e.target.value)}
+                        placeholder="e.g. Indian English (Warm & Reassuring)"
+                        className="w-full text-xs px-3.5 py-2.5 bg-white border border-black/[0.08] rounded-xl text-[#1A1A1A] font-semibold focus:outline-none focus:border-purple-600 shadow-2xs"
+                      />
                     </div>
                   </div>
 
+                  {/* Quality Analysis Meter */}
                   {cloneFileName && (
-                    <div className="p-3.5 rounded-xl bg-[#FBF7ED] border border-black/[0.05] space-y-2 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-black/60">Sample Quality Analysis:</span>
-                        <span className="font-semibold text-[#0D593F]">96% High Fidelity (Low Noise Floor)</span>
+                    <div className="p-4 rounded-2xl bg-white border border-emerald-300 space-y-2 shadow-2xs">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-bold text-black/70 flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                          <span>Acoustic Sample Quality Analysis:</span>
+                        </span>
+                        <span className="font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                          98.6% High Fidelity (Low Noise Floor)
+                        </span>
                       </div>
-                      <div className="w-full bg-black/10 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-[#16856B] h-full w-[96%]" />
+                      <div className="w-full bg-black/10 h-2 rounded-full overflow-hidden">
+                        <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full w-[98.6%]" />
                       </div>
+                      <span className="text-[10.5px] text-emerald-700 block font-medium">
+                        ✓ Optimal pitch distribution, clean phoneme contours, zero room reverberation detected.
+                      </span>
                     </div>
                   )}
 
+                  {/* Test Sentence with Live Speech Synthesis */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-[#1A1A1A] block">
+                        Test Sentence for Cloned Voice Model
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          try {
+                            soundSynth.speak(cloneTestSentence, {
+                              rate: 1.0,
+                              pitch: cloneSpeakerGender === "female" ? 1.05 : 0.95,
+                            });
+                          } catch {}
+                        }}
+                        className="inline-flex items-center gap-1.5 text-xs font-extrabold text-purple-700 hover:text-purple-900 cursor-pointer"
+                      >
+                        <Play className="w-3.5 h-3.5 fill-purple-700 stroke-none" />
+                        <span>Synthesize &amp; Listen to Test Sentence</span>
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={cloneTestSentence}
+                      onChange={(e) => setCloneTestSentence(e.target.value)}
+                      className="w-full text-xs px-3.5 py-2.5 bg-white border border-black/[0.08] rounded-xl text-[#1A1A1A] font-medium focus:outline-none focus:border-purple-600 shadow-2xs"
+                    />
+                  </div>
+
+                  {/* Mandatory Consent Checkbox */}
+                  <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-400/40 space-y-1.5">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={cloneConsentConfirmed}
+                        onChange={(e) => setCloneConsentConfirmed(e.target.checked)}
+                        className="mt-0.5 rounded text-purple-700 focus:ring-purple-700 accent-purple-700 cursor-pointer"
+                      />
+                      <span className="text-xs text-[#1A1A1A] leading-relaxed">
+                        <strong className="text-amber-950 font-black">Mandatory DPDP &amp; Voice Ethics Consent:</strong> I confirm and legally certify that explicit authorization has been secured from the individual whose voice is being cloned. Unauthorized impersonation is strictly prohibited under institutional acceptable use policies.
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* Progress / Status Banner */}
                   {cloneStatus !== "idle" && (
-                    <div className="p-3.5 rounded-2xl bg-[#BCD0F5]/30 border border-[#BCD0F5]/60 flex items-center justify-between text-xs text-[#1A1A1A]">
-                      <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 animate-spin text-[#1A1A1A]" />
-                        <span>
-                          {cloneStatus === "uploading" && "Uploading encrypted audio sample..."}
+                    <div className="p-4 rounded-2xl bg-purple-100/80 border border-purple-300 flex items-center justify-between text-xs text-purple-950">
+                      <div className="flex items-center gap-2.5">
+                        <Activity className="w-4 h-4 animate-spin text-purple-700" />
+                        <span className="font-bold">
+                          {cloneStatus === "uploading" && "Uploading encrypted high-fidelity audio packet..."}
                           {cloneStatus === "analyzing" && "Extracting phoneme vectors and neural embeddings..."}
                           {cloneStatus === "ready" && "Voice model synthesized and verified ready for preview!"}
                         </span>
@@ -1657,24 +2491,32 @@ export default function AgentsPage() {
                         <button
                           type="button"
                           onClick={() => {
-                            try { soundSynth.play("affirm"); } catch {}
+                            try {
+                              soundSynth.speak(cloneTestSentence, {
+                                rate: 1.0,
+                                pitch: cloneSpeakerGender === "female" ? 1.05 : 0.95,
+                              });
+                            } catch {}
                           }}
-                          className="font-semibold underline cursor-pointer"
+                          className="font-black underline text-purple-900 cursor-pointer"
                         >
-                          Play Preview
+                          Play Synthesized Sample
                         </button>
                       )}
                     </div>
                   )}
 
+                  {/* Action Controls */}
                   <div className="flex items-center justify-end gap-3 pt-2">
                     <button
                       type="button"
                       disabled={!cloneConsentConfirmed || !cloneFileName}
                       onClick={handleStartCloningProcess}
-                      className="px-5 py-2.5 rounded-full text-xs font-semibold bg-[#111111] hover:bg-black text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-xs"
+                      className="px-6 py-2.5 rounded-full text-xs font-black bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-800 hover:brightness-110 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-md hover:scale-102 active:scale-98"
                     >
-                      {cloneStatus === "ready" ? "Assign Cloned Voice to Maya" : "Analyze & Process Clone"}
+                      {cloneStatus === "ready"
+                        ? `Assign Cloned Voice to ${selectedAgent.name.split("—")[0].trim()}`
+                        : "Analyze & Train Cloned Voice Model"}
                     </button>
                   </div>
                 </div>
@@ -2081,85 +2923,6 @@ export default function AgentsPage() {
             </div>
           )}
 
-          {/* =================================================================== */}
-          {/* TAB 6: DATA EXTRACTION                                              */}
-          {/* =================================================================== */}
-          {activeTab === "data-extraction" && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <div>
-                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#1A1A1A] flex items-center gap-2">
-                    <Database className="w-4 h-4 text-indigo-600" />
-                    <span>Structured Data Extraction Schema</span>
-                  </h3>
-                  <p className="text-xs text-black/60 mt-0.5">
-                    Variables extracted automatically during conversations and archived directly into the Data Vault.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => alert("Add custom variable modal opened.")}
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-bold bg-gradient-to-r from-[#FF6B08] to-[#E11D48] text-white hover:brightness-110 shadow-[0_4px_16px_rgba(255,107,8,0.3)] transition-all cursor-pointer hover:scale-102 active:scale-98"
-                >
-                  <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                  <span>Add Field</span>
-                </button>
-              </div>
-
-              <div className="border-2 border-black/[0.08] rounded-[24px] overflow-hidden bg-white shadow-xs">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-gradient-to-r from-[#FAF8F3] to-[#F5EFE6] border-b-2 border-black/[0.08] text-[#1A1A1A] font-extrabold uppercase tracking-wider text-[10.5px]">
-                    <tr>
-                      <th className="py-3.5 px-4">Field Name</th>
-                      <th className="py-3.5 px-4">Data Type</th>
-                      <th className="py-3.5 px-4">Required</th>
-                      <th className="py-3.5 px-4">Destination</th>
-                      <th className="py-3.5 px-4">Example Extracted Value</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-black/[0.06]">
-                    {[
-                      { name: "caller_name", type: "String", typeColor: "bg-indigo-100 text-indigo-800 border-indigo-200", req: true, dest: "Data Vault + CRM", sample: "Rahul Sharma" },
-                      { name: "caller_phone", type: "Phone (E.164)", typeColor: "bg-emerald-100 text-emerald-800 border-emerald-200", req: true, dest: "Data Vault", sample: "+91 98401 22345" },
-                      { name: "target_course", type: "Categorical", typeColor: "bg-purple-100 text-purple-800 border-purple-200", req: true, dest: "Data Vault + CRM", sample: "B.Tech Computer Science" },
-                      { name: "board_percentage", type: "Number", typeColor: "bg-amber-100 text-amber-800 border-amber-200", req: false, dest: "Data Vault", sample: "94.2%" },
-                      { name: "hostel_required", type: "Boolean", typeColor: "bg-rose-100 text-rose-800 border-rose-200", req: false, dest: "Data Vault", sample: "Yes (AC Room)" },
-                      { name: "campus_tour_datetime", type: "DateTime", typeColor: "bg-cyan-100 text-cyan-800 border-cyan-200", req: false, dest: "Data Vault + Calendar", sample: "Sat 11:00 AM" },
-                    ].map((f, i) => (
-                      <tr key={i} className="hover:bg-amber-500/[0.03] transition-colors">
-                        <td className="py-3.5 px-4 font-mono font-bold text-[#1A1A1A]">{f.name}</td>
-                        <td className="py-3.5 px-4">
-                          <span className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold border ${f.typeColor}`}>
-                            {f.type}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          {f.req ? (
-                            <span className="text-[10px] font-extrabold text-[#0D593F] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full border border-emerald-300">
-                              Required
-                            </span>
-                          ) : (
-                            <span className="text-[10px] text-black/60 bg-black/[0.04] px-2.5 py-0.5 rounded-full border border-black/[0.05]">
-                              Optional
-                            </span>
-                          )}
-                        </td>
-                        <td className="py-3.5 px-4 text-[#1A1A1A] font-bold">{f.dest}</td>
-                        <td className="py-3.5 px-4 text-black/70 italic font-medium">{f.sample}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 flex items-center justify-between text-xs text-blue-900 shadow-2xs">
-                <span>All extracted records automatically link back to their source call ID and audio transcript in the Data Vault.</span>
-                <Link href="/dashboard/data-vault" className="font-extrabold text-blue-700 hover:underline">
-                  Inspect Data Vault →
-                </Link>
-              </div>
-            </div>
-          )}
 
           {/* =================================================================== */}
           {/* TAB 7: CALL RULES                                                   */}
@@ -3362,6 +4125,27 @@ export default function AgentsPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Provision & Create Agent Modal with 4-Step Freedom Wizard */}
+      <CreateAgentModal
+        isOpen={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+        onAgentCreated={handleAgentCreated}
+        existingClonedVoices={clonedVoices}
+        onVoiceCloned={handleVoiceCloned}
+      />
+
+      {/* Live Simulation Call Modal */}
+      {testCallItem && (
+        <LiveCallModal
+          isOpen={liveModalOpen}
+          call={testCallItem}
+          onClose={() => {
+            setLiveModalOpen(false);
+            setTestCallItem(null);
+          }}
+        />
       )}
     </div>
   );

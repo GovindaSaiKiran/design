@@ -92,12 +92,16 @@ export default function CallDrawer({ call, isOpen, onClose }: CallDrawerProps) {
   const extractedVariables = [
     { label: "Candidate Name", value: call.contactName || "Rahul Sharma", confidence: "100%", vaultId: "DV-091" },
     { label: "Phone Number", value: call.contactNumber, confidence: "100%", vaultId: "DV-092" },
-    { label: "Target Course", value: "B.Tech Computer Science (AI/ML)", confidence: "98%", vaultId: "DV-093" },
-    { label: "Board Score", value: "94.2% (CBSE PCM)", confidence: "99%", vaultId: "DV-094" },
-    { label: "Scholarship Eligibility", value: "35% Merit Scholarship", confidence: "96%", vaultId: "DV-095" },
-    { label: "Hostel Preference", value: "Twin-Sharing AC Room", confidence: "95%", vaultId: "DV-096" },
-    { label: "Action Confirmed", value: "Campus Tour (Sat 11:00 AM)", confidence: "99%", vaultId: "DV-097" },
-    { label: "Lead Temperature", value: "High Intent", confidence: "94%", vaultId: "DV-098" },
+    { label: "Candidate Email", value: "rahul.sharma2026@gmail.com", confidence: "99%", vaultId: "DV-093" },
+    { label: "Residential Address", value: "Sector 15, Rohini, New Delhi - 110085", confidence: "98%", vaultId: "DV-094" },
+    { label: "Discussion Topics", value: "B.Tech CSE, AI/ML, 25% Merit Waiver, Tour", confidence: "99%", vaultId: "DV-095" },
+    { label: "Key Points Extracted", value: "94.2% CBSE PCM; Exemption from Entrance Exam", confidence: "99%", vaultId: "DV-096" },
+    { label: "Target Course", value: "B.Tech Computer Science (AI/ML)", confidence: "98%", vaultId: "DV-097" },
+    { label: "Board Score", value: "94.2% (CBSE PCM)", confidence: "99%", vaultId: "DV-098" },
+    { label: "Scholarship Eligibility", value: "25% Merit Scholarship", confidence: "96%", vaultId: "DV-099" },
+    { label: "Hostel Preference", value: "Twin-Sharing AC Room", confidence: "95%", vaultId: "DV-100" },
+    { label: "Action Confirmed", value: "Campus Tour (Sat 11:00 AM)", confidence: "99%", vaultId: "DV-101" },
+    { label: "Lead Temperature", value: "High Intent", confidence: "94%", vaultId: "DV-102" },
   ];
 
   return (
@@ -118,9 +122,19 @@ export default function CallDrawer({ call, isOpen, onClose }: CallDrawerProps) {
                 <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#C1F2D5] text-[#065F46]">
                   {call.outcome}
                 </span>
+                {call.knowledgeDomainLabel && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-900 border border-indigo-200">
+                    {call.knowledgeDomainLabel}
+                  </span>
+                )}
               </div>
               <p className="text-xs text-black/55 mt-0.5">
                 {call.contactNumber} • {call.direction === "inbound" ? "Inbound Route" : "Outbound Campaign"} • {call.timestamp}
+                {call.groundedDocTitle && (
+                  <span className="font-mono text-[10px] text-indigo-700 block mt-0.5">
+                    Grounded: {call.groundedDocTitle}
+                  </span>
+                )}
               </p>
             </div>
           </div>

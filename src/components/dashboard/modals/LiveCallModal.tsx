@@ -10,6 +10,9 @@ import {
   Volume2,
   CheckCircle2,
   Activity,
+  BookOpen,
+  Database,
+  Sparkles,
 } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
 
@@ -23,6 +26,11 @@ interface LiveCallModalProps {
     durationSeconds?: number;
     latencyMs: number;
     currentSentiment: "positive" | "neutral" | "negative" | "urgent" | "frustrated";
+    knowledgeDomain?: string;
+    knowledgeDomainLabel?: string;
+    groundedDocTitle?: string;
+    groundedChunkRef?: string;
+    knowledgeFactRetrieved?: string;
     transcript: Array<{
       speaker: "agent" | "caller" | "system";
       text: string;
@@ -140,6 +148,38 @@ export default function LiveCallModal({
             <span>Sentiment: <strong className="text-[#16856B] font-semibold capitalize">{call.currentSentiment}</strong></span>
           </div>
         </div>
+
+        {/* Knowledge Base Grounding Card */}
+        {call.groundedDocTitle && (
+          <div className="my-2 p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-200/80 text-xs shrink-0 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-extrabold text-[11px] uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Knowledge Domain: {call.knowledgeDomainLabel || call.knowledgeDomain}</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-indigo-800 border border-indigo-200 flex items-center gap-1">
+                <Database className="w-3 h-3 text-indigo-600" />
+                <span>RAG Vector Grounded</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-indigo-950 font-medium text-[11.5px]">
+              <span className="text-black/50 text-[10px]">Active Document:</span>
+              <span className="font-mono font-semibold bg-white/80 px-2 py-0.5 rounded border border-indigo-200/60 truncate">
+                {call.groundedDocTitle}
+              </span>
+              {call.groundedChunkRef && (
+                <span className="text-[10px] text-indigo-700 font-semibold truncate hidden sm:inline">
+                  • {call.groundedChunkRef}
+                </span>
+              )}
+            </div>
+            {call.knowledgeFactRetrieved && (
+              <p className="text-[11px] text-indigo-900/80 bg-white/90 p-2 rounded-xl border border-indigo-100 italic">
+                &ldquo;{call.knowledgeFactRetrieved}&rdquo;
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Live Transcript Log */}
         <div className="flex-1 overflow-y-auto space-y-3 p-4 bg-[#FBF7ED]/60 rounded-2xl border border-black/[0.06] my-2 text-xs">

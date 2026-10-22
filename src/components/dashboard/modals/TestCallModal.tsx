@@ -44,9 +44,41 @@ const aiEmployeeOptions = [
 
 const languageList = ["Hindi", "Telugu", "Tamil", "Kannada", "Marathi", "English"];
 
+const knowledgeTopicOptions = [
+  {
+    id: "admissions",
+    label: "Admissions & Eligibility",
+    doc: "2026_Admissions_Prospectus_v3.pdf",
+    icon: "🎓",
+    badge: "Cutoffs & Waivers",
+  },
+  {
+    id: "fees",
+    label: "Fees, Installments & Aid",
+    doc: "Tuition_Fee_Installments_Scholarship_2026.pdf",
+    icon: "💳",
+    badge: "3-Part Installments",
+  },
+  {
+    id: "hostels",
+    label: "Hostels & Campus Living",
+    doc: "Campus_Hostel_Boarding_Inventory_2026.pdf",
+    icon: "🏢",
+    badge: "AC Rooms & Dining",
+  },
+  {
+    id: "technical",
+    label: "Technical & Verification",
+    doc: "Portal_Doc_Verification_Manual_v2.pdf",
+    icon: "🛠️",
+    badge: "DigiLocker & Portal",
+  },
+];
+
 export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState(aiEmployeeOptions[0].id);
+  const [selectedTopic, setSelectedTopic] = useState("admissions");
   const [selectedLang, setSelectedLang] = useState("Hindi");
   const [callState, setCallState] = useState<"idle" | "dialing" | "ringing" | "connected" | "completed">("idle");
   const [callSid, setCallSid] = useState("");
@@ -77,6 +109,7 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
         customContext: {
           testMode: "true",
           source: "Swaram Dashboard Test Call Widget",
+          knowledgeDomain: selectedTopic,
         },
       });
 
@@ -166,6 +199,47 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                           <p className="text-xs font-bold text-[#1A1A1A]">{emp.name}</p>
                           <p className="text-[11px] text-black/50 mt-0.5">{emp.role} • {emp.languages}</p>
                         </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Knowledge Base Domain Selector */}
+              <div>
+                <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Grounding Knowledge Domain:</span>
+                  </span>
+                  <span className="text-[10px] text-indigo-700 bg-indigo-50 font-semibold px-2 py-0.5 rounded">
+                    RAG Vector Grounded
+                  </span>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {knowledgeTopicOptions.map((topic) => {
+                    const isSelected = selectedTopic === topic.id;
+                    return (
+                      <button
+                        type="button"
+                        key={topic.id}
+                        onClick={() => setSelectedTopic(topic.id)}
+                        className={`p-2.5 rounded-2xl border text-left transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-indigo-600 bg-indigo-50/70 shadow-2xs ring-1 ring-indigo-500/20"
+                            : "border-black/[0.06] hover:border-black/20 bg-white"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm">{topic.icon}</span>
+                          <span className={`text-[9.5px] font-bold px-1.5 py-0.2 rounded-full ${
+                            isSelected ? "bg-indigo-600 text-white" : "bg-black/5 text-black/60"
+                          }`}>
+                            {topic.badge}
+                          </span>
+                        </div>
+                        <p className="text-xs font-bold text-[#1A1A1A] truncate">{topic.label}</p>
+                        <p className="text-[9.5px] text-black/50 font-mono truncate mt-0.5">{topic.doc}</p>
                       </button>
                     );
                   })}

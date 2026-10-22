@@ -67,7 +67,7 @@
     "id": "sched-1792574703960",
     "workspaceId": "ws-apex-global",
     "name": "Autonomous Outreach & Merit Cadence",
-    "status": "scheduled",
+    "status": "completed",
     "scheduleType": "later",
     "scheduledAtUtc": "2026-10-22T05:00:00.000Z",
     "timezone": "Asia/Calcutta",
@@ -100,8 +100,11 @@
         "email": "rahul.sharma@gmail.com",
         "organization": "B.Tech Computer Science",
         "customFields": {},
-        "status": "pending",
-        "attempts": 0
+        "status": "completed",
+        "attempts": 2,
+        "callSid": "EXO-1792647586745-9035",
+        "executedAt": "2026-10-22T05:39:46.746Z",
+        "durationSeconds": 146
       },
       {
         "id": "c-1792574703959-8k73fe",
@@ -110,30 +113,59 @@
         "email": "ananya.iyer@outlook.com",
         "organization": "B.Tech Biotechnology",
         "customFields": {},
-        "status": "pending",
-        "attempts": 0
+        "status": "completed",
+        "attempts": 2,
+        "callSid": "EXO-1792647587276-7415",
+        "executedAt": "2026-10-22T05:39:47.276Z",
+        "durationSeconds": 95
       }
     ],
     "stats": {
       "totalContacts": 2,
-      "completedCount": 0,
+      "completedCount": 2,
       "noAnswerCount": 0,
       "failedCount": 0,
       "skippedCount": 0,
-      "progressPercent": 0
+      "progressPercent": 100
     },
     "suppressionChecked": true,
     "createdBy": "admin@swaram.ai",
     "createdAt": "2026-10-21T09:25:03.960Z",
-    "updatedAt": "2026-10-21T09:25:03.960Z",
+    "updatedAt": "2026-10-22T05:39:47.800Z",
     "logs": [
       {
         "id": "log-1792574703960",
         "timestamp": "2026-10-21T09:25:03.960Z",
         "level": "info",
         "message": "Campaign scheduled for Thu, 22 Oct, 2026, 10:30 am IST (Asia/Calcutta)."
+      },
+      {
+        "id": "log-1792647586706-a8doy",
+        "timestamp": "2026-10-22T05:39:46.706Z",
+        "level": "info",
+        "message": "Dialer engine activated for 2 contacts. Concurrency limit: 20 channels."
+      },
+      {
+        "id": "log-1792647586755-ntqc6",
+        "timestamp": "2026-10-22T05:39:46.755Z",
+        "level": "success",
+        "message": "Call connected to Rahul Sharma (+919840122345). Duration: 146s. Call SID: EXO-1792647586745-9035"
+      },
+      {
+        "id": "log-1792647587283-2cyyh",
+        "timestamp": "2026-10-22T05:39:47.283Z",
+        "level": "success",
+        "message": "Call connected to Ananya Iyer (+919440188319). Duration: 95s. Call SID: EXO-1792647587276-7415"
+      },
+      {
+        "id": "log-1792647587800-ev6fw",
+        "timestamp": "2026-10-22T05:39:47.800Z",
+        "level": "success",
+        "message": "Campaign finished with status: COMPLETED. (2/2 connected)."
       }
-    ]
+    ],
+    "startedAt": "2026-10-22T05:39:46.696Z",
+    "completedAt": "2026-10-22T05:39:47.793Z"
   },
   {
     "id": "sched-001",

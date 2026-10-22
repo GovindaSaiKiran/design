@@ -22,6 +22,12 @@ export interface DashboardAgent {
     gender: "Female" | "Male" | "Neutral";
     accent: string;
     sampleUrl?: string;
+    isCloned?: boolean;
+    pitch?: number;
+    speed?: number;
+    emotion?: string;
+    clonedAudioSample?: string;
+    provider?: string;
   };
   language: string;
   callsToday: number;
@@ -32,6 +38,14 @@ export interface DashboardAgent {
   activeLiveCount: number;
   languages?: string[];
   totalCallsHandled?: string | number;
+  purpose?: string;
+  contextKnowledge?: string;
+  rules?: string[];
+  guardrails?: string[];
+  greetingPhrase?: string;
+  kpis?: string[];
+  personaArchetype?: string;
+  escalationDesk?: string;
 }
 
 export type AIAgent = DashboardAgent;
@@ -85,6 +99,9 @@ export interface RecentCallRecord {
   callerNumber?: string;
   language?: string;
   status?: string;
+  knowledgeDomain?: string;
+  knowledgeDomainLabel?: string;
+  groundedDocTitle?: string;
 }
 
 export interface CampaignData {

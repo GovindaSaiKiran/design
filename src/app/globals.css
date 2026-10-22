@@ -1566,7 +1566,13 @@
   color: #FFFFFF !important;
 }
 
-
-
-
-
+/* Dedicated desktop responsive margin to guarantee content area is never obscured by the fixed floating sidebar */
+@media (min-width: 1024px) {
+  .dashboard-main-content {
+    margin-left: 284px !important;
+    transition: margin-left 0.2s ease-in-out;
+  }
+  .dashboard-main-content.is-collapsed {
+    margin-left: 100px !important;
+  }
+}

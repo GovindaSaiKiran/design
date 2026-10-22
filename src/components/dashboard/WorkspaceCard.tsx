@@ -53,16 +53,17 @@ export default function WorkspaceCard({
           </span>
         </div>
 
-        <button
-          type="button"
+        <span
+          role="button"
+          tabIndex={0}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
           }}
-          className="w-6 h-6 rounded-full hover:bg-black/5 flex items-center justify-center text-black/40 hover:text-black transition-colors"
+          className="w-6 h-6 rounded-full hover:bg-black/5 flex items-center justify-center text-black/40 hover:text-black transition-colors cursor-pointer"
         >
           <MoreHorizontal className="w-4 h-4" />
-        </button>
+        </span>
       </div>
 
       {/* Title & Description */}
@@ -115,9 +116,20 @@ export default function WorkspaceCard({
 
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={containerClasses}>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={onClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        className={containerClasses}
+      >
         {content}
-      </button>
+      </div>
     );
   }
 
