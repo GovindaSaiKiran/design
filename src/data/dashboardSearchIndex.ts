@@ -389,7 +389,7 @@ export const DASHBOARD_SEARCH_INDEX: SearchItem[] = [
     id: "modal-upload-contacts",
     name: "Upload Contacts & Lead Lists Modal",
     componentName: "UploadContactsModal",
-    section: "Contacts & Lists",
+    section: "Contacts",
     category: "Modal",
     description: "CSV and spreadsheet import dialog for student contact lists with instant field mapping and validation.",
     keywords: [
@@ -475,7 +475,7 @@ export const DASHBOARD_SEARCH_INDEX: SearchItem[] = [
     id: "modal-contact-dossier",
     name: "Student Contact Dossier Modal",
     componentName: "ContactDossierModal",
-    section: "Contacts & Lists",
+    section: "Contacts",
     category: "Modal",
     description: "Individual student interaction profile showing past agent transcripts, sentiment scores, and academic notes.",
     keywords: [
@@ -864,7 +864,7 @@ export const DASHBOARD_SEARCH_INDEX: SearchItem[] = [
     id: "comp-lead-segmentation",
     name: "Lead Segmentation Hub",
     componentName: "LeadSegmentationHub",
-    section: "Contacts & Lists",
+    section: "Contacts",
     category: "Component",
     description: "Interactive category matrix segmenting leads by qualification score, engagement status, and entrance rank.",
     keywords: [
@@ -986,5 +986,29 @@ export const DASHBOARD_SEARCH_INDEX: SearchItem[] = [
     href: "/dashboard",
     iconName: "PanelLeftClose",
     badge: "Widget",
+  },
+  {
+    id: "page-outbound-scheduler",
+    name: "Outbound Calls & Bulk Scheduler",
+    componentName: "OutboundSchedulerPage",
+    section: "Campaigns & Calling",
+    category: "Section",
+    description: "Autonomous outbound calling console: configure contacts, dynamic content, qualification criteria, AI recommended agents, and bulk time-window scheduling.",
+    keywords: [
+      "outbound",
+      "scheduler",
+      "bulk dialing",
+      "bulk calls",
+      "make calls",
+      "calling window",
+      "cadence",
+      "ai recommended agent",
+      "criteria",
+      "outbound history"
+    ],
+    href: "/dashboard/outbound-scheduler",
+    iconName: "PhoneOutgoing",
+    badge: "Bulk Dialer",
+    actionHint: "Open Outbound Scheduler",
   },
 ];

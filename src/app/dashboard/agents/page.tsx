@@ -1308,7 +1308,7 @@ export default function AgentsPage() {
                     <div className="relative z-10 pt-2">
                       <div className="flex items-baseline gap-2">
                         <span className="text-[30px] font-black tracking-tight leading-none text-white">
-                          {selectedAgent.callsToday}
+                          {selectedAgent.callsToday ? selectedAgent.callsToday.toLocaleString() : "0"}
                         </span>
                         <span className="text-[11px] font-bold text-white/75">calls today</span>
                       </div>

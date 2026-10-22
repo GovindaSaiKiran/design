@@ -6,7 +6,7 @@ import { X, Upload, FileSpreadsheet, Check } from "lucide-react";
 interface UploadContactsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onContactsUploaded?: (count: number) => void;
+  onContactsUploaded?: (count: number, fileName?: string) => void;
 }
 
 export default function UploadContactsModal({
@@ -22,7 +22,7 @@ export default function UploadContactsModal({
   const handleUpload = () => {
     setIsUploaded(true);
     setTimeout(() => {
-      onContactsUploaded?.(450);
+      onContactsUploaded?.(2500, fileName);
       onClose();
     }, 700);
   };
@@ -42,12 +42,12 @@ export default function UploadContactsModal({
               <Upload className="w-4 h-4 text-[#1A1A1A]" />
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-black/40">CONTACT LIST</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-black/40">ENTERPRISE CAMPAIGN INGESTION</span>
               <h3 className="text-sm font-bold text-[#1A1A1A]">
                 Import Contacts List
               </h3>
               <p className="text-xs text-black/55">
-                Upload CSV or Excel file with telephone numbers and lead fields
+                Upload CSV or Excel file for high-volume automated AI calling
               </p>
             </div>
           </div>
@@ -69,10 +69,10 @@ export default function UploadContactsModal({
             {fileName}
           </div>
           <p className="text-xs text-black/55 mt-1">
-            450 valid phone numbers detected with board scores and parent contacts
+            2,500 valid phone numbers detected with board scores and parent contacts
           </p>
           <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-medium bg-[#BCD0F5]/50 text-blue-950 border border-[#A8C3F0]/60">
-            Auto-Mapped: Phone (+91), Candidate Name, Target Course, Language
+            Auto-Mapped: Phone (+91 E.164), Candidate Name, Target Course, Language, DND Cleaned
           </span>
         </div>
 
@@ -90,7 +90,7 @@ export default function UploadContactsModal({
             className="px-6 py-2.5 rounded-full text-xs font-semibold text-white bg-[#111111] hover:bg-black shadow-sm inline-flex items-center gap-2 cursor-pointer transition-all"
           >
             <Check className="w-3.5 h-3.5" />
-            <span>{isUploaded ? "Importing..." : "Confirm & Import 450 Leads"}</span>
+            <span>{isUploaded ? "Importing..." : "Confirm & Import 2,500 Leads"}</span>
           </button>
         </div>
       </div>

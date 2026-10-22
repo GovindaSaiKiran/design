@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   History,
   PhoneCall,
@@ -1077,7 +1078,11 @@ function openPrintPdfReport(calls: ComprehensiveCallLog[], topicTitle: string) {
 }
 
 function CallHistoryPageContent() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams?.get("search") || "";
+  const initialId = searchParams?.get("id") || "";
+
+  const [searchQuery, setSearchQuery] = useState(initialSearch || initialId || "");
   const [selectedDomain, setSelectedDomain] = useState<"all" | "admissions" | "fees" | "hostels" | "technical">("all");
   const [directionFilter, setDirectionFilter] = useState<"all" | "inbound" | "outbound">("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -1085,6 +1090,28 @@ function CallHistoryPageContent() {
 
   // Selected Call for Full Transcript Modal & Drawer
   const [selectedCall, setSelectedCall] = useState<ComprehensiveCallLog | null>(null);
+
+  // Auto-open call modal if specific call ID was passed via redirect
+  useEffect(() => {
+    if (initialId) {
+      const match = ALL_CALL_HISTORY_LOGS.find(
+        (c) => c.id.toLowerCase() === initialId.toLowerCase()
+      );
+      if (match) {
+        setSelectedCall(match);
+      }
+    } else if (initialSearch) {
+      const match = ALL_CALL_HISTORY_LOGS.find(
+        (c) =>
+          c.id.toLowerCase() === initialSearch.toLowerCase() ||
+          c.contactName.toLowerCase().includes(initialSearch.toLowerCase()) ||
+          c.contactPhone.includes(initialSearch)
+      );
+      if (match) {
+        setSelectedCall(match);
+      }
+    }
+  }, [initialId, initialSearch]);
   const [expandedEntitiesCallId, setExpandedEntitiesCallId] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [exportModalOpen, setExportModalOpen] = useState(false);

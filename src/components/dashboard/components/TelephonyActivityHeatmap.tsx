@@ -143,22 +143,20 @@ function generateHeatmapData(todayCallsCount?: number): {
         activeDaysCount++;
         const p = pseudoRandom(1);
         if (isWeekend) {
-          rawTotal = p > 0.45 ? Math.floor(1 + pseudoRandom(2) * 5) : 0;
+          rawTotal = p > 0.45 ? Math.floor(650 + pseudoRandom(2) * 800) : 320;
         } else {
-          if (p < 0.12) rawTotal = 0; // Natural quiet day (micro-dot)
-          else if (p < 0.32) rawTotal = Math.floor(2 + pseudoRandom(2) * 5); // Tier 1: 2-6
-          else if (p < 0.62) rawTotal = Math.floor(7 + pseudoRandom(3) * 8); // Tier 2: 7-14
-          else if (p < 0.85) rawTotal = Math.floor(15 + pseudoRandom(4) * 8); // Tier 3: 15-22
-          else rawTotal = Math.floor(23 + pseudoRandom(5) * 12); // Tier 4: 23-34
+          if (p < 0.12) rawTotal = Math.floor(1400 + pseudoRandom(2) * 600); // Lighter weekday
+          else if (p < 0.35) rawTotal = Math.floor(2800 + pseudoRandom(2) * 1200); // Standard weekday
+          else if (p < 0.70) rawTotal = Math.floor(5200 + pseudoRandom(3) * 1600); // Heavy campaign day
+          else rawTotal = Math.floor(7500 + pseudoRandom(5) * 1800); // Mega campaign day
         }
       }
 
-      const adjustedTotal =
-        isToday && todayCallsCount ? Math.max(rawTotal, todayCallsCount) : rawTotal;
+      const adjustedTotal = isToday ? 8600 : rawTotal;
 
-      const inboundRatio = 0.55 + (pseudoRandom(2) - 0.5) * 0.2;
-      const inbound = isFuture ? 0 : Math.round(adjustedTotal * inboundRatio);
-      const outbound = isFuture ? 0 : Math.max(0, adjustedTotal - inbound);
+      const inboundRatio = isToday ? 5180 / 8600 : 0.58 + (pseudoRandom(2) - 0.5) * 0.1;
+      const inbound = isFuture ? 0 : (isToday ? 5180 : Math.round(adjustedTotal * inboundRatio));
+      const outbound = isFuture ? 0 : (isToday ? 3420 : Math.max(0, adjustedTotal - inbound));
 
       // Hourly breakdown for 24 hours
       const hourly: HourlyActivity[] = [];
@@ -353,13 +351,13 @@ export default function TelephonyActivityHeatmap({
   // 4-Tier Palette matching active selected palette
   const getDayTierStyle = (count: number) => {
     const tiers = palette.colors.heatmapTiers;
-    if (count <= 6) {
+    if (count <= 1800) {
       return { backgroundColor: tiers[0] };
     }
-    if (count <= 14) {
+    if (count <= 4200) {
       return { backgroundColor: tiers[1] };
     }
-    if (count <= 22) {
+    if (count <= 6800) {
       return { backgroundColor: tiers[2] };
     }
     return { backgroundColor: tiers[3] };
@@ -367,15 +365,15 @@ export default function TelephonyActivityHeatmap({
 
   // Inbound Hourly Palette (4 Tiers matching Inspiration Rose aesthetic)
   const getInboundHourColor = (count: number) => {
-    if (count <= 1) {
+    if (count <= 80) {
       // Tier 1: Soft Rose Quartz
       return "bg-[#FFE4E6] text-[#9F1239] border border-[#FECDD3]";
     }
-    if (count <= 3) {
+    if (count <= 220) {
       // Tier 2: Fresh Coral Rose
       return "bg-[#FDA4AF] text-[#881337] border border-[#FB7185]";
     }
-    if (count <= 5) {
+    if (count <= 420) {
       // Tier 3: Rich Crimson Rose
       return "bg-[#F43F5E] text-white border border-[#E11D48] shadow-xs";
     }
@@ -385,15 +383,15 @@ export default function TelephonyActivityHeatmap({
 
   // Outbound Hourly Palette (4 Tiers matching Inspiration Purple aesthetic)
   const getOutboundHourColor = (count: number) => {
-    if (count <= 1) {
+    if (count <= 60) {
       // Tier 1: Soft Lavender Mist
       return "bg-[#F3E8FF] text-[#6B21A8] border border-[#E9D5FF]";
     }
-    if (count <= 3) {
+    if (count <= 160) {
       // Tier 2: Fresh Orchid Purple
       return "bg-[#D8B4FE] text-[#581C87] border border-[#C084FC]";
     }
-    if (count <= 5) {
+    if (count <= 320) {
       // Tier 3: Rich Royal Purple
       return "bg-[#A855F7] text-white border border-[#9333EA] shadow-xs";
     }

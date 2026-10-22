@@ -124,7 +124,7 @@ export default function CampaignsPage() {
           icon={Send}
           description="Autonomous outbound batch dialing and live lead verification."
           metric={`${activeCount} active`}
-          metricLabel="94 contacts reached today"
+          metricLabel="3,420 outbound leads reached today"
           status="Dialing Active"
           statusType="ready"
           actionLabel="View queue →"
@@ -151,7 +151,7 @@ export default function CampaignsPage() {
           icon={CheckCircle2}
           description="Finished batch outreach campaigns with qualification yield."
           metric={`${completedCount} completed`}
-          metricLabel="96.2% verification yield"
+          metricLabel="94.2% connect rate across cohorts"
           status="Audited"
           statusType="ready"
           actionLabel="Audit outcomes →"
@@ -165,8 +165,8 @@ export default function CampaignsPage() {
           name="SIP Trunk Concurrency"
           icon={Radio}
           description="Current dialer bandwidth allocated across regional channels."
-          metric="16 channels"
-          metricLabel="Sub-140ms audio response latency"
+          metric="100 Channels Active"
+          metricLabel="Max 500 lines • Sub-140ms voice latency"
           status="Operational"
           statusType="ready"
           actionLabel="View telephony →"

@@ -45,6 +45,7 @@ import { soundSynth } from "@/lib/audio-synth";
 import BuildAIEmployeeBanner from "../components/BuildAIEmployeeBanner";
 import TelephonyActivityHeatmap from "../components/TelephonyActivityHeatmap";
 import { usePalette } from "@/context/PaletteContext";
+import { ENTERPRISE_CALL_CENTER_METRICS } from "@/lib/contactsHistory";
 
 interface CallRecord {
   id: string;
@@ -84,7 +85,7 @@ export default function OverviewPageView() {
 
   // Context & Quotas
   const [workspaceName, setWorkspaceName] = useState("Apex Institute of Technology");
-  const [availableMinutes, setAvailableMinutes] = useState(14.0);
+  const [availableMinutes, setAvailableMinutes] = useState(18420.0);
 
   // Seed telephony calls
   const initialCalls: CallRecord[] = [
@@ -262,13 +263,23 @@ export default function OverviewPageView() {
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: palette.colors.accent }} />
               <span>{workspaceName}</span>
             </span>
+
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+              <Users className="w-3 h-3" />
+              <span>{ENTERPRISE_CALL_CENTER_METRICS.totalDirectoryContacts.toLocaleString()} Leads in Directory</span>
+            </span>
+
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <Radio className="w-3 h-3 animate-pulse" />
+              <span>100 PRI / SIP Channels Live</span>
+            </span>
           </div>
 
           <h2 className="text-xl sm:text-[22px] font-bold text-[#1A1A1A] tracking-tight mt-1.5">
-            AI Voice Operations Overview
+            Enterprise AI Call Center Operations
           </h2>
           <p className="text-xs text-black/55 mt-0.5">
-            Real-time call performance, agent utilization, and live telephony telemetry.
+            Autonomous high-volume AI call center executing mass outbound campaigns &amp; 24/7 inbound caller inquiry queues.
           </p>
         </div>
 
@@ -364,27 +375,27 @@ export default function OverviewPageView() {
               }}
               className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
             >
-              100m MAX
+              100,000m SLA
             </span>
           </div>
 
           {/* Value & Progress */}
           <div className="relative z-10 pt-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-[40px] sm:text-[46px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard1.text }}>
-                {availableMinutes.toFixed(1)}
+              <span className="text-[36px] sm:text-[42px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard1.text }}>
+                {availableMinutes.toLocaleString()}
               </span>
-              <span className="text-xs font-bold opacity-80">min remaining</span>
+              <span className="text-xs font-bold opacity-80">min balance</span>
             </div>
 
             {/* Stepped Progress Bar */}
             <div className="w-full bg-black/15 h-2 rounded-full mt-3 overflow-hidden flex p-0.5 border border-black/10">
-              <div className="bg-current h-full w-[14%] rounded-full opacity-90" />
-              <div className="bg-transparent h-full w-[86%]" />
+              <div className="bg-current h-full w-[82%] rounded-full opacity-90" />
+              <div className="bg-transparent h-full w-[18%]" />
             </div>
 
             <div className="flex items-center justify-between pt-2.5 text-[11px]">
-              <span className="opacity-80 font-bold">Free Tier Active</span>
+              <span className="opacity-80 font-bold">Enterprise Tier • 100 Trunks</span>
               <span className="font-black group-hover:underline">
                 + Top Up &rarr;
               </span>
@@ -445,30 +456,30 @@ export default function OverviewPageView() {
               }}
               className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
             >
-              LIVE TRUNKS
+              100 PRI TRUNKS
             </span>
           </div>
 
           {/* Content */}
           <div className="relative z-10 pt-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-[40px] sm:text-[46px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard2.text }}>
-                {totalCalls}
+              <span className="text-[36px] sm:text-[42px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard2.text }}>
+                {(ENTERPRISE_CALL_CENTER_METRICS.inboundCallsHandled + ENTERPRISE_CALL_CENTER_METRICS.outboundCallsHandled).toLocaleString()}
               </span>
-              <span className="text-xs font-bold opacity-80">calls handled</span>
+              <span className="text-xs font-bold opacity-80">calls today</span>
             </div>
 
-            <div className="flex items-center gap-2.5 mt-2.5 text-xs font-bold">
+            <div className="flex items-center gap-2 mt-2.5 text-xs font-bold flex-wrap">
               <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                <PhoneIncoming className="w-3 h-3" /> {inboundCallsCount} In
+                <PhoneIncoming className="w-3 h-3" /> {ENTERPRISE_CALL_CENTER_METRICS.inboundCallsHandled.toLocaleString()} In
               </span>
               <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                <PhoneOutgoing className="w-3 h-3" /> {outboundCallsCount} Out
+                <PhoneOutgoing className="w-3 h-3" /> {ENTERPRISE_CALL_CENTER_METRICS.outboundCallsHandled.toLocaleString()} Out
               </span>
             </div>
 
             <div className="flex items-center justify-between pt-2.5 text-[11px]">
-              <span className="opacity-80 font-bold">{minutesUsedToday} min consumed</span>
+              <span className="opacity-80 font-bold">21,500 min consumed</span>
               <span
                 style={{
                   backgroundColor: palette.colors.metricCard2.badgeBg,
@@ -476,7 +487,7 @@ export default function OverviewPageView() {
                 }}
                 className="px-2 py-0.5 rounded-full font-black text-[10px] border border-white/20"
               >
-                100% RESOLVED
+                93.4% PICKUP
               </span>
             </div>
           </div>
@@ -535,21 +546,21 @@ export default function OverviewPageView() {
               }}
               className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
             >
-              3 ONLINE
+              100 TRUNKS POOLED
             </span>
           </div>
 
           {/* Content */}
           <div className="relative z-10 pt-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-[40px] sm:text-[46px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard3.text }}>
+              <span className="text-[36px] sm:text-[42px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard3.text }}>
                 3
               </span>
-              <span className="text-xs font-bold opacity-80">voice agents</span>
+              <span className="text-xs font-bold opacity-80">agent pools (1,200/hr)</span>
             </div>
 
             <p className="text-[11px] font-bold mt-2 truncate opacity-90">
-              Maya (Admissions) &bull; Priya &bull; Arjun
+              Maya (Admissions) &bull; Priya (Finance) &bull; Arjun (Outreach)
             </p>
 
             <div className="flex items-center justify-between pt-2.5 text-[11px]">

@@ -22,6 +22,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   History,
+  PhoneOutgoing,
 } from "lucide-react";
 import CreateAgentModal from "./modals/CreateAgentModal";
 import TopUpCreditsModal from "./modals/TopUpCreditsModal";
@@ -107,11 +108,18 @@ export default function AppSidebar({
       badge: "6 Logs",
       badgeColor: "bg-indigo-50 text-indigo-700 border-indigo-200/60",
     },
+    {
+      label: "Outbound Scheduler",
+      href: "/dashboard/outbound-scheduler",
+      icon: PhoneOutgoing,
+      badge: "Bulk Dialer",
+      badgeColor: "bg-purple-50 text-purple-700 border-purple-200/60",
+    },
   ];
 
   const campaignNav: NavItem[] = [
     {
-      label: "Contacts & Lists",
+      label: "Contacts",
       href: "/dashboard/contacts",
       icon: Users,
     },
