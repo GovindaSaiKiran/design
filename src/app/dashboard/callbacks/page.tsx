@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   CalendarClock,
@@ -15,6 +15,27 @@ import {
   Plus,
   Play,
   RotateCcw,
+  Bot,
+  Sparkles,
+  Filter,
+  Users,
+  Layers,
+  FolderKanban,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  SlidersHorizontal,
+  AlertCircle,
+  X,
+  Tag,
+  HelpCircle,
+  Send,
+  Radio,
+  FileText,
+  UserCheck,
+  Calendar,
+  PhoneIncoming,
+  PhoneOutgoing,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import CallDrawer from "@/components/dashboard/views/CallDrawer";
@@ -22,17 +43,57 @@ import { RecentCallRecord } from "@/types/dashboard";
 import { mockRecentCalls } from "@/data/mock/dashboardData";
 import { soundSynth } from "@/lib/audio-synth";
 
-interface CallbackItem {
+export interface CallbackItem {
   id: string;
   contactName: string;
   phone: string;
+  email?: string;
+  city: string;
+  course: string;
+  
+  // 1. Which Agent
+  agentId: string;
+  agentName: string;
+  agentAvatar: string;
+  agentRole: string;
+  agentBadgeColor: string;
+  
+  // 2. Which Topic
+  topicId: string;
+  topicName: string;
+  topicCategory: "Admissions" | "Finance & Fees" | "Hostel & Facilities" | "Verification & Portal";
+  
+  // 3. Same Group / Dataset / Cohort
+  datasetBatchId: string;
+  datasetBatchTitle: string;
+  
+  // 4. When Scheduled
   scheduledWindow: string;
+  scheduledExactTime: string;
+  countdownLabel: string;
+  isOverdue?: boolean;
+  
+  // Reschedule & Manual Scheduling Tracking
+  rescheduleCount?: number;
+  lastRescheduledBy?: "Agent" | "User" | "System";
+  lastRescheduledReason?: string;
+  rescheduledAt?: string;
+  originalScheduledTime?: string;
+  
+  // 5. Why Queued
+  whyQueued: string;
+  queuedTrigger: "Candidate Requested" | "Automated Retry (Busy Line)" | "Post-WhatsApp Followup" | "Special Exception Escalation" | "Doc Verification Sync Issue";
+  
+  // 6. Any Human Interaction Needed
+  humanInteractionNeeded: boolean;
+  humanInteractionReason?: string;
+  humanAssignee?: string;
+  
   priority: "Urgent" | "High" | "Normal";
-  status: "Pending" | "Completed" | "Rescheduled";
-  inquirySummary: string;
-  assignedAgent: string;
+  status: "Pending" | "Completed" | "Rescheduled" | "Cancelled";
   sourceCallId: string;
   createdAt: string;
+  notes?: string;
 }
 
 const initialCallbacks: CallbackItem[] = [
@@ -40,60 +101,455 @@ const initialCallbacks: CallbackItem[] = [
     id: "cb-001",
     contactName: "Devansh Patil",
     phone: "+91 97110 33499",
-    scheduledWindow: "Today, 06:30 PM (Evening Window)",
+    email: "devansh.patil@gmail.com",
+    city: "Mumbai, MH",
+    course: "MBA Fintech & Analytics",
+    agentId: "agent-arjun",
+    agentName: "Arjun (Outreach & Ops AI)",
+    agentAvatar: "A",
+    agentRole: "Outbound Lead Verification & Ops",
+    agentBadgeColor: "bg-blue-50 text-blue-700 border-blue-200",
+    topicId: "topic-admissions-mba",
+    topicName: "MBA GD/PI Schedule & Entrance Cutoffs",
+    topicCategory: "Admissions",
+    datasetBatchId: "batch-outbound-01",
+    datasetBatchTitle: "All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)",
+    scheduledWindow: "Today, 06:30 PM (Evening Slot)",
+    scheduledExactTime: "Today at 06:30 PM",
+    countdownLabel: "In 45 mins",
+    isOverdue: false,
+    rescheduleCount: 1,
+    lastRescheduledBy: "Agent",
+    lastRescheduledReason: "Maya AI: Candidate was attending university lecture during morning cadence; auto-moved to evening slot",
+    rescheduledAt: "Today, 09:18 AM",
+    originalScheduledTime: "Today at 09:15 AM",
+    whyQueued: "Candidate was attending a university lecture during morning outbound cadence; requested evening slot between 6:00 PM and 7:00 PM.",
+    queuedTrigger: "Candidate Requested",
+    humanInteractionNeeded: false,
     priority: "High",
     status: "Pending",
-    inquirySummary: "Candidate was in lecture during morning outbound call. Requested evening callback regarding MBA GD/PI dates.",
-    assignedAgent: "Arjun (Outreach)",
     sourceCallId: "call-005",
     createdAt: "Today, 09:15 AM",
+    notes: "Candidate has 94.2% percentile; confirm attendance for Saturday interview slot.",
   },
   {
     id: "cb-002",
-    contactName: "Kavita Deshmukh",
-    phone: "+91 98230 11944",
-    scheduledWindow: "Today, 05:00 PM - 06:00 PM",
-    priority: "Normal",
+    contactName: "Sneha Reddy",
+    phone: "+91 94401 55620",
+    email: "sneha.reddy@gmail.com",
+    city: "Hyderabad, TS",
+    course: "B.Tech Computer Science (AI/ML)",
+    agentId: "agent-maya",
+    agentName: "Maya (Admissions AI)",
+    agentAvatar: "M",
+    agentRole: "Senior Admissions Counseling Concierge",
+    agentBadgeColor: "bg-orange-50 text-orange-700 border-orange-200",
+    topicId: "topic-admissions-waiver",
+    topicName: "B.Tech CSE Admissions & 35% Chancellor Waiver",
+    topicCategory: "Admissions",
+    datasetBatchId: "batch-outbound-01",
+    datasetBatchTitle: "All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)",
+    scheduledWindow: "Today, 07:15 PM",
+    scheduledExactTime: "Today at 07:15 PM",
+    countdownLabel: "In 1h 30m",
+    isOverdue: false,
+    rescheduleCount: 0,
+    originalScheduledTime: "Today at 07:15 PM",
+    whyQueued: "Candidate was in coaching class; requested evening callback to confirm seat reservation token payment with parents.",
+    queuedTrigger: "Candidate Requested",
+    humanInteractionNeeded: false,
+    priority: "High",
     status: "Pending",
-    inquirySummary: "Parent requested callback after office hours to review AC hostel fee installment schedule.",
-    assignedAgent: "Maya (Admissions)",
-    sourceCallId: "call-002",
-    createdAt: "Today, 10:45 AM",
+    sourceCallId: "call-001",
+    createdAt: "Today, 10:20 AM",
+    notes: "PCM score 95.4% verified against CBSE master database.",
   },
   {
     id: "cb-003",
     contactName: "Meera Krishnan",
     phone: "+91 98210 55678",
-    scheduledWindow: "Yesterday, 05:30 PM",
+    email: "meera.krishnan@outlook.com",
+    city: "Bengaluru, KA",
+    course: "B.Tech Electronics & Comm",
+    agentId: "agent-counselor-desk",
+    agentName: "Senior Counselor Desk (Human Handoff)",
+    agentAvatar: "H",
+    agentRole: "Dean of Admissions & Athletics Director",
+    agentBadgeColor: "bg-rose-50 text-rose-700 border-rose-200",
+    topicId: "topic-sports-quota",
+    topicName: "Sports Quota 25% Fee Concession Appeal",
+    topicCategory: "Admissions",
+    datasetBatchId: "batch-outbound-01",
+    datasetBatchTitle: "All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)",
+    scheduledWindow: "Today, 05:30 PM",
+    scheduledExactTime: "Today at 05:30 PM",
+    countdownLabel: "Next up (In 15 mins)",
+    isOverdue: false,
+    rescheduleCount: 0,
+    originalScheduledTime: "Today at 05:30 PM",
+    whyQueued: "Candidate holds State-level badminton championship medal; requested special 25% sports quota fee concession appeal exceeding standard AI waiver rule.",
+    queuedTrigger: "Special Exception Escalation",
+    humanInteractionNeeded: true,
+    humanInteractionReason: "Athletic director and Dean sign-off required for non-standard 25% sports quota concession.",
+    humanAssignee: "Mr. R. Sharma (Athletic Director)",
     priority: "Urgent",
-    status: "Completed",
-    inquirySummary: "National badminton sports quota waiver review. Senior Counselor Mr. Sharma completed warm follow-up.",
-    assignedAgent: "Counselor Desk (Handoff)",
+    status: "Pending",
     sourceCallId: "call-004",
-    createdAt: "Yesterday, 04:30 PM",
+    createdAt: "Today, 11:45 AM",
+    notes: "Certificate PDF received and uploaded to candidate dossier APX-7741.",
+  },
+  {
+    id: "cb-004",
+    contactName: "Kavita Deshmukh",
+    phone: "+91 98230 11944",
+    email: "kavita.deshmukh@yahoo.com",
+    city: "Pune, MH",
+    course: "B.Tech Computer Science",
+    agentId: "agent-priya",
+    agentName: "Priya (Student Finance AI)",
+    agentAvatar: "P",
+    agentRole: "Scholarship & Fee Specialist",
+    agentBadgeColor: "bg-purple-50 text-purple-700 border-purple-200",
+    topicId: "topic-fees-installment",
+    topicName: "Tuition Fee 3-Part Installment & WhatsApp Matrix",
+    topicCategory: "Finance & Fees",
+    datasetBatchId: "batch-csv-mba",
+    datasetBatchTitle: "Pending Tuition Fee Installments (Batch CSV-MBA)",
+    scheduledWindow: "Today, 05:00 PM - 06:00 PM",
+    scheduledExactTime: "Today at 05:00 PM",
+    countdownLabel: "In 10 mins",
+    isOverdue: false,
+    rescheduleCount: 1,
+    lastRescheduledBy: "User",
+    lastRescheduledReason: "Manual Counselor adjustment: Parent requested post-office hours callback to review loan collateral",
+    rescheduledAt: "Today, 11:00 AM",
+    originalScheduledTime: "Today at 02:00 PM",
+    whyQueued: "Parent requested callback after office hours to review 3-part quarterly installment schedule and bank education loan collateral rules.",
+    queuedTrigger: "Post-WhatsApp Followup",
+    humanInteractionNeeded: false,
+    priority: "Normal",
+    status: "Pending",
+    sourceCallId: "call-002",
+    createdAt: "Today, 10:45 AM",
+    notes: "WhatsApp installment breakdown dispatched successfully at 10:48 AM.",
+  },
+  {
+    id: "cb-005",
+    contactName: "Amitabh Banerjee",
+    phone: "+91 98301 44512",
+    email: "amitabh.b@gmail.com",
+    city: "Kolkata, WB",
+    course: "B.Tech Artificial Intelligence",
+    agentId: "agent-counselor-desk",
+    agentName: "Finance Officer Desk (Human Handoff)",
+    agentAvatar: "F",
+    agentRole: "Student Accounts & Loan Compliance",
+    agentBadgeColor: "bg-amber-50 text-amber-700 border-amber-200",
+    topicId: "topic-fees-loan",
+    topicName: "SBI Education Loan Sanction Letter Endorsement",
+    topicCategory: "Finance & Fees",
+    datasetBatchId: "batch-csv-mba",
+    datasetBatchTitle: "Pending Tuition Fee Installments (Batch CSV-MBA)",
+    scheduledWindow: "Tomorrow, 10:30 AM",
+    scheduledExactTime: "Tomorrow at 10:30 AM",
+    countdownLabel: "Tomorrow 10:30 AM",
+    isOverdue: false,
+    rescheduleCount: 0,
+    originalScheduledTime: "Tomorrow at 10:30 AM",
+    whyQueued: "SBI Loan Officer requested university seal and authorized finance officer countersignature on provisional fee estimation letter.",
+    queuedTrigger: "Special Exception Escalation",
+    humanInteractionNeeded: true,
+    humanInteractionReason: "Physical / digital university seal & finance officer countersignature required on SBI Loan Annexure-IV.",
+    humanAssignee: "Finance Officer Mehta",
+    priority: "Urgent",
+    status: "Pending",
+    sourceCallId: "call-002",
+    createdAt: "Today, 02:15 PM",
+    notes: "Candidate has paid 10% token deposit; needs loan endorsement to disburse tuition balance.",
+  },
+  {
+    id: "cb-006",
+    contactName: "Rohan Sen",
+    phone: "+91 98201 77412",
+    email: "rohan.sen@gmail.com",
+    city: "Mumbai, MH",
+    course: "B.Tech Mechanical Engg",
+    agentId: "agent-maya",
+    agentName: "Maya (Admissions AI)",
+    agentAvatar: "M",
+    agentRole: "Senior Admissions Counseling Concierge",
+    agentBadgeColor: "bg-orange-50 text-orange-700 border-orange-200",
+    topicId: "topic-hostel-room",
+    topicName: "AC Twin Hostel Allotment & Dining Package",
+    topicCategory: "Hostel & Facilities",
+    datasetBatchId: "batch-hostel-allot",
+    datasetBatchTitle: "Hostel Accommodation Allotment Queue (Batch HOSTEL-01)",
+    scheduledWindow: "Today, 06:00 PM",
+    scheduledExactTime: "Today at 06:00 PM",
+    countdownLabel: "In 35 mins",
+    isOverdue: false,
+    rescheduleCount: 2,
+    lastRescheduledBy: "Agent",
+    lastRescheduledReason: "Maya AI: Auto-rescheduled after WhatsApp hostel brochure delivered to allow student room selection",
+    rescheduledAt: "Today, 11:15 AM",
+    originalScheduledTime: "Today at 10:00 AM",
+    whyQueued: "Candidate requested automated callback to finalize AC room selection in Block C and confirm vegetarian dining meal plan.",
+    queuedTrigger: "Post-WhatsApp Followup",
+    humanInteractionNeeded: false,
+    priority: "Normal",
+    status: "Pending",
+    sourceCallId: "call-003",
+    createdAt: "Today, 11:10 AM",
+    notes: "Hostel brochure delivered on WhatsApp. 12 AC twin rooms remaining in Block C.",
+  },
+  {
+    id: "cb-007",
+    contactName: "Siddharth Verma",
+    phone: "+91 98112 34567",
+    email: "siddharth.v@gmail.com",
+    city: "Delhi NCR",
+    course: "B.Tech Computer Science",
+    agentId: "agent-counselor-desk",
+    agentName: "Residential Warden Desk (Human Handoff)",
+    agentAvatar: "W",
+    agentRole: "Campus Living & Residential Warden",
+    agentBadgeColor: "bg-rose-50 text-rose-700 border-rose-200",
+    topicId: "topic-hostel-special",
+    topicName: "Ground Floor Accessibility Accommodation Request",
+    topicCategory: "Hostel & Facilities",
+    datasetBatchId: "batch-hostel-allot",
+    datasetBatchTitle: "Hostel Accommodation Allotment Queue (Batch HOSTEL-01)",
+    scheduledWindow: "Tomorrow, 11:00 AM",
+    scheduledExactTime: "Tomorrow at 11:00 AM",
+    countdownLabel: "Tomorrow 11:00 AM",
+    isOverdue: false,
+    rescheduleCount: 1,
+    lastRescheduledBy: "User",
+    lastRescheduledReason: "Warden Desk Manual: Scheduled for tomorrow 11 AM when Chief Warden is in chamber",
+    rescheduledAt: "Today, 01:30 PM",
+    originalScheduledTime: "Today at 03:00 PM",
+    whyQueued: "Candidate has sports knee ligament recovery requiring ground-floor ramp accessibility; requires Chief Warden room allotment authorization.",
+    queuedTrigger: "Special Exception Escalation",
+    humanInteractionNeeded: true,
+    humanInteractionReason: "Chief Warden manual room allocation override required for medical accessibility ground-floor unit.",
+    humanAssignee: "Chief Warden Dr. Swamy",
+    priority: "High",
+    status: "Pending",
+    sourceCallId: "call-001",
+    createdAt: "Today, 01:20 PM",
+    notes: "Medical prescription verified. Ground floor Block A unit 104 reserved conditionally.",
+  },
+  {
+    id: "cb-008",
+    contactName: "Ananya Sharma",
+    phone: "+91 97184 10293",
+    email: "ananya.sharma@gmail.com",
+    city: "Gurugram, HR",
+    course: "B.Tech Data Science",
+    agentId: "agent-arjun",
+    agentName: "Arjun (Outreach & Ops AI)",
+    agentAvatar: "A",
+    agentRole: "Outbound Lead Verification & Ops",
+    agentBadgeColor: "bg-blue-50 text-blue-700 border-blue-200",
+    topicId: "topic-verification-portal",
+    topicName: "DigiLocker Marksheet Verification Sync Issue",
+    topicCategory: "Verification & Portal",
+    datasetBatchId: "batch-outbound-02",
+    datasetBatchTitle: "National Entrance Test CET Rankers Verification (Batch OUT-02)",
+    scheduledWindow: "Today, 05:45 PM",
+    scheduledExactTime: "Today at 05:45 PM",
+    countdownLabel: "In 25 mins",
+    isOverdue: false,
+    rescheduleCount: 1,
+    lastRescheduledBy: "Agent",
+    lastRescheduledReason: "Arjun AI: Auto-rescheduled after DigiLocker OAuth timeout to give candidate time to upload PDF",
+    rescheduledAt: "Today, 02:45 PM",
+    originalScheduledTime: "Today at 02:40 PM",
+    whyQueued: "DigiLocker API OAuth sync timed out during morning registration; candidate manually re-uploaded 12th marksheet PDF and requested automated clearance confirmation.",
+    queuedTrigger: "Doc Verification Sync Issue",
+    humanInteractionNeeded: false,
+    priority: "High",
+    status: "Pending",
+    sourceCallId: "call-003",
+    createdAt: "Today, 02:40 PM",
+    notes: "Re-trigger DigiLocker verification webhook upon call initiation.",
+  },
+  {
+    id: "cb-009",
+    contactName: "Vikramaditya Rao",
+    phone: "+91 99880 44120",
+    email: "vikram.rao@outlook.com",
+    city: "Hyderabad, TS",
+    course: "B.Tech Electronics & Comm",
+    agentId: "agent-arjun",
+    agentName: "Arjun (Outreach & Ops AI)",
+    agentAvatar: "A",
+    agentRole: "Outbound Lead Verification & Ops",
+    agentBadgeColor: "bg-blue-50 text-blue-700 border-blue-200",
+    topicId: "topic-cet-counseling",
+    topicName: "State CET Rank Verification & Slot Reschedule",
+    topicCategory: "Verification & Portal",
+    datasetBatchId: "batch-outbound-02",
+    datasetBatchTitle: "National Entrance Test CET Rankers Verification (Batch OUT-02)",
+    scheduledWindow: "Yesterday, 04:30 PM",
+    scheduledExactTime: "Yesterday at 04:30 PM",
+    countdownLabel: "Completed",
+    isOverdue: false,
+    rescheduleCount: 1,
+    lastRescheduledBy: "Agent",
+    lastRescheduledReason: "Arjun AI: Moved from Sunday 11 AM to Monday 2 PM per candidate board exam schedule",
+    rescheduledAt: "Yesterday, 02:00 PM",
+    originalScheduledTime: "Sunday at 11:00 AM",
+    whyQueued: "Candidate requested slot change from Sunday 11 AM to Monday 2 PM due to state board practicals.",
+    queuedTrigger: "Candidate Requested",
+    humanInteractionNeeded: false,
+    priority: "Normal",
+    status: "Completed",
+    sourceCallId: "call-003",
+    createdAt: "Yesterday, 02:00 PM",
+    notes: "Counseling slot rescheduled to Monday 2:00 PM. Confirmed by Arjun AI.",
   },
 ];
 
 export default function CallbacksPage() {
   const [callbacks, setCallbacks] = useState<CallbackItem[]>(initialCallbacks);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<"grouped" | "table">("grouped");
+  const [agentFilter, setAgentFilter] = useState<string>("all");
+  const [humanNeededOnly, setHumanNeededOnly] = useState<boolean>(false);
   const [selectedCallRecord, setSelectedCallRecord] = useState<RecentCallRecord | null>(null);
   const [callDrawerOpen, setCallDrawerOpen] = useState(false);
 
-  // Live call confirmation modal state (Explicit user confirmation required!)
+  // Expanded group cards state
+  const [collapsedGroups, setCollapsedGroups] = useState<{ [groupId: string]: boolean }>({});
+
+  // Confirmation Modal
   const [dialConfirmModalOpen, setDialConfirmModalOpen] = useState(false);
   const [targetCallback, setTargetCallback] = useState<CallbackItem | null>(null);
   const [diallingNotice, setDiallingNotice] = useState<string | null>(null);
 
-  const filteredCallbacks = callbacks.filter((cb) => {
-    const matchesSearch =
-      cb.contactName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cb.phone.includes(searchQuery) ||
-      cb.inquirySummary.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === "all" || cb.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Reassign Modal
+  const [reassignModalOpen, setReassignModalOpen] = useState(false);
+  const [reassignItem, setReassignItem] = useState<CallbackItem | null>(null);
+  const [newAgentName, setNewAgentName] = useState("");
+  const [newHumanNeeded, setNewHumanNeeded] = useState(false);
+  const [newHumanReason, setNewHumanReason] = useState("");
+  const [newScheduledWindow, setNewScheduledWindow] = useState("");
+
+  // New Callback Modal
+  const [newCallbackModalOpen, setNewCallbackModalOpen] = useState(false);
+  const [newContactName, setNewContactName] = useState("");
+  const [newContactPhone, setNewContactPhone] = useState("");
+  const [newTopicName, setNewTopicName] = useState("B.Tech CSE Admissions & 35% Chancellor Waiver");
+  const [newDatasetTitle, setNewDatasetTitle] = useState("All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)");
+  const [newAgentSelection, setNewAgentSelection] = useState("Maya (Admissions AI)");
+  const [newScheduledTime, setNewScheduledTime] = useState("Today, 06:00 PM");
+  const [newWhyQueued, setNewWhyQueued] = useState("");
+  const [newHumanToggle, setNewHumanToggle] = useState(false);
+  const [newHumanNotes, setNewHumanNotes] = useState("");
+
+  // Manual Reschedule Modal
+  const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false);
+  const [rescheduleTargetItem, setRescheduleTargetItem] = useState<CallbackItem | null>(null);
+  const [rescheduleSlotType, setRescheduleSlotType] = useState<string>("in-30-mins");
+  const [rescheduleCustomTime, setRescheduleCustomTime] = useState<string>("");
+  const [rescheduleReasonText, setRescheduleReasonText] = useState<string>("");
+  const [rescheduleDelegateToAgent, setRescheduleDelegateToAgent] = useState<boolean>(true);
+  const [reschedulePriority, setReschedulePriority] = useState<"Urgent" | "High" | "Normal">("High");
+
+  const toggleGroupCollapse = (groupId: string) => {
+    try { soundSynth.play("click"); } catch {}
+    setCollapsedGroups((prev) => ({
+      ...prev,
+      [groupId]: !prev[groupId],
+    }));
+  };
+
+  // Filtered callbacks
+  const filteredCallbacks = useMemo(() => {
+    return callbacks.filter((cb) => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        cb.contactName.toLowerCase().includes(q) ||
+        cb.phone.includes(q) ||
+        cb.topicName.toLowerCase().includes(q) ||
+        cb.whyQueued.toLowerCase().includes(q) ||
+        cb.agentName.toLowerCase().includes(q) ||
+        cb.datasetBatchTitle.toLowerCase().includes(q) ||
+        (cb.humanInteractionReason && cb.humanInteractionReason.toLowerCase().includes(q));
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        (statusFilter === "pending" && cb.status === "Pending") ||
+        (statusFilter === "completed" && cb.status === "Completed") ||
+        (statusFilter === "human" && cb.humanInteractionNeeded) ||
+        (statusFilter === "autonomous" && !cb.humanInteractionNeeded);
+
+      const matchesAgent =
+        agentFilter === "all" ||
+        (agentFilter === "maya" && cb.agentId.includes("maya")) ||
+        (agentFilter === "priya" && cb.agentId.includes("priya")) ||
+        (agentFilter === "arjun" && cb.agentId.includes("arjun")) ||
+        (agentFilter === "human" && cb.agentId.includes("counselor"));
+
+      const matchesHumanOnly = !humanNeededOnly || cb.humanInteractionNeeded;
+
+      return matchesSearch && matchesStatus && matchesAgent && matchesHumanOnly;
+    });
+  }, [callbacks, searchQuery, statusFilter, agentFilter, humanNeededOnly]);
+
+  // Grouped by Topic & Dataset Cohort
+  const groupedCohorts = useMemo(() => {
+    const groups: {
+      [key: string]: {
+        groupId: string;
+        topicName: string;
+        datasetBatchTitle: string;
+        topicCategory: string;
+        agentName: string;
+        agentAvatar: string;
+        items: CallbackItem[];
+        pendingCount: number;
+        humanNeededCount: number;
+        earliestScheduled: string;
+      };
+    } = {};
+
+    filteredCallbacks.forEach((cb) => {
+      const key = `${cb.datasetBatchId}__${cb.topicId}`;
+      if (!groups[key]) {
+        groups[key] = {
+          groupId: key,
+          topicName: cb.topicName,
+          datasetBatchTitle: cb.datasetBatchTitle,
+          topicCategory: cb.topicCategory,
+          agentName: cb.agentName,
+          agentAvatar: cb.agentAvatar,
+          items: [],
+          pendingCount: 0,
+          humanNeededCount: 0,
+          earliestScheduled: cb.scheduledExactTime,
+        };
+      }
+      groups[key].items.push(cb);
+      if (cb.status === "Pending") {
+        groups[key].pendingCount += 1;
+      }
+      if (cb.humanInteractionNeeded) {
+        groups[key].humanNeededCount += 1;
+      }
+    });
+
+    return Object.values(groups);
+  }, [filteredCallbacks]);
+
+  // Counts
+  const pendingCount = callbacks.filter((c) => c.status === "Pending").length;
+  const humanNeededCount = callbacks.filter((c) => c.humanInteractionNeeded && c.status === "Pending").length;
+  const autonomousCount = callbacks.filter((c) => !c.humanInteractionNeeded && c.status === "Pending").length;
+  const completedTodayCount = callbacks.filter((c) => c.status === "Completed").length;
 
   const handleOpenSourceCall = (callId: string) => {
     try { soundSynth.play("click"); } catch {}
@@ -112,21 +568,209 @@ export default function CallbacksPage() {
     if (!targetCallback) return;
     try { soundSynth.play("confirm"); } catch {}
     setDialConfirmModalOpen(false);
-    setDiallingNotice(`Carrier SIP line dispatched to ${targetCallback.contactName} (${targetCallback.phone}). Turnaround latency 136ms.`);
+    
+    const isHuman = targetCallback.humanInteractionNeeded;
+    setDiallingNotice(
+      isHuman
+        ? `Transferring live carrier call to ${targetCallback.contactName} (${targetCallback.phone}) with Human Counselor Handoff context.`
+        : `Dispatched carrier SIP line to ${targetCallback.contactName} (${targetCallback.phone}) via ${targetCallback.agentName}. Sub-140ms voice latency SLA.`
+    );
 
     setCallbacks((prev) =>
-      prev.map((c) => (c.id === targetCallback.id ? { ...c, status: "Completed" } : c))
+      prev.map((c) => (c.id === targetCallback.id ? { ...c, status: "Completed", countdownLabel: "Completed" } : c))
     );
 
     setTimeout(() => {
       setDiallingNotice(null);
-    }, 4500);
+    }, 5500);
+  };
+
+  const handleOpenReassignModal = (cb: CallbackItem) => {
+    try { soundSynth.play("click"); } catch {}
+    setReassignItem(cb);
+    setNewAgentName(cb.agentName);
+    setNewHumanNeeded(cb.humanInteractionNeeded);
+    setNewHumanReason(cb.humanInteractionReason || "");
+    setNewScheduledWindow(cb.scheduledWindow);
+    setReassignModalOpen(true);
+  };
+
+  const handleSaveReassign = () => {
+    if (!reassignItem) return;
+    try { soundSynth.play("confirm"); } catch {}
+    setCallbacks((prev) =>
+      prev.map((c) => {
+        if (c.id === reassignItem.id) {
+          return {
+            ...c,
+            agentName: newAgentName,
+            humanInteractionNeeded: newHumanNeeded,
+            humanInteractionReason: newHumanNeeded ? newHumanReason : undefined,
+            scheduledWindow: newScheduledWindow,
+          };
+        }
+        return c;
+      })
+    );
+    setReassignModalOpen(false);
+    setDiallingNotice(`Updated callback settings for ${reassignItem.contactName}. Assigned to ${newAgentName}.`);
+    setTimeout(() => setDiallingNotice(null), 4000);
+  };
+
+  const handleAddNewCallback = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newContactName.trim() || !newContactPhone.trim()) return;
+
+    try { soundSynth.play("confirm"); } catch {}
+
+    const newItem: CallbackItem = {
+      id: `cb-${Date.now()}`,
+      contactName: newContactName.trim(),
+      phone: newContactPhone.trim(),
+      city: "Hyderabad, TS",
+      course: "B.Tech Computer Science",
+      agentId: newAgentSelection.includes("Maya")
+        ? "agent-maya"
+        : newAgentSelection.includes("Priya")
+        ? "agent-priya"
+        : newAgentSelection.includes("Arjun")
+        ? "agent-arjun"
+        : "agent-counselor-desk",
+      agentName: newAgentSelection,
+      agentAvatar: newAgentSelection.charAt(0),
+      agentRole: newAgentSelection.includes("Maya")
+        ? "Admissions Concierge"
+        : newAgentSelection.includes("Priya")
+        ? "Finance Specialist"
+        : newAgentSelection.includes("Arjun")
+        ? "Outreach Specialist"
+        : "Senior Counselor",
+      agentBadgeColor: newAgentSelection.includes("Maya")
+        ? "bg-orange-50 text-orange-700 border-orange-200"
+        : newAgentSelection.includes("Priya")
+        ? "bg-purple-50 text-purple-700 border-purple-200"
+        : "bg-blue-50 text-blue-700 border-blue-200",
+      topicId: "topic-custom",
+      topicName: newTopicName,
+      topicCategory: "Admissions",
+      datasetBatchId: "batch-outbound-01",
+      datasetBatchTitle: newDatasetTitle,
+      scheduledWindow: newScheduledTime,
+      scheduledExactTime: newScheduledTime,
+      countdownLabel: "Scheduled",
+      isOverdue: false,
+      whyQueued: newWhyQueued.trim() || "Manual appointment scheduled by admissions coordinator.",
+      queuedTrigger: "Candidate Requested",
+      humanInteractionNeeded: newHumanToggle,
+      humanInteractionReason: newHumanToggle ? newHumanNotes : undefined,
+      humanAssignee: newHumanToggle ? "Senior Counselor Desk" : undefined,
+      priority: newHumanToggle ? "High" : "Normal",
+      status: "Pending",
+      sourceCallId: "call-001",
+      createdAt: "Just now",
+    };
+
+    setCallbacks((prev) => [newItem, ...prev]);
+    setNewCallbackModalOpen(false);
+    setNewContactName("");
+    setNewContactPhone("");
+    setNewWhyQueued("");
+    setNewHumanToggle(false);
+    setNewHumanNotes("");
+    setDiallingNotice(`Successfully added callback for ${newItem.contactName} to the queue!`);
+    setTimeout(() => setDiallingNotice(null), 4000);
+  };
+
+  const handleMarkResolved = (id: string) => {
+    try { soundSynth.play("click"); } catch {}
+    setCallbacks((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, status: "Completed", countdownLabel: "Completed" } : c))
+    );
+  };
+
+  const handleOpenManualSchedule = (cb: CallbackItem) => {
+    try { soundSynth.play("click"); } catch {}
+    setRescheduleTargetItem(cb);
+    setRescheduleSlotType("in-30-mins");
+    setRescheduleCustomTime(cb.scheduledWindow);
+    setRescheduleReasonText(
+      cb.lastRescheduledReason
+        ? `Adjusted: ${cb.lastRescheduledReason}`
+        : "Candidate requested revised callback slot"
+    );
+    setRescheduleDelegateToAgent(!cb.humanInteractionNeeded);
+    setReschedulePriority(cb.priority);
+    setRescheduleModalOpen(true);
+  };
+
+  const handleSaveManualSchedule = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!rescheduleTargetItem) return;
+    try { soundSynth.play("confirm"); } catch {}
+
+    let newWindow = rescheduleCustomTime;
+    let newCountdown = "Scheduled";
+
+    if (rescheduleSlotType === "in-30-mins") {
+      newWindow = "Today, 07:00 PM (In 30 mins)";
+      newCountdown = "In 30 mins";
+    } else if (rescheduleSlotType === "in-2-hours") {
+      newWindow = "Today, 08:30 PM (Evening Slot)";
+      newCountdown = "In 2 hrs";
+    } else if (rescheduleSlotType === "tonight-9pm") {
+      newWindow = "Tonight, 09:00 PM (Post-Dinner Slot)";
+      newCountdown = "Tonight 9 PM";
+    } else if (rescheduleSlotType === "tomorrow-10am") {
+      newWindow = "Tomorrow, 10:00 AM (Morning Slot)";
+      newCountdown = "Tomorrow 10:00 AM";
+    } else if (rescheduleSlotType === "tomorrow-3pm") {
+      newWindow = "Tomorrow, 03:00 PM (Afternoon Slot)";
+      newCountdown = "Tomorrow 3:00 PM";
+    } else if (rescheduleSlotType === "saturday-11am") {
+      newWindow = "Saturday, 11:00 AM (Weekend Counseling)";
+      newCountdown = "This Saturday 11 AM";
+    } else {
+      newWindow = rescheduleCustomTime || rescheduleTargetItem.scheduledWindow;
+      newCountdown = "Custom Slot";
+    }
+
+    const updatedReason = rescheduleReasonText.trim() || "Manual slot adjustment by operator";
+
+    setCallbacks((prev) =>
+      prev.map((c) => {
+        if (c.id === rescheduleTargetItem.id) {
+          return {
+            ...c,
+            scheduledWindow: newWindow,
+            scheduledExactTime: newWindow,
+            countdownLabel: newCountdown,
+            priority: reschedulePriority,
+            status: "Pending",
+            rescheduleCount: (c.rescheduleCount || 0) + 1,
+            lastRescheduledBy: "User",
+            lastRescheduledReason: updatedReason,
+            rescheduledAt: "Just now",
+            humanInteractionNeeded: !rescheduleDelegateToAgent,
+            humanInteractionReason: !rescheduleDelegateToAgent
+              ? c.humanInteractionReason || "Flagged for manual operator live dial at scheduled slot"
+              : undefined,
+          };
+        }
+        return c;
+      })
+    );
+
+    setRescheduleModalOpen(false);
+    setDiallingNotice(
+      `Manually rescheduled callback for ${rescheduleTargetItem.contactName} to ${newWindow}. (Updated manually by operator)`
+    );
+    setTimeout(() => setDiallingNotice(null), 4500);
   };
 
   return (
-    <div className="space-y-6 select-none font-sans text-[#1A1A1A]">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/[0.06]">
+    <div className="space-y-6 font-sans text-[#1A1A1A] select-none pb-16">
+      {/* Workspace Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-black/[0.06]">
         <div>
           <div className="flex items-center gap-2">
             <Link
@@ -136,273 +780,814 @@ export default function CallbacksPage() {
               Overview
             </Link>
             <span className="text-black/20">/</span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0D593F] bg-[#C1F2D5] px-3 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#16856B]" />
-              Queue Synced
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-700 bg-purple-100 px-3 py-0.5 rounded-full">
+              Callbacks Queue
+            </span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300">
+              <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
+              <span>Real-time Cadence Synced</span>
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A] mt-2">
-            Callbacks &amp; Follow-up Queue
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A] mt-2 flex items-center gap-3">
+            <span>Callbacks &amp; Follow-up Queue</span>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+              {callbacks.length} Total Requests
+            </span>
           </h1>
 
-          <p className="text-xs sm:text-sm text-black/55 mt-1 max-w-2xl leading-relaxed">
-            Manage requested caller appointments and automated outreach cadences with explicit live call initiation confirmations.
+          <p className="text-xs sm:text-sm text-black/60 mt-1 max-w-3xl leading-relaxed">
+            Enterprise call center follow-up queue. Tracks exactly which AI voice agent and topic each callback belongs to, when it is scheduled, why it was queued, whether human interaction is required, and groups related calls from the same topic or dataset.
           </p>
+        </div>
+
+        {/* Header Actions */}
+        <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap shrink-0">
+          <button
+            onClick={() => setNewCallbackModalOpen(true)}
+            className="inline-flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-sm shadow-purple-600/20 transition-all cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Schedule Callback</span>
+          </button>
+
+          <Link
+            href="/dashboard/outbound-scheduler"
+            className="inline-flex items-center gap-1.5 bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold px-4 py-2.5 rounded-full border border-slate-200 shadow-2xs transition-all"
+          >
+            <PhoneOutgoing className="w-3.5 h-3.5 text-purple-600" />
+            <span>Outbound Scheduler</span>
+          </Link>
         </div>
       </div>
 
       {/* Notice Banner */}
       {diallingNotice && (
-        <div className="p-4 rounded-[20px] bg-[#C1F2D5]/40 border border-[#16856B]/30 flex items-center gap-3 text-xs text-[#0D593F] font-semibold animate-in fade-in duration-200">
-          <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16856B]" />
-          <span>{diallingNotice}</span>
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 flex items-center justify-between gap-3 text-xs text-emerald-900 font-semibold animate-in fade-in duration-200 shadow-xs">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
+            <span>{diallingNotice}</span>
+          </div>
+          <button onClick={() => setDiallingNotice(null)} className="text-emerald-700 hover:text-emerald-950 p-1">
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
 
-      {/* 4 Summary Cards */}
+      {/* 4 Telemetry Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <WorkspaceCard
-          name="Pending Requests"
+          name="Pending In Queue"
           icon={Clock}
-          description="Callers who requested follow-up calls during earlier turns."
-          metric={`${callbacks.filter((c) => c.status === "Pending").length} Pending`}
-          metricLabel="Next: Devansh Patil (6:30 PM)"
-          status="Active Queue"
+          description="Candidates awaiting scheduled follow-up outreach."
+          metric={`${pendingCount} Pending`}
+          metricLabel="Earliest: In 10 mins (Kavita Deshmukh)"
+          status="Active"
           statusType="warning"
-          actionLabel="Filter pending →"
-          onClick={() => setStatusFilter("Pending")}
+          actionLabel="View all pending →"
+          onClick={() => setStatusFilter("pending")}
         />
 
         <WorkspaceCard
-          name="Completed Today"
+          name="Requires Human Action"
+          icon={AlertTriangle}
+          description="Complex appeals, fee exceptions, or special quota requests."
+          metric={`${humanNeededCount} Handoffs`}
+          metricLabel="Senior Counselor / Dean intervention"
+          status="High Priority"
+          statusType="warning"
+          actionLabel="Inspect human desk →"
+          onClick={() => setStatusFilter("human")}
+        />
+
+        <WorkspaceCard
+          name="AI Autonomous Calls"
+          icon={Bot}
+          description="Autonomous AI agent callbacks dialed with full turn-by-turn memory."
+          metric={`${autonomousCount} Autonomous`}
+          metricLabel="Maya, Priya & Arjun pool"
+          status="Operational"
+          statusType="ready"
+          actionLabel="View autonomous →"
+          onClick={() => setStatusFilter("autonomous")}
+        />
+
+        <WorkspaceCard
+          name="Resolved Today"
           icon={CheckCircle2}
-          description="Follow-up conversations successfully resolved and archived."
-          metric="1 Resolved"
-          metricLabel="100% connect rate"
-          status="Resolved"
+          description="Follow-ups successfully connected and admissions verified."
+          metric={`${completedTodayCount} Completed`}
+          metricLabel="Sub-140ms voice latency SLA"
+          status="100% Connect"
           statusType="ready"
-          actionLabel="Filter completed →"
-          onClick={() => setStatusFilter("Completed")}
-        />
-
-        <WorkspaceCard
-          name="Average Latency"
-          icon={CalendarClock}
-          description="Average time from scheduled callback slot to carrier ring."
-          metric="< 2.4s"
-          metricLabel="Sub-3s carrier dialling SLA"
-          status="Optimal"
-          statusType="ready"
-          actionLabel="Inspect telemetry →"
-          href="/dashboard/analytics"
-        />
-
-        <WorkspaceCard
-          name="Staff Escalation"
-          icon={User}
-          description="Handoff queue for requests requiring senior counselor intervention."
-          metric="1 Handoff"
-          metricLabel="Verified context transmitted"
-          status="Staff Assigned"
-          statusType="neutral"
-          actionLabel="Manage staff →"
-          href="/dashboard/team"
+          actionLabel="View completed →"
+          onClick={() => setStatusFilter("completed")}
         />
       </div>
 
-      {/* Filter & Search Bar */}
-      <div className="p-4 rounded-[26px] bg-white border border-black/[0.06] shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          {["all", "Pending", "Completed"].map((st) => (
+      {/* Controls Bar: View Mode Switcher, Quick Filters & Search */}
+      <div className="p-4 rounded-2xl bg-white border border-black/[0.08] shadow-2xs space-y-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          {/* View Mode Toggle: Grouped vs Table */}
+          <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl w-fit">
             <button
-              key={st}
               onClick={() => {
                 try { soundSynth.play("click"); } catch {}
-                setStatusFilter(st);
+                setViewMode("grouped");
               }}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                statusFilter === st
-                  ? "bg-[#111111] text-white shadow-sm"
-                  : "bg-[#FBF7ED] text-black/60 hover:text-black border border-black/[0.06]"
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                viewMode === "grouped"
+                  ? "bg-white text-slate-900 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              {st === "all" ? "All Requests" : st}
+              <Layers className="w-3.5 h-3.5 text-purple-600" />
+              <span>Grouped by Topic &amp; Dataset ({groupedCohorts.length} Groups)</span>
             </button>
-          ))}
+
+            <button
+              onClick={() => {
+                try { soundSynth.play("click"); } catch {}
+                setViewMode("table");
+              }}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                viewMode === "table"
+                  ? "bg-white text-slate-900 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-slate-600" />
+              <span>Table / List View ({filteredCallbacks.length})</span>
+            </button>
+          </div>
+
+          {/* Search Box */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="w-3.5 h-3.5 text-black/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search by candidate, topic, reason why queued, agent..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-full text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20 focus:bg-white placeholder:text-slate-400"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="relative flex-1 max-w-sm">
-          <Search className="w-3.5 h-3.5 text-black/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search by contact name, phone, or notes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-black/10 placeholder:text-black/40"
-          />
+        {/* Secondary Quick Filter Pills */}
+        <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-slate-100">
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1">
+            Filter:
+          </span>
+
+          <button
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              setStatusFilter("all");
+              setHumanNeededOnly(false);
+            }}
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+              statusFilter === "all" && !humanNeededOnly
+                ? "bg-slate-900 text-white shadow-xs"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            All Callbacks ({callbacks.length})
+          </button>
+
+          <button
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              setStatusFilter("human");
+              setHumanNeededOnly(true);
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all border ${
+              humanNeededOnly || statusFilter === "human"
+                ? "bg-amber-500 text-white border-amber-600 shadow-xs"
+                : "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100"
+            }`}
+          >
+            <AlertTriangle className="w-3 h-3" />
+            <span>⚠️ Requires Human Action ({humanNeededCount})</span>
+          </button>
+
+          <button
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              setStatusFilter("autonomous");
+              setHumanNeededOnly(false);
+            }}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all border ${
+              statusFilter === "autonomous"
+                ? "bg-emerald-600 text-white border-emerald-700 shadow-xs"
+                : "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
+            }`}
+          >
+            <Bot className="w-3 h-3" />
+            <span>🤖 AI Autonomous ({autonomousCount})</span>
+          </button>
+
+          <button
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              setStatusFilter("pending");
+              setHumanNeededOnly(false);
+            }}
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+              statusFilter === "pending"
+                ? "bg-slate-900 text-white shadow-xs"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Pending Only ({pendingCount})
+          </button>
+
+          <button
+            onClick={() => {
+              try { soundSynth.play("click"); } catch {}
+              setStatusFilter("completed");
+              setHumanNeededOnly(false);
+            }}
+            className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+              statusFilter === "completed"
+                ? "bg-slate-900 text-white shadow-xs"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Completed ({completedTodayCount})
+          </button>
+
+          <div className="h-4 w-[1px] bg-slate-200 mx-1 hidden sm:block" />
+
+          {/* Agent Filter dropdown */}
+          <select
+            value={agentFilter}
+            onChange={(e) => setAgentFilter(e.target.value)}
+            className="text-xs bg-slate-100 border border-slate-200 text-slate-800 rounded-full px-3 py-1 focus:outline-none focus:ring-1 focus:ring-purple-600 font-medium cursor-pointer"
+          >
+            <option value="all">All Agents &amp; Desks</option>
+            <option value="maya">Maya (Admissions AI)</option>
+            <option value="priya">Priya (Finance AI)</option>
+            <option value="arjun">Arjun (Outreach AI)</option>
+            <option value="human">Senior Counselor Desk</option>
+          </select>
         </div>
       </div>
 
-      {/* Callbacks Table */}
-      <div className="bg-white rounded-[26px] border border-black/[0.06] shadow-2xs overflow-hidden">
-        <div className="px-6 py-4 bg-white border-b border-black/[0.06] flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h3 className="font-bold text-xs text-[#1A1A1A]">
-              Scheduled Follow-up Cadence
-            </h3>
-            <span className="text-[11px] font-medium text-black/45">
-              ({filteredCallbacks.length} requests in queue)
+      {/* ========================================================================= */}
+      {/* VIEW 1: GROUPED BY TOPIC & DATASET COHORT                                */}
+      {/* ========================================================================= */}
+      {viewMode === "grouped" && (
+        <div className="space-y-5">
+          {groupedCohorts.length === 0 ? (
+            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 space-y-3">
+              <CalendarClock className="w-10 h-10 text-slate-300 mx-auto" />
+              <h3 className="font-bold text-slate-800 text-sm">No Callbacks Found</h3>
+              <p className="text-xs max-w-sm mx-auto">
+                No callback requests match your active search and filter criteria. Try clearing filters or searching with different terms.
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setStatusFilter("all");
+                  setHumanNeededOnly(false);
+                  setAgentFilter("all");
+                }}
+                className="text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 px-4 py-2 rounded-full border border-purple-200"
+              >
+                Reset Filters
+              </button>
+            </div>
+          ) : (
+            groupedCohorts.map((group) => {
+              const isCollapsed = !!collapsedGroups[group.groupId];
+
+              return (
+                <div
+                  key={group.groupId}
+                  className="bg-white rounded-2xl border border-black/[0.08] shadow-xs overflow-hidden transition-all"
+                >
+                  {/* Group Header Card */}
+                  <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-50 via-white to-purple-50/20 border-b border-black/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="space-y-1.5 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {/* Topic Category Tag */}
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+                          {group.topicCategory}
+                        </span>
+
+                        {/* Dataset Cohort Badge */}
+                        <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1 truncate max-w-xs sm:max-w-md">
+                          <FolderKanban className="w-3 h-3 text-slate-500 shrink-0" />
+                          <span className="truncate">{group.datasetBatchTitle}</span>
+                        </span>
+
+                        {group.humanNeededCount > 0 && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1">
+                            <AlertTriangle className="w-3 h-3 text-amber-600" />
+                            <span>{group.humanNeededCount} Requires Human</span>
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Topic Name */}
+                      <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <span>{group.topicName}</span>
+                      </h3>
+
+                      {/* Group Telemetry Metadata */}
+                      <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <User className="w-3.5 h-3.5 text-purple-600" />
+                          <span>Assigned Agent: <strong className="text-slate-900">{group.agentName}</strong></span>
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1 font-medium">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{group.pendingCount} Pending in Queue</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Group Action Buttons */}
+                    <div className="flex items-center gap-2 self-start md:self-center shrink-0">
+                      <button
+                        onClick={() => {
+                          const firstPending = group.items.find((c) => c.status === "Pending");
+                          if (firstPending) {
+                            handlePromptDial(firstPending);
+                          }
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-900 hover:bg-black text-white shadow-xs transition-all cursor-pointer"
+                      >
+                        <PhoneCall className="w-3 h-3 text-purple-400" />
+                        <span>Dial Next Call</span>
+                      </button>
+
+                      <button
+                        onClick={() => toggleGroupCollapse(group.groupId)}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 transition-all cursor-pointer"
+                        title={isCollapsed ? "Expand Group" : "Collapse Group"}
+                      >
+                        <span>{isCollapsed ? "Expand" : "Collapse"}</span>
+                        {isCollapsed ? (
+                          <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                        ) : (
+                          <ChevronUp className="w-3.5 h-3.5 text-slate-500" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Group Items Cards */}
+                  {!isCollapsed && (
+                    <div className="divide-y divide-black/[0.04]">
+                      {group.items.map((cb) => (
+                        <div
+                          key={cb.id}
+                          className="p-4 sm:p-5 hover:bg-slate-50/60 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+                        >
+                          {/* Left: Contact Info + Why Queued */}
+                          <div className="space-y-2 flex-1 min-w-0">
+                            <div className="flex items-center gap-2.5 flex-wrap">
+                              <span className="font-bold text-sm text-slate-900">
+                                {cb.contactName}
+                              </span>
+                              <span className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                                {cb.phone}
+                              </span>
+                              <span className="text-xs text-slate-500">
+                                {cb.city} • {cb.course}
+                              </span>
+
+                              {/* Priority Pill */}
+                              <span
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                  cb.priority === "Urgent"
+                                    ? "bg-rose-100 text-rose-800 border border-rose-300"
+                                    : cb.priority === "High"
+                                    ? "bg-amber-100 text-amber-800 border border-amber-300"
+                                    : "bg-slate-100 text-slate-700 border border-slate-200"
+                                }`}
+                              >
+                                {cb.priority} Priority
+                              </span>
+
+                              {/* Status Pill */}
+                              {cb.status === "Completed" ? (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                                  <CheckCircle2 className="w-3 h-3" />
+                                  <span>Completed</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+                                  <Clock className="w-3 h-3" />
+                                  <span>Pending</span>
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Why Queued Detail Banner */}
+                            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+                              <div className="flex items-center gap-2 text-[11px] font-bold text-slate-700">
+                                <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+                                <span>Why Queued:</span>
+                                <span className="font-normal text-slate-600">
+                                  {cb.whyQueued}
+                                </span>
+                              </div>
+
+                              {/* When Scheduled */}
+                              <div className="flex items-center gap-2.5 text-[11px] text-slate-600 flex-wrap pt-0.5">
+                                <span className="flex items-center gap-1 font-semibold text-slate-800">
+                                  <Calendar className="w-3 h-3 text-purple-600" />
+                                  <span>When Scheduled: <strong>{cb.scheduledWindow}</strong></span>
+                                </span>
+                                <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold text-[10px]">
+                                  {cb.countdownLabel}
+                                </span>
+
+                                {cb.rescheduleCount && cb.rescheduleCount > 0 ? (
+                                  cb.lastRescheduledBy === "Agent" ? (
+                                    <span
+                                      className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full"
+                                      title={cb.lastRescheduledReason}
+                                    >
+                                      <Bot className="w-2.5 h-2.5 text-blue-600" />
+                                      <span>Agent Rescheduled ({cb.rescheduleCount}x)</span>
+                                    </span>
+                                  ) : (
+                                    <span
+                                      className="inline-flex items-center gap-1 text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full"
+                                      title={cb.lastRescheduledReason}
+                                    >
+                                      <UserCheck className="w-2.5 h-2.5 text-purple-600" />
+                                      <span>Manually Rescheduled ({cb.rescheduleCount}x)</span>
+                                    </span>
+                                  )
+                                ) : null}
+                              </div>
+
+                              {/* Reschedule Context Log if modified */}
+                              {cb.rescheduleCount && cb.rescheduleCount > 0 && cb.lastRescheduledReason && (
+                                <div className="text-[10.5px] text-slate-500 bg-slate-100/70 rounded-md px-2.5 py-1 mt-1 flex items-center gap-1.5 border border-slate-200/60">
+                                  <RotateCcw className="w-3 h-3 text-slate-400 shrink-0" />
+                                  <span className="truncate">
+                                    <strong className="text-slate-700 font-semibold">
+                                      {cb.lastRescheduledBy === "Agent" ? "🤖 AI Agent Reschedule Note:" : "👤 Operator Slot Note:"}
+                                    </strong>{" "}
+                                    {cb.lastRescheduledReason}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Human Interaction Required Callout */}
+                            {cb.humanInteractionNeeded ? (
+                              <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200 flex items-start gap-2.5 text-xs text-amber-900">
+                                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                                <div>
+                                  <strong className="font-bold block text-amber-950">
+                                    Human Interaction Needed:
+                                  </strong>
+                                  <p className="text-[11.5px] text-amber-850 mt-0.5 leading-relaxed">
+                                    {cb.humanInteractionReason}
+                                  </p>
+                                  {cb.humanAssignee && (
+                                    <span className="text-[10.5px] font-semibold text-amber-800 mt-1 block">
+                                      Assignee: <strong>{cb.humanAssignee}</strong>
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2 text-xs text-emerald-800 bg-emerald-50/60 px-3 py-1.5 rounded-lg border border-emerald-200/70 w-fit">
+                                <Bot className="w-3.5 h-3.5 text-emerald-600" />
+                                <span>
+                                  <strong>AI Autonomous Callback:</strong> {cb.agentName} will dial automatically and guide turn-by-turn.
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Right: Actions */}
+                          <div className="flex items-center gap-2 self-start lg:self-center shrink-0 flex-wrap">
+                            {cb.status === "Pending" && (
+                              <button
+                                type="button"
+                                onClick={() => handlePromptDial(cb)}
+                                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-slate-900 hover:bg-black text-white shadow-xs transition-all cursor-pointer"
+                              >
+                                <PhoneCall className="w-3 h-3 text-emerald-400" />
+                                <span>Place Call Now</span>
+                              </button>
+                            )}
+
+                            {/* Manual Reschedule Button for every queued call */}
+                            {cb.status === "Pending" && (
+                              <button
+                                type="button"
+                                onClick={() => handleOpenManualSchedule(cb)}
+                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 transition-all cursor-pointer shadow-2xs"
+                                title="Manually reschedule this callback slot or inspect agent reschedule history"
+                              >
+                                <CalendarClock className="w-3.5 h-3.5 text-purple-600" />
+                                <span>Manual Schedule</span>
+                              </button>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() => handleOpenSourceCall(cb.sourceCallId)}
+                              className="inline-flex items-center gap-1 px-3 py-2 rounded-full text-xs font-semibold bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 transition-all cursor-pointer"
+                              title="Inspect source conversation transcript"
+                            >
+                              <FileText className="w-3 h-3 text-slate-500" />
+                              <span>Source Call</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleOpenReassignModal(cb)}
+                              className="inline-flex items-center gap-1 px-3 py-2 rounded-full text-xs font-semibold bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 transition-all cursor-pointer"
+                              title="Reassign agent, toggle human intervention, or change schedule"
+                            >
+                              <UserCheck className="w-3 h-3 text-purple-600" />
+                              <span>Reassign</span>
+                            </button>
+
+                            {cb.status === "Pending" && (
+                              <button
+                                type="button"
+                                onClick={() => handleMarkResolved(cb.id)}
+                                className="inline-flex items-center gap-1 px-2.5 py-2 rounded-full text-xs font-semibold text-emerald-700 hover:bg-emerald-50 transition-all cursor-pointer"
+                                title="Mark this follow-up as resolved"
+                              >
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* VIEW 2: ALL QUEUE ITEMS (FLAT TABLE VIEW)                                */}
+      {/* ========================================================================= */}
+      {viewMode === "table" && (
+        <div className="bg-white rounded-2xl border border-black/[0.08] shadow-xs overflow-hidden">
+          <div className="px-5 py-4 bg-slate-50 border-b border-black/[0.06] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-xs text-slate-900">
+                Chronological Callback Queue
+              </h3>
+              <span className="text-[11px] font-medium text-slate-500">
+                ({filteredCallbacks.length} requests in queue)
+              </span>
+            </div>
+            <span className="text-[11px] text-slate-500 hidden sm:inline">
+              Carrier dialing requires operator initiation or autonomous time-trigger
             </span>
           </div>
-          <span className="text-[11px] text-black/50 hidden sm:inline">
-            Carrier dialling requires explicit operator confirmation
-          </span>
-        </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#FBF7ED] border-b border-black/[0.06] text-black/45 font-semibold text-[11px] uppercase tracking-wider">
-              <tr>
-                <th className="py-3 px-5">Contact &amp; Phone</th>
-                <th className="py-3 px-5">Scheduled Window</th>
-                <th className="py-3 px-5">Priority</th>
-                <th className="py-3 px-5">Inquiry Context</th>
-                <th className="py-3 px-5">Assigned Agent / Desk</th>
-                <th className="py-3 px-5">Status</th>
-                <th className="py-3 px-5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-black/[0.04]">
-              {filteredCallbacks.map((cb) => (
-                <tr key={cb.id} className="hover:bg-black/[0.015] transition-colors group">
-                  <td className="py-4 px-5 font-semibold text-[#1A1A1A]">
-                    <div>{cb.contactName}</div>
-                    <span className="text-[11px] text-black/45 font-normal">{cb.phone}</span>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#FAF8F3] border-b border-black/[0.06] text-black/55 font-bold text-[11px] uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-4">Contact &amp; Details</th>
+                  <th className="py-3.5 px-4">Which Agent</th>
+                  <th className="py-3.5 px-4">Which Topic &amp; Cohort</th>
+                  <th className="py-3.5 px-4">When Scheduled</th>
+                  <th className="py-3.5 px-4 max-w-xs">Why Queued</th>
+                  <th className="py-3.5 px-4">Human Interaction</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/[0.04]">
+                {filteredCallbacks.map((cb) => (
+                  <tr key={cb.id} className="hover:bg-slate-50/70 transition-colors group">
+                    {/* Contact & Phone */}
+                    <td className="py-4 px-4 font-semibold text-slate-900">
+                      <div className="font-bold">{cb.contactName}</div>
+                      <div className="text-[11px] font-mono text-slate-500 font-normal">{cb.phone}</div>
+                      <div className="text-[10px] text-slate-400 font-normal">{cb.city}</div>
+                    </td>
 
-                  <td className="py-4 px-5 whitespace-nowrap text-[#1A1A1A] font-medium">
-                    {cb.scheduledWindow}
-                  </td>
+                    {/* Which Agent */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs ${cb.agentBadgeColor}`}>
+                          {cb.agentAvatar}
+                        </span>
+                        <div>
+                          <strong className="text-slate-900 block font-bold leading-tight">{cb.agentName}</strong>
+                          <span className="text-[10px] text-slate-500">{cb.agentRole}</span>
+                        </div>
+                      </div>
+                    </td>
 
-                  <td className="py-4 px-5 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium ${
-                        cb.priority === "Urgent"
-                          ? "bg-[#FEE4E2] text-[#B42318]"
-                          : cb.priority === "High"
-                          ? "bg-[#FFD9A0] text-[#733F00]"
-                          : "bg-[#BCD0F5] text-[#1E3A8A]"
-                      }`}
-                    >
-                      {cb.priority}
-                    </span>
-                  </td>
-
-                  <td className="py-4 px-5 max-w-xs text-black/55">
-                    <p className="line-clamp-2">{cb.inquirySummary}</p>
-                    <button
-                      type="button"
-                      onClick={() => handleOpenSourceCall(cb.sourceCallId)}
-                      className="text-[10.5px] font-semibold text-[#1A1A1A] hover:underline mt-1 inline-flex items-center gap-1"
-                    >
-                      <span>View Source Call ({cb.sourceCallId})</span>
-                      <ExternalLink className="w-3 h-3 text-black/40" />
-                    </button>
-                  </td>
-
-                  <td className="py-4 px-5 whitespace-nowrap text-[#1A1A1A] font-medium">
-                    {cb.assignedAgent}
-                  </td>
-
-                  <td className="py-4 px-5 whitespace-nowrap">
-                    {cb.status === "Completed" ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#0D593F] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full">
-                        <CheckCircle2 className="w-3 h-3 text-[#16856B]" />
-                        <span>Completed</span>
+                    {/* Which Topic & Dataset */}
+                    <td className="py-4 px-4 max-w-xs">
+                      <span className="font-bold text-slate-900 block line-clamp-1">{cb.topicName}</span>
+                      <span className="text-[10.5px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200/60 inline-block mt-0.5 line-clamp-1">
+                        {cb.datasetBatchTitle}
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#733F00] bg-[#FFD9A0] px-2.5 py-0.5 rounded-full">
-                        <Clock className="w-3 h-3" />
-                        <span>Pending</span>
-                      </span>
-                    )}
-                  </td>
+                    </td>
 
-                  <td className="py-4 px-5 text-right whitespace-nowrap space-x-2">
-                    {cb.status === "Pending" && (
+                    {/* When Scheduled */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      <div className="font-semibold text-slate-900">{cb.scheduledWindow}</div>
+                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                        <span className="text-[10px] font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full inline-block">
+                          {cb.countdownLabel}
+                        </span>
+                        {cb.rescheduleCount && cb.rescheduleCount > 0 ? (
+                          <span
+                            className={`text-[9.5px] font-bold px-1.5 py-0.5 rounded-full border ${
+                              cb.lastRescheduledBy === "Agent"
+                                ? "bg-blue-50 text-blue-700 border-blue-200"
+                                : "bg-purple-50 text-purple-700 border-purple-200"
+                            }`}
+                            title={cb.lastRescheduledReason}
+                          >
+                            {cb.lastRescheduledBy === "Agent" ? "🤖 Agent Rescheduled" : "👤 Manual Slot"}
+                          </span>
+                        ) : null}
+                      </div>
+                    </td>
+
+                    {/* Why Queued */}
+                    <td className="py-4 px-4 max-w-xs text-slate-600">
+                      <p className="line-clamp-2 text-[11.5px] leading-relaxed">{cb.whyQueued}</p>
                       <button
                         type="button"
-                        onClick={() => handlePromptDial(cb)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#111111] hover:bg-black text-white shadow-xs transition-colors cursor-pointer"
+                        onClick={() => handleOpenSourceCall(cb.sourceCallId)}
+                        className="text-[10.5px] font-bold text-purple-700 hover:underline mt-1 inline-flex items-center gap-1"
                       >
-                        <PhoneCall className="w-3 h-3" />
-                        <span>Initiate Call</span>
+                        <span>Inspect Source Turn ({cb.sourceCallId})</span>
+                        <ExternalLink className="w-3 h-3 text-purple-500" />
                       </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => handleOpenSourceCall(cb.sourceCallId)}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border border-black/[0.06] bg-[#FBF7ED] hover:bg-[#FAF3E4] text-[#1A1A1A] transition-colors cursor-pointer"
-                    >
-                      Audit
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                    </td>
 
-      {/* Explicit Confirmation Modal Before Initiating Live Calls */}
+                    {/* Any Human Interaction Needed */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      {cb.humanInteractionNeeded ? (
+                        <div className="space-y-1">
+                          <span className="inline-flex items-center gap-1 text-[10.5px] font-bold text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
+                            <AlertTriangle className="w-3 h-3 text-amber-600" />
+                            <span>Requires Human</span>
+                          </span>
+                          <span className="text-[10px] text-amber-800 block max-w-[160px] truncate" title={cb.humanInteractionReason}>
+                            {cb.humanInteractionReason}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10.5px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                          <Bot className="w-3 h-3 text-emerald-600" />
+                          <span>AI Autonomous</span>
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Status */}
+                    <td className="py-4 px-4 whitespace-nowrap">
+                      {cb.status === "Completed" ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Completed</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+                          <Clock className="w-3 h-3 text-amber-600" />
+                          <span>Pending</span>
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="py-4 px-4 text-right whitespace-nowrap space-x-1.5">
+                      {cb.status === "Pending" && (
+                        <button
+                          type="button"
+                          onClick={() => handlePromptDial(cb)}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-900 hover:bg-black text-white shadow-xs transition-colors cursor-pointer"
+                        >
+                          <PhoneCall className="w-3 h-3 text-emerald-400" />
+                          <span>Dial</span>
+                        </button>
+                      )}
+
+                      {/* Manual Reschedule button */}
+                      {cb.status === "Pending" && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenManualSchedule(cb)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 transition-colors cursor-pointer"
+                          title="Manually reschedule slot or inspect agent reschedule history"
+                        >
+                          <CalendarClock className="w-3 h-3 text-purple-600" />
+                          <span>Reschedule</span>
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenReassignModal(cb)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 transition-colors cursor-pointer"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL 1: CONFIRM LIVE CALL INITIATION                                     */}
+      {/* ========================================================================= */}
       {dialConfirmModalOpen && targetCallback && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-xs animate-in fade-in duration-100">
-          <div className="relative w-full max-w-md bg-white rounded-[28px] border border-black/[0.06] shadow-2xl p-6 space-y-4 text-xs text-[#1A1A1A]">
-            <div className="w-12 h-12 rounded-full bg-[#FFD9A0] text-[#733F00] flex items-center justify-center">
-              <PhoneCall className="w-6 h-6 text-[#733F00]" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 space-y-4 text-xs text-slate-800">
+            <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center">
+              <PhoneCall className="w-6 h-6 text-purple-700" />
             </div>
 
             <div>
-              <h3 className="text-base font-bold text-[#1A1A1A]">
-                Confirm Live Carrier Call Dispatch?
+              <h3 className="text-lg font-bold text-slate-900">
+                Confirm Carrier Call Dispatch
               </h3>
-              <p className="text-xs text-black/55 mt-1 leading-relaxed">
-                You are about to initiate an automated outbound carrier call to:
+              <p className="text-xs text-slate-500 mt-0.5">
+                Initiating automated carrier line outreach for scheduled callback.
               </p>
             </div>
 
-            <div className="p-4 rounded-[18px] bg-[#FBF7ED] border border-black/[0.06] space-y-2 text-xs text-black/60">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
               <div className="flex justify-between">
-                <span>Contact Name:</span>
-                <strong className="text-[#1A1A1A]">{targetCallback.contactName}</strong>
+                <span className="text-slate-500">Candidate:</span>
+                <strong className="text-slate-900 font-bold">{targetCallback.contactName} ({targetCallback.phone})</strong>
               </div>
               <div className="flex justify-between">
-                <span>Phone Number:</span>
-                <strong className="text-[#1A1A1A]">{targetCallback.phone}</strong>
+                <span className="text-slate-500">Which Agent:</span>
+                <strong className="text-slate-900 font-bold">{targetCallback.agentName}</strong>
               </div>
               <div className="flex justify-between">
-                <span>Assigned Agent:</span>
-                <strong className="text-[#1A1A1A]">{targetCallback.assignedAgent}</strong>
+                <span className="text-slate-500">Which Topic:</span>
+                <strong className="text-slate-900 font-bold">{targetCallback.topicName}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Cohort Group:</span>
+                <span className="text-slate-700 font-medium text-right max-w-[200px] truncate">{targetCallback.datasetBatchTitle}</span>
+              </div>
+              <div className="flex justify-between pt-1 border-t border-slate-200">
+                <span className="text-slate-500">Why Queued:</span>
+                <span className="text-slate-700 font-medium text-right max-w-[220px] line-clamp-2">{targetCallback.whyQueued}</span>
+              </div>
+              <div className="flex justify-between pt-1 border-t border-slate-200">
+                <span className="text-slate-500">Human Action:</span>
+                {targetCallback.humanInteractionNeeded ? (
+                  <span className="text-amber-800 font-bold">⚠️ Requires Human Handoff</span>
+                ) : (
+                  <span className="text-emerald-700 font-bold">🤖 AI Autonomous Execution</span>
+                )}
               </div>
             </div>
 
-            <p className="text-[11px] text-black/50">
-              Standard SIP telephony minutes will be billed. The agent will greet the caller with the context of their previous inquiry.
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Standard SIP telephony trunk channels will be utilized. The agent will greet the candidate with verbatim context of their previous inquiry.
             </p>
 
             <div className="flex items-center justify-end gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={() => setDialConfirmModalOpen(false)}
-                className="px-4 py-2 text-xs font-semibold text-black/60 hover:text-black border border-black/[0.06] bg-[#FBF7ED] rounded-full transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 border border-slate-200 bg-white rounded-full transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleConfirmLiveDial}
-                className="px-5 py-2 text-xs font-semibold bg-[#111111] hover:bg-black text-white rounded-full shadow-sm transition-colors cursor-pointer"
+                className="px-5 py-2 text-xs font-bold bg-slate-900 hover:bg-black text-white rounded-full shadow-sm transition-colors cursor-pointer"
               >
                 Confirm &amp; Place Call Now
               </button>
@@ -411,7 +1596,544 @@ export default function CallbacksPage() {
         </div>
       )}
 
-      {/* Source Call Transcript Drawer */}
+      {/* ========================================================================= */}
+      {/* MODAL 2: REASSIGN AGENT / TOGGLE HUMAN INTERACTION                        */}
+      {/* ========================================================================= */}
+      {reassignModalOpen && reassignItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 space-y-4 text-xs text-slate-800">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">
+                  Manage Callback &amp; Agent Handoff
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Candidate: {reassignItem.contactName} ({reassignItem.phone})
+                </p>
+              </div>
+              <button onClick={() => setReassignModalOpen(false)} className="text-slate-400 hover:text-slate-700">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3.5">
+              {/* Agent Selection */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Which Agent / Desk Handles Callback?
+                </label>
+                <select
+                  value={newAgentName}
+                  onChange={(e) => setNewAgentName(e.target.value)}
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                >
+                  <option value="Maya (Admissions AI)">Maya (Admissions AI) — Student Counseling</option>
+                  <option value="Priya (Student Finance AI)">Priya (Student Finance AI) — Fee &amp; Scholarships</option>
+                  <option value="Arjun (Outreach & Ops AI)">Arjun (Outreach &amp; Ops AI) — Verification &amp; Entrance</option>
+                  <option value="Senior Counselor Desk (Human Handoff)">Senior Counselor Desk (Human Handoff)</option>
+                  <option value="Finance Officer Desk (Human Handoff)">Finance Officer Desk (Human Handoff)</option>
+                  <option value="Residential Warden Desk (Human Handoff)">Residential Warden Desk (Human Handoff)</option>
+                </select>
+              </div>
+
+              {/* Scheduled Window */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Scheduled Time Window
+                </label>
+                <input
+                  type="text"
+                  value={newScheduledWindow}
+                  onChange={(e) => setNewScheduledWindow(e.target.value)}
+                  placeholder="e.g. Today, 06:30 PM"
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                />
+              </div>
+
+              {/* Human Interaction Needed Toggle */}
+              <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-700" />
+                    <div>
+                      <strong className="text-xs font-bold text-amber-950 block">Requires Human Interaction?</strong>
+                      <span className="text-[11px] text-amber-800">Flag for manual counselor exception or Dean sign-off</span>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={newHumanNeeded}
+                    onChange={(e) => setNewHumanNeeded(e.target.checked)}
+                    className="w-4 h-4 accent-amber-600 rounded cursor-pointer"
+                  />
+                </div>
+
+                {newHumanNeeded && (
+                  <div className="pt-2 border-t border-amber-200/80">
+                    <label className="block text-[11px] font-bold text-amber-950 mb-1">
+                      Reason for Human Intervention:
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={newHumanReason}
+                      onChange={(e) => setNewHumanReason(e.target.value)}
+                      placeholder="Specify what document review, waiver signature, or appeal requires human staff..."
+                      className="w-full text-xs bg-white border border-amber-300 rounded-xl p-2 text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setReassignModalOpen(false)}
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 border border-slate-200 bg-white rounded-full transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveReassign}
+                className="px-5 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-sm transition-colors cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL 3: SCHEDULE NEW CALLBACK REQUEST                                    */}
+      {/* ========================================================================= */}
+      {newCallbackModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 space-y-4 text-xs text-slate-800 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">
+                  Schedule New Callback Request
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Add candidate follow-up to the call center queue.
+                </p>
+              </div>
+              <button onClick={() => setNewCallbackModalOpen(false)} className="text-slate-400 hover:text-slate-700">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddNewCallback} className="space-y-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Candidate Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Tanvi Deshmukh"
+                    value={newContactName}
+                    onChange={(e) => setNewContactName(e.target.value)}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Phone Number (E.164) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="+91 98765 43210"
+                    value={newContactPhone}
+                    onChange={(e) => setNewContactPhone(e.target.value)}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20 font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Topic */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Which Topic / Subject?
+                </label>
+                <select
+                  value={newTopicName}
+                  onChange={(e) => setNewTopicName(e.target.value)}
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                >
+                  <option value="B.Tech CSE Admissions & 35% Chancellor Waiver">B.Tech CSE Admissions &amp; 35% Chancellor Waiver</option>
+                  <option value="Tuition Fee 3-Part Installment & WhatsApp Matrix">Tuition Fee 3-Part Installment &amp; WhatsApp Matrix</option>
+                  <option value="AC Twin Hostel Allotment & Dining Package">AC Twin Hostel Allotment &amp; Dining Package</option>
+                  <option value="DigiLocker Marksheet Verification Sync Issue">DigiLocker Marksheet Verification Sync Issue</option>
+                  <option value="Sports Quota 25% Fee Concession Appeal">Sports Quota 25% Fee Concession Appeal</option>
+                  <option value="Campus Lab Tour Booking Confirmation">Campus Lab Tour Booking Confirmation</option>
+                </select>
+              </div>
+
+              {/* Cohort Dataset */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Same Group / Dataset Cohort
+                </label>
+                <select
+                  value={newDatasetTitle}
+                  onChange={(e) => setNewDatasetTitle(e.target.value)}
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                >
+                  <option value="All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)">All-India JoSAA &amp; State CET Qualified Applicants 2026 (Batch OUT-01)</option>
+                  <option value="Pending Tuition Fee Installments (Batch CSV-MBA)">Pending Tuition Fee Installments (Batch CSV-MBA)</option>
+                  <option value="Hostel Accommodation Allotment Queue (Batch HOSTEL-01)">Hostel Accommodation Allotment Queue (Batch HOSTEL-01)</option>
+                  <option value="National Entrance Test CET Rankers Verification (Batch OUT-02)">National Entrance Test CET Rankers Verification (Batch OUT-02)</option>
+                  <option value="Web Portal & Social Inbound Inquiries">Web Portal &amp; Social Inbound Inquiries</option>
+                </select>
+              </div>
+
+              {/* Agent & Scheduled Window */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Which Agent?
+                  </label>
+                  <select
+                    value={newAgentSelection}
+                    onChange={(e) => setNewAgentSelection(e.target.value)}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                  >
+                    <option value="Maya (Admissions AI)">Maya (Admissions AI)</option>
+                    <option value="Priya (Student Finance AI)">Priya (Student Finance AI)</option>
+                    <option value="Arjun (Outreach & Ops AI)">Arjun (Outreach &amp; Ops AI)</option>
+                    <option value="Senior Counselor Desk (Human Handoff)">Senior Counselor Desk</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    When Scheduled?
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Today, 06:00 PM"
+                    value={newScheduledTime}
+                    onChange={(e) => setNewScheduledTime(e.target.value)}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                  />
+                </div>
+              </div>
+
+              {/* Why Queued */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Why Queued? (Reason for follow-up) *
+                </label>
+                <textarea
+                  required
+                  rows={2}
+                  placeholder="e.g. Candidate requested evening slot to discuss scholarships with parents."
+                  value={newWhyQueued}
+                  onChange={(e) => setNewWhyQueued(e.target.value)}
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                />
+              </div>
+
+              {/* Human Intervention Checkbox */}
+              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <strong className="text-xs font-bold text-slate-900 block">Requires Human Interaction?</strong>
+                    <span className="text-[11px] text-slate-500">Uncheck for autonomous AI callback execution</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={newHumanToggle}
+                    onChange={(e) => setNewHumanToggle(e.target.checked)}
+                    className="w-4 h-4 accent-purple-600 rounded cursor-pointer"
+                  />
+                </div>
+
+                {newHumanToggle && (
+                  <div className="pt-2 border-t border-slate-200">
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                      Human Intervention Details:
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Dean manual signature required for special waiver"
+                      value={newHumanNotes}
+                      onChange={(e) => setNewHumanNotes(e.target.value)}
+                      className="w-full text-xs bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-1 focus:ring-purple-600"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setNewCallbackModalOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 border border-slate-200 bg-white rounded-full transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-sm shadow-purple-600/20 transition-colors cursor-pointer"
+                >
+                  Add to Callback Queue
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL 4: MANUAL RESCHEDULE & SLOT PLANNER                                */}
+      {/* ========================================================================= */}
+      {rescheduleModalOpen && rescheduleTargetItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 space-y-4 text-xs text-slate-800 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <CalendarClock className="w-5 h-5 text-purple-700" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">
+                    Manual Reschedule &amp; Slot Planner
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Candidate: <strong className="text-slate-800">{rescheduleTargetItem.contactName}</strong> ({rescheduleTargetItem.phone})
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setRescheduleModalOpen(false)}
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Audit Banner: Already Rescheduled by Agent vs User vs Initial */}
+            {rescheduleTargetItem.rescheduleCount && rescheduleTargetItem.rescheduleCount > 0 ? (
+              rescheduleTargetItem.lastRescheduledBy === "Agent" ? (
+                <div className="p-3.5 rounded-2xl bg-blue-50/80 border border-blue-200 text-blue-900 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Bot className="w-4 h-4 text-blue-600 shrink-0" />
+                    <strong className="text-xs font-bold text-blue-950">
+                      Already Rescheduled by AI Agent ({rescheduleTargetItem.rescheduleCount}x)
+                    </strong>
+                  </div>
+                  <p className="text-[11.5px] text-blue-800 leading-relaxed pl-6">
+                    Agent <strong>{rescheduleTargetItem.agentName}</strong> previously adjusted this slot ({rescheduleTargetItem.rescheduledAt || "prior turn"}).
+                  </p>
+                  {rescheduleTargetItem.lastRescheduledReason && (
+                    <p className="text-[11px] text-blue-700 italic pl-6">
+                      Reason: "{rescheduleTargetItem.lastRescheduledReason}"
+                    </p>
+                  )}
+                  <div className="text-[10.5px] font-semibold text-blue-900 pt-1 pl-6">
+                    Current Scheduled Slot: <strong className="underline">{rescheduleTargetItem.scheduledWindow}</strong> ({rescheduleTargetItem.countdownLabel})
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-2xl bg-purple-50/80 border border-purple-200 text-purple-900 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-purple-600 shrink-0" />
+                    <strong className="text-xs font-bold text-purple-950">
+                      Previously Rescheduled Manually by Operator ({rescheduleTargetItem.rescheduleCount}x)
+                    </strong>
+                  </div>
+                  <p className="text-[11.5px] text-purple-800 leading-relaxed pl-6">
+                    Note: "{rescheduleTargetItem.lastRescheduledReason || "Manual slot change"}"
+                  </p>
+                  <div className="text-[10.5px] font-semibold text-purple-900 pt-1 pl-6">
+                    Current Slot: <strong className="underline">{rescheduleTargetItem.scheduledWindow}</strong> ({rescheduleTargetItem.countdownLabel})
+                  </div>
+                </div>
+              )
+            ) : (
+              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-slate-500" />
+                  <span>Currently on initial slot: <strong>{rescheduleTargetItem.scheduledWindow}</strong></span>
+                </div>
+                <span className="font-bold text-[10.5px] px-2 py-0.5 rounded bg-slate-200/70 text-slate-800">
+                  {rescheduleTargetItem.countdownLabel}
+                </span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSaveManualSchedule} className="space-y-4">
+              {/* Quick Slot Presets */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                  <span>Select New Callback Slot:</span>
+                  <span className="text-[10.5px] text-slate-400 font-normal">Click preset or customize</span>
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {[
+                    { id: "in-30-mins", label: "⚡ In 30 Mins", sub: "Today 07:00 PM" },
+                    { id: "in-2-hours", label: "⏰ In 2 Hours", sub: "Today 08:30 PM" },
+                    { id: "tonight-9pm", label: "🌙 Tonight 9 PM", sub: "Post-Dinner Slot" },
+                    { id: "tomorrow-10am", label: "☀️ Tomorrow 10 AM", sub: "Morning Shift" },
+                    { id: "tomorrow-3pm", label: "⛅ Tomorrow 3 PM", sub: "Afternoon Shift" },
+                    { id: "saturday-11am", label: "🗓️ Saturday 11 AM", sub: "Weekend Slot" },
+                  ].map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() => {
+                        try { soundSynth.play("click"); } catch {}
+                        setRescheduleSlotType(preset.id);
+                      }}
+                      className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${
+                        rescheduleSlotType === preset.id
+                          ? "bg-purple-600 text-white border-purple-700 shadow-xs"
+                          : "bg-slate-50 hover:bg-slate-100 text-slate-800 border-slate-200"
+                      }`}
+                    >
+                      <div className={`text-xs font-bold ${rescheduleSlotType === preset.id ? "text-white" : "text-slate-900"}`}>
+                        {preset.label}
+                      </div>
+                      <div className={`text-[10px] mt-0.5 ${rescheduleSlotType === preset.id ? "text-purple-100" : "text-slate-500"}`}>
+                        {preset.sub}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    try { soundSynth.play("click"); } catch {}
+                    setRescheduleSlotType("custom");
+                  }}
+                  className={`w-full mt-2 p-2.5 rounded-xl text-left border text-xs font-semibold flex items-center justify-between transition-all cursor-pointer ${
+                    rescheduleSlotType === "custom"
+                      ? "bg-purple-50 text-purple-900 border-purple-300 ring-1 ring-purple-400"
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                  }`}
+                >
+                  <span>⚙️ Specify Custom Date &amp; Window</span>
+                  <span className="text-[10px] font-bold text-purple-700">Enter custom timing</span>
+                </button>
+              </div>
+
+              {/* Custom Window Input if Custom is Selected */}
+              {rescheduleSlotType === "custom" && (
+                <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5 animate-in fade-in">
+                  <label className="block text-[11px] font-bold text-slate-700">
+                    Custom Scheduled Window String *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={rescheduleCustomTime}
+                    onChange={(e) => setRescheduleCustomTime(e.target.value)}
+                    placeholder="e.g. Next Monday, 11:30 AM (Post-Exams)"
+                    className="w-full text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                  />
+                </div>
+              )}
+
+              {/* Reason for Manual Reschedule */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Why is this being rescheduled? (Logged to Call Dossier) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={rescheduleReasonText}
+                  onChange={(e) => setRescheduleReasonText(e.target.value)}
+                  placeholder="e.g. Candidate exam finished early; requested callback tonight."
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                />
+                {/* Quick Reason Chips */}
+                <div className="flex items-center gap-1.5 flex-wrap mt-1.5">
+                  {[
+                    "Candidate in coaching class",
+                    "Parent requested evening slot",
+                    "Candidate exam finished early",
+                    "Escalated priority callback",
+                    "Line busy retry round #2",
+                  ].map((chip) => (
+                    <button
+                      key={chip}
+                      type="button"
+                      onClick={() => setRescheduleReasonText(chip)}
+                      className="text-[10px] bg-slate-100 hover:bg-purple-50 hover:text-purple-700 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200 transition-colors cursor-pointer"
+                    >
+                      + {chip}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Execution Mode & Priority */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Execution Mode at New Slot:
+                  </label>
+                  <select
+                    value={rescheduleDelegateToAgent ? "agent" : "human"}
+                    onChange={(e) => setRescheduleDelegateToAgent(e.target.value === "agent")}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                  >
+                    <option value="agent">🤖 Autonomous AI Dial ({rescheduleTargetItem.agentName})</option>
+                    <option value="human">👤 Human Counselor Live Dial</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Call Priority:
+                  </label>
+                  <select
+                    value={reschedulePriority}
+                    onChange={(e) => setReschedulePriority(e.target.value as "Urgent" | "High" | "Normal")}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
+                  >
+                    <option value="Urgent">🔥 Urgent Priority</option>
+                    <option value="High">⚡ High Priority</option>
+                    <option value="Normal">Standard Priority</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setRescheduleModalOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 border border-slate-200 bg-white rounded-full transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-sm shadow-purple-600/20 transition-all cursor-pointer"
+                >
+                  <CalendarClock className="w-3.5 h-3.5" />
+                  <span>Confirm &amp; Lock Schedule</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Slide-over Call Transcript Drawer */}
       <CallDrawer
         call={selectedCallRecord}
         isOpen={callDrawerOpen}

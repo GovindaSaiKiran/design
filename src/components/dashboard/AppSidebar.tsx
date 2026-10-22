@@ -8,7 +8,6 @@ import {
   Bot,
   Radio,
   Users,
-  Megaphone,
   Calendar,
   FolderKanban,
   MessageSquare,
@@ -124,11 +123,6 @@ export default function AppSidebar({
       icon: Users,
     },
     {
-      label: "Campaign Dispatch",
-      href: "/dashboard/campaigns",
-      icon: Megaphone,
-    },
-    {
       label: "Callbacks Queue",
       href: "/dashboard/callbacks",
       icon: Calendar,
@@ -139,8 +133,8 @@ export default function AppSidebar({
       icon: FolderKanban,
     },
     {
-      label: "WhatsApp Flows",
-      href: "/dashboard/instant-leads",
+      label: "WhatsApp",
+      href: "/dashboard/whatsapp",
       icon: MessageSquare,
     },
   ];

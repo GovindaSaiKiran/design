@@ -138,6 +138,7 @@ export default function AppHeader({
     if (pathname?.startsWith("/dashboard/campaigns")) return "Campaigns & Bulk Calling";
     if (pathname?.startsWith("/dashboard/data-vault")) return "Data Vault";
     if (pathname?.startsWith("/dashboard/callbacks")) return "Callbacks & Follow-ups";
+    if (pathname?.startsWith("/dashboard/whatsapp")) return "WhatsApp Workspace";
     if (pathname?.startsWith("/dashboard/instant-leads")) return "WhatsApp & Instant Leads";
     if (pathname?.startsWith("/dashboard/delegate")) return "Agent Playground";
     if (pathname?.startsWith("/dashboard/knowledge")) return "Knowledge Base";
