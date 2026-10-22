@@ -659,15 +659,6 @@ export default function Navbar({
               <ArrowUpRight className="w-3 h-3 xl:w-3.5 xl:h-3.5 stroke-[2.5] shrink-0 text-[#cdfb56] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:scale-110 transition-transform duration-200" />
             </span>
           </LiquidButton>
-
-          {/* Dashboard Direct Link */}
-          <Link
-            href="/dashboard"
-            className="text-[10px] xl:text-[10.5px] font-bold uppercase tracking-wider px-2.5 xl:px-3 py-1.5 rounded-full border border-slate-200/90 hover:border-slate-400 bg-white hover:bg-slate-50 hover:shadow-2xs text-slate-800 hover:text-slate-950 transition-all duration-200 cursor-pointer active:scale-95 shadow-2xs whitespace-nowrap shrink-0 flex items-center group"
-            title="Open Swaram Operations Command Center"
-          >
-            <span>DASHBOARD</span>
-          </Link>
         </div>
 
         {/* ===================================================================== */}
@@ -740,18 +731,6 @@ export default function Navbar({
                     </a>
                   );
                 })}
-
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="py-2 px-3.5 rounded-2xl font-bold transition-colors flex items-center justify-between text-blue-600 hover:bg-blue-50 mt-1"
-                >
-                  <div className="flex items-center gap-2">
-                    <Activity className="w-4 h-4" />
-                    <span>OPERATIONS DASHBOARD</span>
-                  </div>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
 
               {/* Mobile CTAs */}

@@ -1,201 +1,513 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Settings,
-  Building2,
   ShieldCheck,
-  CreditCard,
-  Key,
-  Globe,
-  Bell,
-  Save,
+  RotateCw,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
-import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
+import SettingsNavigation from "@/components/dashboard/settings/SettingsNavigation";
+import PersonalProfileTab from "@/components/dashboard/settings/tabs/PersonalProfileTab";
+import BusinessWorkspaceTab from "@/components/dashboard/settings/tabs/BusinessWorkspaceTab";
+import TeamMembersTab from "@/components/dashboard/settings/tabs/TeamMembersTab";
+import PlanBillingTab from "@/components/dashboard/settings/tabs/PlanBillingTab";
+import NotificationsTab from "@/components/dashboard/settings/tabs/NotificationsTab";
+import SecurityPrivacyTab from "@/components/dashboard/settings/tabs/SecurityPrivacyTab";
+import AppPreferencesTab from "@/components/dashboard/settings/tabs/AppPreferencesTab";
+import AIServicesTab from "@/components/dashboard/settings/tabs/AIServicesTab";
+import PhoneCallingTab from "@/components/dashboard/settings/tabs/PhoneCallingTab";
+import WhatsAppTab from "@/components/dashboard/settings/tabs/WhatsAppTab";
+import OtherAppsTab from "@/components/dashboard/settings/tabs/OtherAppsTab";
+import AdvancedSettingsTab from "@/components/dashboard/settings/tabs/AdvancedSettingsTab";
+import {
+  SettingsTabKey,
+  CompleteSwaramSettings,
+  PersonalProfile,
+  WorkspaceProfile,
+  TeamMember,
+  BillingPlanInfo,
+  NotificationPreferences,
+  SecuritySettings,
+  AppPreferences,
+  AIServiceConnection,
+  PhoneCallingConnection,
+  WhatsAppConnection,
+  AppIntegration,
+  AdvancedConnectionSettings,
+} from "@/types/settings";
 
-export default function SettingsPage() {
-  const [orgName, setOrgName] = useState("Apex Global Institutions");
-  const [domain, setDomain] = useState("admissions.director@apex.edu.in");
-  const [timezone, setTimezone] = useState("Asia/Kolkata (IST • UTC+05:30)");
-  const [savedNotice, setSavedNotice] = useState(false);
+function SettingsPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSavedNotice(true);
-    setTimeout(() => setSavedNotice(false), 3500);
+  // Tab synchronization from URL
+  const initialTab = (searchParams.get("tab") as SettingsTabKey) || "profile";
+  const [activeTab, setActiveTab] = useState<SettingsTabKey>(initialTab);
+
+  const [settings, setSettings] = useState<CompleteSwaramSettings | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [globalNotice, setGlobalNotice] = useState<string | null>(null);
+
+  // Load settings from backend API
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        const json = await res.json();
+        if (json.success && json.settings) {
+          setSettings(json.settings);
+        }
+      } catch (err) {
+        console.error("Failed to load settings:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadSettings();
+  }, []);
+
+  // Sync tab changes with URL query parameter
+  const handleTabSelect = (tab: SettingsTabKey) => {
+    setActiveTab(tab);
+    router.push(`/dashboard/settings?tab=${tab}`, { scroll: false });
   };
 
+  const showGlobalNotice = (msg: string) => {
+    setGlobalNotice(msg);
+    setTimeout(() => setGlobalNotice(null), 3500);
+  };
+
+  // Section Save Handlers
+  const handleSaveProfile = async (updated: PersonalProfile): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "profile", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, profile: updated } : prev));
+        showGlobalNotice("Personal profile changes saved.");
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveWorkspace = async (updated: WorkspaceProfile): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "workspace", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, workspace: updated } : prev));
+        showGlobalNotice("Workspace parameters saved.");
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveTeam = async (updated: TeamMember[]): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "team", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, team: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveBilling = async (updated: BillingPlanInfo): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "billing", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, billing: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveNotifications = async (updated: NotificationPreferences): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "notifications", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, notifications: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveSecurity = async (updated: SecuritySettings): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "security", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, security: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSavePreferences = async (updated: AppPreferences): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "preferences", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, preferences: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveAiServices = async (updated: AIServiceConnection[]): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "aiServices", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, aiServices: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSavePhoneCalling = async (updated: PhoneCallingConnection): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "phoneCalling", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, phoneCalling: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveWhatsApp = async (updated: WhatsAppConnection): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "whatsapp", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, whatsapp: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveOtherApps = async (updated: AppIntegration[]): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "otherApps", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, otherApps: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveAdvanced = async (updated: AdvancedConnectionSettings): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "advanced", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, advanced: updated } : prev));
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  // Test Handlers
+  const handleTestAiConnection = async () => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "test-ai" }),
+      });
+      return await res.json();
+    } catch {
+      return { success: false, latencyMs: 0, message: "AI ping test failed." };
+    }
+  };
+
+  const handleTestPhoneConnection = async () => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "test-phone" }),
+      });
+      return await res.json();
+    } catch {
+      return { success: false, message: "Phone trunk test failed." };
+    }
+  };
+
+  const handleTestWebhook = async () => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "test-webhook" }),
+      });
+      return await res.json();
+    } catch {
+      return { success: false, message: "Webhook ping delivery failed." };
+    }
+  };
+
+  if (isLoading || !settings) {
+    return (
+      <div className="py-24 text-center space-y-3 font-sans">
+        <RotateCw className="w-6 h-6 animate-spin text-[#283A50] mx-auto" />
+        <p className="text-xs text-[#707684]">Loading Swaram Settings &amp; Connections...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 font-sans text-[#1A1A1A]">
-      {/* Workspace Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-black/[0.06]">
+    <div className="space-y-6 font-sans text-[#283A50] max-w-7xl mx-auto pb-12">
+      {/* Workspace Header & Breadcrumbs */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#E9E1D4]">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-xs font-semibold text-black/50 hover:text-[#1A1A1A] transition-colors"
+              className="text-xs font-semibold text-[#707684] hover:text-[#283A50] transition-colors"
             >
               Overview
             </Link>
-            <span className="text-black/20">/</span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1A1A1A] bg-[#FFD9A0] px-3 py-0.5 rounded-full">
-              Organization Settings
+            <span className="text-slate-300">/</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-3 py-0.5 rounded-full">
+              Settings &amp; Connections
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A] mt-2">
-            Organization &amp; Workspace Settings
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#283A50] mt-2">
+            Settings &amp; Service Connections
           </h1>
 
-          <p className="text-sm text-black/60 mt-1 max-w-2xl leading-relaxed">
-            Manage organization identity, operational timezones, security preferences, third-party telephony webhooks, and DPDP compliance.
+          <p className="text-xs sm:text-sm text-[#707684] mt-1 max-w-2xl leading-relaxed">
+            Manage your account identity, institutional workspace rules, team permissions, subscription, and telecom connections in plain, non-technical language.
           </p>
         </div>
 
-        {/* Save Changes */}
-        <button
-          onClick={handleSave}
-          className="inline-flex items-center gap-2 bg-[#111111] hover:bg-black text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-all cursor-pointer shadow-sm"
-        >
-          <Save className="w-3.5 h-3.5 text-white" />
-          <span>Save Configuration</span>
-        </button>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="font-mono text-[11px] font-semibold text-[#707684] bg-[#FAF5E9] px-3 py-1.5 rounded-xl border border-[#E9E1D4]">
+            Workspace ID: org-apex-01
+          </span>
+        </div>
       </div>
 
-      {savedNotice && (
-        <div className="bg-[#C1F2D5]/50 border border-[#16856B]/20 p-3.5 rounded-2xl flex items-center gap-3 text-xs text-[#16856B] shadow-2xs animate-in fade-in duration-200">
-          <CheckCircle2 className="w-4 h-4 text-[#16856B] shrink-0" />
-          <span>Configuration saved successfully across all voice channels and agents.</span>
+      {globalNotice && (
+        <div className="p-3.5 rounded-xl bg-[#B8DEC8]/40 border border-[#2E8066]/30 text-[#2E8066] text-xs font-semibold flex items-center gap-2 animate-in fade-in duration-200">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <span>{globalNotice}</span>
         </div>
       )}
 
-      {/* 4 Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <WorkspaceCard
-          name="Workspace Profile"
-          icon={Building2}
-          description="Verified organization identity and administrative billing contact."
-          metric="Apex Global"
-          metricLabel="Admin: admissions.director@apex.edu.in"
-          status="Verified"
-          statusType="ready"
-          actionLabel="Edit profile →"
-        />
-
-        <WorkspaceCard
-          name="Calling Allowance"
-          icon={CreditCard}
-          description="Talk-time consumption across inbound and outbound channels."
-          metric="2.2 / 14.0 min"
-          metricLabel="Free tier sandbox • 11.8 min remaining"
-          status="Active Plan"
-          statusType="ready"
-          actionLabel="View billing →"
-          href="/dashboard/billing"
-        />
-
-        <WorkspaceCard
-          name="DPDP & Compliance"
-          icon={ShieldCheck}
-          description="Data protection protocols, call recording retention, and PII masking."
-          metric="DPDP Grounded"
-          metricLabel="90-day automatic transcript retention"
-          status="Strict Mode"
-          statusType="ready"
-          actionLabel="Audit policy →"
-          href="/dashboard/data-vault"
-        />
-
-        <WorkspaceCard
-          name="API & Webhooks"
-          icon={Key}
-          description="Telephony webhooks, CRM sync, and custom webhook endpoints."
-          metric="2 active hooks"
-          metricLabel="HubSpot CRM • Meta Cloud API"
-          status="Online"
-          statusType="ready"
-          actionLabel="Manage keys →"
-        />
-      </div>
-
-      {/* Settings Form */}
-      <div className="bg-white rounded-[26px] border border-black/[0.06] overflow-hidden shadow-2xs">
-        {/* Top Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-black/[0.06]">
-          <span className="text-xs font-bold text-[#1A1A1A]">
-            General Configuration Parameters
-          </span>
-          <span className="text-xs text-black/50">
-            Tenant ID: org-apex-01
-          </span>
+      {/* 2-Column Responsive Settings Architecture */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+        {/* Left Column: Navigation Sidebar */}
+        <div className="lg:col-span-1 lg:sticky lg:top-6">
+          <SettingsNavigation
+            activeTab={activeTab}
+            onSelectTab={handleTabSelect}
+          />
         </div>
 
-        <form onSubmit={handleSave} className="p-6 sm:p-7 space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-[#1A1A1A] block">
-                Organization Name
-              </label>
-              <input
-                type="text"
-                value={orgName}
-                onChange={(e) => setOrgName(e.target.value)}
-                className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all font-medium"
-              />
-            </div>
+        {/* Right Column: Tab View */}
+        <div className="lg:col-span-3 min-w-0">
+          {/* ACCOUNT GROUP */}
+          {activeTab === "profile" && (
+            <PersonalProfileTab
+              initialProfile={settings.profile}
+              onSave={handleSaveProfile}
+              onChangePasswordClick={() => handleTabSelect("security")}
+            />
+          )}
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-[#1A1A1A] block">
-                Contact Email Address
-              </label>
-              <input
-                type="text"
-                value={domain}
-                onChange={(e) => setDomain(e.target.value)}
-                className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all font-medium"
-              />
-            </div>
+          {activeTab === "workspace" && (
+            <BusinessWorkspaceTab
+              initialWorkspace={settings.workspace}
+              onSave={handleSaveWorkspace}
+            />
+          )}
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-[#1A1A1A] block">
-                Operational Timezone
-              </label>
-              <input
-                type="text"
-                value={timezone}
-                onChange={(e) => setTimezone(e.target.value)}
-                className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all font-medium"
-              />
-            </div>
+          {activeTab === "team" && (
+            <TeamMembersTab
+              initialTeam={settings.team}
+              onSaveTeam={handleSaveTeam}
+            />
+          )}
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-[#1A1A1A] block">
-                Primary Regional Operating Language
-              </label>
-              <select className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all cursor-pointer font-medium">
-                <option value="en-hi">English + Hindi (Default Pan-India Auto Code-switch)</option>
-                <option value="en-te">English + Telugu (Andhra Pradesh &amp; Telangana)</option>
-                <option value="en-ta">English + Tamil (Tamil Nadu)</option>
-                <option value="en-kn">English + Kannada (Karnataka)</option>
-              </select>
-            </div>
-          </div>
+          {activeTab === "billing" && (
+            <PlanBillingTab
+              initialBilling={settings.billing}
+              onSaveBilling={handleSaveBilling}
+            />
+          )}
 
-          <div className="pt-4 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span className="text-xs text-black/50">
-              Changes apply instantly across all active AI agents and telephony trunks.
-            </span>
-            <button
-              type="submit"
-              className="px-6 py-2.5 rounded-full text-xs font-semibold bg-[#111111] hover:bg-black text-white transition-all cursor-pointer shadow-sm"
-            >
-              Save Configuration
-            </button>
-          </div>
-        </form>
+          {activeTab === "notifications" && (
+            <NotificationsTab
+              initialNotifications={settings.notifications}
+              onSaveNotifications={handleSaveNotifications}
+            />
+          )}
+
+          {activeTab === "security" && (
+            <SecurityPrivacyTab
+              initialSecurity={settings.security}
+              onSaveSecurity={handleSaveSecurity}
+            />
+          )}
+
+          {activeTab === "preferences" && (
+            <AppPreferencesTab
+              initialPreferences={settings.preferences}
+              onSavePreferences={handleSavePreferences}
+            />
+          )}
+
+          {/* CONNECTIONS GROUP */}
+          {activeTab === "ai-services" && (
+            <AIServicesTab
+              initialServices={settings.aiServices}
+              onSaveServices={handleSaveAiServices}
+              onTestAiConnection={handleTestAiConnection}
+            />
+          )}
+
+          {activeTab === "phone-calling" && (
+            <PhoneCallingTab
+              initialPhoneCalling={settings.phoneCalling}
+              onSavePhoneCalling={handleSavePhoneCalling}
+              onTestPhoneConnection={handleTestPhoneConnection}
+            />
+          )}
+
+          {activeTab === "whatsapp" && (
+            <WhatsAppTab
+              initialWhatsApp={settings.whatsapp}
+              onSaveWhatsApp={handleSaveWhatsApp}
+            />
+          )}
+
+          {activeTab === "otherApps" || activeTab === "other-apps" ? (
+            <OtherAppsTab
+              initialApps={settings.otherApps}
+              onSaveApps={handleSaveOtherApps}
+            />
+          ) : null}
+
+          {activeTab === "advanced" && (
+            <AdvancedSettingsTab
+              initialAdvanced={settings.advanced}
+              onSaveAdvanced={handleSaveAdvanced}
+              onTestWebhook={handleTestWebhook}
+            />
+          )}
+        </div>
       </div>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="py-24 text-center space-y-3 font-sans">
+          <RotateCw className="w-6 h-6 animate-spin text-[#283A50] mx-auto" />
+          <p className="text-xs text-[#707684]">Loading Settings...</p>
+        </div>
+      }
+    >
+      <SettingsPageContent />
+    </Suspense>
   );
 }

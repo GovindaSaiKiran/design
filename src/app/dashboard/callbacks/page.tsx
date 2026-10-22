@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   CalendarClock,
   Search,
@@ -42,384 +43,64 @@ import CallDrawer from "@/components/dashboard/views/CallDrawer";
 import { RecentCallRecord } from "@/types/dashboard";
 import { mockRecentCalls } from "@/data/mock/dashboardData";
 import { soundSynth } from "@/lib/audio-synth";
+import {
+  initialCallbacks,
+  type CallbackItem,
+} from "@/data/mock/callbacksData";
 
-export interface CallbackItem {
-  id: string;
-  contactName: string;
-  phone: string;
-  email?: string;
-  city: string;
-  course: string;
-  
-  // 1. Which Agent
-  agentId: string;
-  agentName: string;
-  agentAvatar: string;
-  agentRole: string;
-  agentBadgeColor: string;
-  
-  // 2. Which Topic
-  topicId: string;
-  topicName: string;
-  topicCategory: "Admissions" | "Finance & Fees" | "Hostel & Facilities" | "Verification & Portal";
-  
-  // 3. Same Group / Dataset / Cohort
-  datasetBatchId: string;
-  datasetBatchTitle: string;
-  
-  // 4. When Scheduled
-  scheduledWindow: string;
-  scheduledExactTime: string;
-  countdownLabel: string;
-  isOverdue?: boolean;
-  
-  // Reschedule & Manual Scheduling Tracking
-  rescheduleCount?: number;
-  lastRescheduledBy?: "Agent" | "User" | "System";
-  lastRescheduledReason?: string;
-  rescheduledAt?: string;
-  originalScheduledTime?: string;
-  
-  // 5. Why Queued
-  whyQueued: string;
-  queuedTrigger: "Candidate Requested" | "Automated Retry (Busy Line)" | "Post-WhatsApp Followup" | "Special Exception Escalation" | "Doc Verification Sync Issue";
-  
-  // 6. Any Human Interaction Needed
-  humanInteractionNeeded: boolean;
-  humanInteractionReason?: string;
-  humanAssignee?: string;
-  
-  priority: "Urgent" | "High" | "Normal";
-  status: "Pending" | "Completed" | "Rescheduled" | "Cancelled";
-  sourceCallId: string;
-  createdAt: string;
-  notes?: string;
-}
+export type { CallbackItem } from "@/data/mock/callbacksData";
 
-const initialCallbacks: CallbackItem[] = [
-  {
-    id: "cb-001",
-    contactName: "Devansh Patil",
-    phone: "+91 97110 33499",
-    email: "devansh.patil@gmail.com",
-    city: "Mumbai, MH",
-    course: "MBA Fintech & Analytics",
-    agentId: "agent-arjun",
-    agentName: "Arjun (Outreach & Ops AI)",
-    agentAvatar: "A",
-    agentRole: "Outbound Lead Verification & Ops",
-    agentBadgeColor: "bg-blue-50 text-blue-700 border-blue-200",
-    topicId: "topic-admissions-mba",
-    topicName: "MBA GD/PI Schedule & Entrance Cutoffs",
-    topicCategory: "Admissions",
-    datasetBatchId: "batch-outbound-01",
-    datasetBatchTitle: "All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)",
-    scheduledWindow: "Today, 06:30 PM (Evening Slot)",
-    scheduledExactTime: "Today at 06:30 PM",
-    countdownLabel: "In 45 mins",
-    isOverdue: false,
-    rescheduleCount: 1,
-    lastRescheduledBy: "Agent",
-    lastRescheduledReason: "Maya AI: Candidate was attending university lecture during morning cadence; auto-moved to evening slot",
-    rescheduledAt: "Today, 09:18 AM",
-    originalScheduledTime: "Today at 09:15 AM",
-    whyQueued: "Candidate was attending a university lecture during morning outbound cadence; requested evening slot between 6:00 PM and 7:00 PM.",
-    queuedTrigger: "Candidate Requested",
-    humanInteractionNeeded: false,
-    priority: "High",
-    status: "Pending",
-    sourceCallId: "call-005",
-    createdAt: "Today, 09:15 AM",
-    notes: "Candidate has 94.2% percentile; confirm attendance for Saturday interview slot.",
-  },
-  {
-    id: "cb-002",
-    contactName: "Sneha Reddy",
-    phone: "+91 94401 55620",
-    email: "sneha.reddy@gmail.com",
-    city: "Hyderabad, TS",
-    course: "B.Tech Computer Science (AI/ML)",
-    agentId: "agent-maya",
-    agentName: "Maya (Admissions AI)",
-    agentAvatar: "M",
-    agentRole: "Senior Admissions Counseling Concierge",
-    agentBadgeColor: "bg-orange-50 text-orange-700 border-orange-200",
-    topicId: "topic-admissions-waiver",
-    topicName: "B.Tech CSE Admissions & 35% Chancellor Waiver",
-    topicCategory: "Admissions",
-    datasetBatchId: "batch-outbound-01",
-    datasetBatchTitle: "All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)",
-    scheduledWindow: "Today, 07:15 PM",
-    scheduledExactTime: "Today at 07:15 PM",
-    countdownLabel: "In 1h 30m",
-    isOverdue: false,
-    rescheduleCount: 0,
-    originalScheduledTime: "Today at 07:15 PM",
-    whyQueued: "Candidate was in coaching class; requested evening callback to confirm seat reservation token payment with parents.",
-    queuedTrigger: "Candidate Requested",
-    humanInteractionNeeded: false,
-    priority: "High",
-    status: "Pending",
-    sourceCallId: "call-001",
-    createdAt: "Today, 10:20 AM",
-    notes: "PCM score 95.4% verified against CBSE master database.",
-  },
-  {
-    id: "cb-003",
-    contactName: "Meera Krishnan",
-    phone: "+91 98210 55678",
-    email: "meera.krishnan@outlook.com",
-    city: "Bengaluru, KA",
-    course: "B.Tech Electronics & Comm",
-    agentId: "agent-counselor-desk",
-    agentName: "Senior Counselor Desk (Human Handoff)",
-    agentAvatar: "H",
-    agentRole: "Dean of Admissions & Athletics Director",
-    agentBadgeColor: "bg-rose-50 text-rose-700 border-rose-200",
-    topicId: "topic-sports-quota",
-    topicName: "Sports Quota 25% Fee Concession Appeal",
-    topicCategory: "Admissions",
-    datasetBatchId: "batch-outbound-01",
-    datasetBatchTitle: "All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)",
-    scheduledWindow: "Today, 05:30 PM",
-    scheduledExactTime: "Today at 05:30 PM",
-    countdownLabel: "Next up (In 15 mins)",
-    isOverdue: false,
-    rescheduleCount: 0,
-    originalScheduledTime: "Today at 05:30 PM",
-    whyQueued: "Candidate holds State-level badminton championship medal; requested special 25% sports quota fee concession appeal exceeding standard AI waiver rule.",
-    queuedTrigger: "Special Exception Escalation",
-    humanInteractionNeeded: true,
-    humanInteractionReason: "Athletic director and Dean sign-off required for non-standard 25% sports quota concession.",
-    humanAssignee: "Mr. R. Sharma (Athletic Director)",
-    priority: "Urgent",
-    status: "Pending",
-    sourceCallId: "call-004",
-    createdAt: "Today, 11:45 AM",
-    notes: "Certificate PDF received and uploaded to candidate dossier APX-7741.",
-  },
-  {
-    id: "cb-004",
-    contactName: "Kavita Deshmukh",
-    phone: "+91 98230 11944",
-    email: "kavita.deshmukh@yahoo.com",
-    city: "Pune, MH",
-    course: "B.Tech Computer Science",
-    agentId: "agent-priya",
-    agentName: "Priya (Student Finance AI)",
-    agentAvatar: "P",
-    agentRole: "Scholarship & Fee Specialist",
-    agentBadgeColor: "bg-purple-50 text-purple-700 border-purple-200",
-    topicId: "topic-fees-installment",
-    topicName: "Tuition Fee 3-Part Installment & WhatsApp Matrix",
-    topicCategory: "Finance & Fees",
-    datasetBatchId: "batch-csv-mba",
-    datasetBatchTitle: "Pending Tuition Fee Installments (Batch CSV-MBA)",
-    scheduledWindow: "Today, 05:00 PM - 06:00 PM",
-    scheduledExactTime: "Today at 05:00 PM",
-    countdownLabel: "In 10 mins",
-    isOverdue: false,
-    rescheduleCount: 1,
-    lastRescheduledBy: "User",
-    lastRescheduledReason: "Manual Counselor adjustment: Parent requested post-office hours callback to review loan collateral",
-    rescheduledAt: "Today, 11:00 AM",
-    originalScheduledTime: "Today at 02:00 PM",
-    whyQueued: "Parent requested callback after office hours to review 3-part quarterly installment schedule and bank education loan collateral rules.",
-    queuedTrigger: "Post-WhatsApp Followup",
-    humanInteractionNeeded: false,
-    priority: "Normal",
-    status: "Pending",
-    sourceCallId: "call-002",
-    createdAt: "Today, 10:45 AM",
-    notes: "WhatsApp installment breakdown dispatched successfully at 10:48 AM.",
-  },
-  {
-    id: "cb-005",
-    contactName: "Amitabh Banerjee",
-    phone: "+91 98301 44512",
-    email: "amitabh.b@gmail.com",
-    city: "Kolkata, WB",
-    course: "B.Tech Artificial Intelligence",
-    agentId: "agent-counselor-desk",
-    agentName: "Finance Officer Desk (Human Handoff)",
-    agentAvatar: "F",
-    agentRole: "Student Accounts & Loan Compliance",
-    agentBadgeColor: "bg-amber-50 text-amber-700 border-amber-200",
-    topicId: "topic-fees-loan",
-    topicName: "SBI Education Loan Sanction Letter Endorsement",
-    topicCategory: "Finance & Fees",
-    datasetBatchId: "batch-csv-mba",
-    datasetBatchTitle: "Pending Tuition Fee Installments (Batch CSV-MBA)",
-    scheduledWindow: "Tomorrow, 10:30 AM",
-    scheduledExactTime: "Tomorrow at 10:30 AM",
-    countdownLabel: "Tomorrow 10:30 AM",
-    isOverdue: false,
-    rescheduleCount: 0,
-    originalScheduledTime: "Tomorrow at 10:30 AM",
-    whyQueued: "SBI Loan Officer requested university seal and authorized finance officer countersignature on provisional fee estimation letter.",
-    queuedTrigger: "Special Exception Escalation",
-    humanInteractionNeeded: true,
-    humanInteractionReason: "Physical / digital university seal & finance officer countersignature required on SBI Loan Annexure-IV.",
-    humanAssignee: "Finance Officer Mehta",
-    priority: "Urgent",
-    status: "Pending",
-    sourceCallId: "call-002",
-    createdAt: "Today, 02:15 PM",
-    notes: "Candidate has paid 10% token deposit; needs loan endorsement to disburse tuition balance.",
-  },
-  {
-    id: "cb-006",
-    contactName: "Rohan Sen",
-    phone: "+91 98201 77412",
-    email: "rohan.sen@gmail.com",
-    city: "Mumbai, MH",
-    course: "B.Tech Mechanical Engg",
-    agentId: "agent-maya",
-    agentName: "Maya (Admissions AI)",
-    agentAvatar: "M",
-    agentRole: "Senior Admissions Counseling Concierge",
-    agentBadgeColor: "bg-orange-50 text-orange-700 border-orange-200",
-    topicId: "topic-hostel-room",
-    topicName: "AC Twin Hostel Allotment & Dining Package",
-    topicCategory: "Hostel & Facilities",
-    datasetBatchId: "batch-hostel-allot",
-    datasetBatchTitle: "Hostel Accommodation Allotment Queue (Batch HOSTEL-01)",
-    scheduledWindow: "Today, 06:00 PM",
-    scheduledExactTime: "Today at 06:00 PM",
-    countdownLabel: "In 35 mins",
-    isOverdue: false,
-    rescheduleCount: 2,
-    lastRescheduledBy: "Agent",
-    lastRescheduledReason: "Maya AI: Auto-rescheduled after WhatsApp hostel brochure delivered to allow student room selection",
-    rescheduledAt: "Today, 11:15 AM",
-    originalScheduledTime: "Today at 10:00 AM",
-    whyQueued: "Candidate requested automated callback to finalize AC room selection in Block C and confirm vegetarian dining meal plan.",
-    queuedTrigger: "Post-WhatsApp Followup",
-    humanInteractionNeeded: false,
-    priority: "Normal",
-    status: "Pending",
-    sourceCallId: "call-003",
-    createdAt: "Today, 11:10 AM",
-    notes: "Hostel brochure delivered on WhatsApp. 12 AC twin rooms remaining in Block C.",
-  },
-  {
-    id: "cb-007",
-    contactName: "Siddharth Verma",
-    phone: "+91 98112 34567",
-    email: "siddharth.v@gmail.com",
-    city: "Delhi NCR",
-    course: "B.Tech Computer Science",
-    agentId: "agent-counselor-desk",
-    agentName: "Residential Warden Desk (Human Handoff)",
-    agentAvatar: "W",
-    agentRole: "Campus Living & Residential Warden",
-    agentBadgeColor: "bg-rose-50 text-rose-700 border-rose-200",
-    topicId: "topic-hostel-special",
-    topicName: "Ground Floor Accessibility Accommodation Request",
-    topicCategory: "Hostel & Facilities",
-    datasetBatchId: "batch-hostel-allot",
-    datasetBatchTitle: "Hostel Accommodation Allotment Queue (Batch HOSTEL-01)",
-    scheduledWindow: "Tomorrow, 11:00 AM",
-    scheduledExactTime: "Tomorrow at 11:00 AM",
-    countdownLabel: "Tomorrow 11:00 AM",
-    isOverdue: false,
-    rescheduleCount: 1,
-    lastRescheduledBy: "User",
-    lastRescheduledReason: "Warden Desk Manual: Scheduled for tomorrow 11 AM when Chief Warden is in chamber",
-    rescheduledAt: "Today, 01:30 PM",
-    originalScheduledTime: "Today at 03:00 PM",
-    whyQueued: "Candidate has sports knee ligament recovery requiring ground-floor ramp accessibility; requires Chief Warden room allotment authorization.",
-    queuedTrigger: "Special Exception Escalation",
-    humanInteractionNeeded: true,
-    humanInteractionReason: "Chief Warden manual room allocation override required for medical accessibility ground-floor unit.",
-    humanAssignee: "Chief Warden Dr. Swamy",
-    priority: "High",
-    status: "Pending",
-    sourceCallId: "call-001",
-    createdAt: "Today, 01:20 PM",
-    notes: "Medical prescription verified. Ground floor Block A unit 104 reserved conditionally.",
-  },
-  {
-    id: "cb-008",
-    contactName: "Ananya Sharma",
-    phone: "+91 97184 10293",
-    email: "ananya.sharma@gmail.com",
-    city: "Gurugram, HR",
-    course: "B.Tech Data Science",
-    agentId: "agent-arjun",
-    agentName: "Arjun (Outreach & Ops AI)",
-    agentAvatar: "A",
-    agentRole: "Outbound Lead Verification & Ops",
-    agentBadgeColor: "bg-blue-50 text-blue-700 border-blue-200",
-    topicId: "topic-verification-portal",
-    topicName: "DigiLocker Marksheet Verification Sync Issue",
-    topicCategory: "Verification & Portal",
-    datasetBatchId: "batch-outbound-02",
-    datasetBatchTitle: "National Entrance Test CET Rankers Verification (Batch OUT-02)",
-    scheduledWindow: "Today, 05:45 PM",
-    scheduledExactTime: "Today at 05:45 PM",
-    countdownLabel: "In 25 mins",
-    isOverdue: false,
-    rescheduleCount: 1,
-    lastRescheduledBy: "Agent",
-    lastRescheduledReason: "Arjun AI: Auto-rescheduled after DigiLocker OAuth timeout to give candidate time to upload PDF",
-    rescheduledAt: "Today, 02:45 PM",
-    originalScheduledTime: "Today at 02:40 PM",
-    whyQueued: "DigiLocker API OAuth sync timed out during morning registration; candidate manually re-uploaded 12th marksheet PDF and requested automated clearance confirmation.",
-    queuedTrigger: "Doc Verification Sync Issue",
-    humanInteractionNeeded: false,
-    priority: "High",
-    status: "Pending",
-    sourceCallId: "call-003",
-    createdAt: "Today, 02:40 PM",
-    notes: "Re-trigger DigiLocker verification webhook upon call initiation.",
-  },
-  {
-    id: "cb-009",
-    contactName: "Vikramaditya Rao",
-    phone: "+91 99880 44120",
-    email: "vikram.rao@outlook.com",
-    city: "Hyderabad, TS",
-    course: "B.Tech Electronics & Comm",
-    agentId: "agent-arjun",
-    agentName: "Arjun (Outreach & Ops AI)",
-    agentAvatar: "A",
-    agentRole: "Outbound Lead Verification & Ops",
-    agentBadgeColor: "bg-blue-50 text-blue-700 border-blue-200",
-    topicId: "topic-cet-counseling",
-    topicName: "State CET Rank Verification & Slot Reschedule",
-    topicCategory: "Verification & Portal",
-    datasetBatchId: "batch-outbound-02",
-    datasetBatchTitle: "National Entrance Test CET Rankers Verification (Batch OUT-02)",
-    scheduledWindow: "Yesterday, 04:30 PM",
-    scheduledExactTime: "Yesterday at 04:30 PM",
-    countdownLabel: "Completed",
-    isOverdue: false,
-    rescheduleCount: 1,
-    lastRescheduledBy: "Agent",
-    lastRescheduledReason: "Arjun AI: Moved from Sunday 11 AM to Monday 2 PM per candidate board exam schedule",
-    rescheduledAt: "Yesterday, 02:00 PM",
-    originalScheduledTime: "Sunday at 11:00 AM",
-    whyQueued: "Candidate requested slot change from Sunday 11 AM to Monday 2 PM due to state board practicals.",
-    queuedTrigger: "Candidate Requested",
-    humanInteractionNeeded: false,
-    priority: "Normal",
-    status: "Completed",
-    sourceCallId: "call-003",
-    createdAt: "Yesterday, 02:00 PM",
-    notes: "Counseling slot rescheduled to Monday 2:00 PM. Confirmed by Arjun AI.",
-  },
-];
+function CallbacksContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlFilter = searchParams?.get("filter");
+  const urlTargetId = searchParams?.get("id");
 
-export default function CallbacksPage() {
   const [callbacks, setCallbacks] = useState<CallbackItem[]>(initialCallbacks);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>(urlFilter === "human" ? "human" : "all");
   const [viewMode, setViewMode] = useState<"grouped" | "table">("grouped");
   const [agentFilter, setAgentFilter] = useState<string>("all");
-  const [humanNeededOnly, setHumanNeededOnly] = useState<boolean>(false);
+  const [humanNeededOnly, setHumanNeededOnly] = useState<boolean>(urlFilter === "human");
+  const [activeHighlightId, setActiveHighlightId] = useState<string | null>(urlTargetId || null);
+
   const [selectedCallRecord, setSelectedCallRecord] = useState<RecentCallRecord | null>(null);
   const [callDrawerOpen, setCallDrawerOpen] = useState(false);
+
+  // Sync state when URL search params change
+  useEffect(() => {
+    if (urlFilter === "human") {
+      setStatusFilter("human");
+      setHumanNeededOnly(true);
+    }
+    if (urlTargetId) {
+      setActiveHighlightId(urlTargetId);
+      // Ensure group is expanded and scroll into view smoothly
+      setTimeout(() => {
+        const el = document.getElementById(`callback-${urlTargetId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 350);
+    }
+  }, [urlFilter, urlTargetId]);
+
+  // Broadcast state changes so AppHeader notifications remain 100% in sync
+  const updateCallbacksState = (
+    updater: CallbackItem[] | ((prev: CallbackItem[]) => CallbackItem[])
+  ) => {
+    setCallbacks((prev) => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("swaram:callbacks-updated", {
+            detail: { callbacks: next },
+          })
+        );
+      }
+      return next;
+    });
+  };
 
   // Expanded group cards state
   const [collapsedGroups, setCollapsedGroups] = useState<{ [groupId: string]: boolean }>({});
@@ -576,7 +257,7 @@ export default function CallbacksPage() {
         : `Dispatched carrier SIP line to ${targetCallback.contactName} (${targetCallback.phone}) via ${targetCallback.agentName}. Sub-140ms voice latency SLA.`
     );
 
-    setCallbacks((prev) =>
+    updateCallbacksState((prev) =>
       prev.map((c) => (c.id === targetCallback.id ? { ...c, status: "Completed", countdownLabel: "Completed" } : c))
     );
 
@@ -598,7 +279,7 @@ export default function CallbacksPage() {
   const handleSaveReassign = () => {
     if (!reassignItem) return;
     try { soundSynth.play("confirm"); } catch {}
-    setCallbacks((prev) =>
+    updateCallbacksState((prev) =>
       prev.map((c) => {
         if (c.id === reassignItem.id) {
           return {
@@ -670,7 +351,7 @@ export default function CallbacksPage() {
       createdAt: "Just now",
     };
 
-    setCallbacks((prev) => [newItem, ...prev]);
+    updateCallbacksState((prev) => [newItem, ...prev]);
     setNewCallbackModalOpen(false);
     setNewContactName("");
     setNewContactPhone("");
@@ -683,7 +364,7 @@ export default function CallbacksPage() {
 
   const handleMarkResolved = (id: string) => {
     try { soundSynth.play("click"); } catch {}
-    setCallbacks((prev) =>
+    updateCallbacksState((prev) =>
       prev.map((c) => (c.id === id ? { ...c, status: "Completed", countdownLabel: "Completed" } : c))
     );
   };
@@ -736,7 +417,7 @@ export default function CallbacksPage() {
 
     const updatedReason = rescheduleReasonText.trim() || "Manual slot adjustment by operator";
 
-    setCallbacks((prev) =>
+    updateCallbacksState((prev) =>
       prev.map((c) => {
         if (c.id === rescheduleTargetItem.id) {
           return {
@@ -766,6 +447,11 @@ export default function CallbacksPage() {
     );
     setTimeout(() => setDiallingNotice(null), 4500);
   };
+
+  const activeHighlightCallback = useMemo(() => {
+    if (!activeHighlightId) return null;
+    return callbacks.find((c) => c.id === activeHighlightId) || null;
+  }, [callbacks, activeHighlightId]);
 
   return (
     <div className="space-y-6 font-sans text-[#1A1A1A] select-none pb-16">
@@ -820,6 +506,67 @@ export default function CallbacksPage() {
           </Link>
         </div>
       </div>
+
+      {/* Human Action Call Selected From Notifications Banner */}
+      {activeHighlightCallback && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/95 border-2 border-amber-400 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+              <UserCheck className="w-5 h-5 stroke-[2.2]" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-600 text-white shadow-2xs">
+                  Notification Alert
+                </span>
+                <span className="text-xs font-bold text-amber-950">
+                  {activeHighlightCallback.contactName} ({activeHighlightCallback.phone})
+                </span>
+                <span className="text-xs text-black/50">
+                  • {activeHighlightCallback.course}
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 border border-amber-300">
+                  {activeHighlightCallback.priority} Priority
+                </span>
+              </div>
+              <p className="text-xs text-amber-900 font-medium leading-relaxed">
+                <strong className="text-amber-950">Human Action Needed:</strong>{" "}
+                {activeHighlightCallback.humanInteractionReason || activeHighlightCallback.whyQueued}
+              </p>
+              {activeHighlightCallback.humanAssignee && (
+                <p className="text-[11px] text-amber-800">
+                  Assigned Desk: <strong>{activeHighlightCallback.humanAssignee}</strong> • Topic: {activeHighlightCallback.topicName}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 self-start md:self-center">
+            {activeHighlightCallback.status === "Pending" && (
+              <button
+                type="button"
+                onClick={() => handlePromptDial(activeHighlightCallback)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-[#283A50] hover:bg-[#1E2C3D] text-white shadow-xs transition-all cursor-pointer"
+              >
+                <PhoneCall className="w-3.5 h-3.5 text-amber-400" />
+                <span>Take Action / Dial Now</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setActiveHighlightId(null);
+                router.replace("/dashboard/callbacks");
+              }}
+              className="inline-flex items-center gap-1 px-3 py-2 rounded-full text-xs font-semibold bg-white hover:bg-amber-100/60 text-amber-900 border border-amber-300 transition-all cursor-pointer"
+              title="Clear notification alert focus"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Dismiss</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Notice Banner */}
       {diallingNotice && (
@@ -1153,7 +900,12 @@ export default function CallbacksPage() {
                       {group.items.map((cb) => (
                         <div
                           key={cb.id}
-                          className="p-4 sm:p-5 hover:bg-slate-50/60 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+                          id={`callback-${cb.id}`}
+                          className={`p-4 sm:p-5 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
+                            cb.id === activeHighlightId
+                              ? "bg-amber-50/90 ring-2 ring-amber-500 rounded-xl my-1.5 shadow-md"
+                              : "hover:bg-slate-50/60"
+                          }`}
                         >
                           {/* Left: Contact Info + Why Queued */}
                           <div className="space-y-2 flex-1 min-w-0">
@@ -1381,7 +1133,15 @@ export default function CallbacksPage() {
               </thead>
               <tbody className="divide-y divide-black/[0.04]">
                 {filteredCallbacks.map((cb) => (
-                  <tr key={cb.id} className="hover:bg-slate-50/70 transition-colors group">
+                  <tr
+                    key={cb.id}
+                    id={`callback-row-${cb.id}`}
+                    className={`transition-colors group ${
+                      cb.id === activeHighlightId
+                        ? "bg-amber-50/90 ring-2 ring-amber-500 font-semibold"
+                        : "hover:bg-slate-50/70"
+                    }`}
+                  >
                     {/* Contact & Phone */}
                     <td className="py-4 px-4 font-semibold text-slate-900">
                       <div className="font-bold">{cb.contactName}</div>
@@ -2140,5 +1900,19 @@ export default function CallbacksPage() {
         onClose={() => setCallDrawerOpen(false)}
       />
     </div>
+  );
+}
+
+export default function CallbacksPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-12 text-center text-[#707684] text-xs font-sans">
+          Loading Callbacks &amp; Priority Queue...
+        </div>
+      }
+    >
+      <CallbacksContent />
+    </Suspense>
   );
 }

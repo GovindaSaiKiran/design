@@ -66,8 +66,7 @@ export default function DashboardHeader({
     { id: "campaigns", label: "OUTBOUND" },
     { id: "contacts", label: "CANDIDATES" },
     { id: "knowledge", label: "KNOWLEDGE" },
-    { id: "analytics", label: "TELEMETRY" },
-    { id: "telephony", label: "SIP TRUNK" },
+    { id: "telephony", label: "PHONE NUMBERS" },
     { id: "settings", label: "SETTINGS" },
   ];
 

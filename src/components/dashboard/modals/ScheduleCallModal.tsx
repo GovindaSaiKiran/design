@@ -23,9 +23,14 @@ import {
   ShieldCheck,
   PhoneCall,
   UserCheck,
+  BookOpen,
+  Database,
+  ExternalLink,
+  FileText,
 } from "lucide-react";
+import Link from "next/link";
 import { soundSynth } from "@/lib/audio-synth";
-import { mockAgents, mockContacts } from "@/data/mock/dashboardData";
+import { mockAgents, mockContacts, mockKnowledgeBase } from "@/data/mock/dashboardData";
 import {
   normalizePhoneNumber,
   COMMON_TIMEZONES,
@@ -128,6 +133,31 @@ export default function ScheduleCallModal({
       "Hello {name}, I am calling from Apex Global Institutions regarding your inquiry for {organization}."
   );
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+
+  // STEP B.2: Knowledge Base & Grounding State
+  const [selectedKnowledgeBaseId, setSelectedKnowledgeBaseId] = useState<string>(
+    duplicateFrom?.config?.knowledgeBaseId || "all"
+  );
+  const [strictGrounding, setStrictGrounding] = useState<boolean>(
+    duplicateFrom?.config?.strictGrounding ?? true
+  );
+
+  const selectedKbDoc = useMemo(() => {
+    if (selectedKnowledgeBaseId === "all") {
+      return {
+        id: "all",
+        title: "All Campus Knowledge Documents (Business Library)",
+        category: "Complete Campus Library",
+        vectorChunks: mockKnowledgeBase.reduce((acc, d) => acc + d.vectorChunks, 0),
+        status: "ready" as const,
+        lastUpdated: "Real-time Synced",
+      };
+    }
+    return (
+      mockKnowledgeBase.find((d) => d.id === selectedKnowledgeBaseId) ||
+      mockKnowledgeBase[0]
+    );
+  }, [selectedKnowledgeBaseId]);
 
   // STEP C: Schedule & Pacing State
   const [scheduleType, setScheduleType] = useState<"now" | "later">(
@@ -382,6 +412,10 @@ export default function ScheduleCallModal({
           callObjective,
           instructions,
           openingScript,
+          knowledgeBaseId: selectedKbDoc.id,
+          knowledgeBaseName: selectedKbDoc.title,
+          knowledgeChunkCount: selectedKbDoc.vectorChunks,
+          strictGrounding,
           customContext: {
             workspaceBatch: "swaram-scheduled-v1",
             respectCallingHours: String(respectCallingHours),
@@ -770,6 +804,128 @@ export default function ScheduleCallModal({
                 </div>
               </div>
 
+              {/* Grounding Knowledge Base (Business Library) */}
+              <div className="p-4 rounded-2xl bg-[#FBF7ED] border border-black/[0.08] space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2.5 border-b border-black/[0.06]">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-[#FAF3E4] border border-[#FFD9A0] text-[#733F00] flex items-center justify-center shrink-0">
+                      <BookOpen className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#1A1A1A] flex items-center gap-1.5">
+                        Grounded Knowledge Base
+                        <span className="text-[10px] font-semibold px-2 py-0.2 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          Zero Hallucinations
+                        </span>
+                      </h4>
+                      <p className="text-[10px] text-black/50">
+                        The AI agent answers questions strictly using your verified business library
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/dashboard/knowledge"
+                    target="_blank"
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#733F00] hover:underline shrink-0"
+                  >
+                    <span>Manage in Knowledge Base</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </div>
+
+                {/* Explainer Banner */}
+                <div className="p-3 rounded-xl bg-white border border-black/[0.06] text-xs text-black/75 space-y-1">
+                  <p className="text-[11px] leading-relaxed">
+                    <strong>Knowledge Base</strong> is the information your AI agent refers to when answering customers&apos; questions. Instead of making the AI invent answers, you provide business-approved information so it can respond accurately during phone calls and WhatsApp conversations.
+                  </p>
+                  <p className="text-[10px] text-black/50 italic">
+                    Think of it as the AI agent&apos;s business knowledge library.
+                  </p>
+                </div>
+
+                {/* Knowledge Base Document Options */}
+                <div>
+                  <label className="block text-[11px] font-semibold text-black/70 mb-1.5">
+                    Select Grounded Documents for This Call
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {/* All documents option */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedKnowledgeBaseId("all");
+                        try { soundSynth.play("click"); } catch {}
+                      }}
+                      className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        selectedKnowledgeBaseId === "all"
+                          ? "bg-[#FAF3E4] border-black/30 shadow-xs ring-1 ring-black/20"
+                          : "bg-white border-black/[0.08] hover:border-black/20"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-bold text-xs text-[#1A1A1A] flex items-center gap-1.5">
+                          <Database className="w-3.5 h-3.5 text-[#733F00]" />
+                          All Knowledge Documents
+                        </span>
+                        {selectedKnowledgeBaseId === "all" && <Check className="w-3 h-3 text-black" />}
+                      </div>
+                      <p className="text-[10px] text-black/55">Complete Campus Business Library</p>
+                      <div className="flex items-center justify-between text-[10px] text-[#733F00] font-semibold mt-1.5">
+                        <span>456 Total Chunks</span>
+                        <span className="text-emerald-700">100% Grounded</span>
+                      </div>
+                    </button>
+
+                    {/* Individual Documents */}
+                    {mockKnowledgeBase.map((doc) => {
+                      const isSelected = selectedKnowledgeBaseId === doc.id;
+                      return (
+                        <button
+                          key={doc.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedKnowledgeBaseId(doc.id);
+                            try { soundSynth.play("click"); } catch {}
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                            isSelected
+                              ? "bg-[#FAF3E4] border-black/30 shadow-xs ring-1 ring-black/20"
+                              : "bg-white border-black/[0.08] hover:border-black/20"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-bold text-xs text-[#1A1A1A] truncate max-w-[190px] flex items-center gap-1.5">
+                              <FileText className="w-3.5 h-3.5 text-black/50 shrink-0" />
+                              <span className="truncate">{doc.title.split(".")[0]}</span>
+                            </span>
+                            {isSelected && <Check className="w-3 h-3 text-black shrink-0" />}
+                          </div>
+                          <p className="text-[10px] text-black/55 truncate">{doc.category}</p>
+                          <div className="flex items-center justify-between text-[10px] text-[#733F00] font-semibold mt-1.5">
+                            <span>{doc.vectorChunks} Chunks</span>
+                            <span className="text-emerald-700 font-mono text-[9px]">Ready</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Strict Grounding Guardrail Checkbox */}
+                <label className="flex items-center gap-2 pt-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={strictGrounding}
+                    onChange={(e) => setStrictGrounding(e.target.checked)}
+                    className="rounded accent-black cursor-pointer"
+                  />
+                  <span className="text-[11px] text-black/70">
+                    <strong>Zero-Hallucination Guardrail:</strong> AI agent must only answer based on verified facts in this knowledge library. If a question is unverified, offer human counselor callback.
+                  </span>
+                </label>
+              </div>
+
               {/* Language & Voice Settings */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
@@ -1089,6 +1245,31 @@ export default function ScheduleCallModal({
                     <p className="font-semibold text-[#1A1A1A]">
                       {concurrencyLines} lines • {pacingDelay}s pacing
                     </p>
+                  </div>
+                  <div className="col-span-2 pt-2 border-t border-black/[0.04] flex items-center justify-between">
+                    <div>
+                      <span className="text-black/45">Grounded Knowledge Base (Business Library):</span>
+                      <p className="font-semibold text-[#1A1A1A] flex items-center gap-1.5 mt-0.5">
+                        <BookOpen className="w-3.5 h-3.5 text-[#733F00]" />
+                        <span>{selectedKbDoc.title.split(".")[0]}</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#FAF3E4] text-[#733F00] font-bold">
+                          {selectedKbDoc.vectorChunks} Chunks
+                        </span>
+                        {strictGrounding && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200">
+                            Zero Hallucination Mode
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <Link
+                      href="/dashboard/knowledge"
+                      target="_blank"
+                      className="text-[11px] text-[#733F00] font-semibold hover:underline flex items-center gap-1"
+                    >
+                      <span>Knowledge Base</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
                   </div>
                 </div>
 

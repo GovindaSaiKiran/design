@@ -16,6 +16,9 @@ import {
   Database,
   ArrowRight,
   ShieldCheck,
+  CalendarClock,
+  PhoneOutgoing,
+  MessageSquare,
 } from "lucide-react";
 import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import UploadKnowledgeModal from "@/components/dashboard/modals/UploadKnowledgeModal";
@@ -97,6 +100,53 @@ export default function KnowledgePage() {
             <Upload className="w-3.5 h-3.5 text-white" />
             <span>Upload Document</span>
           </button>
+        </div>
+      </div>
+
+      {/* AI Agent Business Knowledge Library Banner */}
+      <div className="p-5 rounded-[24px] bg-[#FAF5E9] border border-[#E9E1D4] relative overflow-hidden shadow-2xs">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5 max-w-3xl">
+            <div className="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-300/80 text-amber-900 flex items-center justify-center shrink-0 mt-0.5">
+              <BookOpen className="w-5 h-5 text-amber-800" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                  The AI Agent&apos;s Business Knowledge Library
+                </span>
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
+                  Zero Hallucination Guaranteed
+                </span>
+              </div>
+              <p className="text-xs text-slate-700 mt-1 leading-relaxed">
+                Knowledge Base is the information your AI agent refers to when answering customers&apos; questions. Instead of making the AI invent answers, you provide business-approved information so it can respond accurately during <strong>phone calls</strong> and <strong>WhatsApp conversations</strong>.
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                Think of it as the AI agent&apos;s business knowledge library. When scheduling inbound/outbound calls or automations, select from these approved documents to ground agent dialogues.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+            <Link
+              href="/dashboard/campaigns?new=true"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 transition-all shadow-xs"
+              title="Schedule a call campaign using these knowledge documents"
+            >
+              <CalendarClock className="w-3.5 h-3.5 text-purple-600" />
+              <span>Schedule Call</span>
+            </Link>
+
+            <Link
+              href="/dashboard/outbound-scheduler"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-[#283A50] hover:bg-[#1f2d3e] text-white transition-all shadow-xs"
+              title="Launch or schedule autonomous outbound calls with grounded knowledge"
+            >
+              <PhoneOutgoing className="w-3.5 h-3.5 text-amber-300" />
+              <span>Outbound Scheduler</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -353,6 +403,19 @@ export default function KnowledgePage() {
       <UploadKnowledgeModal
         isOpen={uploadModalOpen}
         onClose={() => setUploadModalOpen(false)}
+        onDocUploaded={(title, customCategory) => {
+          const newDoc: KnowledgeDocument = {
+            id: `doc-${Date.now()}`,
+            title: title || "New Knowledge Document.pdf",
+            category: customCategory || "Custom Category",
+            fileSize: "2.4 MB",
+            uploadedAt: "Today",
+            status: "ready",
+            vectorChunks: 142,
+            lastUpdated: "Just now",
+          };
+          setDocuments((prev) => [newDoc, ...prev]);
+        }}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scheduleStore } from "@/lib/server/scheduleStore";
+import { executeCampaign } from "@/lib/server/schedulerEngine";
 import {
   convertLocalToUtc,
   formatUtcToLocal,
@@ -48,6 +49,56 @@ export async function PATCH(
         { success: false, error: "Scheduled campaign not found" },
         { status: 404 }
       );
+    }
+
+    // Pause Action
+    if (body.action === "pause") {
+      if (campaign.status !== "running") {
+        return NextResponse.json(
+          { success: false, error: `Cannot pause campaign with status "${campaign.status}". Only running campaigns can be paused.` },
+          { status: 400 }
+        );
+      }
+
+      const updated = await scheduleStore.update(id, {
+        status: "paused",
+        pausedAt: new Date().toISOString(),
+      });
+      await scheduleStore.appendLog(id, "warn", "Campaign paused by user. Telephony dispatches halted.");
+
+      return NextResponse.json({
+        success: true,
+        message: "Campaign paused successfully",
+        data: updated,
+      });
+    }
+
+    // Resume Action
+    if (body.action === "resume") {
+      if (campaign.status !== "paused") {
+        return NextResponse.json(
+          { success: false, error: `Cannot resume campaign with status "${campaign.status}". Only paused campaigns can be resumed.` },
+          { status: 400 }
+        );
+      }
+
+      const updated = await scheduleStore.update(id, {
+        status: "running",
+      });
+      await scheduleStore.appendLog(id, "info", "Campaign resumed by user. Telephony worker restarted.");
+
+      // Resume execution in background
+      setTimeout(() => {
+        executeCampaign(id).catch((err) =>
+          console.error(`[API] Resume execution error for ${id}:`, err)
+        );
+      }, 100);
+
+      return NextResponse.json({
+        success: true,
+        message: "Campaign resumed successfully",
+        data: updated,
+      });
     }
 
     // Cancellation Action

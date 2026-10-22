@@ -16,6 +16,7 @@ const initialSeedSchedules: ScheduledCampaign[] = [
     workspaceId: "ws-apex-global",
     name: "Early Bird Merit Scholarship Verification Cadence",
     status: "scheduled",
+    callingMode: "bulk",
     scheduleType: "later",
     // Set to 2 hours in future from current time for a clean scheduled state
     scheduledAtUtc: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
@@ -105,6 +106,7 @@ const initialSeedSchedules: ScheduledCampaign[] = [
     workspaceId: "ws-apex-global",
     name: "JoSAA Round 1 Seat Allocation Follow-up",
     status: "completed",
+    callingMode: "normal",
     scheduleType: "later",
     scheduledAtUtc: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
     timezone: "Asia/Kolkata",

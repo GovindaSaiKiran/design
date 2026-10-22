@@ -1,189 +1,274 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Zap,
+  Gauge,
+  Calculator,
+  ShieldAlert,
   CreditCard,
+  Bot,
   Plus,
-  ArrowUpRight,
-  Clock,
-  ShieldCheck,
-  Check,
+  Zap,
+  TrendingUp,
   Download,
-  Calendar,
-  Layers,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  RefreshCw,
   Sparkles,
+  Info,
+  Calendar,
+  Clock,
+  ArrowRight,
 } from "lucide-react";
+import OperatingCapacityHeader from "../usage-controls/OperatingCapacityHeader";
+import CampaignCapacitySimulator from "../usage-controls/CampaignCapacitySimulator";
+import AgentEfficiencyTable from "../usage-controls/AgentEfficiencyTable";
+import SmartGuardrailsPanel from "../usage-controls/SmartGuardrailsPanel";
+import CostIntelligenceAndTrends from "../usage-controls/CostIntelligenceAndTrends";
 import TopUpCreditsModal from "../modals/TopUpCreditsModal";
+import {
+  WorkspaceCapacity,
+  AgentUsageMetric,
+  UsageGuardrailsConfig,
+  CostIntelligenceBreakdown,
+  DailyUsageDataPoint,
+} from "@/types/usageControls";
+import {
+  initialWorkspaceCapacity,
+  initialAgentMetrics,
+  initialGuardrailsConfig,
+  initialCostBreakdown,
+  initialDailyUsageTrend,
+  initialInvoicesList,
+} from "@/data/mock/usageControlsData";
+import { mockAgents } from "@/data/mock/dashboardData";
 
 export default function BillingView() {
+  const [activeTab, setActiveTab] = useState<"capacity" | "simulator" | "costs">("capacity");
+  
+  // State
+  const [capacity, setCapacity] = useState<WorkspaceCapacity>(initialWorkspaceCapacity);
+  const [agents, setAgents] = useState<AgentUsageMetric[]>(initialAgentMetrics);
+  const [guardrails, setGuardrails] = useState<UsageGuardrailsConfig>(initialGuardrailsConfig);
+  const [costs, setCosts] = useState<CostIntelligenceBreakdown>(initialCostBreakdown);
+  const [dailyTrends, setDailyTrends] = useState<DailyUsageDataPoint[]>(initialDailyUsageTrend);
+  const [invoices, setInvoices] = useState(initialInvoicesList);
+  
   const [topUpOpen, setTopUpOpen] = useState(false);
+  const [toastNotice, setToastNotice] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
-  const transactions = [
-    {
-      id: "TXN-90112",
-      date: "Today, 11:20 AM",
-      type: "Usage",
-      description: "Call Session: Rahul Sharma (2m 24s) — Maya Admissions",
-      amount: "-1.2 min",
-      status: "Settled",
-    },
-    {
-      id: "TXN-90084",
-      date: "Today, 10:45 AM",
-      type: "Usage",
-      description: "Call Session: Ananya Iyer (1m 48s) — Priya Finance",
-      amount: "-1.0 min",
-      status: "Settled",
-    },
-    {
-      id: "TXN-89912",
-      date: "Oct 18, 2026",
-      type: "Credit",
-      description: "Institutional Promotional Sandbox Allowance",
-      amount: "+14.0 min",
-      status: "Credited",
-    },
-  ];
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToastNotice({ message, type });
+    setTimeout(() => setToastNotice(null), 4000);
+  };
+
+  // Synchronize with API
+  const fetchUsageData = async () => {
+    try {
+      const res = await fetch("/api/usage-controls");
+      const data = await res.json();
+      if (data.success) {
+        if (data.capacity) setCapacity(data.capacity);
+        if (data.agents) setAgents(data.agents);
+        if (data.guardrails) setGuardrails(data.guardrails);
+        if (data.costs) setCosts(data.costs);
+        if (data.dailyTrends) setDailyTrends(data.dailyTrends);
+        if (data.invoices) setInvoices(data.invoices);
+      }
+    } catch (err) {
+      console.error("Failed to load usage controls data:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsageData();
+  }, []);
+
+  // Save Guardrails handler
+  const handleSaveGuardrails = async (updated: Partial<UsageGuardrailsConfig>): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/usage-controls", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update-guardrails",
+          payload: updated,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setGuardrails(data.guardrails);
+        showToast("Smart usage guardrails and spending policy saved successfully.", "success");
+        return true;
+      } else {
+        showToast(data.message || "Failed to update guardrails.", "error");
+        return false;
+      }
+    } catch (err: any) {
+      showToast(err.message || "Network error updating guardrails.", "error");
+      return false;
+    }
+  };
+
+  const availableAgentsForSimulator = mockAgents.map((a) => ({
+    id: a.id,
+    name: a.name,
+  }));
 
   return (
-    <div className="space-y-6 font-sans text-[#1A1A1A] pb-12">
+    <div className="space-y-6 font-sans text-[#283A50] pb-12">
+      {/* Toast Notification */}
+      {toastNotice && (
+        <div
+          className={`p-4 rounded-2xl border flex items-center justify-between text-xs font-medium shadow-md animate-in fade-in duration-200 ${
+            toastNotice.type === "success"
+              ? "bg-[#B8DEC8]/50 border-[#2E8066]/30 text-[#165B4C]"
+              : "bg-rose-50 border-rose-200 text-rose-800"
+          }`}
+        >
+          <div className="flex items-center gap-2.5">
+            <CheckCircle2 className="w-4 h-4 text-[#2E8066] shrink-0" />
+            <span>{toastNotice.message}</span>
+          </div>
+          <button
+            onClick={() => setToastNotice(null)}
+            className="text-[11px] underline opacity-70 hover:opacity-100 cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-black/[0.06]">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#E9E1D4]">
         <div>
+          {/* Breadcrumb */}
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard"
-              className="text-xs font-semibold text-black/50 hover:text-[#1A1A1A] transition-colors"
+              className="text-xs font-semibold text-[#707684] hover:text-[#283A50] transition-colors"
             >
               Overview
             </Link>
-            <span className="text-black/20">/</span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1A1A1A] bg-[#FFD9A0] px-3 py-0.5 rounded-full">
-              Billing &amp; Allowance
+            <span className="text-[#E9E1D4]">/</span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-3 py-0.5 rounded-full">
+              Usage &amp; Controls
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A] mt-2">
-            Billing &amp; Calling Minutes
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#283A50] mt-2">
+            Usage Control Center
           </h1>
 
-          <p className="text-sm text-black/60 mt-1 max-w-2xl leading-relaxed">
-            Manage your organization minute balance, call consumption ledger, GST invoice records, and carrier recharge options.
+          <p className="text-xs text-[#707684] mt-1 max-w-2xl leading-relaxed">
+            Manage your AI workforce operating capacity, simulate outbound dialer minute requirements, configure spend guardrails, and audit itemized carrier expenses.
           </p>
         </div>
 
         <button
           onClick={() => setTopUpOpen(true)}
-          className="px-5 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white font-semibold text-xs transition-colors flex items-center gap-2 shrink-0 cursor-pointer shadow-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#283A50] hover:bg-black text-white font-semibold text-xs transition-all cursor-pointer shadow-xs hover:scale-[1.02] shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Top Up Minutes</span>
         </button>
       </div>
 
-      {/* 3 Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div className="p-6 rounded-[26px] bg-[#D9C2FA] border border-black/[0.04] shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-black/60 uppercase tracking-wider">Current Balance</span>
-            <span className="p-2 rounded-2xl bg-white/70 text-[#1A1A1A] shadow-2xs">
-              <Zap className="w-4 h-4 fill-current" />
-            </span>
-          </div>
-          <div>
-            <span className="text-4xl font-extrabold text-[#1A1A1A] tracking-tight">11.8</span>
-            <span className="text-xs text-black/60 font-semibold ml-2">Minutes Remaining</span>
-          </div>
-          <p className="text-xs text-black/60">
-            Promotional institutional allowance. 1 Credit = 1 Connected Minute.
-          </p>
-        </div>
+      {/* Section 1: Prominent Operating Capacity Header (Always visible at top of viewport) */}
+      <OperatingCapacityHeader
+        capacity={capacity}
+        onOpenTopUp={() => setTopUpOpen(true)}
+      />
 
-        <div className="p-6 rounded-[26px] bg-[#FFD9A0] border border-black/[0.04] shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-black/60 uppercase tracking-wider">Minutes Consumed</span>
-            <span className="p-2 rounded-2xl bg-white/70 text-[#1A1A1A] shadow-2xs">
-              <Clock className="w-4 h-4" />
-            </span>
-          </div>
-          <div>
-            <span className="text-4xl font-extrabold text-[#1A1A1A] tracking-tight">2.2</span>
-            <span className="text-xs text-black/60 font-semibold ml-2">Minutes Used Today</span>
-          </div>
-          <p className="text-xs text-black/60">
-            Billed strictly per actual audio seconds connected.
-          </p>
-        </div>
+      {/* Internal Navigation Tabs */}
+      <div className="flex items-center gap-1.5 p-1 bg-white rounded-2xl border border-[#E9E1D4] w-fit shadow-xs">
+        <button
+          onClick={() => setActiveTab("capacity")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === "capacity"
+              ? "bg-[#283A50] text-white shadow-xs"
+              : "text-[#707684] hover:text-[#283A50] hover:bg-[#FAF5E9]/50"
+          }`}
+        >
+          <Gauge className="w-3.5 h-3.5" />
+          <span>Capacity &amp; Guardrails</span>
+        </button>
 
-        <div className="p-6 rounded-[26px] bg-white border border-black/[0.06] shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-black/45 uppercase tracking-wider">Active Plan</span>
-            <span className="p-2 rounded-2xl bg-[#C1F2D5] text-[#16856B]">
-              <ShieldCheck className="w-4 h-4" />
-            </span>
-          </div>
-          <div>
-            <span className="text-2xl font-bold text-[#1A1A1A]">Standard Production</span>
-            <p className="text-xs text-[#16856B] font-semibold mt-0.5">SIP Gateway Enabled</p>
-          </div>
-          <p className="text-xs text-black/55">
-            Inbound DID attendants &amp; batch dialer campaigns enabled.
-          </p>
-        </div>
-      </div>
-
-      {/* Transactions Table */}
-      <div className="p-6 rounded-[26px] bg-white border border-black/[0.06] shadow-xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
-          <div>
-            <h3 className="font-bold text-sm text-[#1A1A1A]">
-              Usage &amp; Recharge History
-            </h3>
-            <p className="text-xs text-black/55 mt-0.5">
-              Itemized ledger of call sessions, minute deductions, and promotional credit top-ups.
-            </p>
-          </div>
-          <button
-            onClick={() => alert("Downloading GST invoice statement...")}
-            className="text-xs font-semibold text-[#1A1A1A] px-4 py-1.5 rounded-full bg-[#FBF7ED] hover:bg-[#FAF3E4] border border-black/[0.06] flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
+        <button
+          onClick={() => setActiveTab("simulator")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === "simulator"
+              ? "bg-[#283A50] text-white shadow-xs"
+              : "text-[#707684] hover:text-[#283A50] hover:bg-[#FAF5E9]/50"
+          }`}
+        >
+          <Calculator className="w-3.5 h-3.5" />
+          <span>Campaign Capacity Simulator</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+              activeTab === "simulator"
+                ? "bg-white/20 text-white"
+                : "bg-[#FAF5E9] text-[#707684]"
+            }`}
           >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download Statement</span>
-          </button>
-        </div>
+            Planning Tool
+          </span>
+        </button>
 
-        <div className="border border-black/[0.06] rounded-2xl overflow-hidden divide-y divide-black/[0.06] text-xs">
-          <div className="bg-[#FBF7ED] p-3.5 text-black/45 font-semibold text-[11px] grid grid-cols-5">
-            <span>Transaction ID</span>
-            <span>Date &amp; Time</span>
-            <span className="col-span-2">Description</span>
-            <span className="text-right">Minutes Change</span>
-          </div>
-
-          {transactions.map((txn) => (
-            <div key={txn.id} className="p-3.5 grid grid-cols-5 items-center hover:bg-[#FBF7ED]/50 transition-colors text-[#1A1A1A]">
-              <span className="font-semibold text-[#1A1A1A]">{txn.id}</span>
-              <span className="text-black/50">{txn.date}</span>
-              <span className="col-span-2 text-[#1A1A1A] font-medium">{txn.description}</span>
-              <span
-                className={`text-right font-bold ${
-                  txn.amount.startsWith("+") ? "text-[#16856B]" : "text-[#1A1A1A]"
-                }`}
-              >
-                {txn.amount}
-              </span>
-            </div>
-          ))}
-        </div>
+        <button
+          onClick={() => setActiveTab("costs")}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+            activeTab === "costs"
+              ? "bg-[#283A50] text-white shadow-xs"
+              : "text-[#707684] hover:text-[#283A50] hover:bg-[#FAF5E9]/50"
+          }`}
+        >
+          <CreditCard className="w-3.5 h-3.5" />
+          <span>Cost Intelligence &amp; Invoices</span>
+        </button>
       </div>
 
-      {/* Top Up Modal */}
+      {/* Tab 1: Capacity, Guardrails & Agent Breakdown */}
+      {activeTab === "capacity" && (
+        <div className="space-y-6">
+          {/* Agent Efficiency Comparison */}
+          <AgentEfficiencyTable agents={agents} currency={capacity.currency} />
+
+          {/* Smart Usage Guardrails */}
+          <SmartGuardrailsPanel
+            guardrails={guardrails}
+            onSaveGuardrails={handleSaveGuardrails}
+            currency={capacity.currency}
+          />
+        </div>
+      )}
+
+      {/* Tab 2: Signature Feature — Campaign Capacity Simulator */}
+      {activeTab === "simulator" && (
+        <CampaignCapacitySimulator
+          capacity={capacity}
+          availableAgents={availableAgentsForSimulator}
+        />
+      )}
+
+      {/* Tab 3: Cost Intelligence, Trends & Invoices */}
+      {activeTab === "costs" && (
+        <CostIntelligenceAndTrends
+          costs={costs}
+          dailyTrends={dailyTrends}
+          invoices={invoices}
+          onOpenTopUp={() => setTopUpOpen(true)}
+          currency={capacity.currency}
+        />
+      )}
+
+      {/* Recharge Modal */}
       <TopUpCreditsModal
         isOpen={topUpOpen}
         onClose={() => setTopUpOpen(false)}
-        currentCredits={14}
+        currentCredits={capacity.remainingMinutes}
       />
     </div>
   );

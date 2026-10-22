@@ -19,6 +19,12 @@ import TopUpCreditsModal from "./modals/TopUpCreditsModal";
 import NotificationsPanel from "./components/NotificationsPanel";
 import { NotificationItem } from "@/types/dashboard";
 import { soundSynth } from "@/lib/audio-synth";
+import {
+  initialCallbacks,
+  getHumanActionCallbacks,
+  callbackToNotification,
+  CallbackItem,
+} from "@/data/mock/callbacksData";
 
 interface AppHeaderProps {
   onToggleMobileSidebar: () => void;
@@ -52,48 +58,72 @@ export default function AppHeader({
   const [isMac, setIsMac] = useState(false);
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [notificationsList, setNotificationsList] = useState<NotificationItem[]>([
-    {
-      id: "notif-001",
-      type: "campaign",
-      title: "Outbound Batch Milestone",
-      message: "Batch 'Round 2 Entrance Follow-up' reached 100% resolution with 63% conversion.",
-      timestamp: "10 mins ago",
-      read: false,
-      severity: "info",
-    },
-    {
-      id: "notif-002",
-      type: "handoff",
-      title: "Warm Transfer Escalated",
-      message: "Agent Maya escalated student Rahul Sharma (+91 98401 22345) to Senior Admissions Desk.",
-      timestamp: "25 mins ago",
-      read: false,
-      severity: "warning",
-    },
-    {
-      id: "notif-003",
-      type: "knowledge",
-      title: "SIP Carrier SLA Optimal",
-      message: "TRK-91-AIRTEL-PRI operating at 136ms SLA (Opus HD codec verified).",
-      timestamp: "1 hr ago",
-      read: true,
-      severity: "info",
-    },
-    {
-      id: "notif-004",
-      type: "usage",
-      title: "Sandbox Balance Quota",
-      message: "14.0 minutes remaining in Free Sandbox tier. Auto-recharge standby.",
-      timestamp: "2 hrs ago",
-      read: true,
-      severity: "info",
-    },
-  ]);
+  const [notificationsList, setNotificationsList] = useState<NotificationItem[]>(() => {
+    const callbackNotifs = getHumanActionCallbacks(initialCallbacks).map(callbackToNotification);
+    const baseNotifs: NotificationItem[] = [
+      {
+        id: "notif-001",
+        type: "campaign",
+        title: "Outbound Batch Milestone",
+        message: "Batch 'Round 2 Entrance Follow-up' reached 100% resolution with 63% conversion.",
+        timestamp: "10 mins ago",
+        read: false,
+        severity: "info",
+      },
+      {
+        id: "notif-002",
+        type: "handoff",
+        title: "Warm Transfer Escalated",
+        message: "Agent Maya escalated student Rahul Sharma (+91 98401 22345) to Senior Admissions Desk.",
+        timestamp: "25 mins ago",
+        read: false,
+        severity: "warning",
+      },
+      {
+        id: "notif-003",
+        type: "knowledge",
+        title: "SIP Carrier SLA Optimal",
+        message: "TRK-91-AIRTEL-PRI operating at 136ms SLA (Opus HD codec verified).",
+        timestamp: "1 hr ago",
+        read: true,
+        severity: "info",
+      },
+      {
+        id: "notif-004",
+        type: "usage",
+        title: "Sandbox Balance Quota",
+        message: "14.0 minutes remaining in Free Sandbox tier. Auto-recharge standby.",
+        timestamp: "2 hrs ago",
+        read: true,
+        severity: "info",
+      },
+    ];
+    return [...callbackNotifs, ...baseNotifs];
+  });
   const unreadCount = notificationsList.filter((n) => !n.read).length;
 
   const profileRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
+
+  // Synchronize callbacks queue updates with notifications in real time
+  useEffect(() => {
+    const handleCallbacksUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ callbacks: CallbackItem[] }>;
+      if (customEvent.detail?.callbacks) {
+        const activeHumanCalls = getHumanActionCallbacks(customEvent.detail.callbacks);
+        const newCbNotifs = activeHumanCalls.map(callbackToNotification);
+        setNotificationsList((prev) => {
+          const nonCb = prev.filter((n) => n.type !== "callback");
+          return [...newCbNotifs, ...nonCb];
+        });
+      }
+    };
+
+    window.addEventListener("swaram:callbacks-updated", handleCallbacksUpdate);
+    return () => {
+      window.removeEventListener("swaram:callbacks-updated", handleCallbacksUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     try {
@@ -144,8 +174,8 @@ export default function AppHeader({
     if (pathname?.startsWith("/dashboard/knowledge")) return "Knowledge Base";
     if (pathname?.startsWith("/dashboard/analytics")) return "Analytics & Reports";
     if (pathname?.startsWith("/dashboard/reports")) return "Compliance Reports";
-    if (pathname?.startsWith("/dashboard/phone-numbers")) return "Telephony & SIP Trunks";
-    if (pathname?.startsWith("/dashboard/billing")) return "Minutes & Billing";
+    if (pathname?.startsWith("/dashboard/phone-numbers")) return "Phone Numbers";
+    if (pathname?.startsWith("/dashboard/billing")) return "Usage Control Center";
     if (pathname?.startsWith("/dashboard/team")) return "Team & Access Roles";
     if (pathname?.startsWith("/dashboard/settings")) return "Workspace Settings";
     return "Operations";
@@ -225,6 +255,11 @@ export default function AppHeader({
                   try { soundSynth.play("confirm"); } catch {}
                   setNotificationsList((prev) => prev.map((n) => ({ ...n, read: true })));
                 }}
+                onNotificationClick={(notif) => {
+                  setNotificationsList((prev) =>
+                    prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
+                  );
+                }}
               />
             </div>
 
@@ -268,7 +303,7 @@ export default function AppHeader({
                       className="flex items-center gap-2.5 px-4 py-2 text-black/70 hover:text-black hover:bg-[#FAF3E4]/60 transition-colors"
                     >
                       <CreditCard className="w-3.5 h-3.5 text-black/50" />
-                      <span>Minutes &amp; Billing</span>
+                      <span>Usage &amp; Controls</span>
                     </Link>
                     <Link
                       href="/dashboard/settings"

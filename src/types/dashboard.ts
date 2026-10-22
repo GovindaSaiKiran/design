@@ -163,12 +163,16 @@ export interface TelephonyNumber {
 
 export interface NotificationItem {
   id: string;
-  type: "campaign" | "knowledge" | "handoff" | "usage" | "system";
+  type: "campaign" | "knowledge" | "handoff" | "usage" | "system" | "callback";
   title: string;
   message: string;
   timestamp: string;
   read: boolean;
   severity: "info" | "success" | "warning" | "error";
+  actionUrl?: string;
+  callbackId?: string;
+  contactName?: string;
+  humanInteractionReason?: string;
 }
 
 export interface KPIMetric {

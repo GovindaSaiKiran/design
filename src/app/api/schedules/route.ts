@@ -154,12 +154,16 @@ export async function POST(request: NextRequest) {
       localFormatted = formatUtcToLocal(scheduledAtUtc, body.timezone);
     }
 
+    const callingMode = body.callingMode || "normal";
+    const isNormal = callingMode === "normal";
+
     const campaignId = `sched-${Date.now()}`;
     const newCampaign: ScheduledCampaign = {
       id: campaignId,
       workspaceId: "ws-apex-global",
       name: body.name.trim(),
       status: "scheduled",
+      callingMode,
       scheduleType: body.scheduleType,
       scheduledAtUtc,
       timezone: body.timezone || "Asia/Kolkata",
@@ -167,9 +171,12 @@ export async function POST(request: NextRequest) {
       callingWindow: {
         startHour: body.callingWindow?.startHour ?? 9,
         endHour: body.callingWindow?.endHour ?? 19,
-        concurrencyLimit: body.callingWindow?.concurrencyLimit ?? 20,
-        pacingDelaySec: body.callingWindow?.pacingDelaySec ?? 2,
+        concurrencyLimit: isNormal ? 1 : (body.callingWindow?.concurrencyLimit ?? 20),
+        pacingDelaySec: isNormal ? 3 : (body.callingWindow?.pacingDelaySec ?? 2),
+        maxRetries: body.callingWindow?.maxRetries ?? (isNormal ? 1 : 2),
       },
+      callingPurpose: body.callingPurpose,
+      knowledgeSources: body.knowledgeSources,
       config: {
         agentId: body.config.agentId,
         agentName: body.config.agentName,
@@ -180,6 +187,10 @@ export async function POST(request: NextRequest) {
         instructions: body.config.instructions,
         openingScript: body.config.openingScript,
         customContext: body.config.customContext,
+        knowledgeBaseId: body.config.knowledgeBaseId || "all",
+        knowledgeBaseName: body.config.knowledgeBaseName || "All Campus Knowledge Documents",
+        knowledgeChunkCount: body.config.knowledgeChunkCount || 456,
+        strictGrounding: body.config.strictGrounding ?? true,
       },
       contacts: validContacts,
       stats: {

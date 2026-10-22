@@ -131,7 +131,7 @@ export async function executeCampaign(campaignId: string): Promise<void> {
 
   // Process contacts sequentially or in small concurrency chunks
   for (const contact of campaign.contacts) {
-    // Re-verify campaign status between contacts in case user hit "Cancel" mid-run
+    // Re-verify campaign status between contacts in case user hit "Cancel" or "Pause" mid-run
     const currentStatus = (await scheduleStore.getById(campaignId))?.status;
     if (currentStatus === "cancelled") {
       await scheduleStore.appendLog(
@@ -140,6 +140,14 @@ export async function executeCampaign(campaignId: string): Promise<void> {
         "Execution aborted mid-cadence due to user cancellation request."
       );
       break;
+    }
+    if (currentStatus === "paused") {
+      await scheduleStore.appendLog(
+        campaignId,
+        "info",
+        "Execution paused. Remaining contacts kept in queue until resumed."
+      );
+      return;
     }
 
     // Skip already completed or skipped contacts (Idempotency)
@@ -217,7 +225,7 @@ export async function executeCampaign(campaignId: string): Promise<void> {
 
   // Final status calculation
   const refreshed = await scheduleStore.getById(campaignId);
-  if (!refreshed || refreshed.status === "cancelled") return;
+  if (!refreshed || refreshed.status === "cancelled" || refreshed.status === "paused") return;
 
   const total = refreshed.contacts.length;
   const completed = refreshed.contacts.filter((c) => c.status === "completed").length;

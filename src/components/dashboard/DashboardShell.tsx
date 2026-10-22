@@ -358,6 +358,19 @@ export default function DashboardShell() {
       <UploadKnowledgeModal
         isOpen={uploadKnowledgeOpen}
         onClose={() => setUploadKnowledgeOpen(false)}
+        onDocUploaded={(title, customCategory) => {
+          const newDoc: KnowledgeDocument = {
+            id: `doc-${Date.now()}`,
+            title: title || "New Knowledge Document.pdf",
+            category: customCategory || "Custom Category",
+            fileSize: "2.4 MB",
+            uploadedAt: "Today",
+            status: "ready",
+            vectorChunks: 142,
+            lastUpdated: "Just now",
+          };
+          setKnowledgeDocs((prev) => [newDoc, ...prev]);
+        }}
       />
 
       <ExportReportModal

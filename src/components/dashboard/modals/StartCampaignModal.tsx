@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Send, Sparkles, Check, PhoneCall, AlertCircle, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { X, Send, Sparkles, Check, PhoneCall, AlertCircle, ShieldCheck, BookOpen, ExternalLink, Database } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
+import { mockKnowledgeBase } from "@/data/mock/dashboardData";
 
 interface StartCampaignModalProps {
   isOpen: boolean;
@@ -18,6 +20,7 @@ export default function StartCampaignModal({
   const [title, setTitle] = useState("JoSAA Round 1 Cutoff & Merit Verification");
   const [audience, setAudience] = useState("High-Percentile PCM Applicants (1,240 Verified Candidates)");
   const [selectedAgent, setSelectedAgent] = useState("Maya AI (Hindi/English) & Neha AI (Telugu)");
+  const [selectedKnowledgeBaseId, setSelectedKnowledgeBaseId] = useState<string>("all");
   const [concurrentLines, setConcurrentLines] = useState(30);
   const [consentAcknowledged, setConsentAcknowledged] = useState(false);
 
@@ -131,6 +134,51 @@ export default function StartCampaignModal({
                 onChange={(e) => setConcurrentLines(Number(e.target.value))}
                 className="w-full accent-[#111111] mt-2 cursor-pointer"
               />
+            </div>
+          </div>
+
+          {/* Grounding Knowledge Base Feature */}
+          <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.08] space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-[#733F00]" />
+                <span className="font-bold text-xs text-[#1A1A1A]">Grounded Knowledge Base</span>
+              </div>
+              <Link
+                href="/dashboard/knowledge"
+                target="_blank"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#733F00] hover:underline"
+              >
+                <span>Manage in Knowledge Base</span>
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+            </div>
+
+            <p className="text-[11px] text-black/75 leading-relaxed bg-white p-2.5 rounded-xl border border-black/[0.06]">
+              <strong>Knowledge Base</strong> is the information your AI agent refers to when answering customers&apos; questions. Instead of making the AI invent answers, you provide business-approved information so it can respond accurately during phone calls and WhatsApp conversations.
+              <span className="block text-[10px] text-black/50 italic mt-1">
+                Think of it as the AI agent&apos;s business knowledge library.
+              </span>
+            </p>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-black/70 mb-1">
+                Select Business Library Source
+              </label>
+              <select
+                value={selectedKnowledgeBaseId}
+                onChange={(e) => setSelectedKnowledgeBaseId(e.target.value)}
+                className="w-full px-3.5 py-2 rounded-full bg-white border border-black/[0.08] text-[#1A1A1A] focus:outline-none focus:border-black/30 cursor-pointer text-xs font-medium"
+              >
+                <option value="all">
+                  All Campus Knowledge Documents (456 Chunks • Full Coverage)
+                </option>
+                {mockKnowledgeBase.map((doc) => (
+                  <option key={doc.id} value={doc.id}>
+                    {doc.title} ({doc.vectorChunks} Chunks • {doc.category})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

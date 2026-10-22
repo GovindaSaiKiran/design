@@ -12,9 +12,9 @@ import {
   FolderKanban,
   MessageSquare,
   BookOpen,
-  TrendingUp,
   PhoneCall,
   CreditCard,
+  Gauge,
   Settings,
   Plus,
   LogOut,
@@ -146,19 +146,14 @@ export default function AppSidebar({
       icon: BookOpen,
     },
     {
-      label: "Telemetry & Logs",
-      href: "/dashboard/analytics",
-      icon: TrendingUp,
-    },
-    {
-      label: "SIP Trunks & PRI",
+      label: "Phone Numbers",
       href: "/dashboard/phone-numbers",
       icon: PhoneCall,
     },
     {
-      label: "Minutes & Quota",
+      label: "Usage & Controls",
       href: "/dashboard/billing",
-      icon: CreditCard,
+      icon: Gauge,
     },
     {
       label: "Settings & Keys",

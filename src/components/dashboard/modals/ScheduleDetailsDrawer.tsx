@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   X,
   Calendar,
@@ -19,6 +20,8 @@ import {
   ShieldCheck,
   PhoneOff,
   UserCheck,
+  BookOpen,
+  ExternalLink,
 } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
 import { ScheduledCampaign } from "@/types/schedule";
@@ -345,6 +348,37 @@ export default function ScheduleDetailsDrawer({
                   <div>
                     <span className="text-black/40">Language:</span> {campaign.config.language}
                   </div>
+                </div>
+              </div>
+
+              {/* Grounded Knowledge Base */}
+              <div className="p-3.5 rounded-2xl bg-[#FBF7ED] border border-black/[0.06] space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <BookOpen className="w-3.5 h-3.5 text-[#733F00]" />
+                    <span className="text-[10px] font-bold text-black/45 uppercase">Grounded Knowledge Base</span>
+                  </div>
+                  <Link
+                    href="/dashboard/knowledge"
+                    target="_blank"
+                    className="text-[11px] font-semibold text-[#733F00] hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>Knowledge Base</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </div>
+                <div className="p-2.5 rounded-xl bg-white border border-black/[0.06] flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-xs text-[#1A1A1A]">
+                      {campaign.config.knowledgeBaseName || "Campus Admissions Policy & Fee Matrix"}
+                    </p>
+                    <p className="text-[10px] text-black/50">
+                      {campaign.config.knowledgeChunkCount || 218} Vector Chunks • Zero Hallucinations Active
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    Grounded
+                  </span>
                 </div>
               </div>
 

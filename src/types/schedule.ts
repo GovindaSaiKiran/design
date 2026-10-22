@@ -1,10 +1,34 @@
 export type ScheduleStatus =
   | "scheduled"
   | "running"
+  | "paused"
   | "completed"
   | "partially-completed"
   | "cancelled"
   | "failed";
+
+export type CallingMode = "normal" | "bulk";
+
+export interface StructuredCallingPurpose {
+  goal: string;                 // Why agent is calling
+  keyInformation: string;      // What it should communicate
+  questionsToAsk: string;      // What questions it should ask
+  desiredOutcome: string;      // The desired outcome
+  onInterested: string;        // What to do if contact is interested
+  onDeclined: string;          // What to do if contact declines
+  humanHandoffCriteria?: string;// When to hand off to a human
+  callEndingProtocol?: string; // How the call should end
+}
+
+export interface KnowledgeSourceReference {
+  type: "upload" | "manual" | "kb_collection" | "playground_reference";
+  id: string;
+  title: string;
+  category?: string;
+  snippet?: string;
+  status: "ready" | "processing" | "error";
+  metadata?: Record<string, unknown>;
+}
 
 export type ContactCallStatus =
   | "pending"
@@ -34,6 +58,7 @@ export interface CallingWindowConfig {
   endHour: number;   // e.g. 19 (19:00)
   concurrencyLimit: number; // 1 to 50 concurrent calls
   pacingDelaySec: number;   // delay between dispatch batches
+  maxRetries?: number;      // 1 to 3 retries
 }
 
 export interface CallConfigSnapshot {
@@ -46,6 +71,10 @@ export interface CallConfigSnapshot {
   instructions: string;
   openingScript?: string;
   customContext?: Record<string, string>;
+  knowledgeBaseId?: string;
+  knowledgeBaseName?: string;
+  knowledgeChunkCount?: number;
+  strictGrounding?: boolean;
 }
 
 export interface ExecutionLogItem {
@@ -61,12 +90,15 @@ export interface ScheduledCampaign {
   workspaceId: string;
   name: string;
   status: ScheduleStatus;
+  callingMode: CallingMode;
   scheduleType: "now" | "later";
   scheduledAtUtc: string; // ISO 8601 UTC timestamp
   timezone: string;       // IANA timezone identifier, e.g. "Asia/Kolkata"
   localScheduledTime: string; // Interpreted formatted local representation
   callingWindow: CallingWindowConfig;
   config: CallConfigSnapshot;
+  callingPurpose?: StructuredCallingPurpose;
+  knowledgeSources?: KnowledgeSourceReference[];
   contacts: ScheduledContact[];
   stats: {
     totalContacts: number;
@@ -84,11 +116,13 @@ export interface ScheduledCampaign {
   completedAt?: string;
   cancelledAt?: string;
   cancelReason?: string;
+  pausedAt?: string;
   logs: ExecutionLogItem[];
 }
 
 export interface CreateSchedulePayload {
   name: string;
+  callingMode?: CallingMode;
   scheduleType: "now" | "later";
   scheduledDate?: string; // YYYY-MM-DD
   scheduledTime?: string; // HH:mm
@@ -101,6 +135,9 @@ export interface CreateSchedulePayload {
     customFields?: Record<string, string>;
   }>;
   config: CallConfigSnapshot;
+  callingPurpose?: StructuredCallingPurpose;
+  knowledgeSources?: KnowledgeSourceReference[];
   callingWindow?: Partial<CallingWindowConfig>;
   consentAcknowledged: boolean;
 }
+

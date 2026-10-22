@@ -19,7 +19,7 @@ export default function FinalCTA({ onOpenDemo }: FinalCTAProps) {
   };
 
   return (
-    <section className="w-full p-4 sm:p-6 lg:p-8 bg-white">
+    <section id="contact" className="w-full p-4 sm:p-6 lg:p-8 bg-white scroll-mt-12">
       <div className="max-w-[1360px] mx-auto bg-[#121316] text-white rounded-[32px] sm:rounded-[44px] p-8 sm:p-14 lg:p-20 relative overflow-hidden shadow-2xl">
         {/* Glow effects */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-sky-500/20 via-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none" />
