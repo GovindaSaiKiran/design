@@ -30,7 +30,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { soundSynth } from "@/lib/audio-synth";
-import { mockAgents, mockContacts, mockKnowledgeBase } from "@/data/mock/dashboardData";
+import { mockAgents, mockKnowledgeBase } from "@/data/mock/dashboardData";
+import { getUnifiedContacts } from "@/lib/contactsHistory";
 import {
   normalizePhoneNumber,
   COMMON_TIMEZONES,
@@ -78,17 +79,17 @@ export default function ScheduleCallModal({
   const [contactList, setContactList] = useState<RawContactItem[]>([
     {
       id: "init-1",
-      name: "Rahul Sharma",
+      name: "Aarav Patel",
       phone: "+91 98401 22345",
-      email: "rahul.sharma@gmail.com",
-      organization: "B.Tech Computer Science",
+      email: "aarav.patel@example.com",
+      organization: "Enterprise Support",
     },
     {
       id: "init-2",
       name: "Ananya Iyer",
       phone: "+91 94401 88319",
-      email: "ananya.iyer@outlook.com",
-      organization: "B.Tech Biotechnology",
+      email: "ananya.iyer@example.com",
+      organization: "Direct Inquiry",
     },
   ]);
 
@@ -104,33 +105,72 @@ export default function ScheduleCallModal({
   const [csvRawText, setCsvRawText] = useState("");
 
   // Contact list selection state
-  const [selectedListContactIds, setSelectedListContactIds] = useState<string[]>(
-    mockContacts.map((c) => c.id)
-  );
+  const [availableContacts, setAvailableContacts] = useState<any[]>([]);
+  const [selectedListContactIds, setSelectedListContactIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const list = getUnifiedContacts();
+    setAvailableContacts(list);
+    setSelectedListContactIds(list.map((c) => c.id));
+  }, []);
 
   // STEP B: Call Configuration State
+  const availableAgents = useMemo(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const raw = localStorage.getItem("swaram_agents");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      }
+    } catch {}
+    return mockAgents.length > 0
+      ? mockAgents
+      : [
+          {
+            id: "agent-default",
+            name: "Primary Voice Agent",
+            role: "Voice Telephony Specialist",
+            department: "Outbound Desk",
+            status: "active" as const,
+            voice: {
+              name: "Bulbul Indic",
+              gender: "Female" as const,
+              accent: "Pan-Indian Bilingual",
+            },
+            language: "Hindi + English",
+            callsToday: 0,
+            accuracy: 99,
+            assignedNumber: "+91 (Trunk)",
+            systemPromptPreview: "Primary AI voice assistant",
+            activeLiveCount: 0,
+          },
+        ];
+  }, []);
+
   const [selectedAgentId, setSelectedAgentId] = useState(
-    initialAgentId || duplicateFrom?.config?.agentId || mockAgents[0].id
+    initialAgentId || duplicateFrom?.config?.agentId || availableAgents[0]?.id || "agent-default"
   );
   const currentAgent = useMemo(
-    () => mockAgents.find((a) => a.id === selectedAgentId) || mockAgents[0],
-    [selectedAgentId]
+    () => availableAgents.find((a: any) => a.id === selectedAgentId) || availableAgents[0],
+    [availableAgents, selectedAgentId]
   );
 
   const [selectedLanguage, setSelectedLanguage] = useState(
-    duplicateFrom?.config?.language || currentAgent.language
+    duplicateFrom?.config?.language || currentAgent?.language || "English"
   );
   const [callObjective, setCallObjective] = useState(
     duplicateFrom?.config?.callObjective ||
-      "Verify student entrance eligibility, answer tuition fee queries, and book campus tours."
+      "Verify customer inquiry, answer service questions, and schedule follow-up appointments."
   );
   const [instructions, setInstructions] = useState(
     duplicateFrom?.config?.instructions ||
-      "Warmly greet candidate by name. Verify board marks. If score is >= 90%, mention 35% Chancellor scholarship. Offer WhatsApp fee breakdown."
+      "Warmly greet contact by name. Confirm inquiry details. Answer questions using the grounding knowledge base and offer WhatsApp summary collateral."
   );
   const [openingScript, setOpeningScript] = useState(
     duplicateFrom?.config?.openingScript ||
-      "Hello {name}, I am calling from Apex Global Institutions regarding your inquiry for {organization}."
+      "Hello {name}, I am calling regarding your recent inquiry. Do you have a quick moment to speak?"
   );
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
@@ -155,7 +195,14 @@ export default function ScheduleCallModal({
     }
     return (
       mockKnowledgeBase.find((d) => d.id === selectedKnowledgeBaseId) ||
-      mockKnowledgeBase[0]
+      mockKnowledgeBase[0] || {
+        id: "none",
+        title: "Default Knowledge Library",
+        category: "General",
+        vectorChunks: 0,
+        status: "ready" as const,
+        lastUpdated: "Synced",
+      }
     );
   }, [selectedKnowledgeBaseId]);
 
@@ -348,7 +395,7 @@ export default function ScheduleCallModal({
   };
 
   const handleImportExistingList = () => {
-    const selected = mockContacts.filter((c) => selectedListContactIds.includes(c.id));
+    const selected = availableContacts.filter((c) => selectedListContactIds.includes(c.id));
     const converted: RawContactItem[] = selected.map((c) => ({
       id: `sys-${c.id}`,
       name: c.name,
@@ -599,7 +646,7 @@ export default function ScheduleCallModal({
                     />
                     <input
                       type="text"
-                      placeholder="Course / Department (e.g. B.Tech CSE)"
+                      placeholder="Organization / Department (e.g. Sales, Accounts)"
                       value={manualOrg}
                       onChange={(e) => setManualOrg(e.target.value)}
                       className="px-3.5 py-2 rounded-full bg-white border border-black/[0.08] text-xs focus:outline-none"
@@ -656,51 +703,59 @@ export default function ScheduleCallModal({
                 <div className="p-4 rounded-2xl bg-[#FBF7ED] border border-black/[0.06] space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-xs text-[#1A1A1A]">
-                      Select from Swaram Verified Contacts
+                      Select from Saved Contacts
                     </span>
                     <span className="text-[11px] text-black/50">
-                      {selectedListContactIds.length} of {mockContacts.length} selected
+                      {selectedListContactIds.length} of {availableContacts.length} selected
                     </span>
                   </div>
 
                   <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
-                    {mockContacts.map((contact) => (
-                      <label
-                        key={contact.id}
-                        className="flex items-center justify-between p-2 rounded-xl bg-white border border-black/[0.06] cursor-pointer hover:border-black/20"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <input
-                            type="checkbox"
-                            checked={selectedListContactIds.includes(contact.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedListContactIds((prev) => [...prev, contact.id]);
-                              } else {
-                                setSelectedListContactIds((prev) =>
-                                  prev.filter((id) => id !== contact.id)
-                                );
-                              }
-                            }}
-                            className="rounded accent-black cursor-pointer"
-                          />
-                          <div>
-                            <p className="font-semibold text-xs text-[#1A1A1A]">{contact.name}</p>
-                            <p className="text-[10px] text-black/45">{contact.phone} • {contact.organization}</p>
+                    {availableContacts.length === 0 ? (
+                      <div className="py-6 text-center text-xs text-black/50">
+                        <p className="font-semibold text-[#1A1A1A]">No saved contacts in directory</p>
+                        <p className="text-[11px] mt-0.5">Use manual entry or CSV upload above to add phone numbers.</p>
+                      </div>
+                    ) : (
+                      availableContacts.map((contact) => (
+                        <label
+                          key={contact.id}
+                          className="flex items-center justify-between p-2 rounded-xl bg-white border border-black/[0.06] cursor-pointer hover:border-black/20"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <input
+                              type="checkbox"
+                              checked={selectedListContactIds.includes(contact.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedListContactIds((prev) => [...prev, contact.id]);
+                                } else {
+                                  setSelectedListContactIds((prev) =>
+                                    prev.filter((id) => id !== contact.id)
+                                  );
+                                }
+                              }}
+                              className="rounded accent-black cursor-pointer"
+                            />
+                            <div>
+                              <p className="font-semibold text-xs text-[#1A1A1A]">{contact.name}</p>
+                              <p className="text-[10px] text-black/45">{contact.phone} • {contact.organization || contact.email || "No organization"}</p>
+                            </div>
                           </div>
-                        </div>
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#FAF3E4] text-black/70">
-                          {contact.category}
-                        </span>
-                      </label>
-                    ))}
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#FAF3E4] text-black/70">
+                            {contact.category || "General"}
+                          </span>
+                        </label>
+                      ))
+                    )}
                   </div>
 
                   <div className="flex justify-end pt-1">
                     <button
                       type="button"
+                      disabled={availableContacts.length === 0}
                       onClick={handleImportExistingList}
-                      className="px-4 py-1.5 rounded-full bg-[#111111] text-white font-semibold text-xs hover:bg-black transition-all cursor-pointer"
+                      className="px-4 py-1.5 rounded-full bg-[#111111] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-xs hover:bg-black transition-all cursor-pointer"
                     >
                       Import Selected ({selectedListContactIds.length})
                     </button>
@@ -775,7 +830,7 @@ export default function ScheduleCallModal({
                   Select AI Voice Agent
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  {mockAgents.map((agent) => (
+                  {availableAgents.map((agent: any) => (
                     <button
                       key={agent.id}
                       type="button"
@@ -790,14 +845,14 @@ export default function ScheduleCallModal({
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-bold text-xs text-[#1A1A1A]">{agent.name.split("—")[0]}</span>
+                        <span className="font-bold text-xs text-[#1A1A1A]">{(agent.name || "AI Agent").split("—")[0]}</span>
                         {selectedAgentId === agent.id && (
                           <Check className="w-3.5 h-3.5 text-black" />
                         )}
                       </div>
-                      <p className="text-[10px] text-black/55 line-clamp-1">{agent.role}</p>
+                      <p className="text-[10px] text-black/55 line-clamp-1">{agent.role || "Voice Assistant"}</p>
                       <p className="text-[10px] font-semibold text-[#733F00] mt-1.5">
-                        {agent.voice.name} • {agent.voice.gender}
+                        {agent.voice?.name || "Bulbul Indic"} • {agent.voice?.gender || "Pan-Indic"}
                       </p>
                     </button>
                   ))}
@@ -878,37 +933,44 @@ export default function ScheduleCallModal({
                     </button>
 
                     {/* Individual Documents */}
-                    {mockKnowledgeBase.map((doc) => {
-                      const isSelected = selectedKnowledgeBaseId === doc.id;
-                      return (
-                        <button
-                          key={doc.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedKnowledgeBaseId(doc.id);
-                            try { soundSynth.play("click"); } catch {}
-                          }}
-                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                            isSelected
-                              ? "bg-[#FAF3E4] border-black/30 shadow-xs ring-1 ring-black/20"
-                              : "bg-white border-black/[0.08] hover:border-black/20"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="font-bold text-xs text-[#1A1A1A] truncate max-w-[190px] flex items-center gap-1.5">
-                              <FileText className="w-3.5 h-3.5 text-black/50 shrink-0" />
-                              <span className="truncate">{doc.title.split(".")[0]}</span>
-                            </span>
-                            {isSelected && <Check className="w-3 h-3 text-black shrink-0" />}
-                          </div>
-                          <p className="text-[10px] text-black/55 truncate">{doc.category}</p>
-                          <div className="flex items-center justify-between text-[10px] text-[#733F00] font-semibold mt-1.5">
-                            <span>{doc.vectorChunks} Chunks</span>
-                            <span className="text-emerald-700 font-mono text-[9px]">Ready</span>
-                          </div>
-                        </button>
-                      );
-                    })}
+                    {mockKnowledgeBase.length === 0 ? (
+                      <div className="col-span-full py-4 px-3 text-center text-xs text-black/50 bg-white border border-black/[0.06] rounded-xl">
+                        <p className="font-semibold text-[#1A1A1A]">No individual documents vectorized</p>
+                        <p className="text-[10.5px] mt-0.5">Upload PDFs in the Knowledge tab to ground your agent on specific manuals.</p>
+                      </div>
+                    ) : (
+                      mockKnowledgeBase.map((doc) => {
+                        const isSelected = selectedKnowledgeBaseId === doc.id;
+                        return (
+                          <button
+                            key={doc.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedKnowledgeBaseId(doc.id);
+                              try { soundSynth.play("click"); } catch {}
+                            }}
+                            className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                              isSelected
+                                ? "bg-[#FAF3E4] border-black/30 shadow-xs ring-1 ring-black/20"
+                                : "bg-white border-black/[0.08] hover:border-black/20"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-bold text-xs text-[#1A1A1A] truncate max-w-[190px] flex items-center gap-1.5">
+                                <FileText className="w-3.5 h-3.5 text-black/50 shrink-0" />
+                                <span className="truncate">{doc.title.split(".")[0]}</span>
+                              </span>
+                              {isSelected && <Check className="w-3 h-3 text-black shrink-0" />}
+                            </div>
+                            <p className="text-[10px] text-black/55 truncate">{doc.category}</p>
+                            <div className="flex items-center justify-between text-[10px] text-[#733F00] font-semibold mt-1.5">
+                              <span>{doc.vectorChunks} Chunks</span>
+                              <span className="text-emerald-700 font-mono text-[9px]">Ready</span>
+                            </div>
+                          </button>
+                        );
+                      })
+                    )}
                   </div>
                 </div>
 
@@ -975,7 +1037,7 @@ export default function ScheduleCallModal({
                   type="text"
                   value={callObjective}
                   onChange={(e) => setCallObjective(e.target.value)}
-                  placeholder="e.g. Verify board percentage and qualify for Chancellor Merit Scholarship"
+                  placeholder="e.g. Verify enterprise requirements and qualify for high-concurrency SLA"
                   className="w-full px-4 py-2.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-[#1A1A1A] focus:outline-none text-xs font-medium"
                 />
               </div>
@@ -1015,8 +1077,8 @@ export default function ScheduleCallModal({
                   <span className="italic text-black/75">
                     &ldquo;
                     {openingScript
-                      .replace(/\{name\}/g, analyzedContacts.valid[0]?.name || "Rahul Sharma")
-                      .replace(/\{organization\}/g, analyzedContacts.valid[0]?.organization || "Computer Science")}
+                      .replace(/\{name\}/g, analyzedContacts.valid[0]?.name || "Prospective Client")
+                      .replace(/\{organization\}/g, analyzedContacts.valid[0]?.organization || "Enterprise Account")}
                     &rdquo;
                   </span>
                 </div>

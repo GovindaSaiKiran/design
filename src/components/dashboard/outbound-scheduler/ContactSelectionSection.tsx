@@ -57,52 +57,38 @@ interface ContactSelectionSectionProps {
 
 export const COHORTS_LIST = [
   {
-    id: "cohort-admissions",
-    name: "All-India JoSAA & State CET Qualified Applicants 2026",
-    count: 4850,
-    tag: "High Intent • Avg Score 91.2",
-    description: "Shortlisted candidates with PCM/PCB score > 85% eligible for direct merit seats & Chancellor Scholarships.",
+    id: "cohort-leads",
+    name: "Outbound Qualified Leads",
+    count: 0,
+    tag: "Priority • Verified",
+    description: "Contacts qualified for outbound communication and proactive outreach.",
   },
   {
-    id: "cohort-entrance",
-    name: "National Entrance Test CET Rankers Verification",
-    count: 8600,
-    tag: "Exam Verified • State Ranks",
-    description: "Registered entrance candidates requiring test center verification, admit card verification, and attendance RSVP.",
-  },
-  {
-    id: "cohort-fees",
-    name: "Pending Tuition Fee Installments (Due within 7 Days)",
-    count: 1280,
-    tag: "Finance Desk • Priority",
-    description: "Applicants requesting fee schedule installment breakdowns (40-30-30), SBI loan advisory, and scholarship letters.",
-  },
-  {
-    id: "cohort-hostel",
-    name: "Hostel Accommodation & Living Allotment Queue",
-    count: 950,
-    tag: "Residential Desk",
-    description: "Out-of-state candidates seeking AC room allotment, campus tour passes, and mess schedule advisory.",
+    id: "cohort-followups",
+    name: "Scheduled Account Follow-ups",
+    count: 0,
+    tag: "Follow-up Desk",
+    description: "Customers awaiting scheduled consultation or follow-up discussion.",
   },
   {
     id: "cohort-user-history",
-    name: "Previous Contacts History (CRM & Unified Synced)",
-    count: 1420,
-    tag: "CRM Synced • Verified",
-    description: "All contacts previously synced across Contacts & Lists, CSV uploads, and inquiry forms.",
+    name: "Previous Contacts History (CRM Synced)",
+    count: 0,
+    tag: "CRM Synced",
+    description: "All contacts previously synced across directory and spreadsheet imports.",
   },
 ];
 
 // Sample CSV raw rows for demo import
 const SAMPLE_CSV_ROWS = [
-  { name: "Rahul Sharma", rawPhone: "9840122345", email: "rahul.sharma@gmail.com", course: "B.Tech Computer Science" },
-  { name: "Ananya Iyer", rawPhone: "+91 94401 88319", email: "ananya.iyer@outlook.com", course: "B.Tech Biotechnology" },
-  { name: "Devansh Patil", rawPhone: "9711033499", email: "devansh.patil@gmail.com", course: "MBA General" },
-  { name: "Meera Krishnan", rawPhone: "+91 98210 55678", email: "meera.k@gmail.com", course: "B.Tech ECE" },
-  { name: "Siddharth Verma", rawPhone: "+91 98112 34567", email: "siddharth.v@gmail.com", course: "B.Tech AI/ML" },
-  { name: "Duplicate Entry Test", rawPhone: "9840122345", email: "duplicate@example.com", course: "Duplicate" }, // duplicate
-  { name: "Invalid Number Test", rawPhone: "12345", email: "invalid@example.com", course: "Invalid" }, // invalid
-  { name: "DND Suppressed Test", rawPhone: "+919999999999", email: "dnd@example.com", course: "Suppressed DND" }, // DND
+  { name: "Aarav Patel", rawPhone: "+91 98401 22345", email: "aarav.patel@example.com", course: "Enterprise Support" },
+  { name: "Ananya Iyer", rawPhone: "+91 94401 88319", email: "ananya.iyer@example.com", course: "Direct Inquiry" },
+  { name: "Devansh Patil", rawPhone: "+91 97110 33499", email: "devansh.patil@example.com", course: "Priority Account" },
+  { name: "Meera Krishnan", rawPhone: "+91 98210 55678", email: "meera.k@example.com", course: "Follow-up Queue" },
+  { name: "Siddharth Verma", rawPhone: "+91 98112 34567", email: "siddharth.v@example.com", course: "Standard Client" },
+  { name: "Duplicate Entry Test", rawPhone: "+91 98401 22345", email: "duplicate@example.com", course: "Duplicate" },
+  { name: "Invalid Number Test", rawPhone: "12345", email: "invalid@example.com", course: "Invalid" },
+  { name: "DND Suppressed Test", rawPhone: "+919999999999", email: "dnd@example.com", course: "Suppressed DND" },
 ];
 
 export default function ContactSelectionSection({
@@ -125,7 +111,7 @@ export default function ContactSelectionSection({
   const [singleName, setSingleName] = useState("");
   const [singlePhone, setSinglePhone] = useState("");
   const [singleEmail, setSingleEmail] = useState("");
-  const [singleOrg, setSingleOrg] = useState("B.Tech Computer Science");
+  const [singleOrg, setSingleOrg] = useState("Enterprise Solutions");
 
   // Raw paste area
   const [pasteText, setPasteText] = useState("");
@@ -137,13 +123,13 @@ export default function ContactSelectionSection({
   const [nameCol, setNameCol] = useState("Name");
   const [phoneCol, setPhoneCol] = useState("Phone Number");
   const [emailCol, setEmailCol] = useState("Email Address");
-  const [courseCol, setCourseCol] = useState("Program / Course");
+  const [courseCol, setCourseCol] = useState("Organization / Department");
   const [csvFileName, setCsvFileName] = useState<string | null>(null);
 
   // Process raw sample rows into validated records
   const handleSimulateCsvUpload = () => {
     try { soundSynth.play("confirm"); } catch {}
-    setCsvFileName("JoSAA_Admissions_Counseling_Batch_2026.csv");
+    setCsvFileName("Outbound_Contacts_2026.csv");
 
     const seenPhones = new Set<string>();
     const knownDnd = new Set(["+919999999999", "+919876500000", "+919000000000"]);
@@ -494,7 +480,7 @@ export default function ContactSelectionSection({
                   </div>
 
                   <div className="flex items-center gap-2 text-[11px] text-[#707684]">
-                    <span>{c.organization || "Apex Global Candidate"}</span>
+                    <span>{c.organization || "Direct Contact"}</span>
                     <span className="px-1.5 py-0.5 rounded bg-slate-100 text-[#283A50] text-[10px]">
                       {c.category}
                     </span>
@@ -537,7 +523,7 @@ export default function ContactSelectionSection({
               onClick={handleSimulateCsvUpload}
               className="px-4 py-2 text-xs font-bold rounded-xl bg-[#283A50] text-white hover:bg-[#283A50]/90 transition-all shadow-xs"
             >
-              {csvFileName ? "Re-Upload / Refresh Spreadsheet" : "+ Load Sample JoSAA Applicants Spreadsheet"}
+              {csvFileName ? "Re-Upload / Refresh Spreadsheet" : "+ Load Sample Contacts Spreadsheet"}
             </button>
           </div>
 
@@ -677,14 +663,14 @@ export default function ContactSelectionSection({
           {/* Bulk Paste Area */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-[#283A50] block">
-              Or Paste Multiple Numbers (Format: Name, Phone, Email, Program):
+              Or Paste Multiple Numbers (Format: Name, Phone, Email, Organization):
             </label>
             <textarea
               rows={3}
               value={pasteText}
               onChange={(e) => setPasteText(e.target.value)}
               className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl p-3 text-xs text-[#283A50] font-mono focus:outline-none focus:ring-1 focus:ring-[#283A50] resize-none"
-              placeholder="Rohan Varma, +919840122345, rohan@example.com, B.Tech CS&#10;Pooja Hegde, +919440188319, pooja@example.com, B.Tech Biotech"
+              placeholder="Rohan Varma, +919840122345, rohan@example.com, Acme Corp&#10;Pooja Hegde, +919440188319, pooja@example.com, Global Retail"
             />
             <div className="flex justify-end">
               <button

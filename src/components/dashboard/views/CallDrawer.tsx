@@ -48,60 +48,57 @@ export default function CallDrawer({ call, isOpen, onClose }: CallDrawerProps) {
     {
       id: 1,
       speaker: "agent",
-      text: `Hello, good morning! I am ${call.agentName} calling from the campus admissions office. Am I speaking with ${call.contactName || "the candidate"}?`,
+      text: `Hello! I am ${call.agentName} calling from our Voice Operations Desk. Am I speaking with ${call.contactName || "the contact"}?`,
       time: "00:03",
     },
     {
       id: 2,
       speaker: "caller",
-      text: "Yes, this is Rahul. I had registered on your website yesterday regarding B.Tech CSE admissions.",
+      text: `Yes, speaking. I had requested information regarding your ${call.topic || "telephony platform"}.`,
       time: "00:08",
     },
     {
       id: 3,
       speaker: "agent",
-      text: "Great to speak with you, Rahul! I see you scored 94.2% in your 12th board exams. With that score, you qualify for our 35% Chancellor Merit Scholarship. Are you looking for hostel accommodation as well?",
+      text: `Great to speak with you, ${call.contactName || "there"}! I have your inquiry regarding ${call.qualification || "our verified voice solution"}. Are you looking to integrate with your existing CRM as well?`,
       time: "00:16",
     },
     {
       id: 4,
       speaker: "caller",
-      text: "Yes, definitely. Can you tell me what the total annual fee would be including AC hostel and dining?",
+      text: "Yes, definitely. Can you confirm the setup timelines and dedicated PRI trunk availability?",
       time: "00:27",
     },
     {
       id: 5,
       speaker: "agent",
-      text: "With your scholarship, tuition is ₹5.18 Lakhs and twin-sharing AC hostel with dining is ₹1.85 Lakhs per year. I have also shared the complete brochure on your WhatsApp. Would you like to schedule a campus tour this Saturday at 11 AM?",
+      text: `Our dedicated PRI lines are provisioned within 24 hours with sub-140ms latency SLA. I have also dispatched our technical documentation directly to your WhatsApp. Would you like to schedule an executive demonstration?`,
       time: "00:39",
     },
     {
       id: 6,
       speaker: "caller",
-      text: "Yes, please confirm Saturday 11 AM. My father and I will visit the campus.",
+      text: "Yes, please confirm an executive walkthrough for our engineering and operations team.",
       time: "00:48",
     },
     {
       id: 7,
       speaker: "agent",
-      text: "Your VIP campus pass for Saturday 11 AM is confirmed! Counselor Mr. Vikram will greet you at the admissions lounge. Have a wonderful day!",
+      text: `Your walkthrough session is confirmed! A calendar invite and summary brief have been routed to your registered contact. Have a wonderful day!`,
       time: "00:55",
     },
   ];
 
   const extractedVariables = [
-    { label: "Candidate Name", value: call.contactName || "Rahul Sharma", confidence: "100%", vaultId: "DV-091" },
+    { label: "Contact Name", value: call.contactName || "Direct Contact", confidence: "100%", vaultId: "DV-091" },
     { label: "Phone Number", value: call.contactNumber, confidence: "100%", vaultId: "DV-092" },
-    { label: "Candidate Email", value: "rahul.sharma2026@gmail.com", confidence: "99%", vaultId: "DV-093" },
-    { label: "Residential Address", value: "Sector 15, Rohini, New Delhi - 110085", confidence: "98%", vaultId: "DV-094" },
-    { label: "Discussion Topics", value: "B.Tech CSE, AI/ML, 25% Merit Waiver, Tour", confidence: "99%", vaultId: "DV-095" },
-    { label: "Key Points Extracted", value: "94.2% CBSE PCM; Exemption from Entrance Exam", confidence: "99%", vaultId: "DV-096" },
-    { label: "Target Course", value: "B.Tech Computer Science (AI/ML)", confidence: "98%", vaultId: "DV-097" },
-    { label: "Board Score", value: "94.2% (CBSE PCM)", confidence: "99%", vaultId: "DV-098" },
-    { label: "Scholarship Eligibility", value: "25% Merit Scholarship", confidence: "96%", vaultId: "DV-099" },
-    { label: "Hostel Preference", value: "Twin-Sharing AC Room", confidence: "95%", vaultId: "DV-100" },
-    { label: "Action Confirmed", value: "Campus Tour (Sat 11:00 AM)", confidence: "99%", vaultId: "DV-101" },
-    { label: "Lead Temperature", value: "High Intent", confidence: "94%", vaultId: "DV-102" },
+    { label: "Contact Email", value: `${(call.contactName || "contact").toLowerCase().replace(/[^a-z0-9]/g, ".")}@enterprise.ai`, confidence: "99%", vaultId: "DV-093" },
+    { label: "Discussion Topic", value: call.topic || "Voice Infrastructure & PRI Trunks", confidence: "99%", vaultId: "DV-094" },
+    { label: "Qualification Level", value: call.qualification || "Enterprise Priority Account", confidence: "99%", vaultId: "DV-095" },
+    { label: "Service Line", value: call.groundedDocTitle || "Enterprise Voice Operations", confidence: "98%", vaultId: "DV-096" },
+    { label: "Call Sentiment", value: call.sentiment || "Positive", confidence: "96%", vaultId: "DV-097" },
+    { label: "Action Confirmed", value: "Technical Consultation Scheduled", confidence: "99%", vaultId: "DV-098" },
+    { label: "Lead Temperature", value: "High Intent", confidence: "95%", vaultId: "DV-099" },
   ];
 
   return (
@@ -333,24 +330,33 @@ export default function CallDrawer({ call, isOpen, onClose }: CallDrawerProps) {
                 </div>
               </div>
 
-              {/* WhatsApp Mock Card */}
-              <div className="max-w-sm mx-auto p-4 bg-[#FAF3E4] rounded-2xl border border-black/[0.06]">
-                <div className="bg-white p-3.5 rounded-xl border border-black/[0.08] text-xs space-y-2 text-[#1A1A1A] shadow-xs">
-                  <p className="font-semibold text-[#1A1A1A]">
-                    Hi Rahul! 👋 Thank you for speaking with {call.agentName}.
-                  </p>
-                  <p className="text-[11px] text-black/65 leading-relaxed">
-                    As discussed on the call, here are your B.Tech CSE details:
-                    <br />• 35% Chancellor Merit Scholarship Applied
-                    <br />• Campus Tour Scheduled: <strong className="text-[#1A1A1A]">Saturday, 11:00 AM</strong>
-                  </p>
-                  <div className="p-2.5 bg-[#FAF3E4] rounded-lg border border-black/[0.06] text-[11px] text-[#1A1A1A] font-medium flex items-center justify-between">
-                    <span>📄 BTech_Admissions_Brochure.pdf</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-black/50" />
+              {/* WhatsApp Message Card */}
+              {(() => {
+                const contactName = call.contactName || call.callerName || "there";
+                const contactFirstName = contactName.split(" ")[0].replace(/[()]/g, "");
+                const summaryNote = call.summary || "Follow-up consultation materials and overview";
+                const docName = call.groundedDocTitle || `${(call.knowledgeDomain || "Consultation").replace(/\s+/g, "_")}_Overview.pdf`;
+
+                return (
+                  <div className="max-w-sm mx-auto p-4 bg-[#FAF3E4] rounded-2xl border border-black/[0.06]">
+                    <div className="bg-white p-3.5 rounded-xl border border-black/[0.08] text-xs space-y-2 text-[#1A1A1A] shadow-xs">
+                      <p className="font-semibold text-[#1A1A1A]">
+                        Hi {contactFirstName}! 👋 Thank you for speaking with {call.agentName}.
+                      </p>
+                      <p className="text-[11px] text-black/65 leading-relaxed">
+                        As discussed on the call:
+                        <br />• {summaryNote}
+                        <br />• Outcome: <strong className="text-[#1A1A1A]">{call.qualification || call.outcome}</strong>
+                      </p>
+                      <div className="p-2.5 bg-[#FAF3E4] rounded-lg border border-black/[0.06] text-[11px] text-[#1A1A1A] font-medium flex items-center justify-between">
+                        <span className="truncate max-w-[240px]">📄 {docName}</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-black/50 shrink-0" />
+                      </div>
+                      <p className="text-[10px] text-black/45 text-right">Delivered {call.timeAgo || "Just now"} ✓✓</p>
+                    </div>
                   </div>
-                  <p className="text-[10px] text-black/45 text-right">Delivered 10:52 AM ✓✓</p>
-                </div>
-              </div>
+                );
+              })()}
             </div>
           )}
 

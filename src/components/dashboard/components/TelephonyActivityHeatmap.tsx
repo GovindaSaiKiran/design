@@ -138,43 +138,16 @@ function generateHeatmapData(todayCallsCount?: number): {
         return x - Math.floor(x);
       };
 
-      let rawTotal = 0;
-      if (!isFuture) {
-        activeDaysCount++;
-        const p = pseudoRandom(1);
-        if (isWeekend) {
-          rawTotal = p > 0.45 ? Math.floor(650 + pseudoRandom(2) * 800) : 320;
-        } else {
-          if (p < 0.12) rawTotal = Math.floor(1400 + pseudoRandom(2) * 600); // Lighter weekday
-          else if (p < 0.35) rawTotal = Math.floor(2800 + pseudoRandom(2) * 1200); // Standard weekday
-          else if (p < 0.70) rawTotal = Math.floor(5200 + pseudoRandom(3) * 1600); // Heavy campaign day
-          else rawTotal = Math.floor(7500 + pseudoRandom(5) * 1800); // Mega campaign day
-        }
-      }
-
-      const adjustedTotal = isToday ? 8600 : rawTotal;
-
-      const inboundRatio = isToday ? 5180 / 8600 : 0.58 + (pseudoRandom(2) - 0.5) * 0.1;
-      const inbound = isFuture ? 0 : (isToday ? 5180 : Math.round(adjustedTotal * inboundRatio));
-      const outbound = isFuture ? 0 : (isToday ? 3420 : Math.max(0, adjustedTotal - inbound));
+      // Without real past call logs, past days have 0 calls
+      const adjustedTotal = isToday ? (todayCallsCount || 0) : 0;
+      const inbound = adjustedTotal;
+      const outbound = 0;
 
       // Hourly breakdown for 24 hours
       const hourly: HourlyActivity[] = [];
       for (let h = 0; h < 24; h++) {
-        let weight = 0.04;
-        if (h >= 9 && h <= 12) weight = 0.95;
-        else if (h >= 14 && h <= 17) weight = 1.0;
-        else if (h === 8 || h === 13 || h === 18) weight = 0.55;
-        else if (h >= 19 && h <= 21) weight = 0.25;
-        else if (h >= 22 || h <= 6) weight = 0.02;
-
-        const hourNoise = 0.75 + pseudoRandom(h + 10) * 0.55;
-        const hourInbound = isFuture
-          ? 0
-          : Math.max(0, Math.round((inbound / 9.5) * weight * hourNoise));
-        const hourOutbound = isFuture
-          ? 0
-          : Math.max(0, Math.round((outbound / 9.5) * weight * hourNoise));
+        const hourInbound = 0;
+        const hourOutbound = 0;
 
         const hourLabel = `${String(h).padStart(2, "0")}:00`;
         const hour12 =
@@ -269,7 +242,7 @@ function generateHeatmapData(todayCallsCount?: number): {
 }
 
 export default function TelephonyActivityHeatmap({
-  currentCallsCount = 10,
+  currentCallsCount = 0,
   onSelectDay,
 }: TelephonyActivityHeatmapProps) {
   const { months, allDays, todayDay } = useMemo(

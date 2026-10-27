@@ -54,7 +54,7 @@ export default function PlanBillingTab({ initialBilling, onSaveBilling }: PlanBi
         badge={billing.planBadge}
         whatIsThis="Your enterprise subscription, telephony talk-time quota, payment cards, and tax invoices."
         whyDoINeedIt="Ensures your outbound call dispatchers and WhatsApp bots never pause unexpectedly due to exhausted minutes or failed billing renewals."
-        whatToDoNext="Review your remaining minutes (1,158 min left this cycle) or configure a spending limit cap to guard against unwanted overages."
+        whatToDoNext={`Review your remaining minutes (${remainingMinutes.toLocaleString()} min left this cycle) or configure a spending limit cap to guard against unwanted overages.`}
       >
         <button
           type="button"

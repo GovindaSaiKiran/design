@@ -18,16 +18,16 @@ interface TimelineMonth {
 }
 
 const timelineData: TimelineMonth[] = [
-  { id: "jan", name: "Jan", count: 6, stageLabel: "Spring Intake" },
-  { id: "feb", name: "Feb", stageLabel: "Webinar Queries" },
-  { id: "mar", name: "Mar", count: 3, stageLabel: "Early Decisions" },
-  { id: "apr", name: "Apr", stageLabel: "Scholarship Slabs" },
-  { id: "may", name: "May", count: 2, stageLabel: "Entrance Tests" },
-  { id: "jun", name: "Jun", stageLabel: "Rank Lists" },
-  { id: "jul", name: "Jul", stageLabel: "Seat Matrix" },
-  { id: "aug", name: "Aug", count: 4, stageLabel: "Peak Intake", active: true },
-  { id: "sep", name: "Sep", count: 2, stageLabel: "Counseling Slabs", active: true },
-  { id: "oct", name: "Oct", count: 6, stageLabel: "Hostel Allocation" }
+  { id: "jan", name: "Jan", count: 6, stageLabel: "Q1 Campaign" },
+  { id: "feb", name: "Feb", stageLabel: "Carrier Peering" },
+  { id: "mar", name: "Mar", count: 3, stageLabel: "SLA Reviews" },
+  { id: "apr", name: "Apr", stageLabel: "Usage Volume" },
+  { id: "may", name: "May", count: 2, stageLabel: "Q2 Outreach" },
+  { id: "jun", name: "Jun", stageLabel: "Trunk Scaling" },
+  { id: "jul", name: "Jul", stageLabel: "Mid-Year Audit" },
+  { id: "aug", name: "Aug", count: 4, stageLabel: "Peak Dialing", active: true },
+  { id: "sep", name: "Sep", count: 2, stageLabel: "Outbound Cadence", active: true },
+  { id: "oct", name: "Oct", count: 6, stageLabel: "Q4 Scaling" }
 ];
 
 interface TimelineScrubberDockProps {

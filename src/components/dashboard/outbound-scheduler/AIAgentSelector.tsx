@@ -39,8 +39,17 @@ export default function AIAgentSelector({
 }: AIAgentSelectorProps) {
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
 
+  const fallbackAgent = {
+    id: "default-agent",
+    name: "Voice Concierge AI",
+    role: "Autonomous Telephony Agent",
+    language: "English + Hindi",
+    voice: { name: "Neural Voice 1" },
+    accuracy: 98,
+  };
+
   const selectedAgent =
-    mockAgents.find((a) => a.id === selectedAgentId) || mockAgents[0];
+    mockAgents.find((a) => a.id === selectedAgentId) || mockAgents[0] || fallbackAgent;
 
   const handleToggleVoicePreview = (agentId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -76,8 +85,17 @@ export default function AIAgentSelector({
       </div>
 
       {/* Agents Selection Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {mockAgents.map((agent) => {
+      {mockAgents.length === 0 ? (
+        <div className="p-8 text-center bg-white rounded-2xl border border-[#E9E1D4] space-y-2">
+          <Bot className="w-8 h-8 text-[#707684]/40 mx-auto" />
+          <h4 className="text-xs font-bold text-[#283A50]">No custom AI agents configured</h4>
+          <p className="text-[11px] text-[#707684] max-w-sm mx-auto">
+            Default voice concierge persona will be assigned automatically. You can customize agents anytime in the Agents tab.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {mockAgents.map((agent) => {
           const isSelected = agent.id === selectedAgentId;
           const isPlaying = playingVoiceId === agent.id;
 
@@ -171,7 +189,8 @@ export default function AIAgentSelector({
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {/* Selected Agent Summary & Readiness Dossier */}
       <div className="bg-white rounded-2xl border border-[#E9E1D4] p-5 shadow-xs space-y-4">
@@ -237,7 +256,7 @@ export default function AIAgentSelector({
             value={openingScript}
             onChange={(e) => onChangeOpeningScript(e.target.value)}
             className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl p-3 text-xs text-[#283A50] focus:outline-none focus:ring-1 focus:ring-[#283A50] focus:bg-white resize-none"
-            placeholder="e.g. Hello {name}, this is Maya from Admissions at Apex Global. I'm calling regarding your scholarship verification."
+            placeholder="e.g. Hello {name}, this is Maya calling from {organization}. I'm following up regarding your recent inquiry."
           />
         </div>
 
@@ -256,7 +275,7 @@ export default function AIAgentSelector({
             value={campaignInstructions}
             onChange={(e) => onChangeCampaignInstructions(e.target.value)}
             className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl p-3 text-xs text-[#283A50] focus:outline-none focus:ring-1 focus:ring-[#283A50] focus:bg-white resize-none"
-            placeholder="e.g. Prioritize Saturday 11 AM campus tour booking. If candidate asks about hostel, explain AC twin room pricing."
+            placeholder="e.g. Prioritize scheduling discovery demonstrations. If contact asks about pricing, explain tiered volume discounts."
           />
         </div>
       </div>

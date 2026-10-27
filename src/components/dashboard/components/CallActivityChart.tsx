@@ -129,6 +129,15 @@ export default function CallActivityChart() {
 
       {/* SVG Chart Area */}
       <div className="relative w-full overflow-hidden bg-[#FAF3E4]/30 rounded-2xl p-4 border border-black/[0.05]">
+        {chartData.length === 0 ? (
+          <div className="text-center space-y-2 py-12">
+            <BarChart3 className="w-8 h-8 text-black/30 mx-auto" />
+            <h4 className="text-sm font-bold text-[#1A1A1A]">No call telemetry recorded yet</h4>
+            <p className="text-xs text-black/50 max-w-sm mx-auto">
+              Activity graphs, candidate flow dynamics, and conversion yields will generate in real time as voice calls are connected.
+            </p>
+          </div>
+        ) : (
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="w-full h-52 sm:h-60 overflow-visible"

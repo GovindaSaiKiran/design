@@ -6,6 +6,8 @@ import { X, Send, Sparkles, Check, PhoneCall, AlertCircle, ShieldCheck, BookOpen
 import { soundSynth } from "@/lib/audio-synth";
 import { mockKnowledgeBase } from "@/data/mock/dashboardData";
 
+import { useEffect } from "react";
+
 interface StartCampaignModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,12 +19,34 @@ export default function StartCampaignModal({
   onClose,
   onCampaignStarted,
 }: StartCampaignModalProps) {
-  const [title, setTitle] = useState("JoSAA Round 1 Cutoff & Merit Verification");
-  const [audience, setAudience] = useState("High-Percentile PCM Applicants (1,240 Verified Candidates)");
-  const [selectedAgent, setSelectedAgent] = useState("Maya AI (Hindi/English) & Neha AI (Telugu)");
+  const [title, setTitle] = useState("Customer Follow-up Campaign");
+  const [audience, setAudience] = useState("All Contacts");
+  const [agents, setAgents] = useState<{ id: string; name: string; role: string }[]>([
+    { id: "a1", name: "Executive AI Caller", role: "English & Indic Languages" },
+    { id: "a2", name: "Customer Relations AI", role: "Global English" },
+  ]);
+  const [selectedAgent, setSelectedAgent] = useState("Executive AI Caller");
   const [selectedKnowledgeBaseId, setSelectedKnowledgeBaseId] = useState<string>("all");
   const [concurrentLines, setConcurrentLines] = useState(30);
   const [consentAcknowledged, setConsentAcknowledged] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("swaram_agents");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const mapped = parsed.map((a: any) => ({
+            id: a.id || a.name,
+            name: a.name || "AI Voice Agent",
+            role: a.role || a.language || "Telephony Specialist",
+          }));
+          setAgents(mapped);
+          setSelectedAgent(mapped[0].name);
+        }
+      }
+    } catch {}
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -32,7 +56,7 @@ export default function StartCampaignModal({
       return;
     }
     try { soundSynth.play("confirm"); } catch {}
-    onCampaignStarted?.(title, 1240);
+    onCampaignStarted?.(title, 0);
     onClose();
   };
 
@@ -90,15 +114,9 @@ export default function StartCampaignModal({
               onChange={(e) => setAudience(e.target.value)}
               className="w-full px-4 py-2.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-[#1A1A1A] focus:outline-none focus:border-black/30 cursor-pointer transition-all text-xs font-medium"
             >
-              <option value="High-Percentile PCM Applicants (1,240 Verified Candidates)">
-                High-Percentile PCM Applicants (1,240 Verified Candidates)
-              </option>
-              <option value="JoSAA Round 1 Registered Students (2,500 candidates)">
-                JoSAA Round 1 Registered Students (2,500 candidates)
-              </option>
-              <option value="Hostel & Campus Open Day Inquiries (850 parents)">
-                Hostel & Campus Open Day Inquiries (850 parents)
-              </option>
+              <option value="All Contacts">All Contacts</option>
+              <option value="Recent Leads">Recent Leads</option>
+              <option value="VIP Customers">VIP Customers</option>
             </select>
           </div>
 
@@ -112,9 +130,11 @@ export default function StartCampaignModal({
                 onChange={(e) => setSelectedAgent(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-[#1A1A1A] focus:outline-none focus:border-black/30 cursor-pointer transition-all text-xs font-medium"
               >
-                <option value="Maya AI (Hindi/English) & Neha AI (Telugu)">Maya (Hindi) + Neha (Telugu)</option>
-                <option value="Ishita AI (Kannada) & Suhani AI (Bengali)">Ishita (Kannada) + Suhani (Bengali)</option>
-                <option value="Vikram AI (Global English)">Vikram (Global English)</option>
+                {agents.map((ag) => (
+                  <option key={ag.id} value={ag.name}>
+                    {ag.name} ({ag.role})
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -171,7 +191,7 @@ export default function StartCampaignModal({
                 className="w-full px-3.5 py-2 rounded-full bg-white border border-black/[0.08] text-[#1A1A1A] focus:outline-none focus:border-black/30 cursor-pointer text-xs font-medium"
               >
                 <option value="all">
-                  All Campus Knowledge Documents (456 Chunks • Full Coverage)
+                  All Knowledge Documents
                 </option>
                 {mockKnowledgeBase.map((doc) => (
                   <option key={doc.id} value={doc.id}>

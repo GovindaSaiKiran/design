@@ -55,48 +55,48 @@ export default function CreateAgentModal({
   // -------------------------------------------------------------
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [department, setDepartment] = useState("University Admissions Desk");
-  const [personaArchetype, setPersonaArchetype] = useState("Empathetic Academic Counselor");
-  const [purposePreset, setPurposePreset] = useState("admissions");
+  const [department, setDepartment] = useState("Customer Operations Desk");
+  const [personaArchetype, setPersonaArchetype] = useState("Professional & Helpful Voice Specialist");
+  const [purposePreset, setPurposePreset] = useState("customer-service");
   const [customPurpose, setCustomPurpose] = useState(
-    "Guide prospective students and parents through branch cutoffs, merit scholarships, fee installment schemes, and lock in Saturday campus counseling tours."
+    "Assist prospective and active customers with product inquiries, service onboarding, and schedule appointments."
   );
-  const [targetAudience, setTargetAudience] = useState("12th grade board exam students & parents");
-  const [primaryKpi, setPrimaryKpi] = useState("Confirmed Campus Visits & Prospectus Downloads");
+  const [targetAudience, setTargetAudience] = useState("Prospective clients, customers & enterprise accounts");
+  const [primaryKpi, setPrimaryKpi] = useState("Resolved Inquiries & Scheduled Consultations");
 
   // Purpose Presets
   const purposePresets = [
     {
-      id: "admissions",
-      title: "Admissions & Cutoffs",
-      icon: "🎓",
-      desc: "Counsel on branch cutoffs, eligibility, Chancellor fee waivers, and book campus tours.",
-      defaultRole: "Senior Admissions & Scholarship Counselor",
-      defaultPurpose: "Guide prospective students and parents through branch cutoffs, merit scholarships, fee installment schemes, and lock in Saturday campus counseling tours.",
+      id: "customer-service",
+      title: "Customer Support",
+      icon: "🎧",
+      desc: "Assist callers with inquiries, service features, account details, and schedule follow-ups.",
+      defaultRole: "Senior Customer Service Specialist",
+      defaultPurpose: "Assist callers with product questions, account status, resolution workflows, and schedule consultation calls.",
+    },
+    {
+      id: "sales-outreach",
+      title: "Outbound Qualification",
+      icon: "📞",
+      desc: "Contact registered leads, qualify call volume and requirements, and book executive demos.",
+      defaultRole: "Enterprise Outreach Specialist",
+      defaultPurpose: "Reach out to registered leads, qualify requirements, address common questions, and schedule demonstrations.",
     },
     {
       id: "finance",
-      title: "Tuition & Financial Aid",
+      title: "Billing & Accounts",
       icon: "💳",
-      desc: "Assist with fee structures, education loans, installment schedules, and hostel rates.",
-      defaultRole: "Financial Aid & Student Accounts Officer",
-      defaultPurpose: "Answer questions regarding tuition installments, bank tie-up loan schemes, scholarship disbursements, and WhatsApp fee schedule delivery.",
+      desc: "Assist with invoices, subscription tiers, renewal schedules, and payment links.",
+      defaultRole: "Billing & Accounts Officer",
+      defaultPurpose: "Answer questions regarding invoice receipts, payment methods, plan adjustments, and dispatch payment links.",
     },
     {
-      id: "support",
-      title: "Student Support & Tech",
+      id: "technical",
+      title: "Technical Helpdesk",
       icon: "🛠️",
-      desc: "Resolve LMS access, exam timetable inquiries, student ID, and campus Wi-Fi help.",
-      defaultRole: "Student Services & Technical Helpdesk",
-      defaultPurpose: "Provide instantaneous resolution for student portal logins, exam hall ticket downloads, library card renewals, and hostel room maintenance.",
-    },
-    {
-      id: "outreach",
-      title: "Outbound Lead Outreach",
-      icon: "📞",
-      desc: "Contact prospectus downloaders, qualify entrance rankings, and schedule callbacks.",
-      defaultRole: "Outbound Admissions Engagement Specialist",
-      defaultPurpose: "Call students who downloaded the 2026 prospectus, qualify their board marks for scholarship eligibility, handle objections, and schedule counseling visits.",
+      desc: "Resolve LMS/CRM integration issues, API webhooks, platform onboarding, and service inquiries.",
+      defaultRole: "Technical Solutions Specialist",
+      defaultPurpose: "Provide instantaneous resolution for platform credentials, webhook notifications, and telephony configurations.",
     },
     {
       id: "custom",
@@ -111,15 +111,15 @@ export default function CreateAgentModal({
   // -------------------------------------------------------------
   // STEP 2: CONTEXT & BACKGROUND KNOWLEDGE FREEDOM
   // -------------------------------------------------------------
-  const [institutionName, setInstitutionName] = useState("Apex Global University");
+  const [institutionName, setInstitutionName] = useState("Enterprise Voice Solutions");
   const [operatingHours, setOperatingHours] = useState("Mon–Sat, 9:00 AM – 6:30 PM IST");
-  const [campusLocation, setCampusLocation] = useState("Knowledge City Campus, Hyderabad & Bangalore");
+  const [campusLocation, setCampusLocation] = useState("HITEC City, Hyderabad & Bengaluru Tech Hub");
   const [keyGroundingFacts, setKeyGroundingFacts] = useState([
-    "B.Tech Computer Science & AI tuition is ₹5.18 Lakhs/year.",
-    "Chancellor's Merit Scholarship: >90% in PCM qualifies for 35% tuition waiver.",
-    "Board marks 80%-90% qualify for 20% Dean's Merit Scholarship.",
-    "Air-conditioned Twin-sharing hostel is ₹1.10 Lakhs/year inclusive of 4 meals and laundry.",
-    "Official Helpline: +91 40 4590 1199 • WhatsApp: +91 94402 18765.",
+    "Enterprise voice telephony plans include 3,000 monthly calling minutes.",
+    "Carrier-grade PRI SIP trunks support sub-140ms acoustic latency.",
+    "Native CRM synchronization available for HubSpot, Salesforce, and Zoho.",
+    "Zero-hallucination factual grounding backed by semantic vector search.",
+    "Official Support Desk: +91 40 4590 1197 • Help Desk: support@enterprise.ai.",
   ]);
   const [newFactInput, setNewFactInput] = useState("");
   const [groundingStrictness, setGroundingStrictness] = useState<"strict" | "balanced">("strict");
@@ -142,20 +142,20 @@ export default function CreateAgentModal({
   const [dosRules, setDosRules] = useState([
     "Always greet callers with warmth, empathy, and clarity.",
     "Keep replies concise (under 25 words) for natural conversational phone latency.",
-    "When student scores >90%, immediately highlight the 35% Chancellor's waiver.",
-    "Offer to schedule a Saturday 11:00 AM counseling tour before ending call.",
+    "When customer indicates high volume (>50k min/mo), highlight enterprise volume pricing.",
+    "Offer to schedule a technical walkthrough or live demonstration before ending call.",
   ]);
   const [dontsRules, setDontsRules] = useState([
-    "Never speculate or invent cutoff ranks not in official documentation.",
-    "Do not promise unofficial discounts outside the scholarship matrix.",
-    "Never disparage or discuss competitor institutions.",
+    "Never speculate or invent SLA terms not present in official documentation.",
+    "Do not quote custom discounts outside the verified rate matrix.",
+    "Never disparage or discuss competitor telephony carriers.",
     "Do not keep caller on silence for more than 4 seconds without reassurance.",
   ]);
   const [newDoInput, setNewDoInput] = useState("");
   const [newDontInput, setNewDontInput] = useState("");
-  const [escalationDesk, setEscalationDesk] = useState("Senior Counselor Mrs. Sunita Roy (+91 40 4590 1100)");
+  const [escalationDesk, setEscalationDesk] = useState("Operations Escalation Desk (+91 40 4590 1100)");
   const [fallbackPhrase, setFallbackPhrase] = useState(
-    "I do not have verified documentation on that specific matter right now. Let me connect you directly with Senior Counselor Mrs. Roy."
+    "I do not have verified documentation on that specific item right now. Let me connect you directly with our senior operations desk."
   );
 
   const addDoRule = () => {
@@ -725,7 +725,7 @@ FALLBACK PHRASE:
               <div className="flex items-center gap-2 pt-1">
                 <input
                   type="text"
-                  placeholder="Add a new verified fact (e.g. B.Tech Artificial Intelligence fee is ₹5.50L)..."
+                  placeholder="Add a new verified fact (e.g. Standard SLA turnaround time is 2 business hours)..."
                   value={newFactInput}
                   onChange={(e) => setNewFactInput(e.target.value)}
                   onKeyDown={(e) => {

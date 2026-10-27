@@ -56,8 +56,7 @@ import {
 } from "lucide-react";
 import { soundSynth } from "@/lib/audio-synth";
 import { mockAgents, mockKnowledgeBase } from "@/data/mock/dashboardData";
-import { ScheduledCampaign, CallingMode, StructuredCallingPurpose, KnowledgeSourceReference } from "@/types/schedule";
-import { INITIAL_UNIFIED_CONTACTS, saveUserContactBatch } from "@/lib/contactsHistory";
+import { INITIAL_UNIFIED_CONTACTS, saveUserContactBatch, getUnifiedContacts } from "@/lib/contactsHistory";
 
 // Subcomponents for Outbound Scheduler
 import CallingModeSelector from "@/components/dashboard/outbound-scheduler/CallingModeSelector";
@@ -119,88 +118,6 @@ export interface OutboundCallRecord {
   };
 }
 
-const INITIAL_CALL_RECORDS: OutboundCallRecord[] = [
-  {
-    id: "OUT-9042",
-    contactName: "Rahul Sharma",
-    contactPhone: "+91 98401 22345",
-    courseOrProgram: "B.Tech Computer Science (AI/ML)",
-    city: "Hyderabad, TS",
-    agentId: "agent-maya",
-    agentName: "Maya",
-    agentAvatar: "M",
-    agentRole: "Admissions & Student Concierge",
-    topic: "Merit Scholarship Verification",
-    direction: "outbound",
-    status: "completed",
-    duration: "2m 14s",
-    durationSeconds: 134,
-    timestamp: "Today, 10:45 AM",
-    timeAgo: "25m ago",
-    dispatchMode: "Instant Batch",
-    callingWindow: "09:00 AM - 07:00 PM IST",
-    sentimentScore: 94,
-    outcome: "Scholarship Verified • Saturday Tour Booked",
-    summary: "Verified Class 12 CBSE board aggregate of 94.2%. Confirmed eligibility for 35% Chancellor Merit Scholarship. Booked Saturday 11 AM VIP tour slot.",
-    knowledgeBaseName: "Campus Admissions Policy, Cutoffs & Seat Matrix.pdf",
-    extractedEntities: {
-      phoneNumbers: [{ label: "Mobile", value: "+91 98401 22345", verified: true }],
-      keyPoints: [
-        "Candidate scored 94.2% in Class 12 CBSE board exams.",
-        "Candidate confirmed Saturday 11 AM campus tour booking.",
-        "Scholarship waiver voucher dispatched to WhatsApp.",
-      ],
-    },
-  },
-  {
-    id: "OUT-9041",
-    contactName: "Ananya Iyer",
-    contactPhone: "+91 94401 88319",
-    courseOrProgram: "B.Tech Biotechnology",
-    city: "Bengaluru, KA",
-    agentId: "agent-maya",
-    agentName: "Maya",
-    agentAvatar: "M",
-    agentRole: "Admissions & Student Concierge",
-    topic: "Merit Scholarship Verification",
-    direction: "outbound",
-    status: "completed",
-    duration: "1m 48s",
-    durationSeconds: 108,
-    timestamp: "Today, 10:15 AM",
-    timeAgo: "55m ago",
-    dispatchMode: "Instant Batch",
-    callingWindow: "09:00 AM - 07:00 PM IST",
-    sentimentScore: 91,
-    outcome: "Brochure & Tour Pass Sent",
-    summary: "Confirmed 91.8% PCB aggregate. Candidate inquired about state-of-the-art genomics lab and hostel accommodations. Pass dispatched via WhatsApp.",
-    knowledgeBaseName: "Campus Admissions Policy, Cutoffs & Seat Matrix.pdf",
-  },
-  {
-    id: "OUT-9040",
-    contactName: "Vikramaditya Rao",
-    contactPhone: "+91 99880 44120",
-    courseOrProgram: "B.Tech Electronics & Communication",
-    city: "Hyderabad, TS",
-    agentId: "agent-arjun",
-    agentName: "Arjun",
-    agentAvatar: "A",
-    agentRole: "Outreach & Operations AI",
-    topic: "Entrance Exam Verification",
-    direction: "outbound",
-    status: "callback",
-    duration: "45s",
-    durationSeconds: 45,
-    timestamp: "Today, 09:30 AM",
-    timeAgo: "1h 40m ago",
-    dispatchMode: "Instant Batch",
-    callingWindow: "09:00 AM - 07:00 PM IST",
-    sentimentScore: 78,
-    outcome: "Callback Scheduled (06:00 PM)",
-    summary: "Candidate was attending university lecture. Requested automated callback today between 6:00 PM and 7:00 PM.",
-  },
-];
-
 function OutboundSchedulerPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -213,7 +130,7 @@ function OutboundSchedulerPageContent() {
   const [activeTab, setActiveTab] = useState<"dispatch" | "history">("dispatch");
 
   // Campaign Name
-  const [campaignName, setCampaignName] = useState("JoSAA Round 1 Admissions & Scholarship Verification");
+  const [campaignName, setCampaignName] = useState("Outbound Verification & Customer Outreach");
 
   // 1. Calling Mode State
   const [callingMode, setCallingMode] = useState<CallingMode>("normal");
@@ -226,35 +143,35 @@ function OutboundSchedulerPageContent() {
   // 2. AI Agent State
   const [selectedAgentId, setSelectedAgentId] = useState<string>("agent-maya");
   const [openingScript, setOpeningScript] = useState<string>(
-    "Hello {name}, I am Maya calling from Apex Global Institutions regarding your scholarship verification."
+    "Hello {name}, I am calling from our support desk regarding your recent inquiry."
   );
   const [campaignInstructions, setCampaignInstructions] = useState<string>(
-    "Greet the candidate warmly by name. Verify Class 12 board percentage >=85%. Answer fee installment questions. Offer Saturday 11 AM campus tour booking."
+    "Greet the contact warmly by name. Verify details. Answer customer questions and schedule follow-ups as appropriate."
   );
 
   // 3. Calling Purpose State
   const [callingPurpose, setCallingPurpose] = useState<StructuredCallingPurpose>({
-    goal: "Verify Class 12 board examination marks and confirm eligibility for the 35% Chancellor Merit Scholarship.",
-    keyInformation: "Apex Global Institutions has shortlisted the candidate based on JoSAA/State rank. 35% tuition waiver available if aggregate is >=85%.",
-    questionsToAsk: "1. Did you score above 85% in PCM/PCB? 2. Have you shortlisted any other engineering colleges? 3. Can your family attend Saturday's open campus day?",
-    desiredOutcome: "Secure candidate's verbal confirmation and book a VIP campus tour slot for Saturday 11:00 AM.",
-    onInterested: "Confirm candidate's Saturday 11 AM appointment and immediately dispatch the campus map and scholarship eligibility token via WhatsApp.",
-    onDeclined: "Politely thank the candidate, ask if they would like the digital course prospectus sent to their email, and conclude courteously.",
-    humanHandoffCriteria: "If candidate asks for sports quota exemptions, customized payment installments, or speaks in regional language unable to be understood.",
-    callEndingProtocol: "Summarize confirmed appointment details, provide Admissions Helpdesk direct line (+91 40 4590 1199), and offer warm sign-off.",
+    goal: "Verify contact details and confirm interest in current offerings.",
+    keyInformation: "Confirm eligibility and provide overview of available benefits and solutions.",
+    questionsToAsk: "1. Did you have any questions regarding our services? 2. Would you like to schedule a demonstration or consultation?",
+    desiredOutcome: "Secure contact's interest and schedule a follow-up consultation.",
+    onInterested: "Confirm appointment details and dispatch follow-up confirmation.",
+    onDeclined: "Politely thank the contact and close the call courteously.",
+    humanHandoffCriteria: "If contact requests customized commercial terms or complex enterprise escalation.",
+    callEndingProtocol: "Summarize discussion points, provide support contact info, and offer warm sign-off.",
   });
 
   // 4. Grounded Knowledge State
   const [selectedKbIds, setSelectedKbIds] = useState<string[]>(["doc-002"]);
   const [manualNotes, setManualNotes] = useState<string>(
-    "• Chancellor Merit Scholarship cutoff: 85% in Class 12 board examinations.\n• Saturday VIP Campus Tour timing: 11:00 AM to 01:30 PM (Lunch provided).\n• Admissions helpline: +91 40 4590 1199."
+    "• High-concurrency SLA: 99.99% uptime with sub-140ms response latency.\n• Enterprise multi-region SIP peering supported across major Indian carriers.\n• Telephony operations helpline: +91 40 4590 1199."
   );
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
   const [selectedPlaygroundIds, setSelectedPlaygroundIds] = useState<string[]>(["play-01"]);
 
   // 5. Contact Selection State
   const [contactSourceMode, setContactSourceMode] = useState<"cohort" | "directory" | "csv" | "manual">("cohort");
-  const [selectedCohortId, setSelectedCohortId] = useState<string>("cohort-admissions");
+  const [selectedCohortId, setSelectedCohortId] = useState<string>("cohort-enterprise-leads");
   const [selectedDirectoryContactIds, setSelectedDirectoryContactIds] = useState<string[]>([
     "cont-001",
     "cont-002",
@@ -266,8 +183,8 @@ function OutboundSchedulerPageContent() {
       id: "man-init-1",
       name: "Rohan K. Varma",
       phone: "+91 98401 22345",
-      email: "rohan.varma@gmail.com",
-      organization: "B.Tech Computer Science",
+      email: "rohan.varma@enterprise.ai",
+      organization: "Acme Technologies",
       isValid: true,
       isDuplicate: false,
       isSuppressed: false,
@@ -276,8 +193,8 @@ function OutboundSchedulerPageContent() {
       id: "man-init-2",
       name: "Pooja Hegde",
       phone: "+91 94401 88319",
-      email: "pooja.h@outlook.com",
-      organization: "B.Tech Biotechnology",
+      email: "pooja.h@enterprise.ai",
+      organization: "Global Retail Corp",
       isValid: true,
       isDuplicate: false,
       isSuppressed: false,
@@ -363,7 +280,19 @@ function OutboundSchedulerPageContent() {
 
   // Selected Agent Object
   const selectedAgent = useMemo(() => {
-    return mockAgents.find((a) => a.id === selectedAgentId) || mockAgents[0];
+    return (
+      mockAgents.find((a) => a.id === selectedAgentId) ||
+      mockAgents[0] || {
+        id: "agent-maya",
+        name: "Maya — Admissions & Student Concierge",
+        role: "Admissions Concierge AI",
+        language: "Hindi + English",
+        avatar: "M",
+        accuracy: 98,
+        voice: { name: "Neural Voice 1" },
+        capabilities: ["Telephony Inbound", "Telephony Outbound"],
+      }
+    );
   }, [selectedAgentId]);
 
   // Selected Knowledge Base Name
@@ -382,13 +311,21 @@ function OutboundSchedulerPageContent() {
   // Compute contacts payload according to active source mode
   const resolvedContacts = useMemo(() => {
     if (contactSourceMode === "cohort") {
-      // Generate representative verified contacts for the cohort
+      const unified = getUnifiedContacts();
+      if (unified.length > 0) {
+        return unified.slice(0, 5).map((c) => ({
+          name: c.name,
+          phone: c.phone,
+          email: c.email,
+          organization: c.organization || "Direct Contact",
+        }));
+      }
       return [
-        { name: "Rahul Sharma", phone: "+919840122345", email: "rahul.sharma@gmail.com", organization: "B.Tech CS" },
-        { name: "Ananya Iyer", phone: "+919440188319", email: "ananya.iyer@outlook.com", organization: "B.Tech Biotech" },
-        { name: "Devansh Patil", phone: "+919711033499", email: "devansh.patil@gmail.com", organization: "MBA Management" },
-        { name: "Meera Krishnan", phone: "+919821055678", email: "meera.k@gmail.com", organization: "B.Tech ECE" },
-        { name: "Siddharth Verma", phone: "+919811234567", email: "siddharth.v@gmail.com", organization: "B.Tech AI/ML" },
+        { name: "Aarav Patel", phone: "+919840122345", email: "aarav.patel@example.com", organization: "Enterprise Support" },
+        { name: "Ananya Iyer", phone: "+919440188319", email: "ananya.iyer@example.com", organization: "Direct Inquiry" },
+        { name: "Devansh Patil", phone: "+919711033499", email: "devansh.patil@example.com", organization: "Priority Account" },
+        { name: "Meera Krishnan", phone: "+919821055678", email: "meera.k@example.com", organization: "Follow-up Queue" },
+        { name: "Siddharth Verma", phone: "+919811234567", email: "siddharth.v@example.com", organization: "Standard Client" },
       ];
     }
     if (contactSourceMode === "directory") {
@@ -775,7 +712,7 @@ function OutboundSchedulerPageContent() {
               value={campaignName}
               onChange={(e) => setCampaignName(e.target.value)}
               className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl px-4 py-2.5 text-sm font-bold text-[#283A50] focus:outline-none focus:ring-1 focus:ring-[#283A50] focus:bg-white"
-              placeholder="e.g. JoSAA Round 1 Merit Scholarship Verification"
+              placeholder="e.g. Q1 Customer Outreach & Verification"
             />
           </div>
 

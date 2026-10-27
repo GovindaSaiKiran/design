@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import {
   Database,
@@ -38,13 +38,15 @@ import WorkspaceCard from "@/components/dashboard/WorkspaceCard";
 import CallDrawer from "@/components/dashboard/views/CallDrawer";
 import { RecentCallRecord } from "@/types/dashboard";
 import { mockRecentCalls } from "@/data/mock/dashboardData";
+import { initialCallbacks } from "@/data/mock/callbacksData";
+import { getUnifiedContacts } from "@/lib/contactsHistory";
 import { soundSynth } from "@/lib/audio-synth";
 
 interface ExtractedRecord {
   id: string;
   callId: string;
   contactName: string;
-  fieldName: "Phone Number" | "Email Address" | "Callback Request" | "Target Program" | "Board Score" | "Hostel Requirement";
+  fieldName: "Phone Number" | "Email Address" | "Callback Request" | "Service Line" | "Monthly Volume" | "CRM Integration" | string;
   extractedValue: string;
   sourceSnippet: string;
   confidence: number;
@@ -68,88 +70,9 @@ export interface ExtractionField {
   description: string;
 }
 
-const mockVaultRecords: ExtractedRecord[] = [
-  {
-    id: "rec-001",
-    callId: "call-001",
-    contactName: "Rahul Sharma",
-    fieldName: "Phone Number",
-    extractedValue: "+91 98401 22345",
-    sourceSnippet: "Calling from registered mobile number. Verified caller ID on carrier trunk TRK-01.",
-    confidence: 100,
-    validationState: "Verified",
-    extractedAt: "Today, 11:20 AM",
-    promotionalConsent: false,
-    agentName: "Maya (Admissions)",
-  },
-  {
-    id: "rec-002",
-    callId: "call-001",
-    contactName: "Rahul Sharma",
-    fieldName: "Target Program",
-    extractedValue: "B.Tech Computer Science (AI/ML)",
-    sourceSnippet: "Yes, this is Rahul. I had registered regarding B.Tech CSE admissions.",
-    confidence: 98,
-    validationState: "Verified",
-    extractedAt: "Today, 11:20 AM",
-    promotionalConsent: false,
-    agentName: "Maya (Admissions)",
-  },
-  {
-    id: "rec-003",
-    callId: "call-001",
-    contactName: "Rahul Sharma",
-    fieldName: "Board Score",
-    extractedValue: "94.2% (CBSE PCM)",
-    sourceSnippet: "I see you scored 94.2% in your 12th board exams... Yes, CBSE with PCM.",
-    confidence: 99,
-    validationState: "Verified",
-    extractedAt: "Today, 11:21 AM",
-    promotionalConsent: false,
-    agentName: "Maya (Admissions)",
-  },
-  {
-    id: "rec-004",
-    callId: "call-002",
-    contactName: "Ananya Iyer",
-    fieldName: "Email Address",
-    extractedValue: "ananya.iyer@outlook.com",
-    sourceSnippet: "Please email the scholarship breakdown to ananya.iyer@outlook.com as well.",
-    confidence: 96,
-    validationState: "Verified",
-    extractedAt: "Today, 10:46 AM",
-    promotionalConsent: false,
-    agentName: "Priya (Finance)",
-  },
-  {
-    id: "rec-005",
-    callId: "call-005",
-    contactName: "Devansh Patil",
-    fieldName: "Callback Request",
-    extractedValue: "Today, 06:30 PM (Evening Window)",
-    sourceSnippet: "Candidate requested follow-up today between 6:00 PM and 7:00 PM.",
-    confidence: 94,
-    validationState: "Pending",
-    extractedAt: "Today, 09:15 AM",
-    promotionalConsent: false,
-    agentName: "Arjun (Outreach)",
-  },
-  {
-    id: "rec-006",
-    callId: "call-004",
-    contactName: "Meera Krishnan",
-    fieldName: "Target Program",
-    extractedValue: "B.Tech Electronics & Comm. (Sports Quota)",
-    sourceSnippet: "National level badminton player requesting sports waiver evaluation.",
-    confidence: 88,
-    validationState: "Review Needed",
-    extractedAt: "Yesterday, 04:32 PM",
-    promotionalConsent: false,
-    agentName: "Maya (Admissions)",
-  },
-];
+const mockVaultRecords: ExtractedRecord[] = [];
 
-const initialExtractionFields: ExtractionField[] = [
+export const RECOMMENDED_SCHEMA_TEMPLATE: ExtractionField[] = [
   {
     id: "f-1",
     name: "caller_name",
@@ -158,10 +81,10 @@ const initialExtractionFields: ExtractionField[] = [
     typeColor: "bg-indigo-100 text-indigo-800 border-indigo-200",
     required: true,
     destination: "Data Vault + CRM",
-    sampleValue: "Rahul Sharma",
+    sampleValue: "Format: [First Name] [Last Name]",
     confidenceThreshold: 90,
     status: "Active",
-    description: "Legal name of caller or prospective candidate confirmed via opening exchange.",
+    description: "Full name of caller or representative confirmed via conversation.",
   },
   {
     id: "f-2",
@@ -171,7 +94,7 @@ const initialExtractionFields: ExtractionField[] = [
     typeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     required: true,
     destination: "Data Vault",
-    sampleValue: "+91 98401 22345",
+    sampleValue: "Format: +[Country][Number] (E.164)",
     confidenceThreshold: 98,
     status: "Active",
     description: "Carrier trunk verified E.164 phone number with national country code.",
@@ -184,82 +107,199 @@ const initialExtractionFields: ExtractionField[] = [
     typeColor: "bg-blue-100 text-blue-800 border-blue-200",
     required: false,
     destination: "Data Vault + CRM",
-    sampleValue: "ananya.iyer@outlook.com",
+    sampleValue: "Format: username@company.com",
     confidenceThreshold: 92,
     status: "Active",
-    description: "Personal or guardian email for prospectus, scholarship & fee receipt dispatches.",
+    description: "Corporate or verified personal email address for transcripts and proposals.",
   },
   {
     id: "f-4",
-    name: "target_course",
-    label: "Target Academic Degree / Program",
+    name: "service_tier",
+    label: "Service Line / Solution Tier",
     type: "Categorical",
     typeColor: "bg-purple-100 text-purple-800 border-purple-200",
     required: true,
     destination: "Data Vault + CRM",
-    sampleValue: "B.Tech Computer Science (AI/ML)",
+    sampleValue: "Format: Categorical [Tier / Plan]",
     confidenceThreshold: 95,
     status: "Active",
-    description: "Preferred curriculum stream matched against official institutional catalog.",
+    description: "Identified solution requirements matched against pricing tiers.",
   },
   {
     id: "f-5",
-    name: "board_percentage",
-    label: "Class 12th Board Exam Marks",
+    name: "monthly_minutes",
+    label: "Estimated Monthly Minutes",
     type: "Number",
     typeColor: "bg-amber-100 text-amber-800 border-amber-200",
     required: false,
     destination: "Data Vault",
-    sampleValue: "94.2% (CBSE PCM)",
+    sampleValue: "Format: Integer (Minutes / Month)",
     confidenceThreshold: 90,
     status: "Active",
-    description: "Academic qualification score used for automatic scholarship tier evaluation.",
+    description: "Telephony capacity requirement for concurrency and billing.",
   },
   {
     id: "f-6",
-    name: "hostel_required",
-    label: "Campus Residential Hostel Opt-in",
+    name: "crm_integration",
+    label: "CRM Integration Required",
     type: "Boolean",
     typeColor: "bg-rose-100 text-rose-800 border-rose-200",
     required: false,
     destination: "Data Vault",
-    sampleValue: "Yes (AC Twin-Sharing)",
+    sampleValue: "Format: Boolean [True / False]",
     confidenceThreshold: 85,
     status: "Active",
-    description: "Whether student requires on-campus boarding and meal plan allocation.",
+    description: "Whether the account requires bidirectional CRM synchronization.",
   },
   {
     id: "f-7",
-    name: "campus_tour_datetime",
-    label: "Campus Counseling Visit Schedule",
+    name: "scheduled_consultation",
+    label: "Scheduled Walkthrough Slot",
     type: "DateTime",
     typeColor: "bg-cyan-100 text-cyan-800 border-cyan-200",
     required: false,
     destination: "Data Vault + Calendar",
-    sampleValue: "Saturday, 11:00 AM",
+    sampleValue: "Format: ISO-8601 Timestamp",
     confidenceThreshold: 92,
     status: "Active",
-    description: "Confirmed appointment for in-person campus walkthrough with admissions dean.",
+    description: "Confirmed appointment for solution engineer walkthrough.",
   },
   {
     id: "f-8",
-    name: "scholarship_interest",
-    label: "Merit Waiver & Financial Aid",
+    name: "contract_term",
+    label: "Contract Commitment Term",
     type: "Categorical",
     typeColor: "bg-teal-100 text-teal-800 border-teal-200",
     required: false,
     destination: "Data Vault + CRM",
-    sampleValue: "35% Chancellor Tier",
+    sampleValue: "Format: Enum [Monthly, Annual, Custom]",
     confidenceThreshold: 90,
     status: "Active",
-    description: "Direct fee discount bracket based on entrance test or board percentile.",
+    description: "Preferred billing arrangement and annual commit term.",
   },
 ];
+
+const initialExtractionFields: ExtractionField[] = [];
 
 export default function DataVaultPage() {
   const [vaultTab, setVaultTab] = useState<"records" | "schema">("records");
   const [records, setRecords] = useState<ExtractedRecord[]>(mockVaultRecords);
   const [extractionFields, setExtractionFields] = useState<ExtractionField[]>(initialExtractionFields);
+  const [pendingCallbacksCount, setPendingCallbacksCount] = useState(0);
+
+  // Sync dynamic extracted records and callbacks
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    try {
+      // 1. Check custom vault records
+      const customRaw = localStorage.getItem("swaram_vault_records");
+      if (customRaw) {
+        const parsed = JSON.parse(customRaw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setRecords(parsed);
+        }
+      } else {
+        // 2. Synthesize from live calls if present
+        const callsRaw = localStorage.getItem("swaram_calls");
+        const dynamicRecords: ExtractedRecord[] = [];
+
+        if (callsRaw) {
+          const parsedCalls = JSON.parse(callsRaw);
+          if (Array.isArray(parsedCalls) && parsedCalls.length > 0) {
+            parsedCalls.forEach((call: any, idx: number) => {
+              if (call.contactNumber) {
+                dynamicRecords.push({
+                  id: `rec-call-phone-${call.id || idx}`,
+                  callId: call.id || `CALL-${1000 + idx}`,
+                  contactName: call.contactName || "Direct Contact",
+                  fieldName: "Phone Number",
+                  extractedValue: call.contactNumber,
+                  sourceSnippet: `Direct trunk connection verified: ${call.contactNumber}`,
+                  confidence: 100,
+                  validationState: "Verified",
+                  extractedAt: call.timestamp || "Today",
+                  promotionalConsent: false,
+                  agentName: call.agentName || "Swaram AI Router",
+                });
+              }
+              if (call.topic) {
+                dynamicRecords.push({
+                  id: `rec-call-topic-${call.id || idx}`,
+                  callId: call.id || `CALL-${1000 + idx}`,
+                  contactName: call.contactName || "Direct Contact",
+                  fieldName: "Service Line",
+                  extractedValue: call.topic,
+                  sourceSnippet: `Caller inquired regarding ${call.topic}`,
+                  confidence: 98,
+                  validationState: "Verified",
+                  extractedAt: call.timestamp || "Today",
+                  promotionalConsent: false,
+                  agentName: call.agentName || "Swaram AI Router",
+                });
+              }
+            });
+          }
+        }
+
+        // 3. If no calls, check unified contacts
+        if (dynamicRecords.length === 0) {
+          const contacts = getUnifiedContacts();
+          if (contacts && contacts.length > 0) {
+            contacts.forEach((c, idx) => {
+              dynamicRecords.push({
+                id: `rec-contact-${c.id || idx}`,
+                callId: `CALL-DIR-${100 + idx}`,
+                contactName: c.name,
+                fieldName: "Phone Number",
+                extractedValue: c.phone,
+                sourceSnippet: `E.164 carrier verified trunk parameter: ${c.phone}`,
+                confidence: 99,
+                validationState: "Verified",
+                extractedAt: c.addedAt || "Recent",
+                promotionalConsent: false,
+                agentName: c.assignedAgent || "Swaram AI Router",
+              });
+            });
+          }
+        }
+
+        setRecords(dynamicRecords);
+      }
+    } catch (err) {
+      console.error("Error syncing vault records:", err);
+    }
+
+    // Load pending callbacks count
+    try {
+      const cbRaw = localStorage.getItem("swaram_callbacks");
+      if (cbRaw) {
+        const parsed = JSON.parse(cbRaw);
+        if (Array.isArray(parsed)) {
+          setPendingCallbacksCount(parsed.filter((c: any) => c.status === "Pending").length);
+        }
+      } else {
+        setPendingCallbacksCount(initialCallbacks.filter((c) => c.status === "Pending").length);
+      }
+    } catch {}
+
+    // Load custom schema from localStorage if user created or loaded fields
+    try {
+      const schemaRaw = localStorage.getItem("swaram_vault_schema");
+      if (schemaRaw) {
+        const parsedSchema = JSON.parse(schemaRaw);
+        if (Array.isArray(parsedSchema)) {
+          setExtractionFields(parsedSchema);
+        }
+      }
+    } catch (err) {
+      console.error("Error loading vault schema:", err);
+    }
+  }, []);
+
+  const extractedPhoneCount = useMemo(() => {
+    return records.filter((r) => r.fieldName === "Phone Number" || r.fieldName.toLowerCase().includes("phone")).length;
+  }, [records]);
 
   // Search & Filters for Records
   const [searchQuery, setSearchQuery] = useState("");
@@ -288,9 +328,7 @@ export default function DataVaultPage() {
   const [newFieldDesc, setNewFieldDesc] = useState("");
 
   // Live Extraction Simulator State
-  const [simText, setSimText] = useState(
-    "Hi, this is Rahul Sharma calling from Mumbai. I scored 94.2% in my CBSE 12th board exams and I am looking for admission into B.Tech CSE. Can I visit the campus this Saturday at 11:00 AM?"
-  );
+  const [simText, setSimText] = useState("");
   const [isSimulating, setIsSimulating] = useState(false);
   const [simResults, setSimResults] = useState<Array<{ key: string; label: string; value: string; confidence: number }> | null>(null);
 
@@ -325,9 +363,25 @@ export default function DataVaultPage() {
 
   const handleOpenSourceCall = (callId: string) => {
     try { soundSynth.play("click"); } catch {}
-    const match = mockRecentCalls.find((c) => c.id === callId) || mockRecentCalls[0];
-    setSelectedCallRecord(match);
-    setCallDrawerOpen(true);
+    let match: RecentCallRecord | undefined;
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("swaram_calls");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            match = parsed.find((c: any) => c.id === callId);
+          }
+        }
+      } catch {}
+    }
+    if (!match) {
+      match = mockRecentCalls.find((c) => c.id === callId);
+    }
+    if (match) {
+      setSelectedCallRecord(match);
+      setCallDrawerOpen(true);
+    }
   };
 
   const handleExportData = () => {
@@ -336,17 +390,44 @@ export default function DataVaultPage() {
     setTimeout(() => setExportNotice(null), 3500);
   };
 
+  const updateSchemaFields = (newFields: ExtractionField[]) => {
+    setExtractionFields(newFields);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("swaram_vault_schema", JSON.stringify(newFields));
+      } catch (err) {
+        console.error("Failed to persist schema:", err);
+      }
+    }
+  };
+
   const handleToggleFieldStatus = (id: string) => {
     try { soundSynth.play("pop"); } catch {}
-    setExtractionFields((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, status: f.status === "Active" ? "Paused" : "Active" } : f))
+    const updated = extractionFields.map((f) =>
+      f.id === id ? { ...f, status: (f.status === "Active" ? "Paused" : "Active") as ExtractionField["status"] } : f
     );
+    updateSchemaFields(updated);
   };
 
   const handleDeleteField = (id: string) => {
     try { soundSynth.play("click"); } catch {}
-    setExtractionFields((prev) => prev.filter((f) => f.id !== id));
+    const updated = extractionFields.filter((f) => f.id !== id);
+    updateSchemaFields(updated);
     setSchemaNotice("Extraction field removed from runtime schema.");
+    setTimeout(() => setSchemaNotice(null), 3000);
+  };
+
+  const handleLoadRecommendedTemplate = () => {
+    try { soundSynth.play("confirm"); } catch {}
+    updateSchemaFields(RECOMMENDED_SCHEMA_TEMPLATE);
+    setSchemaNotice("Recommended enterprise schema template loaded successfully!");
+    setTimeout(() => setSchemaNotice(null), 3500);
+  };
+
+  const handleClearSchema = () => {
+    try { soundSynth.play("click"); } catch {}
+    updateSchemaFields([]);
+    setSchemaNotice("Extraction schema cleared. Zero active fields configured.");
     setTimeout(() => setSchemaNotice(null), 3000);
   };
 
@@ -378,13 +459,13 @@ export default function DataVaultPage() {
       typeColor: typeColorMap[newFieldType] || "bg-indigo-100 text-indigo-800 border-indigo-200",
       required: newFieldReq,
       destination: newFieldDest,
-      sampleValue: newFieldSample.trim() || "Sample Value",
+      sampleValue: newFieldSample.trim() || "Format: Freeform String",
       confidenceThreshold: newFieldConfidence,
       status: "Active",
       description: newFieldDesc.trim() || "Custom extraction variable extracted during voice call turns.",
     };
 
-    setExtractionFields((prev) => [...prev, newField]);
+    updateSchemaFields([...extractionFields, newField]);
     setIsAddFieldModalOpen(false);
     setSchemaNotice(`Field "${newField.label}" added to runtime extraction schema!`);
     setTimeout(() => setSchemaNotice(null), 4000);
@@ -398,19 +479,100 @@ export default function DataVaultPage() {
   };
 
   const handleRunSimulator = () => {
+    const textToParse = simText.trim();
+    if (!textToParse) {
+      alert("Please enter a call transcript utterance to test entity extraction.");
+      return;
+    }
+
     try { soundSynth.play("click"); } catch {}
     setIsSimulating(true);
 
     setTimeout(() => {
       try { soundSynth.play("affirm"); } catch {}
       setIsSimulating(false);
-      setSimResults([
-        { key: "caller_name", label: "Caller Full Name", value: "Rahul Sharma", confidence: 99 },
-        { key: "board_percentage", label: "Class 12th Board Score", value: "94.2% (CBSE)", confidence: 98 },
-        { key: "target_course", label: "Target Degree", value: "B.Tech Computer Science", confidence: 96 },
-        { key: "campus_tour_datetime", label: "Counseling Visit", value: "Saturday, 11:00 AM", confidence: 94 },
-      ]);
-    }, 600);
+
+      const results: Array<{ key: string; label: string; value: string; confidence: number }> = [];
+
+      // Extract Name
+      const nameMatch = textToParse.match(/(?:this is|I am|my name is|speaking with|call from)\s+(?:(Dr|Mr|Mrs|Ms)\.?\s+)?([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i);
+      if (nameMatch) {
+        const fullName = nameMatch[1] ? `${nameMatch[1]}. ${nameMatch[2]}` : nameMatch[2];
+        results.push({
+          key: "caller_name",
+          label: "Caller Full Name",
+          value: fullName,
+          confidence: 98,
+        });
+      }
+
+      // Extract Phone
+      const phoneMatch = textToParse.match(/(?:\+?\d{1,4}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+      if (phoneMatch) {
+        results.push({
+          key: "caller_phone",
+          label: "Primary Contact Number",
+          value: phoneMatch[0],
+          confidence: 99,
+        });
+      }
+
+      // Extract Email
+      const emailMatch = textToParse.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch) {
+        results.push({
+          key: "caller_email",
+          label: "Verified Email Address",
+          value: emailMatch[0],
+          confidence: 96,
+        });
+      }
+
+      // Extract Volume / Minutes
+      const volumeMatch = textToParse.match(/(\d[\d,]*(?:\s*(?:mins|minutes|k|K|calls|channels|hrs|hours))(?:\/(?:mo|month|day))?)/i);
+      if (volumeMatch) {
+        results.push({
+          key: "monthly_minutes",
+          label: "Estimated Volume",
+          value: volumeMatch[1],
+          confidence: 95,
+        });
+      }
+
+      // Extract Service Tier / Topic
+      const serviceMatch = textToParse.match(/(enterprise|sip trunk|pri|cloud pbx|telephony|support|api|integration|crm)/i);
+      if (serviceMatch) {
+        results.push({
+          key: "service_tier",
+          label: "Service Line",
+          value: `${serviceMatch[1].toUpperCase()} Operations`,
+          confidence: 94,
+        });
+      }
+
+      // Extract Date/Time / Slot
+      const slotMatch = textToParse.match(/(monday|tuesday|wednesday|thursday|friday|saturday|sunday|today|tomorrow)(?:\s+at\s+|\s+)?(\d{1,2}(?::\d{2})?\s*(?:am|pm|AM|PM)?)?/i);
+      if (slotMatch) {
+        results.push({
+          key: "scheduled_consultation",
+          label: "Walkthrough Slot",
+          value: `${slotMatch[1]}${slotMatch[2] ? `, ${slotMatch[2]}` : ""}`,
+          confidence: 92,
+        });
+      }
+
+      // Fallback general entities
+      if (results.length === 0) {
+        results.push({
+          key: "unstructured_transcript",
+          label: "Raw Speech Entity",
+          value: textToParse.length > 50 ? `${textToParse.slice(0, 50)}...` : textToParse,
+          confidence: 90,
+        });
+      }
+
+      setSimResults(results);
+    }, 450);
   };
 
   return (
@@ -492,7 +654,7 @@ export default function DataVaultPage() {
             Regulatory Notice: DPDP Compliance &amp; Non-Promotional Restriction
           </h4>
           <p className="text-black/60">
-            All extracted phone numbers and emails are securely archived strictly for institutional inquiry fulfillment and scheduled callback execution.
+            All extracted phone numbers and emails are securely archived strictly for enterprise inquiry fulfillment and scheduled callback execution.
             Under regulatory compliance rules, <strong>extraction does not constitute implicit consent to place unsolicited telemarketing or promotional broadcast calls</strong>.
           </p>
         </div>
@@ -506,9 +668,9 @@ export default function DataVaultPage() {
           name="Extracted Contacts"
           icon={Phone}
           description="Verified phone numbers and caller profiles extracted from conversations."
-          metric="24 Verified"
-          metricLabel="100% confidence on E.164 trunks"
-          status="All Verified"
+          metric={extractedPhoneCount > 0 ? `${extractedPhoneCount} Verified` : "0 Verified"}
+          metricLabel={extractedPhoneCount > 0 ? "100% confidence on E.164 trunks" : "E.164 verified carrier trunks"}
+          status={extractedPhoneCount > 0 ? "All Verified" : "Queue Ready"}
           statusType="ready"
           actionLabel="Filter phone numbers →"
           onClick={() => {
@@ -521,10 +683,10 @@ export default function DataVaultPage() {
           name="Pending Callbacks"
           icon={Clock}
           description="Inbound inquiries with explicit callback times requested by callers."
-          metric="1 Pending"
-          metricLabel="Next scheduled: Today 6:30 PM"
-          status="Follow-up Queue"
-          statusType="warning"
+          metric={pendingCallbacksCount > 0 ? `${pendingCallbacksCount} Pending` : "0 Pending"}
+          metricLabel={pendingCallbacksCount > 0 ? "Scheduled follow-up queue" : "No scheduled callbacks in queue"}
+          status={pendingCallbacksCount > 0 ? "Follow-up Queue" : "Queue Clear"}
+          statusType={pendingCallbacksCount > 0 ? "warning" : "ready"}
           actionLabel="View callback queue →"
           href="/dashboard/callbacks"
         />
@@ -533,10 +695,10 @@ export default function DataVaultPage() {
           name="Extraction Schema"
           icon={Database}
           description="Active variables and neural regex patterns extracted across all agents."
-          metric={`${extractionFields.filter((f) => f.status === "Active").length} Active`}
-          metricLabel={`${extractionFields.filter((f) => f.required).length} Required for routing`}
-          status="Schema Engine"
-          statusType="ready"
+          metric={extractionFields.length > 0 ? `${extractionFields.filter((f) => f.status === "Active").length} Active` : "0 Configured"}
+          metricLabel={extractionFields.length > 0 ? `${extractionFields.filter((f) => f.required).length} Required for routing` : "Awaiting schema deployment"}
+          status={extractionFields.length > 0 ? "Schema Engine" : "Schema Empty"}
+          statusType={extractionFields.length > 0 ? "ready" : "neutral"}
           actionLabel="Manage extraction rules →"
           onClick={() => {
             try { soundSynth.play("click"); } catch {}
@@ -627,8 +789,9 @@ export default function DataVaultPage() {
                   <option value="Phone Number">Phone Numbers</option>
                   <option value="Email Address">Email Addresses</option>
                   <option value="Callback Request">Callback Requests</option>
-                  <option value="Target Program">Target Program</option>
-                  <option value="Board Score">Board Score</option>
+                  <option value="Service Line">Service Line / Solution Tier</option>
+                  <option value="Monthly Volume">Estimated Monthly Volume</option>
+                  <option value="CRM Integration">CRM Integration</option>
                 </select>
 
                 {/* Validation State Selector */}
@@ -691,8 +854,35 @@ export default function DataVaultPage() {
                 <tbody className="divide-y divide-black/[0.04]">
                   {filteredRecords.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-12 text-center text-black/45">
-                        No records found matching the current search and filter criteria.
+                      <td colSpan={7} className="py-16 text-center">
+                        {records.length === 0 ? (
+                          <div className="max-w-md mx-auto flex flex-col items-center justify-center space-y-3 px-4">
+                            <div className="w-12 h-12 rounded-2xl bg-black/[0.04] border border-black/[0.06] flex items-center justify-center text-black/40">
+                              <Database className="w-6 h-6 stroke-[1.8]" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-bold text-[#1A1A1A]">No Extracted Records in Vault</h4>
+                              <p className="text-xs text-black/50 mt-1 leading-relaxed">
+                                Structured caller parameters, verified E.164 numbers, and callback requests will stream here automatically in real time as AI agents converse with callers.
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                try { soundSynth.play("click"); } catch {}
+                                setVaultTab("schema");
+                              }}
+                              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-[#18181B] text-white hover:bg-black transition-all cursor-pointer shadow-xs"
+                            >
+                              <SlidersHorizontal className="w-3.5 h-3.5" />
+                              <span>View Extraction Schema &amp; Test Engine</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="py-4 text-black/45">
+                            No records found matching the current search and filter criteria.
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ) : (
@@ -810,11 +1000,31 @@ export default function DataVaultPage() {
                   </span>
                 </div>
                 <p className="text-xs text-black/65 mt-1 leading-relaxed">
-                  These structured variables are automatically extracted by all active voice agents during conversations, normalized against institutional schemas, and archived into the Data Vault.
+                  These structured variables are automatically extracted by all active voice agents during conversations, normalized against enterprise schemas, and archived into the Data Vault.
                 </p>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
+                {extractionFields.length === 0 ? (
+                  <button
+                    type="button"
+                    onClick={handleLoadRecommendedTemplate}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold bg-white text-indigo-700 border border-indigo-300 hover:bg-indigo-50 shadow-xs transition-all cursor-pointer hover:scale-102 active:scale-98"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Load Recommended Template</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleClearSchema}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium text-black/50 hover:text-rose-600 hover:bg-rose-50 border border-black/[0.08] transition-all cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Clear All</span>
+                  </button>
+                )}
+
                 <button
                   type="button"
                   onClick={() => setIsAddFieldModalOpen(true)}
@@ -840,11 +1050,17 @@ export default function DataVaultPage() {
               </div>
               <div className="p-3 rounded-xl bg-white border border-indigo-100 shadow-2xs">
                 <span className="text-black/50 block text-[10.5px] font-bold">Target Destinations</span>
-                <span className="text-lg font-black text-purple-900 mt-0.5 block">CRM + Vault + Cal</span>
+                <span className="text-lg font-black text-purple-900 mt-0.5 block">
+                  {extractionFields.length === 0
+                    ? "None Configured"
+                    : Array.from(new Set(extractionFields.map((f) => f.destination.replace("Data Vault", "Vault").replace(" + ", "+")))).join(" / ")}
+                </span>
               </div>
               <div className="p-3 rounded-xl bg-white border border-indigo-100 shadow-2xs">
-                <span className="text-black/50 block text-[10.5px] font-bold">Extraction SLA Latency</span>
-                <span className="text-lg font-black text-[#FF6B08] mt-0.5 block">&lt; 42 ms</span>
+                <span className="text-black/50 block text-[10.5px] font-bold">Extraction Engine SLA</span>
+                <span className="text-lg font-black text-[#FF6B08] mt-0.5 block">
+                  {extractionFields.length === 0 ? "Idle (No Schema)" : "Sub-Second Live"}
+                </span>
               </div>
             </div>
           </div>
@@ -871,7 +1087,7 @@ export default function DataVaultPage() {
               <option value="string">String / Text</option>
               <option value="phone">Phone (E.164)</option>
               <option value="email">Email Address</option>
-              <option value="categorical">Categorical / Program</option>
+              <option value="categorical">Categorical / Enum</option>
               <option value="number">Numeric / Percentage</option>
               <option value="boolean">Boolean (Yes/No)</option>
               <option value="datetime">DateTime</option>
@@ -904,13 +1120,54 @@ export default function DataVaultPage() {
                     <th className="py-3.5 px-4">Required</th>
                     <th className="py-3.5 px-4">Destination</th>
                     <th className="py-3.5 px-4">Min. Confidence</th>
-                    <th className="py-3.5 px-4">Sample Extracted Value</th>
+                    <th className="py-3.5 px-4">Expected Format / Pattern</th>
                     <th className="py-3.5 px-4">Status</th>
                     <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/[0.06]">
-                  {filteredSchema.map((f) => (
+                  {filteredSchema.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-16 text-center">
+                        {extractionFields.length === 0 ? (
+                          <div className="max-w-md mx-auto flex flex-col items-center justify-center space-y-3 px-4">
+                            <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 shadow-2xs">
+                              <SlidersHorizontal className="w-6 h-6 stroke-[1.8]" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-bold text-[#1A1A1A]">No Extraction Fields Configured</h4>
+                              <p className="text-xs text-black/55 mt-1 leading-relaxed">
+                                Voice personas will not extract structured variables until schema fields are added. You can deploy our recommended enterprise schema or build your own custom parameters.
+                              </p>
+                            </div>
+                            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
+                              <button
+                                type="button"
+                                onClick={handleLoadRecommendedTemplate}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 shadow-xs transition-all cursor-pointer hover:scale-102 active:scale-98"
+                              >
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span>Load Recommended Schema Template</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setIsAddFieldModalOpen(true)}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-white text-[#1A1A1A] border border-black/[0.1] hover:border-black/20 hover:bg-black/[0.02] transition-all cursor-pointer"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                                <span>Add Custom Field</span>
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="py-4 text-black/45">
+                            No schema fields matching &quot;{schemaSearch}&quot;.
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredSchema.map((f) => (
                     <tr key={f.id} className="hover:bg-indigo-50/20 transition-colors">
                       <td className="py-4 px-5">
                         <div className="font-mono font-bold text-[#1A1A1A] text-xs">{f.name}</div>
@@ -947,8 +1204,8 @@ export default function DataVaultPage() {
                       </td>
 
                       <td className="py-4 px-4 max-w-xs">
-                        <span className="text-black/75 italic font-medium truncate block">
-                          &ldquo;{f.sampleValue}&rdquo;
+                        <span className="text-black/75 font-mono text-[11px] font-medium truncate block">
+                          {f.sampleValue}
                         </span>
                       </td>
 
@@ -977,7 +1234,8 @@ export default function DataVaultPage() {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  ))
+                )}
                 </tbody>
               </table>
             </div>
@@ -1014,14 +1272,27 @@ export default function DataVaultPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-black/60 block">
-                Sample Conversation Utterance (Speech Transcript)
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-bold text-black/60 block">
+                  Utterance Speech Transcript (Neural Extraction Input)
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSimText("Hello, this is Dr. Robert Vance calling regarding Cloud PBX PRI trunks for our contact center with 10,000 minutes and scheduling a walkthrough for Monday at 10 AM.");
+                    try { soundSynth.play("click"); } catch {}
+                  }}
+                  className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer"
+                >
+                  Load Sample Enterprise Query
+                </button>
+              </div>
               <textarea
                 rows={2}
                 value={simText}
                 onChange={(e) => setSimText(e.target.value)}
-                className="w-full text-xs p-3.5 bg-[#FAF8F3] border border-black/[0.08] rounded-2xl text-[#1A1A1A] font-medium focus:outline-none focus:border-indigo-600 resize-none shadow-2xs"
+                placeholder="Type or paste any conversation turn to test real-time entity extraction against schema keys (or click 'Load Sample Enterprise Query')..."
+                className="w-full text-xs p-3.5 bg-[#FAF8F3] border border-black/[0.08] rounded-2xl text-[#1A1A1A] font-medium focus:outline-none focus:border-indigo-600 resize-none shadow-2xs placeholder:text-black/35"
               />
             </div>
 
@@ -1093,7 +1364,7 @@ export default function DataVaultPage() {
                     required
                     value={newFieldName}
                     onChange={(e) => setNewFieldName(e.target.value)}
-                    placeholder="e.g. parent_annual_income"
+                    placeholder="e.g. concurrent_channels"
                     className="w-full text-xs font-mono px-3.5 py-2.5 bg-[#FAF8F3] border border-black/[0.08] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-indigo-600"
                   />
                 </div>
@@ -1107,7 +1378,7 @@ export default function DataVaultPage() {
                     required
                     value={newFieldLabel}
                     onChange={(e) => setNewFieldLabel(e.target.value)}
-                    placeholder="e.g. Parent Annual Income"
+                    placeholder="e.g. Concurrent PRI Channels"
                     className="w-full text-xs px-3.5 py-2.5 bg-[#FAF8F3] border border-black/[0.08] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-indigo-600 font-medium"
                   />
                 </div>
@@ -1153,13 +1424,13 @@ export default function DataVaultPage() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#1A1A1A] block">
-                  Example Extracted Value
+                  Expected Format / Validation Rule
                 </label>
                 <input
                   type="text"
                   value={newFieldSample}
                   onChange={(e) => setNewFieldSample(e.target.value)}
-                  placeholder="e.g. ₹12.5 Lakhs / year"
+                  placeholder="e.g. Format: +[Country][Number] or Boolean [True/False]"
                   className="w-full text-xs px-3.5 py-2.5 bg-[#FAF8F3] border border-black/[0.08] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-indigo-600 font-medium"
                 />
               </div>
@@ -1172,7 +1443,7 @@ export default function DataVaultPage() {
                   rows={2}
                   value={newFieldDesc}
                   onChange={(e) => setNewFieldDesc(e.target.value)}
-                  placeholder="Prompt guideline for agent: 'Ask student for annual family income when discussing financial aid waiver eligibility.'"
+                  placeholder="Prompt guideline for agent: 'Verify monthly call concurrency and current CRM when discussing enterprise SLA pricing.'"
                   className="w-full text-xs px-3.5 py-2.5 bg-[#FAF8F3] border border-black/[0.08] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-indigo-600 leading-relaxed resize-none"
                 />
               </div>

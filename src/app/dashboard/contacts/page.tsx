@@ -71,9 +71,9 @@ export default function ContactsPage() {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newEmail, setNewEmail] = useState("");
-  const [newOrg, setNewOrg] = useState("B.Tech Computer Science");
+  const [newOrg, setNewOrg] = useState("");
   const [newCategory, setNewCategory] = useState<"High Intent" | "Follow-up" | "Resolved">("High Intent");
-  const [newCity, setNewCity] = useState("Hyderabad, TS");
+  const [newCity, setNewCity] = useState("");
   const [newNotes, setNewNotes] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -193,46 +193,28 @@ export default function ContactsPage() {
       soundSynth.playSuccess();
     } catch {}
 
-    const sampleImportedContacts: StoredContact[] = [
-      {
-        id: `imp-${Date.now()}-1`,
-        name: "Abhishek Chawla",
-        phone: "+91 98760 11223",
-        email: "abhishek.c@gmail.com",
-        category: "High Intent",
-        organization: "B.Tech Computer Science",
-        city: "Delhi NCR",
-        notes: "Imported via CSV: JoSAA high percentile ranker (97.4%).",
-        assignedAgent: "Maya (Admissions)",
-        priorityScore: 96,
-        source: "user_csv",
-        addedAt: "Just now",
-        lastCallOutcome: "Queued for Outreach",
-        lastContacted: "Imported today",
-      },
-      {
-        id: `imp-${Date.now()}-2`,
-        name: "Tanvi Deshmukh",
-        phone: "+91 97654 33210",
-        email: "tanvi.d@outlook.com",
-        category: "High Intent",
-        organization: "B.Tech Artificial Intelligence",
-        city: "Nagpur, MH",
-        notes: "Imported via CSV: Verified CET rank 1,420.",
-        assignedAgent: "Arjun (Outreach)",
-        priorityScore: 91,
-        source: "user_csv",
-        addedAt: "Just now",
-        lastCallOutcome: "Queued for Outreach",
-        lastContacted: "Imported today",
-      },
-    ];
+    const sampleImportedContacts: StoredContact[] = Array.from({ length: Math.min(count, 5) }, (_, i) => ({
+      id: `imp-${Date.now()}-${i + 1}`,
+      name: `Contact #${i + 1}`,
+      phone: `+91 98000 ${String(10000 + i).slice(-4)}`,
+      email: `contact${i + 1}@example.com`,
+      category: "High Intent",
+      organization: "Direct Contact",
+      city: "National",
+      notes: `Imported via CSV: ${fileName || "Contacts_List.csv"}`,
+      assignedAgent: "Maya AI",
+      priorityScore: 90,
+      source: "user_csv",
+      addedAt: "Just now",
+      lastCallOutcome: "Queued for Outreach",
+      lastContacted: "Imported today",
+    }));
 
     saveUserContactBatch(
       `Imported: ${fileName || "Contacts_List.csv"} (${count} leads)`,
       sampleImportedContacts,
       "csv_upload",
-      "Maya (Admissions)"
+      "Maya AI"
     );
 
     setToastMessage(`Successfully imported ${count} contacts and logged to user history!`);
@@ -267,7 +249,7 @@ export default function ContactsPage() {
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#1A1A1A] mt-2 flex items-center gap-2.5">
             Contacts &amp; User History
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              {ENTERPRISE_CALL_CENTER_METRICS.totalDirectoryContacts.toLocaleString()} Leads in Call Center Directory
+              {contactsList.length.toLocaleString()} Leads in Call Center Directory
             </span>
           </h1>
 
@@ -323,10 +305,10 @@ export default function ContactsPage() {
           name="User Contacts History"
           icon={History}
           description="Contacts and cohorts explicitly provided by user via Outbound Scheduler, CSV, or manual entries."
-          metric={`${ENTERPRISE_CALL_CENTER_METRICS.userHistoryCount.toLocaleString()} leads`}
-          metricLabel="Stored across 6 user batches"
-          status="Persistent"
-          statusType="ready"
+          metric={`${userHistoryContacts.length.toLocaleString()} leads`}
+          metricLabel={userBatches.length > 0 ? `Stored across ${userBatches.length} user batches` : "No user batches yet"}
+          status={userHistoryContacts.length > 0 ? "Persistent" : "Empty"}
+          statusType={userHistoryContacts.length > 0 ? "ready" : "neutral"}
           actionLabel="View user history →"
           onClick={() => {
             setActiveViewTab("user-history");
@@ -337,11 +319,11 @@ export default function ContactsPage() {
         <WorkspaceCard
           name="High Intent Contacts"
           icon={Star}
-          description="Candidates with PCM/PCB scores > 85% shortlisted for priority merit admissions & scholarships."
-          metric={`${ENTERPRISE_CALL_CENTER_METRICS.highIntentCount.toLocaleString()} leads`}
-          metricLabel="Ready for outbound cadence"
-          status="Priority"
-          statusType="ready"
+          description="Contacts with high engagement or conversion probability ready for outreach."
+          metric={`${highIntentCount.toLocaleString()} leads`}
+          metricLabel={highIntentCount > 0 ? "Ready for outbound cadence" : "No high intent leads"}
+          status={highIntentCount > 0 ? "Priority" : "Idle"}
+          statusType={highIntentCount > 0 ? "ready" : "neutral"}
           actionLabel="View high intent →"
           onClick={() => {
             setActiveViewTab("directory");
@@ -355,7 +337,7 @@ export default function ContactsPage() {
           description="High-volume enterprise call center calls handled today by autonomous AI agent pool."
           metric={`${(ENTERPRISE_CALL_CENTER_METRICS.inboundCallsHandled + ENTERPRISE_CALL_CENTER_METRICS.outboundCallsHandled).toLocaleString()} Calls`}
           metricLabel={`${ENTERPRISE_CALL_CENTER_METRICS.inboundCallsHandled.toLocaleString()} In • ${ENTERPRISE_CALL_CENTER_METRICS.outboundCallsHandled.toLocaleString()} Out`}
-          status="100 Trunks"
+          status={ENTERPRISE_CALL_CENTER_METRICS.inboundCallsHandled + ENTERPRISE_CALL_CENTER_METRICS.outboundCallsHandled > 0 ? "Active" : "Idle"}
           statusType="ready"
           actionLabel="Inspect dialer queue →"
           onClick={() => {
@@ -368,8 +350,8 @@ export default function ContactsPage() {
           icon={Database}
           description="Historical logs of contact lists and cohorts imported into the platform for automated dialing."
           metric={`${userBatches.length} batches`}
-          metricLabel="21,550 leads indexed"
-          status="Active"
+          metricLabel={`${contactsList.length.toLocaleString()} leads indexed`}
+          status={userBatches.length > 0 ? "Active" : "Idle"}
           statusType="neutral"
           actionLabel="Inspect batches →"
           onClick={() => setActiveViewTab("batches")}
@@ -791,7 +773,7 @@ export default function ContactsPage() {
                   <label className="text-xs font-bold text-slate-700 block mb-1">Email Address</label>
                   <input
                     type="email"
-                    placeholder="student@example.com"
+                    placeholder="contact@example.com"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -801,10 +783,10 @@ export default function ContactsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Course / Department</label>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Organization / Department</label>
                   <input
                     type="text"
-                    placeholder="B.Tech Computer Science"
+                    placeholder="Acme Technologies"
                     value={newOrg}
                     onChange={(e) => setNewOrg(e.target.value)}
                     className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -820,7 +802,7 @@ export default function ContactsPage() {
                   >
                     <option value="High Intent">High Intent (Priority)</option>
                     <option value="Follow-up">Follow-up Needed</option>
-                    <option value="Resolved">Resolved / Tour Confirmed</option>
+                    <option value="Resolved">Resolved / Demo Confirmed</option>
                   </select>
                 </div>
               </div>
@@ -829,7 +811,7 @@ export default function ContactsPage() {
                 <label className="text-xs font-bold text-slate-700 block mb-1">Notes / Qualification Summary</label>
                 <textarea
                   rows={2}
-                  placeholder="e.g. Scored 93.4% in PCM, interested in campus visit..."
+                  placeholder="e.g. Inquired about enterprise voice SLA and CRM integration..."
                   value={newNotes}
                   onChange={(e) => setNewNotes(e.target.value)}
                   className="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500"

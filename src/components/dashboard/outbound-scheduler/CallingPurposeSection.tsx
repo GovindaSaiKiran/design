@@ -21,42 +21,42 @@ interface CallingPurposeSectionProps {
 
 const TEMPLATES: { label: string; data: StructuredCallingPurpose }[] = [
   {
-    label: "🎓 Merit Scholarship & Admissions Counseling",
+    label: "💼 Enterprise Lead Qualification & Discovery",
     data: {
-      goal: "Verify Class 12 board examination marks and confirm eligibility for the 35% Chancellor Merit Scholarship.",
-      keyInformation: "Apex Global Institutions has shortlisted the candidate based on JoSAA/State rank. 35% tuition waiver available if aggregate is >=85%.",
-      questionsToAsk: "1. Did you score above 85% in PCM/PCB? 2. Have you shortlisted any other engineering colleges? 3. Can your family attend Saturday's open campus day?",
-      desiredOutcome: "Secure candidate's verbal confirmation and book a VIP campus tour slot for Saturday 11:00 AM.",
-      onInterested: "Confirm candidate's Saturday 11 AM appointment and immediately dispatch the campus map and scholarship eligibility token via WhatsApp.",
-      onDeclined: "Politely thank the candidate, ask if they would like the digital course prospectus sent to their email, and conclude courteously.",
-      humanHandoffCriteria: "If candidate asks for sports quota exemptions, customized payment installments, or speaks in regional language unable to be understood.",
-      callEndingProtocol: "Summarize confirmed appointment details, provide Admissions Helpdesk direct line (+91 40 4590 1199), and offer warm sign-off.",
+      goal: "Verify prospective client requirements and confirm eligibility for our dedicated enterprise voice telephony tier.",
+      keyInformation: "Our voice platform provides low-latency telephony infrastructure, carrier PRI trunks, and custom LLM grounding. Special enterprise onboarding terms available this month.",
+      questionsToAsk: "1. What is your estimated monthly call volume? 2. Are you looking to integrate with an existing CRM? 3. Can your team attend an executive demo this week?",
+      desiredOutcome: "Confirm client interest and book an executive demonstration slot with a solution engineer.",
+      onInterested: "Confirm demo time and dispatch calendar invite and product brief via WhatsApp and email.",
+      onDeclined: "Politely thank the contact, offer to send a digital product overview, and close courteously.",
+      humanHandoffCriteria: "If client requests complex custom security audits, specialized compliance terms, or immediate live engineer transfer.",
+      callEndingProtocol: "Summarize scheduled consultation time, share support desk helpline, and provide warm sign-off.",
     },
   },
   {
-    label: "🏛️ National Entrance CET Admit Card Verification",
+    label: "📋 Customer Renewal & Service Cadence",
     data: {
-      goal: "Verify registered candidate attendance and test center allocation for Sunday's state entrance examination.",
-      keyInformation: "Admit cards are now downloadable from the portal. Exam starts strictly at 09:30 AM with biometrics closing at 09:00 AM.",
-      questionsToAsk: "1. Have you downloaded your Hall Ticket? 2. Do you have any questions regarding test center commute or allowed stationary?",
-      desiredOutcome: "Confirm candidate attendance and verify test city/center details.",
-      onInterested: "Log confirmation and send examination center GPS pin and guidelines to registered phone.",
-      onDeclined: "Log non-attendance reason (e.g. opting for other exam) and update CRM registry.",
-      humanHandoffCriteria: "If candidate reports name spelling mismatch on admit card or photo upload error.",
-      callEndingProtocol: "Wish the candidate best of luck, remind about original photo ID requirement, and conclude call.",
+      goal: "Engage active accounts approaching agreement renewal and review telephony utilization metrics.",
+      keyInformation: "Account eligible for preferred renewal rates and expanded concurrent call lines upon early confirmation.",
+      questionsToAsk: "1. Have you reviewed your team's monthly minute utilization report? 2. Are there any new channels (e.g. WhatsApp, SMS) you wish to activate?",
+      desiredOutcome: "Secure verbal renewal commitment or schedule an account review meeting.",
+      onInterested: "Log renewal confirmation and dispatch agreement documentation via secure portal.",
+      onDeclined: "Log feedback, address potential questions regarding pricing or features, and flag for account manager.",
+      humanHandoffCriteria: "If customer reports critical service dissatisfaction or requests custom contract terms.",
+      callEndingProtocol: "Reiterate support channels, thank them for their business partnership, and conclude call.",
     },
   },
   {
-    label: "💳 Fee Schedule Installment Follow-up",
+    label: "💳 Invoice & Payment Schedule Verification",
     data: {
-      goal: "Follow up on provisional seat allotment token and explain flexible tuition fee installment options.",
-      keyInformation: "Term installment 1 due in 7 days. Flexible 40-30-30 schedule available with 0% interest education loan subvention via SBI/HDFC.",
-      questionsToAsk: "1. Have you received the provisional seat allotment letter? 2. Would you like assistance with education loan documentation?",
-      desiredOutcome: "Confirm date of installment payment or schedule consultation with student finance desk.",
-      onInterested: "Send fee invoice link and bank loan sanction support guide via WhatsApp.",
-      onDeclined: "Inquire if candidate wishes to surrender provisional hold or transfer deposit to another program.",
-      humanHandoffCriteria: "If parent requests special installment extension beyond the 7-day grace period.",
-      callEndingProtocol: "Reiterate payment deadline, share finance desk contact email, and offer helpful assistance.",
+      goal: "Follow up on upcoming billing cycle and ensure invoice routing details are up to date.",
+      keyInformation: "Tax invoices generated automatically with net-30 terms. Automated payment via corporate card or bank transfer supported.",
+      questionsToAsk: "1. Has your accounts department received the latest monthly statement? 2. Do you require updated purchase order references?",
+      desiredOutcome: "Confirm scheduled payment clearance date or connect with finance desk.",
+      onInterested: "Send updated invoice copy and payment coordinates via WhatsApp and email.",
+      onDeclined: "Inquire if invoice requires adjustment or dispute resolution review.",
+      humanHandoffCriteria: "If contact requests invoice revision, credit notes, or escalation to accounts head.",
+      callEndingProtocol: "Confirm agreed payment timeline, share finance desk contact email, and offer courteous sign-off.",
     },
   },
 ];
@@ -131,7 +131,7 @@ export default function CallingPurposeSection({
               value={purpose.goal}
               onChange={(e) => updateField("goal", e.target.value)}
               className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl p-3 text-xs text-[#283A50] focus:outline-none focus:ring-1 focus:ring-[#283A50] focus:bg-white resize-none"
-              placeholder="e.g. Verify candidate's Class 12 board marks and determine eligibility for 35% Chancellor Merit Scholarship."
+              placeholder="e.g. Verify prospect requirements, qualify volume tier, and schedule discovery demonstration."
               required
             />
           </div>
@@ -146,7 +146,7 @@ export default function CallingPurposeSection({
               value={purpose.keyInformation}
               onChange={(e) => updateField("keyInformation", e.target.value)}
               className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl p-3 text-xs text-[#283A50] focus:outline-none focus:ring-1 focus:ring-[#283A50] focus:bg-white resize-none"
-              placeholder="e.g. State rank was shortlisted for direct counseling; explain scholarship percentage and limited seats."
+              placeholder="e.g. Highlight sub-140ms voice latency, multi-carrier SIP trunking, and native CRM integrations."
               required
             />
           </div>
@@ -164,7 +164,7 @@ export default function CallingPurposeSection({
               value={purpose.questionsToAsk}
               onChange={(e) => updateField("questionsToAsk", e.target.value)}
               className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl p-3 text-xs text-[#283A50] focus:outline-none focus:ring-1 focus:ring-[#283A50] focus:bg-white resize-none"
-              placeholder="e.g. Did you score above 85%? Have you confirmed Saturday tour attendance? Any hostel inquiries?"
+              placeholder="e.g. What is your estimated monthly call volume? Are you looking to integrate with an existing PBX or CRM?"
             />
           </div>
 

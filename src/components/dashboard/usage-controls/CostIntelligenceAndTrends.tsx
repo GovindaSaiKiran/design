@@ -137,7 +137,7 @@ export default function CostIntelligenceAndTrends({
 
           <div className="p-3 rounded-2xl bg-[#FAF5E9]/60 border border-[#E9E1D4] text-[11px] text-[#707684] flex items-center justify-between">
             <span>7-Day Total: <span className="font-bold text-[#283A50]">{dailyTrends.reduce((a, b) => a + b.totalMinutes, 0)} minutes</span></span>
-            <span>Average Burn: <span className="font-bold text-[#283A50]">74 mins/day</span></span>
+            <span>Average Burn: <span className="font-bold text-[#283A50]">{dailyTrends.length > 0 ? Math.round(dailyTrends.reduce((a, b) => a + b.totalMinutes, 0) / dailyTrends.length) : 0} mins/day</span></span>
             <span className="text-[#2E8066] font-semibold">Predictable Burn Pace</span>
           </div>
         </div>
@@ -252,7 +252,16 @@ export default function CostIntelligenceAndTrends({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E9E1D4]">
-              {invoices.map((inv) => (
+              {invoices.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-10 text-center text-[#707684]">
+                    <CreditCard className="w-8 h-8 text-[#707684]/40 mx-auto mb-1.5" />
+                    <p className="font-semibold text-xs text-[#283A50]">No invoices generated yet</p>
+                    <p className="text-[10px] text-[#707684]">Invoices and billing summaries will appear at the close of your first billing cycle.</p>
+                  </td>
+                </tr>
+              ) : (
+                invoices.map((inv) => (
                 <tr key={inv.id} className="hover:bg-[#FAF5E9]/30 transition-colors">
                   <td className="py-3.5 px-5 font-mono font-bold text-[#283A50]">
                     {inv.id}
@@ -282,7 +291,7 @@ export default function CostIntelligenceAndTrends({
                     </button>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

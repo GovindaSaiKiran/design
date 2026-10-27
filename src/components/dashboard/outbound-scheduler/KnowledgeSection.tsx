@@ -51,32 +51,32 @@ interface PlaygroundReferenceItem {
 const PLAYGROUND_APPROVED_REFERENCES: PlaygroundReferenceItem[] = [
   {
     id: "play-01",
-    title: "Objection Handling: Branch Choice vs Future Placement",
-    scenario: "Candidate is admitted to B.Tech ECE but hesitant whether to wait for CS in Round 2.",
+    title: "Objection Handling: Tier Comparison & Scalability",
+    scenario: "Client asks whether Enterprise plan is necessary compared to Starter tier for high call volumes.",
     dialogueSnippet:
-      "Agent: 'I completely understand your priority for Computer Science. At Apex Global, our ECE curriculum offers minor degrees in AI/ML and 84% of core tech recruiters recruit from both branches without differentiation.'",
+      "Agent: 'I understand your focus on return on investment. For high-volume outreach, the Enterprise tier includes dedicated SIP trunks, sub-140ms latency, and SLA guarantees that reduce cost per successful conversation.'",
     approvedDate: "Approved Yesterday in Playground",
-    agentName: "Maya (Admissions)",
+    agentName: "Voice Operations AI",
     turnCount: 4,
   },
   {
     id: "play-02",
-    title: "Fee Installment & Education Loan Guidance",
-    scenario: "Parent inquires about SBI loan approval timelines and semester installment matrix.",
+    title: "Billing & Invoicing Cycle Guidance",
+    scenario: "Client inquires about tax invoice generation, automated payment terms, and usage alerts.",
     dialogueSnippet:
-      "Agent: 'Yes, we provide the provisional admission sanction certificate within 24 hours of document submission, which is recognized by SBI, HDFC, and Canara Bank for priority education loan disbursement under the Vidya Lakshmi portal.'",
+      "Agent: 'Yes, tax-compliant invoices are generated automatically at the start of each billing cycle, and automated thresholds notify your finance team when 80% of prepaid minutes are utilized.'",
     approvedDate: "Approved Oct 20 in Playground",
-    agentName: "Priya (Student Finance)",
+    agentName: "Billing & Finance Desk",
     turnCount: 6,
   },
   {
     id: "play-03",
-    title: "Hostel Twin AC Allotment & Dining Rules",
-    scenario: "Out-of-state candidate asks about laundry, 4-meal mess menu, and campus gate hours.",
+    title: "Custom CRM & Webhook Integration",
+    scenario: "Technical lead inquires about webhook payload formats and bidirectional contact sync.",
     dialogueSnippet:
-      "Agent: 'Block C features double-occupancy air-conditioned suites with attached washrooms, high-speed Wi-Fi, and 4-tier security. The dining mess serves hygienic North and South Indian rotational menus curated by certified nutritionists.'",
+      "Agent: 'Our system delivers real-time call disposition webhooks with full sentiment scores, call recording URLs, and structured summaries formatted directly for standard REST API endpoints.'",
     approvedDate: "Approved Oct 18 in Playground",
-    agentName: "Maya (Admissions)",
+    agentName: "Technical Solutions Desk",
     turnCount: 5,
   },
 ];
@@ -202,7 +202,7 @@ export default function KnowledgeSection({
             What should your AI agent know?
           </h3>
           <p className="text-xs text-[#707684] mt-0.5 leading-relaxed">
-            Attach verified university sources, manual facts, or approved dialogue examples so the agent provides 100% accurate information on calls.
+            Attach verified knowledge collections, manual facts, or approved dialogue examples so the agent provides 100% accurate information on calls.
           </p>
         </div>
 
@@ -298,53 +298,61 @@ export default function KnowledgeSection({
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {filteredKbs.map((doc) => {
-              const isSelected = selectedKbIds.includes(doc.id);
-              return (
-                <div
-                  key={doc.id}
-                  onClick={() => toggleKbSelection(doc.id)}
-                  className={`p-3.5 rounded-xl border transition-all cursor-pointer text-left flex flex-col justify-between ${
-                    isSelected
-                      ? "bg-[#FAF5E9]/60 border-[#283A50] shadow-xs ring-1 ring-[#283A50]"
-                      : "bg-white border-[#E9E1D4] hover:border-[#283A50]/40 hover:bg-[#FAF5E9]/20"
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-[#283A50] shrink-0" />
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#707684]">
-                          {doc.category}
-                        </span>
+          {filteredKbs.length === 0 ? (
+            <div className="p-8 text-center rounded-xl border border-dashed border-[#E9E1D4] bg-[#FAF5E9]/20">
+              <BookOpen className="w-8 h-8 text-[#707684]/50 mx-auto mb-2" />
+              <p className="text-xs font-semibold text-[#283A50]">No knowledge documents found</p>
+              <p className="text-[11px] text-[#707684] mt-1">Try a different search term or upload supporting files in the Upload tab.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {filteredKbs.map((doc) => {
+                const isSelected = selectedKbIds.includes(doc.id);
+                return (
+                  <div
+                    key={doc.id}
+                    onClick={() => toggleKbSelection(doc.id)}
+                    className={`p-3.5 rounded-xl border transition-all cursor-pointer text-left flex flex-col justify-between ${
+                      isSelected
+                        ? "bg-[#FAF5E9]/60 border-[#283A50] shadow-xs ring-1 ring-[#283A50]"
+                        : "bg-white border-[#E9E1D4] hover:border-[#283A50]/40 hover:bg-[#FAF5E9]/20"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-4 h-4 text-[#283A50] shrink-0" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#707684]">
+                            {doc.category}
+                          </span>
+                        </div>
+                        <div
+                          className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
+                            isSelected
+                              ? "border-[#283A50] bg-[#283A50] text-white"
+                              : "border-[#E9E1D4] bg-white"
+                          }`}
+                        >
+                          {isSelected && <CheckCircle2 className="w-3 h-3" />}
+                        </div>
                       </div>
-                      <div
-                        className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
-                          isSelected
-                            ? "border-[#283A50] bg-[#283A50] text-white"
-                            : "border-[#E9E1D4] bg-white"
-                        }`}
-                      >
-                        {isSelected && <CheckCircle2 className="w-3 h-3" />}
-                      </div>
+
+                      <h4 className="font-bold text-xs text-[#283A50] mt-2 line-clamp-2">
+                        {doc.title}
+                      </h4>
                     </div>
 
-                    <h4 className="font-bold text-xs text-[#283A50] mt-2 line-clamp-2">
-                      {doc.title}
-                    </h4>
+                    <div className="mt-3 pt-2 border-t border-[#E9E1D4]/80 flex items-center justify-between text-[10px] text-[#707684]">
+                      <span className="font-mono">{doc.vectorChunks} chunks</span>
+                      <span className="text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">
+                        Ready &amp; Synced
+                      </span>
+                    </div>
                   </div>
-
-                  <div className="mt-3 pt-2 border-t border-[#E9E1D4]/80 flex items-center justify-between text-[10px] text-[#707684]">
-                    <span className="font-mono">{doc.vectorChunks} chunks</span>
-                    <span className="text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">
-                      Ready &amp; Synced
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -379,29 +387,29 @@ export default function KnowledgeSection({
               <button
                 type="button"
                 onClick={() =>
-                  handleSimulateFileUpload("Chancellor_Merit_Scholarship_2026_Guidelines.pdf", "1.8 MB", "pdf")
+                  handleSimulateFileUpload("Standard_Service_Agreement_Q3.pdf", "1.8 MB", "pdf")
                 }
                 className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-white border border-[#E9E1D4] hover:bg-[#FAF5E9] text-[#283A50]"
               >
-                + Upload Scholarship Guidelines.pdf
+                + Upload Service_Agreement.pdf
               </button>
               <button
                 type="button"
                 onClick={() =>
-                  handleSimulateFileUpload("Hostel_AC_Twin_Allocation_Rules_Term1.docx", "840 KB", "docx")
+                  handleSimulateFileUpload("Product_Pricing_and_Billing_Policy.docx", "840 KB", "docx")
                 }
                 className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-white border border-[#E9E1D4] hover:bg-[#FAF5E9] text-[#283A50]"
               >
-                + Upload Hostel Allotment Rules.docx
+                + Upload Pricing_Policy.docx
               </button>
               <button
                 type="button"
                 onClick={() =>
-                  handleSimulateFileUpload("BTech_Specialization_Curriculum_FAQs.txt", "240 KB", "txt")
+                  handleSimulateFileUpload("Customer_Operations_FAQ.txt", "240 KB", "txt")
                 }
                 className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-white border border-[#E9E1D4] hover:bg-[#FAF5E9] text-[#283A50]"
               >
-                + Upload Curriculum FAQs.txt
+                + Upload Operations_FAQ.txt
               </button>
             </div>
           </div>
@@ -465,7 +473,7 @@ export default function KnowledgeSection({
                 Write Information Manually
               </h4>
               <p className="text-xs text-[#707684] mt-0.5">
-                Enter business facts, temporary campaign fees, scholarship cutoffs, or talking points directly.
+                Enter business facts, temporary campaign offers, qualification criteria, or talking points directly.
               </p>
             </div>
             <span className="text-[10px] text-[#707684] font-mono">
@@ -478,7 +486,7 @@ export default function KnowledgeSection({
             value={manualNotes}
             onChange={(e) => onChangeManualNotes(e.target.value)}
             className="w-full bg-[#FAF5E9]/30 border border-[#E9E1D4] rounded-xl p-3.5 text-xs text-[#283A50] focus:outline-none focus:ring-1 focus:ring-[#283A50] focus:bg-white resize-none font-sans leading-relaxed"
-            placeholder="Type or paste campaign-specific facts here...&#10;&#10;Example:&#10;• Chancellor Merit Scholarship cutoff: 85% in Class 12 board examinations.&#10;• Saturday VIP Campus Tour timing: 11:00 AM to 01:30 PM (Lunch included for candidates & parents).&#10;• Admissions contact helpline: +91 40 4590 1199."
+            placeholder="Type or paste campaign-specific facts here...&#10;&#10;Example:&#10;• Special seasonal discount: 15% off annual commit plans before month end.&#10;• Dedicated onboarding support included for teams over 5 agents.&#10;• Priority support helpline: +1 (800) 555-0199."
           />
         </div>
       )}

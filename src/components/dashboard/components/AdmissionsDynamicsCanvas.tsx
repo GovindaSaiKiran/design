@@ -289,15 +289,15 @@ export default function AdmissionsDynamicsCanvas({
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF3E4] text-xs text-[#1A1A1A]">
-                    <span className="font-semibold">B.Tech Tuition Slabs (₹7.98L)</span>
+                    <span className="font-semibold">Enterprise SLA Tier (99.99%)</span>
                     <span className="text-[#16856B] bg-[#C1F2D5] font-bold text-[10px] px-2 py-0.5 rounded-full">100% Ingested</span>
                   </div>
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF3E4] text-xs text-[#1A1A1A]">
-                    <span className="font-semibold">Twin-Sharing AC Hostel (₹1.85L)</span>
+                    <span className="font-semibold">Multi-Region SIP Peering (120ms)</span>
                     <span className="text-[#16856B] bg-[#C1F2D5] font-bold text-[10px] px-2 py-0.5 rounded-full">Verified</span>
                   </div>
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF3E4] text-xs text-[#1A1A1A]">
-                    <span className="font-semibold">Merit Slabs (35% Waiver)</span>
+                    <span className="font-semibold">Volume Discounts (Net-30)</span>
                     <span className="text-[#16856B] bg-[#C1F2D5] font-bold text-[10px] px-2 py-0.5 rounded-full">Auto-Calculated</span>
                   </div>
                 </div>

@@ -14,7 +14,7 @@ export default function UploadContactsModal({
   onClose,
   onContactsUploaded,
 }: UploadContactsModalProps) {
-  const [fileName, setFileName] = useState("JoSAA_High_Percentile_Applicants_2026.csv");
+  const [fileName, setFileName] = useState("Customer_Leads_2026.csv");
   const [isUploaded, setIsUploaded] = useState(false);
 
   if (!isOpen) return null;
@@ -22,7 +22,7 @@ export default function UploadContactsModal({
   const handleUpload = () => {
     setIsUploaded(true);
     setTimeout(() => {
-      onContactsUploaded?.(2500, fileName);
+      onContactsUploaded?.(250, fileName);
       onClose();
     }, 700);
   };

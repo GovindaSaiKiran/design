@@ -124,9 +124,9 @@ export default function CampaignsPage() {
           icon={Send}
           description="Autonomous outbound batch dialing and live lead verification."
           metric={`${activeCount} active`}
-          metricLabel="3,420 outbound leads reached today"
-          status="Dialing Active"
-          statusType="ready"
+          metricLabel={activeCount > 0 ? "Dialing queue active" : "No active campaigns"}
+          status={activeCount > 0 ? "Dialing Active" : "Standby"}
+          statusType={activeCount > 0 ? "ready" : "neutral"}
           actionLabel="View queue →"
           onClick={() => {
             setMainView("bulk");
@@ -139,8 +139,8 @@ export default function CampaignsPage() {
           icon={Calendar}
           description="Automated outreach cadences scheduled for upcoming dates."
           metric={`${scheduledCount} scheduled`}
-          metricLabel="Early bird merit scholarship"
-          status="Queued"
+          metricLabel={scheduledCount > 0 ? "Automated outreach queued" : "No drives scheduled"}
+          status={scheduledCount > 0 ? "Queued" : "Standby"}
           statusType="neutral"
           actionLabel="Review schedule →"
           onClick={() => setMainView("scheduled")}
@@ -151,7 +151,7 @@ export default function CampaignsPage() {
           icon={CheckCircle2}
           description="Finished batch outreach campaigns with qualification yield."
           metric={`${completedCount} completed`}
-          metricLabel="94.2% connect rate across cohorts"
+          metricLabel={completedCount > 0 ? "Archived campaigns" : "No completed campaigns"}
           status="Audited"
           statusType="ready"
           actionLabel="Audit outcomes →"
@@ -165,7 +165,7 @@ export default function CampaignsPage() {
           name="SIP Trunk Concurrency"
           icon={Radio}
           description="Current dialer bandwidth allocated across regional channels."
-          metric="100 Channels Active"
+          metric="0 Channels Active"
           metricLabel="Max 500 lines • Sub-140ms voice latency"
           status="Operational"
           statusType="ready"

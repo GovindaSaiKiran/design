@@ -22,22 +22,22 @@ interface UploadKnowledgeModalProps {
 }
 
 const PRESET_CATEGORIES = [
-  "Academic & Course Info",
-  "Fee Structures & Scholarships",
-  "Hostel & Amenities",
-  "Placement Statistics",
-  "Admissions Policies",
+  "Product Specifications & Architecture",
+  "Pricing & Volume Rate Cards",
+  "Service Level Agreements (SLA)",
+  "Compliance, Security & SOC2",
+  "Carrier Interconnect & Telephony",
 ];
 
 const SUGGESTED_MANUAL_CATEGORIES = [
-  "Campus Placement Rules",
-  "Examination Bylaws",
-  "Fee Concessions & TFW",
-  "Sports & Gymnasium",
-  "Hostel Curfew & Dining",
-  "Transportation & Bus Routes",
-  "International Student Cell",
-  "Refund & Cancellation Policy",
+  "Carrier Interconnect Protocols",
+  "High Availability & Disaster Recovery",
+  "Invoicing Terms & Volume Slabs",
+  "CRM Webhook Integration Runbook",
+  "Indic Language Synthesis Specs",
+  "SIP Trunk Authentication & TLS",
+  "Escalation Roster & On-Call Matrix",
+  "Refund & Usage Credit Policies",
 ];
 
 export default function UploadKnowledgeModal({
@@ -45,9 +45,9 @@ export default function UploadKnowledgeModal({
   onClose,
   onDocUploaded,
 }: UploadKnowledgeModalProps) {
-  const [docName, setDocName] = useState("JoSAA_Cutoffs_Scholarship_Matrix_2026-27.pdf");
+  const [docName, setDocName] = useState("Product_Knowledge_Base_2026.pdf");
   const [fileSize, setFileSize] = useState("2.4 MB");
-  const [category, setCategory] = useState("Academic & Course Info");
+  const [category, setCategory] = useState("Product Specifications & Architecture");
   const [isCustomCategory, setIsCustomCategory] = useState(false);
   const [customCategory, setCustomCategory] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);

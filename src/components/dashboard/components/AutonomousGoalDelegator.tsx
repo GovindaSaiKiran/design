@@ -25,60 +25,47 @@ export default function AutonomousGoalDelegator({
 }: AutonomousGoalDelegatorProps) {
   const quickGoals = [
     {
-      id: "merit",
-      label: "Merit Scholarship Grant",
+      id: "qualification",
+      label: "Customer Qualification",
       prompt:
-        "Draft the September admissions qualification batch and verify 35% merit scholarships for 85%+ PCM scorers in Hindi and Telugu",
-      records: 1240,
+        "Qualify inbound and registered contacts, verify account eligibility, and dispatch priority scheduling links in Hindi and English",
+      records: 0,
       steps: [
-        "Pull 1,240 candidate records & PCM scores from JoSAA state rank database",
-        "Match 35% - 50% Chancellor Merit Scholarship fee waivers per candidate",
-        "Synthesizing Bulbul V3 Neural Voice calls in Hindi & Telugu (140ms first-byte stream)",
-        "Assemble confirmed applicant dossier and dispatch WhatsApp counseling passes",
+        "Sync qualified contact registry and CRM status records",
+        "Verify profile information and map customer segment",
+        "Synthesize natural neural voice calls with sub-140ms first-byte stream",
+        "Assemble interaction dossier and dispatch confirmation details",
       ],
     },
     {
-      id: "seat",
-      label: "B.Tech Seat Confirmation",
+      id: "followup",
+      label: "Service Follow-up & Survey",
       prompt:
-        "Contact verified JEE candidates for Computer Science round-2 seat reservation and deposit confirmation in Kannada & English",
-      records: 840,
+        "Contact verified accounts for satisfaction follow-up and schedule advisory consultations in regional languages",
+      records: 0,
       steps: [
-        "Import CS & AI shortlist from central counseling allocation portal",
-        "Verify seat lock status and calculate semester deposit vouchers",
-        "Deploy Ishita & Maya agents for personalized confirmation calls",
-        "Update registrar ERP with confirmed candidates and send payment links",
+        "Import contact shortlist from central CRM database",
+        "Verify account status and recent activity logs",
+        "Deploy voice agents for personalized outreach calls",
+        "Update records with confirmed outcomes and send follow-up summaries",
       ],
     },
     {
-      id: "hostel",
-      label: "Hostel Allotment Sync",
+      id: "renewal",
+      label: "Subscription Renewal Notice",
       prompt:
-        "Run outreach to out-of-state first-year admissions for AC campus residency, mess preferences, and guardian affidavits",
-      records: 520,
+        "Automated outreach for upcoming service renewals with payment links over messaging channels",
+      records: 0,
       steps: [
-        "Filter non-local enrollees needing campus residential accommodation",
-        "Present block allocation tiers (Twin AC, Deluxe, Standard)",
-        "Record student dietary choices and roommate preferences via voice",
-        "Push approved room tokens directly into Campus ERP & Warden desk",
-      ],
-    },
-    {
-      id: "fees",
-      label: "Fee Installment Reminder",
-      prompt:
-        "Outbound reminder for 2nd installment tuition fee payment with instant UPI & NetBanking payment links over WhatsApp",
-      records: 615,
-      steps: [
-        "Sync ledger balances from Finance & Accounts SAP system",
-        "Call fee payers with polite empathetic Hindi and Marathi reminders",
-        "Offer flexible 2-part installment scheduling for approved guardians",
-        "Trigger immediate SMS and WhatsApp receipt upon payment acknowledgment",
+        "Sync ledger balances and upcoming expiration dates",
+        "Call account holders with polite and timely reminders",
+        "Provide flexible options and schedule advisory appointments",
+        "Trigger immediate receipt and confirmation messaging",
       ],
     },
   ];
 
-  const [selectedGoalId, setSelectedGoalId] = useState<string>("merit");
+  const [selectedGoalId, setSelectedGoalId] = useState<string>("qualification");
   const activePreset = quickGoals.find((g) => g.id === selectedGoalId) || quickGoals[0];
   const [goalText, setGoalText] = useState<string>(activePreset.prompt);
   const [isDelegating, setIsDelegating] = useState<boolean>(false);
@@ -127,8 +114,8 @@ export default function AutonomousGoalDelegator({
           </h2>
 
           <p className="text-xs sm:text-sm text-black/60 max-w-2xl mx-auto leading-relaxed">
-            Describe the admissions or counseling goal and connect your campus documents.
-            Swaram orchestrates autonomous voice agents, verifies scholarships, and updates student dossiers in real-time.
+            Describe your voice outreach goal and connect your business documents.
+            Swaram orchestrates autonomous voice agents, verifies inquiries, and updates dossiers in real-time.
           </p>
         </div>
 
@@ -163,7 +150,7 @@ export default function AutonomousGoalDelegator({
               onChange={(e) => setGoalText(e.target.value)}
               rows={2}
               className="w-full bg-transparent text-sm sm:text-base text-neutral-900 font-medium placeholder-neutral-400 resize-none focus:outline-none leading-relaxed"
-              placeholder="Describe your admissions outreach goal..."
+              placeholder="Describe your voice outreach goal or campaign objective..."
             />
 
             {/* Bottom Status Toolbar */}
@@ -171,11 +158,11 @@ export default function AutonomousGoalDelegator({
               <div className="flex flex-wrap items-center gap-2 text-[11px] text-neutral-600">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-neutral-200 font-semibold text-neutral-800 shadow-2xs">
                   <Bot className="w-3.5 h-3.5 text-blue-600" />
-                  <span>Admissions Copilot • Multi-Agent</span>
+                  <span>Voice Copilot • Multi-Agent</span>
                 </span>
                 <span className="hidden md:inline-flex items-center gap-1 text-neutral-500">
                   <Database className="w-3 h-3 text-neutral-400" />
-                  <span>Connected: JoSAA Register, UGC Guidelines, Bulbul V3 SIP</span>
+                  <span>Connected: Knowledge Base, CRM Sync, Voice SIP</span>
                 </span>
               </div>
 
@@ -183,7 +170,7 @@ export default function AutonomousGoalDelegator({
                 {delegatedSuccess ? (
                   <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Goal Dispatched ({activePreset.records} Candidates)</span>
+                    <span>Goal Dispatched Successfully</span>
                   </span>
                 ) : (
                   <button

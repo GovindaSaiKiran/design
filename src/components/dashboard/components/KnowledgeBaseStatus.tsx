@@ -101,7 +101,7 @@ export default function KnowledgeBaseStatus({
           <div className="flex items-center justify-between text-xs mb-2">
             <span className="font-semibold text-[#1A1A1A] flex items-center gap-2 truncate">
               <FileText className="w-4 h-4 text-black/45 shrink-0" />
-              <span className="truncate">{mockKnowledgeBase[0].title}</span>
+              <span className="truncate">{mockKnowledgeBase[0]?.title || "Knowledge Document"}</span>
             </span>
             <span className="text-[10.5px] font-bold text-[#16856B] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full shrink-0 ml-2">
               Indexed

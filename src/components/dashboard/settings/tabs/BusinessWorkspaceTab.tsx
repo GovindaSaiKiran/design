@@ -128,7 +128,7 @@ export default function BusinessWorkspaceTab({
                   value={workspace.businessName}
                   onChange={(e) => setWorkspace({ ...workspace, businessName: e.target.value })}
                   className="w-full text-xs pl-9 pr-3 py-2.5 bg-[#FAF5E9]/60 border border-[#E9E1D4] rounded-xl text-[#283A50] focus:outline-none focus:border-[#283A50] font-medium"
-                  placeholder="Apex Global Institutions"
+                  placeholder="Acme Voice Solutions"
                   required
                 />
               </div>

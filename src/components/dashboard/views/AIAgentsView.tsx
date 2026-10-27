@@ -400,11 +400,11 @@ export default function AIAgentsView({
             </div>
 
             <div className="p-4 rounded-xl bg-white border border-black/[0.06] text-xs text-[#1A1A1A] italic shadow-2xs">
-              &ldquo;What is the cutoff score for B.Tech AI & Data Science and can I pay tuition in 3-part zero interest EMI?&rdquo;
+              &ldquo;Can you explain your enterprise SLA and whether you support SIP trunk peering with our existing PBX?&rdquo;
             </div>
 
             <p className="text-xs text-black/60 leading-relaxed">
-              Synthesizes real-time verified answers from college prospectus and scholarship slabs with zero hallucination.
+              Synthesizes real-time verified answers from grounded knowledge bases and compliance policies with sub-140ms voice latency.
             </p>
           </div>
 
@@ -420,24 +420,24 @@ export default function AIAgentsView({
             <div className="p-4 rounded-xl bg-white border border-black/[0.06] space-y-2 text-xs">
               <div className="flex items-center gap-2 text-black/80 font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
-                <span>Verify student 12th Board PCM marks</span>
+                <span>Verify enterprise inquiry requirements and volume</span>
               </div>
               <div className="flex items-center gap-2 text-black/80 font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
-                <span>Qualify for 35% Chancellor Merit Scholarship</span>
+                <span>Qualify customer for dedicated account executive discovery</span>
               </div>
               <div className="flex items-center gap-2 text-black/80 font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
-                <span>Book campus visit slot for Saturday 11:00 AM</span>
+                <span>Schedule technical demonstration for Thursday 2:00 PM</span>
               </div>
               <div className="flex items-center gap-2 text-black/40">
                 <span className="w-3.5 h-3.5 rounded-full border border-black/20 inline-block" />
-                <span>Trigger WhatsApp confirmation pass with QR</span>
+                <span>Trigger WhatsApp confirmation calendar invite and summary</span>
               </div>
             </div>
 
             <p className="text-xs text-black/60 leading-relaxed">
-              Executes autonomous multi-step admissions campaigns and syncs candidate dossiers into CRM.
+              Executes autonomous multi-step voice campaigns and syncs qualified leads directly into your CRM.
             </p>
           </div>
         </div>

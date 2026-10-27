@@ -144,7 +144,7 @@ export default function BatchCallingProgress({
             <div className="text-xs font-semibold text-neutral-900">Maya AI (Line 1)</div>
             <div className="text-[11px] text-neutral-500 flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              On Call: B.Tech CSE Lead
+              On Call: Account Qualification
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function BatchCallingProgress({
             <div className="text-xs font-semibold text-neutral-900">Priya AI (Line 2)</div>
             <div className="text-[11px] text-neutral-500 flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              On Call: MBA FinTech Inquiry
+              On Call: Service Renewal Cadence
             </div>
           </div>
         </div>

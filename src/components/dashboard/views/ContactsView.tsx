@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Users, Search, Upload, ArrowUpRight, X, Sparkles } from "lucide-react";
 import ContactIntelligence from "../components/ContactIntelligence";
+import { getUnifiedContacts, StoredContact } from "@/lib/contactsHistory";
 
 interface ContactsViewProps {
   onUploadContacts: () => void;
@@ -15,80 +16,36 @@ export default function ContactsView({
 }: ContactsViewProps) {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [contactsList, setContactsList] = useState<StoredContact[]>([]);
 
-  const contactsList = [
-    {
-      id: "c-1",
-      name: "Rahul Verma (राहुल वर्मा)",
-      phone: "+91 98401 55219",
-      organization: "Applicant — B.Tech CSE (AI & Robotics)",
-      category: "High Intent",
-      lastOutcome: "Interested",
-      lastTime: "4 min ago",
-      agent: "Maya AI (Admissions)",
-      locale: "Hindi / Eng",
-      score: "94.2% PCM",
-    },
-    {
-      id: "c-2",
-      name: "Vikram Malhotra (విక్రమ్ మల్హోత్రా)",
-      phone: "+91 98401 77120",
-      organization: "Applicant — B.Tech Data Science & AI",
-      category: "High Intent",
-      lastOutcome: "Interested",
-      lastTime: "2 min ago",
-      agent: "Neha AI (Admissions)",
-      locale: "Telugu / Eng",
-      score: "91.8% PCM",
-    },
-    {
-      id: "c-3",
-      name: "Anita Roy (অনিতা রায়)",
-      phone: "+91 98765 11980",
-      organization: "Applicant — Lateral Entry Diploma (Mechanical)",
-      category: "Follow-up",
-      lastOutcome: "Human Handoff",
-      lastTime: "8 min ago",
-      agent: "Suhani AI (Support)",
-      locale: "Bengali / Eng",
-      score: "88.4% Poly",
-    },
-    {
-      id: "c-4",
-      name: "Deepika Sen (ದೀಪಿಕಾ ಸೇನ್)",
-      phone: "+91 91760 88231",
-      organization: "Applicant — 100% Chairman Merit Scholarship",
-      category: "Resolved",
-      lastOutcome: "Completed",
-      lastTime: "25 min ago",
-      agent: "Ishita AI (Scholarships)",
-      locale: "Kannada / Eng",
-      score: "96.5% PCM",
-    },
-    {
-      id: "c-5",
-      name: "Gaurav Joshi (गौरव जोशी)",
-      phone: "+91 98840 33219",
-      organization: "Parent — Hostel Accommodation & Bus Route Desk",
-      category: "Follow-up",
-      lastOutcome: "Callback Requested",
-      lastTime: "36 min ago",
-      agent: "Rohan AI (Affairs)",
-      locale: "Hindi / Marathi",
-      score: "Parent Inquiry",
-    },
-  ];
+  useEffect(() => {
+    setContactsList(getUnifiedContacts());
+    const handleUpdate = () => {
+      setContactsList(getUnifiedContacts());
+    };
+    window.addEventListener("storage", handleUpdate);
+    window.addEventListener("contacts-updated", handleUpdate);
+    return () => {
+      window.removeEventListener("storage", handleUpdate);
+      window.removeEventListener("contacts-updated", handleUpdate);
+    };
+  }, []);
 
   const filteredContacts = contactsList.filter((c) => {
+    const nameStr = c.name || "";
+    const phoneStr = c.phone || "";
+    const orgStr = c.organization || c.email || "";
+    const scoreStr = (c as any).score || (c.priorityScore ? `${c.priorityScore}%` : "");
+
     const matchesSearch =
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.phone.includes(search) ||
-      c.organization.toLowerCase().includes(search.toLowerCase()) ||
-      c.score.toLowerCase().includes(search.toLowerCase());
+      nameStr.toLowerCase().includes(search.toLowerCase()) ||
+      phoneStr.includes(search) ||
+      orgStr.toLowerCase().includes(search.toLowerCase()) ||
+      scoreStr.toLowerCase().includes(search.toLowerCase());
 
     const matchesCategory =
       categoryFilter === "all" ||
-      c.category.toLowerCase() === categoryFilter.toLowerCase();
+      (c.category || "").toLowerCase() === categoryFilter.toLowerCase();
 
     return matchesSearch && matchesCategory;
   });
@@ -196,64 +153,106 @@ export default function ContactsView({
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.04] bg-white font-medium text-black/80">
-              {filteredContacts.map((contact) => (
-                <tr
-                  key={contact.id}
-                  onClick={() => onViewContactDossier(contact.id)}
-                  className="hover:bg-[#FAF3E4]/40 transition-colors cursor-pointer group"
-                >
-                  <td className="py-4 px-4">
-                    <div className="font-semibold text-[#1A1A1A] group-hover:text-black transition-colors text-sm">
-                      {contact.name}
+              {filteredContacts.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-12 px-4 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-[#FAF3E4] border border-black/[0.08] flex items-center justify-center text-black/40">
+                        <Users className="w-6 h-6 stroke-[1.5]" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold text-[#1A1A1A]">No contacts found</p>
+                        <p className="text-xs text-black/50 max-w-sm">
+                          {search || categoryFilter !== "all"
+                            ? "Try adjusting your search criteria or filter to see more candidate records."
+                            : "Import a contact register via CSV or manual entry to begin tracking outreach intelligence."}
+                        </p>
+                      </div>
+                      <button
+                        onClick={onUploadContacts}
+                        className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>Import Contacts</span>
+                      </button>
                     </div>
-                    <div className="text-xs text-black/50 mt-0.5">{contact.organization}</div>
-                  </td>
-                  <td className="py-4 px-4">
-                    <div className="font-mono text-black/80 text-xs">{contact.phone}</div>
-                    <div className="text-[10px] text-black/50 mt-0.5 font-sans">{contact.locale}</div>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span className="font-mono font-semibold text-[#16856B] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full text-[11px]">
-                      {contact.score}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
-                        contact.category === "High Intent"
-                          ? "bg-[#FFD9A0] text-[#7A4B00]"
-                          : contact.category === "Resolved"
-                          ? "bg-[#C1F2D5] text-[#16856B]"
-                          : "bg-[#BCD0F5] text-[#1B365D]"
-                      }`}
-                    >
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          contact.category === "High Intent"
-                            ? "bg-[#7A4B00]"
-                            : contact.category === "Resolved"
-                            ? "bg-[#16856B]"
-                            : "bg-[#1B365D]"
-                        }`}
-                      />
-                      {contact.lastOutcome}
-                    </span>
-                  </td>
-                  <td className="py-4 px-4 text-black/60 font-sans">{contact.agent}</td>
-                  <td className="py-4 px-4 text-right">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onViewContactDossier(contact.id);
-                      }}
-                      className="px-3.5 py-1.5 rounded-full bg-[#FAF3E4] hover:bg-[#111111] hover:text-white text-[#1A1A1A] border border-black/[0.06] font-semibold text-xs shadow-2xs transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95"
-                    >
-                      <span>Inspect</span>
-                      <ArrowUpRight className="w-3 h-3" />
-                    </button>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredContacts.map((contact) => {
+                  const scoreDisplay =
+                    (contact as any).score ||
+                    (contact.priorityScore ? `${contact.priorityScore}% Priority` : "Unscored");
+                  const outcomeDisplay =
+                    (contact as any).lastOutcome || contact.lastCallOutcome || "Pending";
+                  const agentDisplay =
+                    (contact as any).agent || contact.assignedAgent || "Unassigned";
+                  const localeDisplay =
+                    (contact as any).locale ||
+                    (contact.city ? `${contact.city} • Indic` : "Bilingual");
+
+                  return (
+                    <tr
+                      key={contact.id}
+                      onClick={() => onViewContactDossier(contact.id)}
+                      className="hover:bg-[#FAF3E4]/40 transition-colors cursor-pointer group"
+                    >
+                      <td className="py-4 px-4">
+                        <div className="font-semibold text-[#1A1A1A] group-hover:text-black transition-colors text-sm">
+                          {contact.name}
+                        </div>
+                        <div className="text-xs text-black/50 mt-0.5">
+                          {contact.organization || contact.email || "No organization"}
+                        </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="font-mono text-black/80 text-xs">{contact.phone}</div>
+                        <div className="text-[10px] text-black/50 mt-0.5 font-sans">{localeDisplay}</div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span className="font-mono font-semibold text-[#16856B] bg-[#C1F2D5] px-2.5 py-0.5 rounded-full text-[11px]">
+                          {scoreDisplay}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                            contact.category === "High Intent"
+                              ? "bg-[#FFD9A0] text-[#7A4B00]"
+                              : contact.category === "Resolved"
+                              ? "bg-[#C1F2D5] text-[#16856B]"
+                              : "bg-[#BCD0F5] text-[#1B365D]"
+                          }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              contact.category === "High Intent"
+                                ? "bg-[#7A4B00]"
+                                : contact.category === "Resolved"
+                                ? "bg-[#16856B]"
+                                : "bg-[#1B365D]"
+                            }`}
+                          />
+                          {outcomeDisplay}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 text-black/60 font-sans">{agentDisplay}</td>
+                      <td className="py-4 px-4 text-right">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onViewContactDossier(contact.id);
+                          }}
+                          className="px-3.5 py-1.5 rounded-full bg-[#FAF3E4] hover:bg-[#111111] hover:text-white text-[#1A1A1A] border border-black/[0.06] font-semibold text-xs shadow-2xs transition-all inline-flex items-center gap-1 cursor-pointer active:scale-95"
+                        >
+                          <span>Inspect</span>
+                          <ArrowUpRight className="w-3 h-3" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

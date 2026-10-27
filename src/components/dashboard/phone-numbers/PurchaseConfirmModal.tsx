@@ -207,7 +207,7 @@ export default function PurchaseConfirmModal({
           <div className="p-3 rounded-xl bg-amber-50/60 border border-amber-200/80 text-[11px] text-amber-900 flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
             <span>
-              <strong>DoT &amp; Telecom Verification:</strong> Number is bound to your verified Apex Global Institutions workspace account under Indian Telecom commercial rules.
+              <strong>DoT &amp; Telecom Verification:</strong> Number is bound to your verified enterprise workspace account under Indian Telecom commercial rules.
             </span>
           </div>
 

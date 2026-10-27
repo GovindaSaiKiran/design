@@ -163,7 +163,16 @@ export default function AgentEfficiencyTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-[#E9E1D4]">
-            {sortedAgents.map((ag) => {
+            {sortedAgents.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="py-12 text-center text-[#707684]">
+                  <Bot className="w-8 h-8 text-[#707684]/50 mx-auto mb-2" />
+                  <p className="font-semibold text-sm text-[#283A50]">No agent metrics recorded yet</p>
+                  <p className="text-xs text-[#707684] mt-0.5">Voice usage data will appear here once agents handle live or outbound calls.</p>
+                </td>
+              </tr>
+            ) : (
+              sortedAgents.map((ag) => {
               return (
                 <tr
                   key={ag.agentId}
@@ -269,7 +278,8 @@ export default function AgentEfficiencyTable({
                   </td>
                 </tr>
               );
-            })}
+            })
+          )}
           </tbody>
         </table>
       </div>

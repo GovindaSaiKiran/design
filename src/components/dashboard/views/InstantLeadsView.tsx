@@ -16,7 +16,7 @@ export default function InstantLeadsView() {
   const [copied, setCopied] = useState(false);
   const [simName, setSimName] = useState("Kiran Kumar");
   const [simPhone, setSimPhone] = useState("+91 98401 22340");
-  const [simCourse, setSimCourse] = useState("B.Tech Computer Science");
+  const [simCourse, setSimCourse] = useState("Enterprise Telephony SLA & Pricing");
   const [simulating, setSimulating] = useState(false);
   const [simResult, setSimResult] = useState<string | null>(null);
 
@@ -39,11 +39,11 @@ export default function InstantLeadsView() {
       const res = await telephonyApi.initiateCall({
         toNumber: simPhone,
         recipientName: simName,
-        agentId: "anu-admissions",
+        agentId: "maya-operations",
         language: "Hindi",
         customContext: {
           leadSource: "Instant Webhook (Sub-30s Trigger)",
-          courseInquired: simCourse,
+          topicInquired: simCourse,
         },
       });
 
@@ -167,7 +167,7 @@ export default function InstantLeadsView() {
               <span>Simulate Form Ingestion Trigger</span>
             </h3>
             <p className="text-xs text-black/55 mt-1">
-              Verify real-world latency when a student submits their details on a lead page.
+              Verify real-world latency when a customer submits their details on a lead page.
             </p>
           </div>
 
@@ -195,7 +195,7 @@ export default function InstantLeadsView() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">Inquired Course / Interest:</label>
+              <label className="block text-xs font-semibold text-[#1A1A1A] mb-1.5">Inquired Solution / Interest:</label>
               <input
                 type="text"
                 required

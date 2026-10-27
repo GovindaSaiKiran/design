@@ -183,10 +183,10 @@ export default function AnalyticsPage() {
 
           <div className="space-y-4">
             {[
-              { label: "B.Tech CSE & AI Admissions Cutoffs", pct: 45, count: 11 },
-              { label: "Hostel Fee & Merit Scholarships", pct: 30, count: 7 },
-              { label: "Campus Tour Booking & Visits", pct: 15, count: 4 },
-              { label: "Human Counselor Escalations", pct: 10, count: 2 },
+              { label: "Enterprise SLA & Dedicated SIP Peering", pct: 45, count: 11 },
+              { label: "Billing Inquiries & Usage Tier Upgrades", pct: 30, count: 7 },
+              { label: "Technical Demo & Proof of Concept", pct: 15, count: 4 },
+              { label: "Live Operator Escalations", pct: 10, count: 2 },
             ].map((intent, i) => (
               <div key={i} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">

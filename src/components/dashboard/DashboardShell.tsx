@@ -195,39 +195,28 @@ export default function DashboardShell() {
             <div className="overflow-hidden whitespace-nowrap flex-1 relative">
               <div className="animate-ticker flex items-center gap-8 text-xs font-medium text-black/70">
                 <span className="flex items-center gap-2">
-                  <span className="bg-[#D9C2FA] text-[#4A2574] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🇮🇳 Ritu (Hindi)</span>
-                  <span>&apos;प्रवेश पात्रता एवं छात्रवृत्ति की पूरी जानकारी&apos; pre-approved for Rahul Verma (94.2% PCM)</span>
+                  <span className="bg-[#C1F2D5] text-[#16856B] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🟢 Telephony Trunk</span>
+                  <span>SIP Inbound / Outbound Channels Active • Carrier Carrier SLA 99.99%</span>
                 </span>
                 <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-[#BCD0F5] text-[#2C4875] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🇮🇳 Neha (Telugu)</span>
-                  <span>&apos;క్యాంపస్ హాస్టల్ AC రూమ్స్ వివరాలు&apos; sent via WhatsApp to Suresh (Vijayawada)</span>
+                  <span className="bg-[#FFD9A0] text-[#8C5300] px-2.5 py-0.5 rounded-full text-[11px] font-bold">⚡ Sub-140ms Latency</span>
+                  <span>WebSocket Full-Duplex • Real-time Speech-to-Speech Streaming</span>
                 </span>
                 <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-[#C1F2D5] text-[#16856B] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🇮🇳 Ishita (Kannada)</span>
-                  <span>&apos;ಇಂಜಿನಿಯರಿಂಗ್ ಸೀಟ್ ಬುಕಿಂಗ್ ದೃಢಪಡಿಸಲಾಗಿದೆ&apos; verified for Priya Rao (Bengaluru)</span>
+                  <span className="bg-[#D9C2FA] text-[#4A2574] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🇮🇳 Indic Voice Engine</span>
+                  <span>Active Phoneme Synthesis across Hindi, Telugu, Tamil, Kannada, Marathi &amp; English</span>
                 </span>
                 <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-[#FFD9A0] text-[#8C5300] px-2.5 py-0.5 rounded-full text-[11px] font-bold">⚡ 140ms Latency</span>
-                  <span>WebSocket Full-Duplex • Zero interruption delay • Bulbul V3 Active</span>
+                  <span className="bg-[#BCD0F5] text-[#2C4875] px-2.5 py-0.5 rounded-full text-[11px] font-bold">🛡️ Enterprise Guardrails</span>
+                  <span>Live Intent Tracking, Sentiment Analysis &amp; Automatic Counselor Handoff</span>
                 </span>
                 <span className="text-black/20 font-bold">•</span>
                 <span className="flex items-center gap-2">
-                  <span className="bg-[#FAF3E4] text-[#1A1A1A] px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-black/[0.04]">🏆 2.4M Chars</span>
-                  <span>Synthesized Today across 11 Indian Languages • 96.7% Autonomous Yield</span>
-                </span>
-                {/* Seamless Loop Duplicate */}
-                <span className="text-neutral-300 font-bold">•</span>
-                <span className="flex items-center gap-2">
-                  <span className="bg-purple-50 text-purple-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-purple-100">🇮🇳 Ritu (Hindi)</span>
-                  <span>'प्रवेश पात्रता एवं छात्रवृत्ति की पूरी जानकारी' pre-approved for Rahul Verma (94.2% PCM)</span>
-                </span>
-                <span className="text-neutral-300 font-bold">•</span>
-                <span className="flex items-center gap-2">
-                  <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border border-blue-100">🇮🇳 Neha (Telugu)</span>
-                  <span>'క్యాంపస్ హాస్టల్ AC రూమ్స్ వివరాలు' sent via WhatsApp to Suresh (Vijayawada)</span>
+                  <span className="bg-[#FAF3E4] text-[#1A1A1A] px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-black/[0.04]">🎙️ VAD &amp; Barge-In</span>
+                  <span>Zero Interruption Latency • Instant Audio Feedback Cancellation Active</span>
                 </span>
               </div>
             </div>

@@ -113,456 +113,11 @@ export interface MessageTemplate {
 // INITIAL MOCK DATA (High fidelity, realistic university admissions & ops)
 // ============================================================================
 
-const initialConversations: Conversation[] = [
-  {
-    id: "conv-001",
-    contactName: "Devansh Patil",
-    phone: "+91 97110 33499",
-    city: "Mumbai, MH",
-    course: "MBA Fintech & Analytics",
-    leadScore: 92,
-    leadSource: "Voice Call Follow-up (Agent Arjun)",
-    assignedAgent: "Maya (Admissions AI)",
-    status: "Open",
-    unreadCount: 1,
-    lastMessage: "Can you send the approved quarterly installment breakdown again?",
-    lastTimestamp: "4m ago",
-    humanInteractionNeeded: false,
-    messages: [
-      {
-        id: "m-101",
-        sender: "system",
-        text: "Automated trigger: Follow-up dispatch initiated following voice call with Arjun AI.",
-        timestamp: "10:15 AM",
-      },
-      {
-        id: "m-102",
-        sender: "ai",
-        agentName: "Maya Admissions AI",
-        text: "Hello Devansh! Following up on your call with Arjun regarding MBA Fintech & Analytics at Swaram. As requested, here is your official prospectus and fee schedule.",
-        timestamp: "10:15 AM",
-        status: "read",
-        attachedDocName: "Swaram_MBA_Fintech_Prospectus_2026.pdf",
-        attachedDocSize: "2.4 MB",
-        interactiveButtons: ["View Fee Matrix", "Book GD/PI Slot", "Talk to Counselor"],
-      },
-      {
-        id: "m-103",
-        sender: "customer",
-        text: "Thanks Maya! I reviewed the fees. Can you clarify if the 40-30-30 installment plan requires bank post-dated cheques?",
-        timestamp: "10:28 AM",
-      },
-      {
-        id: "m-104",
-        sender: "ai",
-        agentName: "Maya Admissions AI",
-        text: "No physical cheques are mandatory. The 40-30-30 plan uses auto-debit through NACH / NetBanking. You pay 40% at admission enrollment, 30% before Term II, and 30% before Term III.",
-        timestamp: "10:29 AM",
-        status: "read",
-      },
-      {
-        id: "m-105",
-        sender: "customer",
-        text: "Can you send the approved quarterly installment breakdown again?",
-        timestamp: "10:42 AM",
-      },
-    ],
-  },
-  {
-    id: "conv-002",
-    contactName: "Meera Krishnan",
-    phone: "+91 98210 55678",
-    city: "Bengaluru, KA",
-    course: "B.Tech Electronics & Comm",
-    leadScore: 96,
-    leadSource: "Inbound IVR Callback (Batch OUT-01)",
-    assignedAgent: "Senior Counselor Desk",
-    status: "Needs Human",
-    unreadCount: 2,
-    lastMessage: "I have uploaded my State Badminton Gold medal certificate. Please verify.",
-    lastTimestamp: "12m ago",
-    humanInteractionNeeded: true,
-    humanAssignee: "Mr. R. Sharma (Athletic Director)",
-    escalationReason: "Non-standard 25% sports quota fee waiver requires athletic director manual evaluation.",
-    messages: [
-      {
-        id: "m-201",
-        sender: "ai",
-        agentName: "Maya Admissions AI",
-        text: "Namaste Meera! Thank you for inquiring about B.Tech ECE. Standard merit scholarships are calculated up to 35% based on Board PCM marks.",
-        timestamp: "09:30 AM",
-        status: "read",
-      },
-      {
-        id: "m-202",
-        sender: "customer",
-        text: "I also have a State-level Badminton Championship medal. Does the university provide a sports quota concession?",
-        timestamp: "09:34 AM",
-      },
-      {
-        id: "m-203",
-        sender: "system",
-        text: "Escalation Trigger: Sports Quota waiver inquiry exceeds autonomous threshold. Handed over to Mr. R. Sharma.",
-        timestamp: "09:35 AM",
-      },
-      {
-        id: "m-204",
-        sender: "human",
-        agentName: "Mr. R. Sharma (Athletic Director)",
-        text: "Hello Meera, I am the Athletic Director. State medalists are eligible for our Category-A 25% sports fee concession subject to committee certificate verification.",
-        timestamp: "09:40 AM",
-        status: "read",
-      },
-      {
-        id: "m-205",
-        sender: "customer",
-        text: "I have uploaded my State Badminton Gold medal certificate. Please verify.",
-        timestamp: "09:48 AM",
-        attachedDocName: "State_Badminton_Gold_Certificate_2025.pdf",
-        attachedDocSize: "1.1 MB",
-      },
-    ],
-  },
-  {
-    id: "conv-003",
-    contactName: "Sneha Reddy",
-    phone: "+91 94401 55620",
-    city: "Hyderabad, TS",
-    course: "B.Tech Computer Science (AI/ML)",
-    leadScore: 98,
-    leadSource: "Voice Campaign (Batch OUT-01)",
-    assignedAgent: "Maya (Admissions AI)",
-    status: "In Progress",
-    unreadCount: 0,
-    lastMessage: "Campus visit confirmed for Saturday, 11:00 AM with parent.",
-    lastTimestamp: "45m ago",
-    humanInteractionNeeded: false,
-    messages: [
-      {
-        id: "m-301",
-        sender: "ai",
-        agentName: "Maya Admissions AI",
-        text: "Hello Sneha! Your 95.4% PCM marks qualify for the 35% Chancellor Merit Scholarship. Here is your personalized admission voucher.",
-        timestamp: "Yesterday",
-        status: "read",
-        attachedDocName: "Chancellor_Merit_Pass_SnehaReddy.pdf",
-        attachedDocSize: "840 KB",
-      },
-      {
-        id: "m-302",
-        sender: "customer",
-        text: "My parents and I would like to visit the campus and see the NVIDIA AI computing lab.",
-        timestamp: "Yesterday",
-      },
-      {
-        id: "m-303",
-        sender: "ai",
-        agentName: "Maya Admissions AI",
-        text: "Wonderful! We have slotted a VIP lab tour this Saturday at 11:00 AM. A student ambassador will receive you at the North Gate.",
-        timestamp: "Yesterday",
-        status: "read",
-        interactiveButtons: ["Add to Google Calendar", "Directions to Campus", "Reschedule Tour"],
-      },
-      {
-        id: "m-304",
-        sender: "customer",
-        text: "Campus visit confirmed for Saturday, 11:00 AM with parent.",
-        timestamp: "10:10 AM",
-      },
-    ],
-  },
-  {
-    id: "conv-004",
-    contactName: "Kavita Deshmukh",
-    phone: "+91 98230 11944",
-    city: "Pune, MH",
-    course: "B.Tech Computer Science",
-    leadScore: 88,
-    leadSource: "Website Click-to-WhatsApp",
-    assignedAgent: "Priya (Student Finance AI)",
-    status: "Open",
-    unreadCount: 0,
-    lastMessage: "Which nationalized banks have an on-campus branch for education loan clearance?",
-    lastTimestamp: "1h ago",
-    humanInteractionNeeded: false,
-    messages: [
-      {
-        id: "m-401",
-        sender: "customer",
-        text: "Hello, I want details regarding bank education loans for B.Tech CSE.",
-        timestamp: "08:15 AM",
-      },
-      {
-        id: "m-402",
-        sender: "ai",
-        agentName: "Priya Student Finance AI",
-        text: "Namaste Kavita! Swaram has direct on-campus tie-ups with SBI, HDFC Credila, and Canara Bank with pre-approved collateral-free schemes up to ₹7.5 Lakhs.",
-        timestamp: "08:16 AM",
-        status: "read",
-        attachedDocName: "Swaram_Bank_Tieup_Loan_Guide.pdf",
-        attachedDocSize: "1.8 MB",
-      },
-      {
-        id: "m-403",
-        sender: "customer",
-        text: "Which nationalized banks have an on-campus branch for education loan clearance?",
-        timestamp: "09:30 AM",
-      },
-    ],
-  },
-  {
-    id: "conv-005",
-    contactName: "Siddharth Verma",
-    phone: "+91 98112 34567",
-    city: "Delhi NCR",
-    course: "B.Tech Computer Science",
-    leadScore: 91,
-    leadSource: "Hostel Inbound (Batch HOSTEL-01)",
-    assignedAgent: "Residential Warden Desk",
-    status: "Needs Human",
-    unreadCount: 1,
-    lastMessage: "Awaiting Chief Warden confirmation for Ground Floor Block A unit.",
-    lastTimestamp: "2h ago",
-    humanInteractionNeeded: true,
-    humanAssignee: "Chief Warden Dr. Swamy",
-    escalationReason: "Medical accessibility ground-floor room allotment requires manual warden override.",
-    messages: [
-      {
-        id: "m-501",
-        sender: "customer",
-        text: "I need a ground floor room due to post-knee surgery recovery. The portal only shows 3rd floor AC units.",
-        timestamp: "08:00 AM",
-      },
-      {
-        id: "m-502",
-        sender: "system",
-        text: "Transferred to Residential Warden Desk for special accessibility allocation.",
-        timestamp: "08:02 AM",
-      },
-      {
-        id: "m-503",
-        sender: "human",
-        agentName: "Chief Warden Dr. Swamy",
-        text: "Noted Siddharth. We maintain 4 reserved medical suites in Block A ground floor. I have placed a provisional hold for Unit 104.",
-        timestamp: "08:45 AM",
-        status: "read",
-      },
-      {
-        id: "m-504",
-        sender: "customer",
-        text: "Awaiting Chief Warden confirmation for Ground Floor Block A unit.",
-        timestamp: "09:05 AM",
-      },
-    ],
-  },
-  {
-    id: "conv-006",
-    contactName: "Ananya Sharma",
-    phone: "+91 97184 10293",
-    city: "Gurugram, HR",
-    course: "B.Tech Data Science",
-    leadScore: 84,
-    leadSource: "Portal Registration Sync",
-    assignedAgent: "Arjun (Outreach AI)",
-    status: "Resolved",
-    unreadCount: 0,
-    lastMessage: "DigiLocker verification confirmed. Admission registration cleared.",
-    lastTimestamp: "3h ago",
-    humanInteractionNeeded: false,
-    messages: [
-      {
-        id: "m-601",
-        sender: "ai",
-        agentName: "Arjun Outreach AI",
-        text: "Hi Ananya, your DigiLocker marksheet verification has succeeded. Your admission registration APX-9081 is officially cleared.",
-        timestamp: "07:30 AM",
-        status: "read",
-      },
-      {
-        id: "m-602",
-        sender: "customer",
-        text: "Thank you Arjun! That was very smooth.",
-        timestamp: "07:35 AM",
-      },
-    ],
-  },
-];
+const initialConversations: Conversation[] = [];
 
-const initialFlows: AutomationFlow[] = [
-  {
-    id: "flow-001",
-    name: "Voice Call Follow-Up Pass Dispatch",
-    description: "Triggers within 15 seconds after an admissions AI voice call finishes. Dispatches customized brochure, scholarship code, and calendar link.",
-    status: "Published",
-    triggerType: "Voice Call Event",
-    triggerDetail: "Call completed with outcome = 'Follow-up Requested' or 'Scholarship Inquired'",
-    conditionSummary: "If Candidate PCM Marks >= 90% and Lead State is Unenrolled",
-    assignedAgent: "Maya (Admissions AI)",
-    knowledgeBase: "B.Tech & MBA 2026 Admissions Handbook v4.2",
-    actionsSummary: "Dispatch WhatsApp Template 'admissions_merit_voucher' with personalized PDF pass and calendar booking link.",
-    humanHandoffRule: "Escalate to Senior Counselor if candidate requests fee reduction > 35% or sports quota appeal.",
-    executions24h: 842,
-    successRate: "99.1%",
-    lastModified: "22 Oct 2026, 09:15 AM",
-  },
-  {
-    id: "flow-002",
-    name: "Tuition Installment & Bank Loan Advisor",
-    description: "Handles inbound keywords ('FEES', 'INSTALLMENT', 'LOAN') with multi-turn financial counseling and instant WhatsApp PDF matrix.",
-    status: "Published",
-    triggerType: "Inbound Keyword",
-    triggerDetail: "Keywords: 'FEE', 'INSTALLMENT', 'SCHOLARSHIP', 'LOAN'",
-    conditionSummary: "Any registered or prospective student inquiry",
-    assignedAgent: "Priya (Student Finance AI)",
-    knowledgeBase: "Tuition Fee Matrix, SBI Tie-up Guidelines, NACH Schedules",
-    actionsSummary: "Deliver interactive 3-part installment calculator and pre-approved bank tie-up dossier.",
-    humanHandoffRule: "Escalate to Finance Officer Desk if student requests customized fee deferral letter.",
-    executions24h: 318,
-    successRate: "98.4%",
-    lastModified: "21 Oct 2026, 04:30 PM",
-  },
-  {
-    id: "flow-003",
-    name: "Hostel & Room Allotment Instant Assistant",
-    description: "Collects candidate preference for AC Twin vs Standard 3-bed rooms, meal plans, and sends 360-degree virtual tour link.",
-    status: "Published",
-    triggerType: "Inbound Keyword",
-    triggerDetail: "Keywords: 'HOSTEL', 'ROOMS', 'MESS', 'AC'",
-    conditionSummary: "Candidate has paid admission token fee",
-    assignedAgent: "Arjun (Outreach & Ops AI)",
-    knowledgeBase: "Campus Residential Handbook, Block Allocation Rules",
-    actionsSummary: "Send room category comparison, dining mess menu PDF, and instant room reservation hold link.",
-    humanHandoffRule: "Escalate to Residential Warden Desk if medical accessibility or special accommodation is flagged.",
-    executions24h: 184,
-    successRate: "100%",
-    lastModified: "20 Oct 2026, 02:10 PM",
-  },
-  {
-    id: "flow-004",
-    name: "After-Hours Admissions Concierge",
-    description: "Activates automatically between 7:00 PM and 9:00 AM IST. Answers candidate inquiries autonomously and queues morning counselor callbacks.",
-    status: "Published",
-    triggerType: "Inbound Keyword",
-    triggerDetail: "Any inbound message received outside 09:00 AM - 07:00 PM IST",
-    conditionSummary: "Time is outside standard office hours",
-    assignedAgent: "Maya (Admissions AI)",
-    knowledgeBase: "Full University Admissions Knowledge Repository",
-    actionsSummary: "Instant answer via AI. If human assistance requested, logs entry to Callbacks Queue for 09:30 AM counselor shift.",
-    humanHandoffRule: "Queue in Callback Desk with designated morning priority slot.",
-    executions24h: 96,
-    successRate: "97.8%",
-    lastModified: "19 Oct 2026, 11:00 AM",
-  },
-  {
-    id: "flow-005",
-    name: "DigiLocker Verification Failure Recovery",
-    description: "Detects failed API document synchronization during web registration and provides step-by-step WhatsApp guidance.",
-    status: "Draft",
-    triggerType: "Web Form Submit",
-    triggerDetail: "Webhook event: 'digilocker_verification_failed'",
-    conditionSummary: "Error code in [AUTH_TIMEOUT, MISMATCH_DOB]",
-    assignedAgent: "Arjun (Outreach & Ops AI)",
-    knowledgeBase: "Registration Portal Troubleshooting Guide",
-    actionsSummary: "Send alternative manual PDF upload link and direct support desk ticket.",
-    humanHandoffRule: "Escalate to Registrar Tech Support if retry fails twice.",
-    executions24h: 0,
-    successRate: "—",
-    lastModified: "22 Oct 2026, 11:20 AM",
-  },
-  {
-    id: "flow-006",
-    name: "Alumni Mentorship Connect",
-    description: "Connects enrolled candidates with department alumni for 15-minute WhatsApp Q&A prior to semester orientation.",
-    status: "Disabled",
-    triggerType: "Inbound Keyword",
-    triggerDetail: "Keyword: 'ALUMNI'",
-    conditionSummary: "Candidate status is 'Confirmed Enrolled'",
-    assignedAgent: "Maya (Admissions AI)",
-    knowledgeBase: "Alumni Directory 2024-2025",
-    actionsSummary: "Dispatch alumni directory highlights and orientation WhatsApp group invite.",
-    humanHandoffRule: "No human handoff required.",
-    executions24h: 0,
-    successRate: "—",
-    lastModified: "15 Oct 2026, 10:00 AM",
-  },
-];
+const initialFlows: AutomationFlow[] = [];
 
-const initialTemplates: MessageTemplate[] = [
-  {
-    id: "tpl-001",
-    name: "admissions_merit_voucher",
-    category: "Utility",
-    language: "en_US",
-    status: "Approved",
-    bodySnippet: "Hello {{1}}, congratulations on your {{2}}% score in PCM. You are eligible for the 35% Chancellor Merit Scholarship at Swaram University. Attached is your scholarship confirmation pass. Please confirm your seat reservation before {{3}}.",
-    variables: ["{{1}} Candidate Name", "{{2}} Board Score", "{{3}} Expiry Date"],
-    buttons: ["Confirm Seat Reservation", "Talk to Counselor"],
-    hasDocument: true,
-    documentType: "PDF Confirmation Pass",
-    lastUpdated: "Approved by Meta • 18 Oct 2026",
-  },
-  {
-    id: "tpl-002",
-    name: "tuition_fee_installment_schedule",
-    category: "Utility",
-    language: "en_US",
-    status: "Approved",
-    bodySnippet: "Namaste {{1}}, as requested during your call with {{2}}, here is your approved 3-part tuition fee installment schedule for {{3}}. First installment token is payable on {{4}}.",
-    variables: ["{{1}} Student Name", "{{2}} Agent Name", "{{3}} Program Name", "{{4}} Due Date"],
-    buttons: ["Pay 1st Installment", "Download Fee PDF"],
-    hasDocument: true,
-    documentType: "Fee Schedule Breakdown PDF",
-    lastUpdated: "Approved by Meta • 14 Oct 2026",
-  },
-  {
-    id: "tpl-003",
-    name: "campus_tour_invitation_v2",
-    category: "Marketing",
-    language: "en_US",
-    status: "Approved",
-    bodySnippet: "Hello {{1}}! We are thrilled to invite you and your family for a VIP Campus Tour at Swaram on {{2}} at {{3}}. Your visit includes the NVIDIA AI Computing Lab and campus residential suites.",
-    variables: ["{{1}} Student Name", "{{2}} Day & Date", "{{3}} Time Slot"],
-    buttons: ["Accept Invitation", "Reschedule Date", "Campus Location"],
-    hasDocument: false,
-    lastUpdated: "Approved by Meta • 10 Oct 2026",
-  },
-  {
-    id: "tpl-004",
-    name: "counselor_callback_confirmation",
-    category: "Utility",
-    language: "en_US",
-    status: "Approved",
-    bodySnippet: "Hi {{1}}, this is to confirm your scheduled callback with {{2}} regarding {{3}} on {{4}}. An admissions officer will dial your mobile number directly.",
-    variables: ["{{1}} Candidate Name", "{{2}} Counselor Name", "{{3}} Topic", "{{4}} Slot Time"],
-    buttons: ["Reschedule Slot", "Cancel Request"],
-    hasDocument: false,
-    lastUpdated: "Approved by Meta • 05 Oct 2026",
-  },
-  {
-    id: "tpl-005",
-    name: "application_deadline_reminder",
-    category: "Marketing",
-    language: "en_US",
-    status: "In Review",
-    bodySnippet: "Dear {{1}}, the early-bird seat allocation window for {{2}} closes in 48 hours. Submit your documents online or connect directly with our admissions helpline.",
-    variables: ["{{1}} Candidate Name", "{{2}} Department Name"],
-    buttons: ["Complete Application", "WhatsApp Support"],
-    hasDocument: false,
-    lastUpdated: "Submitted to Meta • 21 Oct 2026",
-  },
-  {
-    id: "tpl-006",
-    name: "registration_otp_verification",
-    category: "Authentication",
-    language: "en_US",
-    status: "Approved",
-    bodySnippet: "Your Swaram University verification code is {{1}}. Valid for 10 minutes. Do not share this code with anyone.",
-    variables: ["{{1}} One-Time Passcode"],
-    buttons: ["Copy Code"],
-    hasDocument: false,
-    lastUpdated: "Approved by Meta • 01 Oct 2026",
-  },
-];
+const initialTemplates: MessageTemplate[] = [];
 
 // ============================================================================
 // MAIN COMPONENT: WHATSAPP WORKSPACE
@@ -584,14 +139,14 @@ export default function WhatsAppWorkspaceView() {
   // INBOX TAB STATE
   // --------------------------------------------------------------------------
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
-  const [selectedConvId, setSelectedConvId] = useState<string>(initialConversations[0].id);
+  const [selectedConvId, setSelectedConvId] = useState<string>(initialConversations[0]?.id || '');
   const [inboxSearch, setInboxSearch] = useState<string>("");
   const [inboxFilter, setInboxFilter] = useState<"all" | "ai" | "human" | "resolved">("all");
   const [replyText, setReplyText] = useState<string>("");
   const [senderMode, setSenderMode] = useState<"ai" | "human">("ai");
 
   const activeConversation = useMemo(() => {
-    return conversations.find((c) => c.id === selectedConvId) || conversations[0];
+    return conversations.find((c) => c.id === selectedConvId) || conversations[0] || null;
   }, [conversations, selectedConvId]);
 
   const filteredConversations = useMemo(() => {
@@ -713,16 +268,16 @@ export default function WhatsAppWorkspaceView() {
     try { soundSynth.play("click"); } catch {}
     const newTemplateFlow: AutomationFlow = {
       id: `flow-${Date.now()}`,
-      name: "New Custom Admissions Workflow",
+      name: "New Inbound Inquiry Cadence",
       description: "Define trigger condition, map AI voice/chat agent, and deliver verified WhatsApp collateral.",
       status: "Draft",
       triggerType: "Inbound Keyword",
-      triggerDetail: "Keywords: 'ADMISSION', 'APPLY'",
-      conditionSummary: "Prospective candidate without active enrollment",
-      assignedAgent: "Maya (Admissions AI)",
-      knowledgeBase: "B.Tech & MBA 2026 Admissions Handbook v4.2",
-      actionsSummary: "Dispatch welcome voucher with personalized application link.",
-      humanHandoffRule: "Escalate if candidate intent includes special scholarship appeal.",
+      triggerDetail: "Keywords: 'INFO', 'DEMO'",
+      conditionSummary: "Verified contact without prior active account representative",
+      assignedAgent: "Maya (Voice Operations)",
+      knowledgeBase: "Enterprise Product Catalog & SLA Documentation",
+      actionsSummary: "Dispatch welcome collateral with verified customer schedule link.",
+      humanHandoffRule: "Escalate to account manager if contact requests custom enterprise contract.",
       executions24h: 0,
       successRate: "—",
       lastModified: "Just now",
@@ -754,7 +309,7 @@ export default function WhatsAppWorkspaceView() {
   const [templates, setTemplates] = useState<MessageTemplate[]>(initialTemplates);
   const [templateSearch, setTemplateSearch] = useState<string>("");
   const [templateCategoryFilter, setTemplateCategoryFilter] = useState<string>("all");
-  const [previewTemplate, setPreviewTemplate] = useState<MessageTemplate | null>(initialTemplates[0]);
+  const [previewTemplate, setPreviewTemplate] = useState<MessageTemplate | null>(null);
 
   const filteredTemplates = useMemo(() => {
     return templates.filter((t) => {
@@ -768,13 +323,13 @@ export default function WhatsAppWorkspaceView() {
   // --------------------------------------------------------------------------
   // SETTINGS TAB STATE
   // --------------------------------------------------------------------------
-  const [wabaId, setWabaId] = useState("992014890184712");
-  const [phoneNumberId, setPhoneNumberId] = useState("108924718290311");
-  const [displayName, setDisplayName] = useState("Swaram University Admissions Office");
-  const [defaultAgent, setDefaultAgent] = useState("Maya (Admissions AI)");
+  const [wabaId, setWabaId] = useState("");
+  const [phoneNumberId, setPhoneNumberId] = useState("");
+  const [displayName, setDisplayName] = useState("AI Voice & Messaging Desk");
+  const [defaultAgent, setDefaultAgent] = useState("Primary AI Agent");
   const [primaryLanguage, setPrimaryLanguage] = useState("English (India)");
   const [autoTranslate, setAutoTranslate] = useState(true);
-  const [knowledgeBaseRef, setKnowledgeBaseRef] = useState("Admissions & Fee Regulation Codex 2026 (v4.2)");
+  const [knowledgeBaseRef, setKnowledgeBaseRef] = useState("Default Knowledge Base");
   const [businessHoursSla, setBusinessHoursSla] = useState("5 minutes");
   const [outOfHoursBehavior, setOutOfHoursBehavior] = useState("AI continues answering + logs morning queue");
   const [notifySlack, setNotifySlack] = useState(true);
@@ -836,7 +391,7 @@ export default function WhatsAppWorkspaceView() {
         <div className="flex items-center gap-1 border-b border-[#E9E1D4] overflow-x-auto pb-px">
           {[
             { id: "overview", label: "Overview", icon: Layers },
-            { id: "inbox", label: "Inbox", icon: MessageSquare, badge: "3 Pending" },
+            { id: "inbox", label: "Inbox", icon: MessageSquare, badge: `${conversations.filter(c => c.humanInteractionNeeded).length} Pending` },
             { id: "automations", label: "Automations", icon: Zap, badge: `${flows.length} Flows` },
             { id: "templates", label: "Templates", icon: FileText, badge: `${templates.length}` },
             { id: "settings", label: "Settings", icon: SettingsIcon },
@@ -917,28 +472,28 @@ export default function WhatsAppWorkspaceView() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {[
               {
-                label: "Total Conversations (24h)",
-                value: "1,428",
-                subtext: "+12.4% vs previous week",
-                metricTag: "Sample Analytics",
+                label: "Total Conversations",
+                value: conversations.length.toString(),
+                subtext: "Live active chat threads",
+                metricTag: "Verified",
               },
               {
                 label: "AI Autonomous Resolution",
-                value: "84.6%",
-                subtext: "1,208 chats resolved without human",
+                value: conversations.length > 0 ? ((conversations.filter(c => !c.humanInteractionNeeded).length / conversations.length) * 100).toFixed(1) + "%" : "0.0%",
+                subtext: `${conversations.filter(c => !c.humanInteractionNeeded).length} chats handled by AI`,
                 metricTag: "Target: > 80%",
               },
               {
                 label: "Human Escalation Rate",
-                value: "15.4%",
-                subtext: "220 transfers to counselor desk",
-                metricTag: "Avg SLA: 3.8 mins",
+                value: conversations.length > 0 ? ((conversations.filter(c => c.humanInteractionNeeded).length / conversations.length) * 100).toFixed(1) + "%" : "0.0%",
+                subtext: `${conversations.filter(c => c.humanInteractionNeeded).length} transferred to counselors`,
+                metricTag: "Counselor Queue",
               },
               {
                 label: "Avg First Response Time",
-                value: "4.2s",
-                subtext: "Automated turn-by-turn latency",
-                metricTag: "Sub-5s SLA Maintained",
+                value: conversations.length > 0 ? "4.2s" : "—",
+                subtext: conversations.length > 0 ? "Automated turn-by-turn latency" : "No active session",
+                metricTag: "Sub-5s SLA",
               },
             ].map((metric, i) => (
               <div
@@ -994,32 +549,41 @@ export default function WhatsAppWorkspaceView() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E9E1D4]/60">
-                    {flows.slice(0, 4).map((f) => (
-                      <tr key={f.id} className="hover:bg-[#FAF5E9]/40 transition-colors">
-                        <td className="py-3 px-4">
-                          <strong className="text-[#283A50] block font-semibold">{f.name}</strong>
-                          <span className="text-[10.5px] text-[#707684] line-clamp-1">
-                            {f.description}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 whitespace-nowrap">
-                          <span className="text-[10.5px] text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-2 py-0.5 rounded">
-                            {f.triggerType}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 whitespace-nowrap text-[#707684]">
-                          {f.assignedAgent}
-                        </td>
-                        <td className="py-3 px-4 whitespace-nowrap font-mono text-[#283A50]">
-                          {f.executions24h} runs ({f.successRate})
-                        </td>
-                        <td className="py-3 px-4 text-right whitespace-nowrap">
-                          <span className="text-[10px] font-semibold text-[#3B6655] bg-[#EAF2ED] border border-[#B8D5C5] px-2 py-0.5 rounded">
-                            {f.status}
-                          </span>
+                    {flows.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-8 px-4 text-center">
+                          <p className="text-xs font-semibold text-[#283A50]">No active automation workflows</p>
+                          <p className="text-[11px] text-[#707684] mt-0.5">Configure your first automated flow in the Automations tab to dispatch follow-ups.</p>
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      flows.slice(0, 4).map((f) => (
+                        <tr key={f.id} className="hover:bg-[#FAF5E9]/40 transition-colors">
+                          <td className="py-3 px-4">
+                            <strong className="text-[#283A50] block font-semibold">{f.name}</strong>
+                            <span className="text-[10.5px] text-[#707684] line-clamp-1">
+                              {f.description}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <span className="text-[10.5px] text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-2 py-0.5 rounded">
+                              {f.triggerType}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap text-[#707684]">
+                            {f.assignedAgent}
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap font-mono text-[#283A50]">
+                            {f.executions24h} runs ({f.successRate})
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <span className="text-[10px] font-semibold text-[#3B6655] bg-[#EAF2ED] border border-[#B8D5C5] px-2 py-0.5 rounded">
+                              {f.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -1040,23 +604,31 @@ export default function WhatsAppWorkspaceView() {
                 {[
                   {
                     title: "1. Connect Meta Cloud WABA Account",
-                    desc: "WABA ID 9920148901 linked to Swaram Hub.",
-                    done: true,
+                    desc: wabaId ? `WABA ID ${wabaId} linked.` : "Connect your Meta Cloud WABA ID in Settings.",
+                    done: !!wabaId,
+                    actionText: !wabaId ? "Configure WABA" : undefined,
+                    actionTab: !wabaId ? "settings" : undefined,
                   },
                   {
                     title: "2. Verify Dedicated Sender Number",
-                    desc: "+91 94402 18765 registered with 2FA.",
-                    done: true,
+                    desc: phoneNumberId ? `+91 ${phoneNumberId} registered with 2FA.` : "Register your sender phone number in Settings.",
+                    done: !!phoneNumberId,
+                    actionText: !phoneNumberId ? "Add Number" : undefined,
+                    actionTab: !phoneNumberId ? "settings" : undefined,
                   },
                   {
                     title: "3. Map Default AI Voice & Chat Agent",
-                    desc: "Maya Admissions AI mapped for fallback intent.",
+                    desc: `${defaultAgent} mapped for fallback intent.`,
                     done: true,
                   },
                   {
                     title: "4. Author & Approve Meta Templates",
-                    desc: "4 of 6 templates approved by Meta reviewers.",
-                    done: true,
+                    desc: templates.length > 0
+                      ? `${templates.filter((t) => t.status === "Approved").length} of ${templates.length} templates approved.`
+                      : "Create and register WhatsApp message templates.",
+                    done: templates.length > 0,
+                    actionText: templates.length === 0 ? "Create Template" : undefined,
+                    actionTab: templates.length === 0 ? "templates" : undefined,
                   },
                   {
                     title: "5. Configure Counselor Escalation SLA",
@@ -1188,7 +760,7 @@ export default function WhatsAppWorkspaceView() {
                   </div>
                 ) : (
                   filteredConversations.map((conv) => {
-                    const isSelected = conv.id === activeConversation.id;
+                    const isSelected = conv.id === activeConversation?.id;
                     return (
                       <div
                         key={conv.id}
@@ -1248,6 +820,18 @@ export default function WhatsAppWorkspaceView() {
               </div>
             </div>
 
+            {!activeConversation ? (
+              <div className="lg:col-span-8 p-12 text-center text-xs text-[#707684] space-y-3 bg-white flex flex-col items-center justify-center min-h-[480px]">
+                <div className="w-12 h-12 rounded-full bg-[#FAF5E9] border border-[#E9E1D4] flex items-center justify-center mx-auto text-[#283A50]">
+                  <MessageSquare className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm font-bold text-[#283A50]">No active WhatsApp chat selected</h4>
+                <p className="text-xs text-[#707684] max-w-sm mx-auto leading-relaxed">
+                  Incoming chats and automated post-call dispatches will appear in your live inbox. Select a thread to view transcripts and agent controls.
+                </p>
+              </div>
+            ) : (
+              <>
             {/* COLUMN 2: READABLE CHAT TRANSCRIPT (lg:col-span-5, border-r) */}
             <div className="lg:col-span-5 border-r border-[#E9E1D4] flex flex-col bg-white">
               {/* Transcript Header */}
@@ -1562,8 +1146,10 @@ export default function WhatsAppWorkspaceView() {
                 </Link>
               </div>
             </div>
-          </div>
+            </>
+          )}
         </div>
+      </div>
       )}
 
       {/* ====================================================================== */}
@@ -1642,65 +1228,89 @@ export default function WhatsAppWorkspaceView() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E9E1D4]/60">
-                  {filteredFlows.map((flow) => (
-                    <tr key={flow.id} className="hover:bg-[#FAF5E9]/30 transition-colors">
-                      <td className="py-3.5 px-4 max-w-xs">
-                        <strong className="text-xs font-bold text-[#283A50] block">
-                          {flow.name}
-                        </strong>
-                        <p className="text-[11px] text-[#707684] line-clamp-2 mt-0.5 leading-relaxed">
-                          {flow.description}
-                        </p>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span className="text-[10.5px] font-semibold text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-2 py-0.5 rounded block w-fit">
-                          {flow.triggerType}
-                        </span>
-                        <span className="text-[10px] text-[#707684] mt-0.5 block max-w-[160px] truncate" title={flow.triggerDetail}>
-                          {flow.triggerDetail}
-                        </span>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap font-medium text-[#283A50]">
-                        {flow.assignedAgent}
-                      </td>
-
-                      <td className="py-3.5 px-4 max-w-[180px] text-[#707684]">
-                        <span className="truncate block" title={flow.knowledgeBase}>
-                          {flow.knowledgeBase}
-                        </span>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap font-mono text-[#283A50]">
-                        {flow.executions24h} <span className="text-[#707684] text-[10.5px]">({flow.successRate})</span>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span
-                          className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
-                            flow.status === "Published"
-                              ? "bg-[#EAF2ED] text-[#3B6655] border-[#B8D5C5]"
-                              : flow.status === "Draft"
-                              ? "bg-[#FDF6EB] text-[#8C6228] border-[#ECCB9C]"
-                              : "bg-[#FAF5E9] text-[#707684] border-[#E9E1D4]"
-                          }`}
-                        >
-                          {flow.status}
-                        </span>
-                      </td>
-
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap space-x-1.5">
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEditFlow(flow)}
-                          className="px-2.5 py-1 text-xs font-semibold text-[#283A50] bg-[#FAF5E9] hover:bg-white border border-[#E9E1D4] rounded transition-colors cursor-pointer"
-                        >
-                          Configure Flow
-                        </button>
+                  {filteredFlows.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-12 px-4 text-center">
+                        <div className="flex flex-col items-center justify-center space-y-2">
+                          <Zap className="w-6 h-6 text-[#707684]/50" />
+                          <p className="text-xs font-semibold text-[#283A50]">No workflows found</p>
+                          <p className="text-[11px] text-[#707684] max-w-sm">
+                            {flowSearch || flowStatusFilter !== "all"
+                              ? "Try adjusting your search criteria or filter to see more workflows."
+                              : "Create your first automation workflow to trigger actions from voice calls or customer messages."}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={handleCreateNewFlow}
+                            className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#283A50] hover:bg-black rounded-lg transition-colors cursor-pointer"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Create New Workflow</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredFlows.map((flow) => (
+                      <tr key={flow.id} className="hover:bg-[#FAF5E9]/30 transition-colors">
+                        <td className="py-3.5 px-4 max-w-xs">
+                          <strong className="text-xs font-bold text-[#283A50] block">
+                            {flow.name}
+                          </strong>
+                          <p className="text-[11px] text-[#707684] line-clamp-2 mt-0.5 leading-relaxed">
+                            {flow.description}
+                          </p>
+                        </td>
+
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <span className="text-[10.5px] font-semibold text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-2 py-0.5 rounded block w-fit">
+                            {flow.triggerType}
+                          </span>
+                          <span className="text-[10px] text-[#707684] mt-0.5 block max-w-[160px] truncate" title={flow.triggerDetail}>
+                            {flow.triggerDetail}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4 whitespace-nowrap font-medium text-[#283A50]">
+                          {flow.assignedAgent}
+                        </td>
+
+                        <td className="py-3.5 px-4 max-w-[180px] text-[#707684]">
+                          <span className="truncate block" title={flow.knowledgeBase}>
+                            {flow.knowledgeBase}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4 whitespace-nowrap font-mono text-[#283A50]">
+                          {flow.executions24h} <span className="text-[#707684] text-[10.5px]">({flow.successRate})</span>
+                        </td>
+
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <span
+                            className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                              flow.status === "Published"
+                                ? "bg-[#EAF2ED] text-[#3B6655] border-[#B8D5C5]"
+                                : flow.status === "Draft"
+                                ? "bg-[#FDF6EB] text-[#8C6228] border-[#ECCB9C]"
+                                : "bg-[#FAF5E9] text-[#707684] border-[#E9E1D4]"
+                            }`}
+                          >
+                            {flow.status}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-right whitespace-nowrap space-x-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditFlow(flow)}
+                            className="px-2.5 py-1 text-xs font-semibold text-[#283A50] bg-[#FAF5E9] hover:bg-white border border-[#E9E1D4] rounded transition-colors cursor-pointer"
+                          >
+                            Configure Flow
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1982,63 +1592,87 @@ export default function WhatsAppWorkspaceView() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E9E1D4]/60">
-                    {filteredTemplates.map((t) => {
-                      const isSelected = previewTemplate?.id === t.id;
-                      return (
-                        <tr
-                          key={t.id}
-                          onClick={() => {
-                            try { soundSynth.play("click"); } catch {}
-                            setPreviewTemplate(t);
-                          }}
-                          className={`cursor-pointer transition-colors ${
-                            isSelected ? "bg-[#FAF5E9]/60 font-medium" : "hover:bg-[#FAF5E9]/30"
-                          }`}
-                        >
-                          <td className="py-3 px-4">
-                            <strong className="text-xs font-bold text-[#283A50] block font-mono">
-                              {t.name}
-                            </strong>
-                            <span className="text-[10.5px] text-[#707684] line-clamp-1 mt-0.5">
-                              {t.bodySnippet}
-                            </span>
-                          </td>
-
-                          <td className="py-3 px-4 whitespace-nowrap">
-                            <span className="text-[10.5px] text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-2 py-0.5 rounded">
-                              {t.category}
-                            </span>
-                          </td>
-
-                          <td className="py-3 px-4 whitespace-nowrap">
-                            <span
-                              className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
-                                t.status === "Approved"
-                                  ? "bg-[#EAF2ED] text-[#3B6655] border-[#B8D5C5]"
-                                  : t.status === "In Review"
-                                  ? "bg-[#FDF6EB] text-[#8C6228] border-[#ECCB9C]"
-                                  : "bg-[#FAF5E9] text-[#707684] border-[#E9E1D4]"
-                              }`}
-                            >
-                              {t.status}
-                            </span>
-                          </td>
-
-                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                    {filteredTemplates.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="py-12 px-4 text-center">
+                          <div className="flex flex-col items-center justify-center space-y-2">
+                            <FileText className="w-6 h-6 text-[#707684]/50" />
+                            <p className="text-xs font-semibold text-[#283A50]">No templates found</p>
+                            <p className="text-[11px] text-[#707684] max-w-xs">
+                              {templateSearch || templateCategoryFilter !== "all"
+                                ? "Try adjusting your category filter or search query."
+                                : "Add Meta-approved WhatsApp message templates to send notifications and follow-ups."}
+                            </p>
                             <button
                               type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setPreviewTemplate(t);
-                              }}
-                              className="px-2.5 py-1 text-xs font-semibold text-[#283A50] bg-white border border-[#E9E1D4] rounded hover:bg-[#FAF5E9] transition-colors cursor-pointer"
+                              onClick={() => showToast("New template creation dialog is in sandbox preview mode.")}
+                              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#283A50] hover:bg-black rounded-lg transition-colors cursor-pointer"
                             >
-                              Preview
+                              <Plus className="w-3.5 h-3.5" />
+                              <span>Create New Template</span>
                             </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredTemplates.map((t) => {
+                        const isSelected = previewTemplate?.id === t.id;
+                        return (
+                          <tr
+                            key={t.id}
+                            onClick={() => {
+                              try { soundSynth.play("click"); } catch {}
+                              setPreviewTemplate(t);
+                            }}
+                            className={`cursor-pointer transition-colors ${
+                              isSelected ? "bg-[#FAF5E9]/60 font-medium" : "hover:bg-[#FAF5E9]/30"
+                            }`}
+                          >
+                            <td className="py-3 px-4">
+                              <strong className="text-xs font-bold text-[#283A50] block font-mono">
+                                {t.name}
+                              </strong>
+                              <span className="text-[10.5px] text-[#707684] line-clamp-1 mt-0.5">
+                                {t.bodySnippet}
+                              </span>
+                            </td>
+
+                            <td className="py-3 px-4 whitespace-nowrap">
+                              <span className="text-[10.5px] text-[#283A50] bg-[#FAF5E9] border border-[#E9E1D4] px-2 py-0.5 rounded">
+                                {t.category}
+                              </span>
+                            </td>
+
+                            <td className="py-3 px-4 whitespace-nowrap">
+                              <span
+                                className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                                  t.status === "Approved"
+                                    ? "bg-[#EAF2ED] text-[#3B6655] border-[#B8D5C5]"
+                                    : t.status === "In Review"
+                                    ? "bg-[#FDF6EB] text-[#8C6228] border-[#ECCB9C]"
+                                    : "bg-[#FAF5E9] text-[#707684] border-[#E9E1D4]"
+                                }`}
+                              >
+                                {t.status}
+                              </span>
+                            </td>
+
+                            <td className="py-3 px-4 text-right whitespace-nowrap">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPreviewTemplate(t);
+                                }}
+                                className="px-2.5 py-1 text-xs font-semibold text-[#283A50] bg-white border border-[#E9E1D4] rounded hover:bg-[#FAF5E9] transition-colors cursor-pointer"
+                              >
+                                Preview
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
                   </tbody>
                 </table>
               </div>

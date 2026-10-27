@@ -17,42 +17,7 @@ export interface VoiceItem {
   provider?: string;
 }
 
-export const initialClonedVoices: VoiceItem[] = [
-  {
-    id: "clone-dean-vikram",
-    name: "Dean Dr. Vikram Rao (Cloned)",
-    gender: "Male",
-    language: "Indian English + Hindi",
-    accent: "Authoritative Academic Executive",
-    tone: "Authoritative & Crisp",
-    sampleAudio: "https://actions.google.com/sounds/v1/speech/female_affirmation.ogg",
-    latencyMs: 118,
-    sampleTranscript: "Welcome to Apex Global University. I am Dean Vikram Rao. We are dedicated to world-class research and academic innovation.",
-    tag: "Cloned Neural Model",
-    recommendedFor: "High-Priority Executive Outreach & Chancellor Desk",
-    isCloned: true,
-    cloneFidelity: 98.4,
-    clonedAt: "Oct 19, 2026",
-    provider: "Enterprise Neural Clone Engine",
-  },
-  {
-    id: "clone-aditi-counselor",
-    name: "Aditi Sen (Cloned Counselor)",
-    gender: "Female",
-    language: "Bengali + Indian English",
-    accent: "Refined Eastern Indian English",
-    tone: "Warm & Reassuring",
-    sampleAudio: "https://actions.google.com/sounds/v1/speech/female_affirmation.ogg",
-    latencyMs: 122,
-    sampleTranscript: "Hello! This is Aditi Sen from student counseling. Let us explore your merit scholarship options together.",
-    tag: "Verified Consent",
-    recommendedFor: "Personalized Admissions Guidance",
-    isCloned: true,
-    cloneFidelity: 97.2,
-    clonedAt: "Oct 21, 2026",
-    provider: "Enterprise Neural Clone Engine",
-  },
-];
+export const initialClonedVoices: VoiceItem[] = [];
 
 export const readyMadeVoices: VoiceItem[] = [
   {

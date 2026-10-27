@@ -64,7 +64,7 @@ export default function KnowledgeView({
               Use your documents. Add one document or one lakh documents.
             </h1>
             <p className="text-xs sm:text-sm text-black/60 leading-relaxed font-sans">
-              Connect institutional brochures, JoSAA rank cutoffs, hostel guides, fee schedules, and CRM data. AI Voice Agents use them as zero-hallucination context when conducting admissions calls.
+              Connect company brochures, product specifications, policies, FAQs, and CRM data. AI Voice Agents use them as zero-hallucination context when conducting voice calls.
             </p>
           </div>
 
@@ -193,52 +193,73 @@ export default function KnowledgeView({
         </div>
 
         <div className="space-y-3">
-          {documents.map((doc) => (
-            <div
-              key={doc.id}
-              className="bg-[#FAF3E4]/40 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-[20px] border border-black/[0.06] hover:bg-[#FAF3E4] transition-all"
-            >
-              <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                  <FileText className="w-4 h-4 stroke-[1.8]" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-[#1A1A1A] text-sm">
-                    {doc.title}
-                  </h4>
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-black/50 mt-1">
-                    <span className="bg-black/5 text-[#1A1A1A] font-medium px-2 py-0.5 rounded-full text-[11px]">
-                      {doc.category}
-                    </span>
-                    <span>• {doc.fileSize}</span>
-                    <span>• {doc.vectorChunks} embedding chunks</span>
+          {documents.length === 0 ? (
+            <div className="p-12 text-center bg-[#FAF3E4]/30 rounded-[20px] border border-black/[0.06] space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#FAF3E4] border border-black/[0.08] flex items-center justify-center mx-auto text-black/40">
+                <FileText className="w-6 h-6 stroke-[1.5]" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-[#1A1A1A]">No grounding documents uploaded</p>
+                <p className="text-xs text-black/50 max-w-sm mx-auto">
+                  Upload PDF brochures, fee schedules, or policy manuals to ground your voice agents in authoritative knowledge.
+                </p>
+              </div>
+              <button
+                onClick={onUploadDocument}
+                className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>Upload Document</span>
+              </button>
+            </div>
+          ) : (
+            documents.map((doc) => (
+              <div
+                key={doc.id}
+                className="bg-[#FAF3E4]/40 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-[20px] border border-black/[0.06] hover:bg-[#FAF3E4] transition-all"
+              >
+                <div className="flex items-start gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <FileText className="w-4 h-4 stroke-[1.8]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-[#1A1A1A] text-sm">
+                      {doc.title}
+                    </h4>
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-black/50 mt-1">
+                      <span className="bg-black/5 text-[#1A1A1A] font-medium px-2 py-0.5 rounded-full text-[11px]">
+                        {doc.category}
+                      </span>
+                      <span>• {doc.fileSize}</span>
+                      <span>• {doc.vectorChunks} embedding chunks</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-between sm:justify-end gap-3 text-xs">
-                <span className="text-black/40 font-mono text-xs">{doc.lastUpdated}</span>
-                {doc.status === "ready" && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#C1F2D5] text-[#16856B]">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
-                    <span>Vectorized</span>
-                  </span>
-                )}
-                {doc.status === "processing" && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#FFD9A0] text-[#7A4B00]">
-                    <RefreshCw className="w-3.5 h-3.5 text-[#7A4B00] animate-spin" />
-                    <span>Processing</span>
-                  </span>
-                )}
-                {doc.status === "failed" && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#FFD9A0]/50 text-red-600">
-                    <AlertCircle className="w-3.5 h-3.5 text-red-600" />
-                    <span>Failed</span>
-                  </span>
-                )}
+                <div className="flex items-center justify-between sm:justify-end gap-3 text-xs">
+                  <span className="text-black/40 font-mono text-xs">{doc.lastUpdated}</span>
+                  {doc.status === "ready" && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#C1F2D5] text-[#16856B]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#16856B]" />
+                      <span>Vectorized</span>
+                    </span>
+                  )}
+                  {doc.status === "processing" && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#FFD9A0] text-[#7A4B00]">
+                      <RefreshCw className="w-3.5 h-3.5 text-[#7A4B00] animate-spin" />
+                      <span>Processing</span>
+                    </span>
+                  )}
+                  {doc.status === "failed" && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#FFD9A0]/50 text-red-600">
+                      <AlertCircle className="w-3.5 h-3.5 text-red-600" />
+                      <span>Failed</span>
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

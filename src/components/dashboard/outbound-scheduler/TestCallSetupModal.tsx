@@ -49,7 +49,7 @@ export default function TestCallSetupModal({
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: "agent",
-      text: openingScript.replace(/\{name\}/g, "Rahul").replace(/\{organization\}/g, "Apex Global"),
+      text: openingScript.replace(/\{name\}/g, "Customer").replace(/\{organization\}/g, "Enterprise Workspace"),
       time: "Just now",
     },
   ]);
@@ -79,12 +79,12 @@ export default function TestCallSetupModal({
     setIsAgentTyping(true);
 
     setTimeout(() => {
-      let reply = "Yes, absolutely! Based on our admissions guidelines, we have provisional scholarship slabs available for students scoring above 85%. Can you attend this Saturday at 11 AM?";
+      let reply = "Thank you for asking. Based on our grounded knowledge layer, our voice system is configured to assist with inquiry qualification, onboarding, and scheduling follow-ups. Would you like me to record your preferences?";
       const lower = newMsg.text.toLowerCase();
-      if (lower.includes("fee") || lower.includes("cost") || lower.includes("scholarship")) {
-        reply = "Under the Chancellor Merit Scholarship, candidates with >=85% receive a 35% tuition waiver across all four years. We also provide zero-interest installment support through SBI.";
-      } else if (lower.includes("hostel") || lower.includes("room")) {
-        reply = "We offer twin-sharing AC accommodations in Block C with round-the-clock Wi-Fi and a four-meal rotational dining menu. A 48-hour provisional hold can be reserved today.";
+      if (lower.includes("pricing") || lower.includes("cost") || lower.includes("fee") || lower.includes("plan")) {
+        reply = "Our plans include predictable usage-based billing with dedicated SIP trunks, zero overage surprises, and enterprise SLA guarantees. I can send a detailed summary directly to your contact number.";
+      } else if (lower.includes("feature") || lower.includes("integration") || lower.includes("support") || lower.includes("technical")) {
+        reply = "We offer native CRM integrations, live webhook event streams, and sub-140ms latency voice models optimized for regional and conversational flow.";
       }
 
       setMessages((prev) => [

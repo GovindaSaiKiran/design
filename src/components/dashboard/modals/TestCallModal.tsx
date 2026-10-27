@@ -18,68 +18,80 @@ interface TestCallModalProps {
   onClose: () => void;
 }
 
-const aiEmployeeOptions = [
-  {
-    id: "maya-admissions",
-    name: "Maya (Admissions Counselor)",
-    role: "Admissions & Counseling Desk",
-    languages: "Hindi, English",
-    code: "VOX-01",
-  },
-  {
-    id: "priya-finance",
-    name: "Priya (Tuition & Financial Aid)",
-    role: "Scholarship & Fee Structure",
-    languages: "Telugu, English",
-    code: "VOX-02",
-  },
-  {
-    id: "arjun-outreach",
-    name: "Arjun (Verification & Outreach)",
-    role: "Entrance Guidance & Cadence",
-    languages: "Hindi, English, Hinglish",
-    code: "VOX-03",
-  },
-];
-
 const languageList = ["Hindi", "Telugu", "Tamil", "Kannada", "Marathi", "English"];
 
-const knowledgeTopicOptions = [
+const defaultKnowledgeTopics = [
   {
-    id: "admissions",
-    label: "Admissions & Eligibility",
-    doc: "2026_Admissions_Prospectus_v3.pdf",
-    icon: "🎓",
-    badge: "Cutoffs & Waivers",
+    id: "general-faq",
+    label: "General Inquiries & FAQ",
+    doc: "Knowledge_Base_Index.pdf",
+    icon: "📋",
+    badge: "Core Knowledge",
   },
   {
-    id: "fees",
-    label: "Fees, Installments & Aid",
-    doc: "Tuition_Fee_Installments_Scholarship_2026.pdf",
+    id: "services-pricing",
+    label: "Services, Plans & Pricing",
+    doc: "Services_and_Fee_Structure.pdf",
     icon: "💳",
-    badge: "3-Part Installments",
+    badge: "Commercials",
   },
   {
-    id: "hostels",
-    label: "Hostels & Campus Living",
-    doc: "Campus_Hostel_Boarding_Inventory_2026.pdf",
+    id: "operations-support",
+    label: "Operations & Support",
+    doc: "Operational_Guidelines.pdf",
     icon: "🏢",
-    badge: "AC Rooms & Dining",
+    badge: "SLA & Policies",
   },
   {
-    id: "technical",
+    id: "technical-integration",
     label: "Technical & Verification",
-    doc: "Portal_Doc_Verification_Manual_v2.pdf",
+    doc: "Technical_Documentation.pdf",
     icon: "🛠️",
-    badge: "DigiLocker & Portal",
+    badge: "Integrations",
   },
 ];
 
 export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState(aiEmployeeOptions[0].id);
-  const [selectedTopic, setSelectedTopic] = useState("admissions");
+  const [employeeOptions, setEmployeeOptions] = useState<
+    Array<{ id: string; name: string; role: string; languages: string; code: string }>
+  >([]);
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState(defaultKnowledgeTopics[0].id);
   const [selectedLang, setSelectedLang] = useState("Hindi");
+
+  React.useEffect(() => {
+    try {
+      const raw = localStorage.getItem("swaram_agents");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const mapped = parsed.map((a: any, idx: number) => ({
+            id: a.id || `agent-${idx}`,
+            name: a.name || `Voice Agent ${idx + 1}`,
+            role: a.role || a.department || "AI Voice Specialist",
+            languages: (a.languages && a.languages.join(", ")) || a.language || "English, Hindi",
+            code: `VOX-0${idx + 1}`,
+          }));
+          setEmployeeOptions(mapped);
+          setSelectedEmployee(mapped[0].id);
+          return;
+        }
+      }
+    } catch {}
+
+    const fallback = [
+      {
+        id: "primary-voice-agent",
+        name: "Primary Voice Agent",
+        role: "Inbound & Outbound Telephony Specialist",
+        languages: "Hindi, English, Hinglish",
+        code: "VOX-01",
+      },
+    ];
+    setEmployeeOptions(fallback);
+    setSelectedEmployee(fallback[0].id);
+  }, []);
   const [callState, setCallState] = useState<"idle" | "dialing" | "ringing" | "connected" | "completed">("idle");
   const [callSid, setCallSid] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -177,7 +189,7 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                   Select AI Employee Persona:
                 </label>
                 <div className="grid grid-cols-1 gap-2">
-                  {aiEmployeeOptions.map((emp) => {
+                  {employeeOptions.map((emp) => {
                     const isSelected = selectedEmployee === emp.id;
                     return (
                       <button
@@ -217,7 +229,7 @@ export default function TestCallModal({ isOpen, onClose }: TestCallModalProps) {
                   </span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                  {knowledgeTopicOptions.map((topic) => {
+                  {defaultKnowledgeTopics.map((topic) => {
                     const isSelected = selectedTopic === topic.id;
                     return (
                       <button

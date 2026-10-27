@@ -29,13 +29,13 @@ export default function CoreCapabilitiesGrid() {
     {
       num: "02",
       icon: BookOpen,
-      title: "Institutional Knowledge RAG",
-      desc: "Grounded strictly in verified university prospectuses, fee charts & guidelines.",
+      title: "Enterprise Knowledge Grounding & RAG",
+      desc: "Grounded strictly in verified product documentation, SLA terms & guidelines.",
       bullets: [
-        "Ingests college prospectuses, PDFs, and syllabus guides",
-        "Accurate fee calculations and installment breakdowns",
-        "Hostel, dining, and campus residency guidelines",
-        "Continuous syncing with real-time SIS updates",
+        "Ingests product catalogs, PDFs, and technical runbooks",
+        "Accurate pricing tier calculations and volume breakdowns",
+        "SLA, carrier interconnect, and security policy verification",
+        "Continuous syncing with real-time CRM & knowledge updates",
       ],
       metric: "100%",
       metricLabel: "Grounded accuracy with citation traceability",
@@ -46,13 +46,13 @@ export default function CoreCapabilitiesGrid() {
       title: "Smart Human Handoff & CRM",
       desc: "Seamless escalation & lead qualification with complete context dossiers.",
       bullets: [
-        "Warm call escalation with student summary briefing",
-        "Automated intent scoring (High, Medium, Information)",
-        "Instant sync to Salesforce, Slate, and HubSpot CRM",
-        "After-hours callback scheduling with SMS confirmation",
+        "Warm call escalation with complete caller context briefing",
+        "Automated intent scoring (Urgent, High, Information)",
+        "Instant sync to Salesforce, HubSpot, and custom webhooks",
+        "After-hours callback scheduling with SMS/WhatsApp confirmation",
       ],
       metric: "4.2x",
-      metricLabel: "Increase in qualified completed applications",
+      metricLabel: "Increase in qualified customer conversions",
     },
   ];
 

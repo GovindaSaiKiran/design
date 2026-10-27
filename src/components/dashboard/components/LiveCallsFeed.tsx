@@ -42,17 +42,28 @@ export default function LiveCallsFeed({ liveCalls, onViewCall }: LiveCallsFeedPr
             </span>
           </div>
           <h3 className="text-xl font-bold text-[#1A1A1A] tracking-tight mt-1">
-            Active Admissions Calls
+            Active Voice Sessions
           </h3>
           <p className="text-xs text-black/50 font-normal">
-            Real-time acoustic streaming, sub-second latency, and live student dialogue
+            Real-time acoustic streaming, sub-second latency, and live conversation dialogue
           </p>
         </div>
       </div>
 
       {/* Live Calls List */}
       <div className="space-y-4">
-        {liveCalls.map((call) => {
+        {liveCalls.length === 0 ? (
+          <div className="p-8 text-center bg-[#FAF3E4]/30 rounded-[20px] border border-black/[0.06] space-y-2.5">
+            <div className="w-10 h-10 rounded-xl bg-[#FAF3E4] border border-black/[0.06] flex items-center justify-center mx-auto text-black/40">
+              <PhoneCall className="w-5 h-5 text-black/50" />
+            </div>
+            <p className="text-xs font-semibold text-[#1A1A1A]">No active calls in progress</p>
+            <p className="text-[11px] text-black/50 max-w-xs mx-auto">
+              Channels are clear and ready for incoming SIP trunk requests or scheduled campaign dispatches.
+            </p>
+          </div>
+        ) : (
+          liveCalls.map((call) => {
           const currentDuration = formatTimer(call.durationSeconds, secondsElapsed);
 
           return (

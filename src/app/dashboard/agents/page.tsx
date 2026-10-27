@@ -229,103 +229,14 @@ export interface StoredConversation {
   }[];
 }
 
-const initialConversationHistory: StoredConversation[] = [
-  {
-    id: "conv-1",
-    agentId: "maya-1",
-    agentName: "Maya",
-    direction: "outbound",
-    contactName: "Rahul Sharma (Lead)",
-    contactNumber: "+91 98401 22345",
-    timestamp: "10 mins ago",
-    durationFormatted: "00:34",
-    turnsCount: 5,
-    sentiment: "positive",
-    sentimentScore: "96%",
-    topics: ["35% Chancellor Waiver", "B.Tech CSE", "Saturday Tour Booking", "Prospectus Followup"],
-    status: "Trained",
-    trainingOutcome: "Campus Tour Confirmed for Sat 11 AM; Merit Waiver Qualified",
-    turns: [
-      { id: "h1-1", speaker: "agent", text: "Hello Rahul! This is Maya calling from Apex Global University Admissions. I noticed you downloaded our 2026 Engineering Prospectus yesterday. Do you have two quick minutes to discuss your branch preferences?", time: "00:02" },
-      { id: "h1-2", speaker: "caller", text: "Hi! Yes, I was actually looking at Computer Science and AI specialization, but wanted to know if you offer merit scholarships for high board marks.", time: "00:10" },
-      { id: "h1-3", speaker: "agent", text: "We certainly do! For students scoring above 90% in PCM, we provide direct tuition fee waivers of up to 35% under the Chancellor's Merit Award. What was your score in 12th boards or your expected percentage?", time: "00:18" },
-      { id: "h1-4", speaker: "caller", text: "I scored 94.2% in my pre-board exams.", time: "00:26" },
-      { id: "h1-5", speaker: "agent", text: "That is an outstanding score, Rahul! You are directly eligible for our top-tier waiver. We are hosting an exclusive campus counseling tour this Saturday at 11:00 AM. May I reserve two seats for you and your parents?", time: "00:34" },
-    ],
-  },
-  {
-    id: "conv-2",
-    agentId: "maya-1",
-    agentName: "Maya",
-    direction: "inbound",
-    contactName: "Ananya Reddy (Caller)",
-    contactNumber: "+91 94402 18765",
-    timestamp: "1 hour ago",
-    durationFormatted: "00:42",
-    turnsCount: 4,
-    sentiment: "positive",
-    sentimentScore: "98%",
-    topics: ["తెలుగు Auto-Switch", "Hostel Accommodation", "AC Twin Sharing", "Wi-Fi & Mess"],
-    status: "Trained",
-    trainingOutcome: "Regional Language Switch Verified; Hostel Fee Breakdown Delivered",
-    turns: [
-      { id: "h2-1", speaker: "caller", text: "Hello, I wanted to inquire about university campus facilities and hostel accommodation.", time: "00:03" },
-      { id: "h2-2", speaker: "agent", text: "Welcome to Apex Global University! We offer 4 air-conditioned residential hostels with 24/7 security, high-speed Wi-Fi, and 4 multi-cuisine meals daily.", time: "00:09" },
-      { id: "h2-3", speaker: "caller", text: "నమస్కారం! నేను తెలుగులో మాట్లాడొచ్చా? హాస్టల్ వార్షిక ఫీజు ఎంత?", time: "00:18" },
-      { id: "h2-4", speaker: "agent", text: "ఖచ్చితంగా అండి! మీరు తెలుగులో మాట్లాడవచ్చు. మా AC ట్విన్-షేరింగ్ హాస్టల్ వార్షిక ఫీజు ₹1.10 లక్షలు. ఇందులో భోజనం, లాండ్రీ మరియు జిమ్ సదుపాయాలు ఉంటాయి.", time: "00:27" },
-    ],
-  },
-  {
-    id: "conv-3",
-    agentId: "maya-1",
-    agentName: "Maya",
-    direction: "outbound",
-    contactName: "Vikram Patel (Lead)",
-    contactNumber: "+91 97234 55120",
-    timestamp: "3 hours ago",
-    durationFormatted: "00:24",
-    turnsCount: 4,
-    sentiment: "neutral",
-    sentimentScore: "88%",
-    topics: ["Objection: Driving/Busy", "Callback Scheduled", "WhatsApp Catalog", "Lead Nurture"],
-    status: "Trained",
-    trainingOutcome: "Rescheduled Callback for Tomorrow 4:00 PM; WhatsApp Catalog Dispatched",
-    turns: [
-      { id: "h3-1", speaker: "agent", text: "Hello Vikram! Maya calling from Apex Admissions regarding your counseling inquiry for Data Science admissions.", time: "00:02" },
-      { id: "h3-2", speaker: "caller", text: "Hey Maya, I am currently driving. Can you call me back tomorrow around 4 PM?", time: "00:09" },
-      { id: "h3-3", speaker: "agent", text: "Of course Vikram! I have logged a priority callback for tomorrow at 4:00 PM. Meanwhile, would you like me to send our syllabus brochure on WhatsApp?", time: "00:16" },
-      { id: "h3-4", speaker: "caller", text: "Yes please, that would be great. Thank you!", time: "00:22" },
-    ],
-  },
-  {
-    id: "conv-4",
-    agentId: "maya-1",
-    agentName: "Maya",
-    direction: "inbound",
-    contactName: "Dr. K. Srinivas (Parent)",
-    contactNumber: "+91 98111 87654",
-    timestamp: "Yesterday",
-    durationFormatted: "00:52",
-    turnsCount: 4,
-    sentiment: "positive",
-    sentimentScore: "92%",
-    topics: ["Parent Inquiry", "Human Counselor Escalation", "Dean Consultation", "SIP Handoff"],
-    status: "Trained",
-    trainingOutcome: "Warm Handoff to Senior Counselor Desk (+91 40 4590 1100)",
-    turns: [
-      { id: "h4-1", speaker: "caller", text: "Good afternoon. I am a parent seeking specialized counseling regarding international dual-degree exchange programs.", time: "00:04" },
-      { id: "h4-2", speaker: "agent", text: "Good afternoon! We partner with Purdue and Melbourne universities for 2+2 dual-degree tracks with credit transfers.", time: "00:12" },
-      { id: "h4-3", speaker: "caller", text: "Can I speak directly with your senior admissions counselor to review international visa documentation?", time: "00:23" },
-      { id: "h4-4", speaker: "agent", text: "Immediately, sir. I am executing a zero-latency warm transfer to Senior Counselor Mrs. Sunita Roy. Please stay on the line.", time: "00:32" },
-    ],
-  },
-];
+const initialConversationHistory: StoredConversation[] = [];
+
 
 export default function AgentsPage() {
   const { palette } = usePalette();
   const [agents, setAgents] = useState<DashboardAgent[]>(mockAgents);
-  const [selectedAgent, setSelectedAgent] = useState<DashboardAgent>(mockAgents[0]);
-  const activeAgentTheme = getAgentTheme(selectedAgent.id);
+  const [selectedAgent, setSelectedAgent] = useState<DashboardAgent | null>(mockAgents[0] || null);
+  const activeAgentTheme = getAgentTheme(selectedAgent?.id || "maya");
   const [activeTab, setActiveTab] = useState<
     | "overview"
     | "instructions"
@@ -353,7 +264,7 @@ export default function AgentsPage() {
   const [cloneConsentConfirmed, setCloneConsentConfirmed] = useState(false);
   const [cloneFileName, setCloneFileName] = useState<string | null>(null);
   const [cloneStatus, setCloneStatus] = useState<"idle" | "uploading" | "analyzing" | "ready">("idle");
-  const [cloneVoiceName, setCloneVoiceName] = useState("Campus Dean Voice Clone");
+  const [cloneVoiceName, setCloneVoiceName] = useState("Custom Voice Clone");
   const [cloneSpeakerGender, setCloneSpeakerGender] = useState<"Female" | "Male" | "Neutral">("Male");
   const [cloneSpeakerAccent, setCloneSpeakerAccent] = useState("Pan-Indian Corporate English");
   const [cloneInputMode, setCloneInputMode] = useState<"mic" | "upload">("mic");
@@ -361,65 +272,62 @@ export default function AgentsPage() {
   const [cloneRecordingSecs, setCloneRecordingSecs] = useState(0);
   const [cloneRecordedBlob, setCloneRecordedBlob] = useState<string | null>(null);
   const [cloneTestSentence, setCloneTestSentence] = useState(
-    "Hello! Welcome to Apex Global University. I am testing my newly cloned neural voice model."
+    "Hello! Welcome. I am testing my newly cloned neural voice model."
   );
   const cloneMicTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Freedom to edit Context, Rules, Purposes for the selected agent
   const [editPurpose, setEditPurpose] = useState(
-    selectedAgent.purpose ||
-      "Counsel prospective students on admissions, fee matrices, merit scholarships, and book campus counseling tours."
+    selectedAgent?.purpose ||
+      "Counsel prospective callers on inquiries, fee structures, and services."
   );
   const [editGreetingPhrase, setEditGreetingPhrase] = useState(
-    selectedAgent.greetingPhrase ||
-      `Hello! Welcome to Apex Global Admissions. I am ${selectedAgent.name.split("—")[0].trim()}. How may I assist you today?`
+    selectedAgent?.greetingPhrase ||
+      (selectedAgent ? `Hello! Welcome. I am ${selectedAgent.name.split("—")[0].trim()}. How may I assist you today?` : "Hello! Welcome. How may I assist you today?")
   );
-  const [editSystemPrompt, setEditSystemPrompt] = useState(selectedAgent.systemPromptPreview);
-  const [editGroundingFacts, setEditGroundingFacts] = useState<string[]>([
-    "B.Tech Computer Science tuition is ₹5.18 Lakhs/year.",
-    "Chancellor's Merit Scholarship: >90% in PCM qualifies for 35% tuition fee waiver.",
-    "Air-conditioned Twin-sharing hostel is ₹1.10 Lakhs/year inclusive of 4 meals and laundry.",
-    "Direct Helpline: +91 40 4590 1199 • WhatsApp Catalog Dispatch active.",
-  ]);
+  const [editSystemPrompt, setEditSystemPrompt] = useState(selectedAgent?.systemPromptPreview || "");
+  const [editGroundingFacts, setEditGroundingFacts] = useState<string[]>([]);
   const [newContextFactInput, setNewContextFactInput] = useState("");
-  const [editDosRules, setEditDosRules] = useState<string[]>([
-    "Always greet callers with warmth, empathy, and active listening.",
-    "Keep answers under 25 words per turn for natural phone conversational latency.",
-    "Promptly offer to reserve a Saturday 11:00 AM counseling tour.",
-  ]);
+  const [editDosRules, setEditDosRules] = useState<string[]>([]);
   const [newDoInput, setNewDoInput] = useState("");
-  const [editDontsRules, setEditDontsRules] = useState<string[]>([
-    "Never invent or guess cutoff ranks not in official records.",
-    "Do not offer unapproved fee discounts outside the merit matrix.",
-    "Never discuss competitor institutions negatively.",
-  ]);
+  const [editDontsRules, setEditDontsRules] = useState<string[]>([]);
   const [newDontInput, setNewDontInput] = useState("");
   const [editEscalationDesk, setEditEscalationDesk] = useState(
-    selectedAgent.escalationDesk || "Admissions Counselor Desk (+91 40 4590 1100)"
+    selectedAgent?.escalationDesk || "Counselor Desk"
   );
   const [saveSuccessNotice, setSaveSuccessNotice] = useState(false);
 
   // Keep editor state in sync when selected agent changes
   useEffect(() => {
+    if (!selectedAgent) return;
     setEditPurpose(
       selectedAgent.purpose ||
-        "Counsel prospective students on admissions, fee matrices, merit scholarships, and book campus counseling tours."
+        "Counsel prospective callers on inquiries, fee structures, and services."
     );
     setEditGreetingPhrase(
       selectedAgent.greetingPhrase ||
-        `Hello! Welcome to Apex Global Admissions. I am ${selectedAgent.name.split("—")[0].trim()}. How may I assist you today?`
+        `Hello! Welcome. I am ${selectedAgent.name.split("—")[0].trim()}. How may I assist you today?`
     );
-    setEditSystemPrompt(selectedAgent.systemPromptPreview);
+    setEditSystemPrompt(selectedAgent.systemPromptPreview || "");
     if (selectedAgent.rules && selectedAgent.rules.length > 0) {
       setEditDosRules(selectedAgent.rules);
+    } else {
+      setEditDosRules([]);
     }
     if (selectedAgent.guardrails && selectedAgent.guardrails.length > 0) {
       setEditDontsRules(selectedAgent.guardrails);
+    } else {
+      setEditDontsRules([]);
     }
     if (selectedAgent.contextKnowledge) {
       const facts = selectedAgent.contextKnowledge.split("\n").filter((f) => f.trim().length > 0);
-      if (facts.length > 0) setEditGroundingFacts(facts);
+      setEditGroundingFacts(facts);
+    } else {
+      setEditGroundingFacts([]);
     }
+    setEditEscalationDesk(
+      selectedAgent.escalationDesk || "Counselor Desk"
+    );
   }, [selectedAgent]);
 
   // Language tab states (12+ Indian Languages with Native Scripts)
@@ -447,25 +355,25 @@ export default function AgentsPage() {
     {
       id: "in-1",
       speaker: "caller",
-      text: "Hello! I saw your announcement regarding B.Tech admissions for 2026. What is the tuition for Computer Science?",
+      text: "Hello! I am calling to inquire about your enterprise voice telephony solutions and pricing tiers.",
       time: "00:03",
     },
     {
       id: "in-2",
       speaker: "agent",
-      text: "Hello! Welcome to Apex Global Admissions. For B.Tech Computer Science, the annual tuition is ₹5.18 Lakhs. May I know what percentage you secured in your 12th board exams?",
+      text: "Hello! Welcome to our Voice Operations Desk. Our enterprise plan includes 3,000 monthly minutes with dedicated SIP trunks. May I know your estimated monthly call volume?",
       time: "00:08",
     },
     {
       id: "in-3",
       speaker: "caller",
-      text: "I got 94.2% in CBSE with Physics, Chemistry and Math.",
+      text: "We are currently handling around 15,000 calls per month across regional languages.",
       time: "00:15",
     },
     {
       id: "in-4",
       speaker: "agent",
-      text: "Congratulations! With 94.2%, you qualify for our 35% Chancellor Merit Scholarship, reducing your tuition fee significantly. Would you like me to book your campus tour for this Saturday at 11:00 AM?",
+      text: "Understood! For 15,000 calls, we offer sub-140ms multi-lingual models with volume discounts. Would you like me to schedule a technical walkthrough with our telephony solutions engineer?",
       time: "00:22",
     },
   ];
@@ -474,31 +382,31 @@ export default function AgentsPage() {
     {
       id: "out-1",
       speaker: "agent",
-      text: `Hello Rahul! This is ${selectedAgent.name.split("—")[0].trim()} calling from Apex Global University Admissions. I noticed you downloaded our 2026 Engineering Prospectus yesterday. Do you have two quick minutes to discuss your branch preferences?`,
+      text: `Hello! This is ${selectedAgent ? selectedAgent.name.split("—")[0].trim() : "Agent"} calling from voice operations. Do you have two quick minutes?`,
       time: "00:02",
     },
     {
       id: "out-2",
       speaker: "caller",
-      text: "Hi! Yes, I was actually looking at Computer Science and AI specialization, but wanted to know if you offer merit scholarships for high board marks.",
+      text: "Hi! Yes, I was actually looking at high-concurrency SIP trunking and wanted to know your SLA guarantees for multi-carrier failover.",
       time: "00:10",
     },
     {
       id: "out-3",
       speaker: "agent",
-      text: "We certainly do! For students scoring above 90% in PCM, we provide direct tuition fee waivers of up to 35% under the Chancellor's Merit Award. What was your score in 12th boards or your expected percentage?",
+      text: "We provide 99.99% high-availability SLA with automated failover in under 120ms. What is your estimated monthly concurrent line volume?",
       time: "00:18",
     },
     {
       id: "out-4",
       speaker: "caller",
-      text: "I scored 94.2% in my pre-board exams.",
+      text: "We are scaling up to approximately 48 concurrent lines across pan-India campaigns.",
       time: "00:26",
     },
     {
       id: "out-5",
       speaker: "agent",
-      text: "That is an outstanding score, Rahul! You are directly eligible for our top-tier waiver. We are hosting an exclusive campus counseling tour this Saturday at 11:00 AM. May I reserve two seats for you and your parents?",
+      text: "That fits our Tier-1 enterprise volume plan with dedicated SIP routing. May I schedule a technical onboarding walkthrough with our solutions team for Thursday?",
       time: "00:34",
     },
   ];
@@ -524,12 +432,13 @@ export default function AgentsPage() {
     } catch {}
 
     const isOut = callSimulationMode === "outbound";
+    const agentNameStr = selectedAgent ? selectedAgent.name.split("—")[0].trim() : "Agent";
     const newSession: StoredConversation = {
       id: `train-${Date.now()}`,
-      agentId: selectedAgent.id,
-      agentName: selectedAgent.name.split("—")[0].trim(),
+      agentId: selectedAgent?.id || "default",
+      agentName: agentNameStr,
       direction: callSimulationMode,
-      contactName: isOut ? "Rahul Sharma (Lead)" : "Incoming Caller",
+      contactName: isOut ? "Prospective Lead (Outbound)" : "Incoming Caller",
       contactNumber: "+91 98401 22345",
       timestamp: "Just now",
       durationFormatted: "00:36",
@@ -537,8 +446,8 @@ export default function AgentsPage() {
       sentiment: "positive",
       sentimentScore: "95%",
       topics: isOut
-        ? ["Outbound Pitch", "Lead Qualification", "WhatsApp Delivery", "Visit Scheduling"]
-        : ["Admissions Q&A", "Hostel Fees", "Scholarships", "Language Switch"],
+        ? ["Outbound Discovery", "Lead Qualification", "WhatsApp Delivery", "Demo Scheduling"]
+        : ["Pricing & Plans", "SIP Trunks", "CRM Integration", "Multi-lingual Routing"],
       status: "Trained",
       trainingOutcome: isOut
         ? "Outbound Campaign Script Validated & Lead Qualified"
@@ -548,7 +457,7 @@ export default function AgentsPage() {
 
     setConversationHistory((prev) => [newSession, ...prev]);
     setTrainingSuccessNotice(
-      `🎉 Training Session Saved to History! ${selectedAgent.name.split("—")[0].trim()}'s neural weights & RAG dialogue memory have been updated.`
+      `🎉 Training Session Saved to History! ${agentNameStr}'s neural weights & RAG dialogue memory have been updated.`
     );
     setTimeout(() => {
       setTrainingSuccessNotice(null);
@@ -560,7 +469,7 @@ export default function AgentsPage() {
         {
           id: `fresh-in-${Date.now()}`,
           speaker: "agent",
-          text: `Hello! I am ${selectedAgent.name.split("—")[0].trim()} with Apex Global Admissions. How can I assist you with your campus inquiry today?`,
+          text: `Hello! I am ${agentNameStr}. How can I assist you with your inquiry today?`,
           time: "00:00",
         },
       ]);
@@ -569,7 +478,7 @@ export default function AgentsPage() {
         {
           id: `fresh-out-${Date.now()}`,
           speaker: "agent",
-          text: `Hi Rahul! This is ${selectedAgent.name.split("—")[0].trim()} from Apex Global Admissions following up on your recent catalog download. Do you have two quick minutes?`,
+          text: `Hello! This is ${agentNameStr} following up on your recent platform inquiry. Do you have two quick minutes?`,
           time: "00:00",
         },
       ]);
@@ -727,6 +636,7 @@ export default function AgentsPage() {
   };
 
   const handleSelectVoice = (v: VoiceItem) => {
+    if (!selectedAgent) return;
     try {
       soundSynth.play("click");
     } catch {}
@@ -788,6 +698,7 @@ export default function AgentsPage() {
   };
 
   const handleSaveAgentInstructions = () => {
+    if (!selectedAgent) return;
     try {
       soundSynth.play("confirm");
     } catch {}
@@ -811,6 +722,7 @@ export default function AgentsPage() {
   };
 
   const handleSimulateCall = (agent: DashboardAgent, forceDirection?: "inbound" | "outbound") => {
+    if (!agent) return;
     try {
       soundSynth.play("confirm");
     } catch {}
@@ -820,7 +732,7 @@ export default function AgentsPage() {
     const liveCallObj: LiveCallItem = {
       id: `sim-${direction}-${agent.id}`,
       callerNumber: "+91 98401 22345",
-      callerName: isOut ? "Rahul Sharma (Outbound Lead)" : "Rahul Sharma (Incoming Caller)",
+      callerName: isOut ? "Prospective Lead (Outbound)" : "Customer (Incoming Caller)",
       agentId: agent.id,
       agentName: agent.name.split("—")[0].trim(),
       direction: direction,
@@ -828,8 +740,8 @@ export default function AgentsPage() {
       durationFormatted: "00:28",
       currentSentiment: "positive",
       intent: isOut
-        ? "Outbound Lead Qualification & Visit Scheduling"
-        : "Inbound Admissions & Fee Inquiries",
+        ? "Outbound Lead Qualification & Demo Scheduling"
+        : "Inbound Inquiries & Plan Verification",
       latestSnippet: isOut
         ? "Testing proactive outbound campaign pitch, objection handling, and appointment booking."
         : "Testing inbound voice latency, prompt guardrails, and knowledge retrieval.",
@@ -838,13 +750,13 @@ export default function AgentsPage() {
       latencyMs: isOut ? 112 : 135,
       transcript: isOut
         ? [
-            { speaker: "agent", text: `Hello Rahul! This is ${agent.name.split("—")[0].trim()} calling from Apex Global University Admissions. I noticed you requested our 2026 course catalog.`, time: "00:02" },
-            { speaker: "caller", text: "Hi! Yes, I was looking into B.Tech CSE and wanted to know about scholarship criteria.", time: "00:09" },
-            { speaker: "agent", text: "Candidates scoring above 90% receive direct Chancellor scholarships of 35%. Can I invite you for campus counseling this Saturday?", time: "00:18" },
+            { speaker: "agent", text: `Hello! This is ${agent.name.split("—")[0].trim()} following up from our Voice Telephony Desk regarding your recent platform inquiry.`, time: "00:02" },
+            { speaker: "caller", text: "Hi! Yes, I was looking into automated voice agents and wanted to verify SIP trunk integration.", time: "00:09" },
+            { speaker: "agent", text: "We support carrier PRI and SIP trunking with sub-140ms latency. Would you like me to schedule a technical consultation?", time: "00:18" },
           ]
         : [
             { speaker: "caller", text: "Hello, I am testing the conversational voice agent in inbound simulation mode.", time: "00:02" },
-            { speaker: "agent", text: `Hello! I am ${agent.name.split("—")[0].trim()}. How can I assist you with admissions today?`, time: "00:08" },
+            { speaker: "agent", text: `Hello! I am ${agent.name.split("—")[0].trim()}. How can I assist with your voice operations today?`, time: "00:08" },
           ],
     };
     setTestCallItem(liveCallObj);
@@ -876,26 +788,26 @@ export default function AgentsPage() {
 
       if (callSimulationMode === "outbound") {
         if (lower.includes("busy") || lower.includes("later") || lower.includes("tomorrow") || lower.includes("call back")) {
-          responseText = "I completely understand! Would tomorrow at 4:00 PM be a convenient time for me to call you back? I have recorded this in your counseling schedule.";
+          responseText = "I completely understand! Would tomorrow at 4:00 PM be a convenient time for me to call you back? I have recorded this in your callback schedule.";
         } else if (lower.includes("not interested") || lower.includes("cancel") || lower.includes("remove") || lower.includes("no")) {
           responseText = "Understood, thank you for letting us know! I have updated your status and removed your contact from our active outreach list. Wishing you all the best!";
-        } else if (lower.includes("scholarship") || lower.includes("fee") || lower.includes("cost") || lower.includes("tuition")) {
-          responseText = "Our annual tuition for CSE is ₹5.18 Lakhs, and with your 35% Chancellor waiver it comes down to ₹3.36 Lakhs. Would you like me to send the full fee breakdown on WhatsApp?";
-        } else if (lower.includes("whatsapp") || lower.includes("brochure") || lower.includes("catalog")) {
-          responseText = "I have dispatched the official 2026 Admissions Prospectus and fee schedule directly to your registered WhatsApp number. Please feel free to review it!";
+        } else if (lower.includes("pricing") || lower.includes("fee") || lower.includes("cost") || lower.includes("rate") || lower.includes("plan")) {
+          responseText = "Our enterprise voice plans start with per-minute increments, and volume discounts apply above 10,000 monthly minutes. Would you like me to send the complete rate matrix on WhatsApp?";
+        } else if (lower.includes("whatsapp") || lower.includes("brochure") || lower.includes("catalog") || lower.includes("spec")) {
+          responseText = "I have dispatched our verified Technical Architecture and Telephony Runbook directly to your registered WhatsApp number. Please feel free to review it!";
         } else {
-          responseText = "Great! I have updated your student profile in our CRM. We are also arranging one-on-one lab walkthroughs this Saturday at 11:00 AM. May I lock in your seat?";
+          responseText = "Great! I have updated your contact profile in our CRM. We can also arrange a personalized live demonstration this Thursday. May I lock in a slot for your team?";
         }
       } else {
         // Inbound mode
-        if (lower.includes("hostel") || lower.includes("stay") || lower.includes("room") || lower.includes("accommodation")) {
-          responseText = "We offer 4 on-campus residential hostels with AC and Non-AC twin-sharing options. The annual hostel fee starts at ₹1.10 Lakhs inclusive of all 4 meals, high-speed Wi-Fi, and laundry facilities.";
+        if (lower.includes("sla") || lower.includes("uptime") || lower.includes("latency") || lower.includes("peering")) {
+          responseText = "We guarantee 99.99% carrier uptime with automated multi-region SIP failover under 120ms. Audio streams are end-to-end encrypted via TLS 1.3 and SRTP.";
         } else if (lower.includes("telugu") || lower.includes("hindi") || lower.includes("language")) {
-          responseText = "ఖచ్చితంగా! మీరు తెలుగులో మాట్లాడవచ్చు. మన యూనివర్సిటీ అడ్మిషన్ల వివరాలు మరియు స్కాలర్‌షిప్ గైడెన్స్ పూర్తి వివరాలు నేను మీకు వివరించగలను. (Sure, you can speak in Telugu! I am fully equipped to guide you in your native language.)";
-        } else if (lower.includes("human") || lower.includes("counselor") || lower.includes("officer") || lower.includes("transfer")) {
-          responseText = "Certainly! I am transferring your call directly to Senior Admissions Counselor Mrs. Sunita Roy. Please hold for direct SIP connection with zero wait time...";
+          responseText = "ఖచ్చితంగా! మీరు తెలుగులో మాట్లాడవచ్చు. మన వాయిస్ ఆటోమేషన్ ప్లాట్‌ఫారమ్ వివరాలు మరియు API ఇంటిగ్రేషన్ పూర్తి సమాచారం నేను మీకు వివరించగలను. (Sure, you can speak in Telugu! I am fully equipped to guide you in your native language.)";
+        } else if (lower.includes("human") || lower.includes("agent") || lower.includes("operator") || lower.includes("transfer")) {
+          responseText = "Certainly! I am transferring your call directly to our Senior Solutions Engineer. Please hold for direct SIP connection with zero wait time...";
         } else {
-          responseText = "Thank you for asking! According to our 2026 admissions policy, all candidates with board percentages above 90% receive priority counseling and direct merit waivers. I have updated your simulation dossier accordingly.";
+          responseText = "Thank you for asking! Our enterprise platform provides sub-140ms voice latency, multi-lingual Indic speech synthesis, and bi-directional CRM webhook synchronization. I have updated your simulation dossier accordingly.";
         }
       }
 
@@ -941,25 +853,27 @@ export default function AgentsPage() {
           provider: "Custom Cloned Neural Engine",
         };
         setClonedVoices((prev) => [newCloned, ...prev]);
-        const updatedAgent: DashboardAgent = {
-          ...selectedAgent,
-          voice: {
-            name: newCloned.name,
-            gender: newCloned.gender,
-            accent: `${newCloned.accent} (${newCloned.tone})`,
-            sampleUrl: newCloned.sampleAudio,
-            isCloned: true,
-          },
-        };
-        setSelectedAgent(updatedAgent);
-        setAgents((prev) => prev.map((a) => (a.id === selectedAgent.id ? updatedAgent : a)));
-        try {
-          soundSynth.play("affirm");
-          soundSynth.speak(
-            `Voice model ${cloneVoiceName} cloned and assigned to ${selectedAgent.name.split("—")[0].trim()}!`,
-            { rate: 1.05 }
-          );
-        } catch {}
+        if (selectedAgent) {
+          const updatedAgent: DashboardAgent = {
+            ...selectedAgent,
+            voice: {
+              name: newCloned.name,
+              gender: newCloned.gender,
+              accent: `${newCloned.accent} (${newCloned.tone})`,
+              sampleUrl: newCloned.sampleAudio,
+              isCloned: true,
+            },
+          };
+          setSelectedAgent(updatedAgent);
+          setAgents((prev) => prev.map((a) => (a.id === selectedAgent.id ? updatedAgent : a)));
+          try {
+            soundSynth.play("affirm");
+            soundSynth.speak(
+              `Voice model ${cloneVoiceName} cloned and assigned to ${selectedAgent.name.split("—")[0].trim()}!`,
+              { rate: 1.05 }
+            );
+          } catch {}
+        }
       }, 1400);
     }, 1000);
   };
@@ -1065,7 +979,7 @@ export default function AgentsPage() {
       {publishSuccessNotice && (
         <div className="p-3.5 rounded-2xl bg-[#C1F2D5]/40 border border-[#16856B]/20 flex items-center gap-3 text-xs text-[#0D593F] font-semibold animate-in fade-in duration-200">
           <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16856B]" />
-          <span>Agent revision successfully compiled and published to live telephony line {selectedAgent.assignedNumber}.</span>
+          <span>Agent revision successfully compiled and published to live telephony line {selectedAgent?.assignedNumber || ""}.</span>
         </div>
       )}
 
@@ -1074,7 +988,7 @@ export default function AgentsPage() {
       {/* ======================================================================= */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {agents.map((agent) => {
-          const isSelected = selectedAgent.id === agent.id;
+          const isSelected = selectedAgent?.id === agent.id;
           const theme = getAgentTheme(agent.id);
 
           return (
@@ -1153,9 +1067,29 @@ export default function AgentsPage() {
       </div>
 
       {/* ======================================================================= */}
-      {/* ACTIVE AGENT DETAIL DECK (9 TABS)                                       */}
+      {/* ACTIVE AGENT DETAIL DECK (9 TABS) OR ZERO-STATE                          */}
       {/* ======================================================================= */}
-      <div className="bg-white rounded-[26px] border-2 border-black/[0.08] shadow-[0_6px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+      {!selectedAgent ? (
+        <div className="bg-white rounded-[26px] border-2 border-dashed border-black/15 p-12 text-center flex flex-col items-center justify-center gap-4 shadow-2xs">
+          <div className="w-16 h-16 rounded-3xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#FF6B08]">
+            <Bot className="w-8 h-8 stroke-[2.2]" />
+          </div>
+          <div className="max-w-md">
+            <h3 className="text-base font-bold text-[#1A1A1A]">No Voice Agents Deployed</h3>
+            <p className="text-xs text-black/60 mt-1">
+              Create your first autonomous AI voice agent with custom system prompts, neural voice synthesis, and call routing guardrails.
+            </p>
+          </div>
+          <button
+            onClick={() => setCreateModalOpen(true)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-[#FF6B08] hover:bg-[#E55F05] text-white shadow-sm transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <span>Create Your First Agent</span>
+          </button>
+        </div>
+      ) : (
+        <div className="bg-white rounded-[26px] border-2 border-black/[0.08] shadow-[0_6px_30px_rgba(0,0,0,0.04)] overflow-hidden">
         {/* Agent Profile Sub-Header with Dynamic Theme Gradient */}
         <div
           className={`px-6 py-5 border-b border-black/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300 ${activeAgentTheme.heroBg}`}
@@ -2846,18 +2780,18 @@ export default function AgentsPage() {
               <div className="space-y-3">
                 {[
                   {
-                    title: "B.Tech Fee Structure, TFW & Merit Scholarships 2026.xlsx",
+                    title: "Enterprise Pricing, Invoicing & SLA Terms 2026.xlsx",
                     chunks: 142,
-                    category: "Fees & Scholarships",
+                    category: "Pricing & Invoicing",
                     status: "Synchronized",
                     theme: "emerald",
                     iconBg: "bg-emerald-100 text-emerald-800 border-emerald-300",
                     border: "border-emerald-300/80 bg-gradient-to-r from-emerald-50/60 via-white to-teal-50/40",
                   },
                   {
-                    title: "Campus Admissions Policy, Cutoffs & Seat Matrix.pdf",
+                    title: "Telephony Integration & PBX Carrier Runbook.pdf",
                     chunks: 218,
-                    category: "Admissions Policy",
+                    category: "Telephony Infrastructure",
                     status: "Synchronized",
                     theme: "rose",
                     iconBg: "bg-rose-100 text-rose-800 border-rose-300",
@@ -3154,9 +3088,9 @@ export default function AgentsPage() {
                   }`} />
                   <span className="text-xs font-extrabold text-[#1A1A1A] tracking-tight">
                     {callSimulationMode === "inbound" ? (
-                      <>INBOUND SIP CALL SIMULATION — Caller dialed (+91 40 4590 1000) Admissions Desk</>
+                      <>INBOUND SIP CALL SIMULATION — Caller dialed (+91 40 4590 1000) Telephony Desk</>
                     ) : (
-                      <>OUTBOUND CAMPAIGN SIMULATION — Agent dialing lead Rahul Sharma (+91 98401 22345)</>
+                      <>OUTBOUND CAMPAIGN SIMULATION — Agent dialing lead (+91 98401 22345)</>
                     )}
                   </span>
                 </div>
@@ -3236,7 +3170,7 @@ export default function AgentsPage() {
                                 ? `${selectedAgent.name.split("—")[0].trim()} (${callSimulationMode === "inbound" ? "Inbound Agent" : "Outbound Persona"})`
                                 : callSimulationMode === "inbound"
                                 ? "Caller (You • +91 98401 22345)"
-                                : "Rahul Sharma (Lead • +91 98401 22345)"}
+                                : "Prospective Lead (+91 98401 22345)"}
                             </span>
                             <span>•</span>
                             <span>{turn.time}</span>
@@ -3403,12 +3337,12 @@ export default function AgentsPage() {
                         <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 border-2 border-emerald-300/70 shadow-2xs">
                           <span className="text-[10px] font-extrabold text-emerald-800 uppercase block">Contact Disposition</span>
                           <span className="text-2xl font-black text-emerald-700 block mt-0.5">Hot Lead (Engaged)</span>
-                          <span className="text-[10.5px] text-emerald-600 font-bold">Ready for Campus Visit</span>
+                          <span className="text-[10.5px] text-emerald-600 font-bold">Ready for Demo</span>
                         </div>
 
                         <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-indigo-50 border-2 border-purple-300/70 shadow-2xs">
                           <span className="text-[10px] font-extrabold text-purple-800 uppercase block">Campaign Attribution</span>
-                          <span className="text-xs font-extrabold text-purple-900 block mt-1">2026 Engineering Prospectus Warm List</span>
+                          <span className="text-xs font-extrabold text-purple-900 block mt-1">Enterprise Telephony Outreach</span>
                         </div>
                       </>
                     )}
@@ -3423,39 +3357,39 @@ export default function AgentsPage() {
                       {callSimulationMode === "inbound" ? (
                         <>
                           <div className="flex justify-between items-center py-1.5 border-b border-black/[0.04]">
-                            <span className="text-black/60">Target Course:</span>
-                            <span className="px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 font-bold text-[11px]">B.Tech CSE</span>
+                            <span className="text-black/60">Service Tier:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 font-bold text-[11px]">Enterprise SIP Trunking</span>
                           </div>
                           <div className="flex justify-between items-center py-1.5 border-b border-black/[0.04]">
-                            <span className="text-black/60">Board Percentage:</span>
-                            <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 font-bold text-[11px]">94.2% (CBSE)</span>
+                            <span className="text-black/60">Concurrency:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 font-bold text-[11px]">48 Active Channels</span>
                           </div>
                           <div className="flex justify-between items-center py-1.5 border-b border-black/[0.04]">
-                            <span className="text-black/60">Scholarship Tier:</span>
-                            <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 font-bold text-[11px]">35% Chancellor</span>
+                            <span className="text-black/60">Integration:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-900 font-bold text-[11px]">Salesforce &amp; Asterisk PBX</span>
                           </div>
                           <div className="flex justify-between items-center py-1.5">
-                            <span className="text-black/60">Campus Tour:</span>
-                            <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold text-[11px]">Sat 11:00 AM Reserved</span>
+                            <span className="text-black/60">Follow-up:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold text-[11px]">Technical Demo Reserved</span>
                           </div>
                         </>
                       ) : (
                         <>
                           <div className="flex justify-between items-center py-1.5 border-b border-black/[0.04]">
                             <span className="text-black/60">Lead Name:</span>
-                            <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-900 font-bold text-[11px]">Rahul Sharma</span>
+                            <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-900 font-bold text-[11px]">Prospective Client</span>
                           </div>
                           <div className="flex justify-between items-center py-1.5 border-b border-black/[0.04]">
                             <span className="text-black/60">Contact Number:</span>
                             <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-bold text-[11px]">+91 98401 22345</span>
                           </div>
                           <div className="flex justify-between items-center py-1.5 border-b border-black/[0.04]">
-                            <span className="text-black/60">WhatsApp Brochure:</span>
-                            <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 font-bold text-[11px]">Prospectus Dispatched</span>
+                            <span className="text-black/60">WhatsApp Follow-up:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 font-bold text-[11px]">Overview Dispatched</span>
                           </div>
                           <div className="flex justify-between items-center py-1.5">
                             <span className="text-black/60">CRM Status:</span>
-                            <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold text-[11px]">Counseling Scheduled</span>
+                            <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold text-[11px]">Meeting Scheduled</span>
                           </div>
                         </>
                       )}
@@ -3566,28 +3500,28 @@ export default function AgentsPage() {
                       version: "v3.4 (Current Production)",
                       author: "Govinda T.",
                       date: "2 days ago",
-                      changes: "Updated Chancellor merit waiver tiers to 35% and configured Telugu auto-code switching.",
+                      changes: "Configured sub-140ms acoustic model and Telugu auto-code switching.",
                       isCurrent: true,
                     },
                     {
                       version: "v3.3",
                       author: "Govinda T.",
                       date: "Oct 12, 2026",
-                      changes: "Connected new 2026 Hostel AC fee schedule vector collection.",
+                      changes: "Connected new 2026 Enterprise Telephony SLA and carrier pricing vector collection.",
                       isCurrent: false,
                     },
                     {
                       version: "v3.2",
                       author: "System Admin",
                       date: "Oct 05, 2026",
-                      changes: "Adjusted silence threshold to 5 seconds and added warm counselor transfer trigger.",
+                      changes: "Adjusted silence threshold to 4 seconds and added warm operator transfer trigger.",
                       isCurrent: false,
                     },
                     {
                       version: "v3.1",
                       author: "System Admin",
                       date: "Sep 28, 2026",
-                      changes: "Initial provision of Maya Admissions Agent on DID +91 40 4590 1199.",
+                      changes: "Initial provision of Voice Agent on primary SIP DID +91 40 4590 1199.",
                       isCurrent: false,
                     },
                   ].map((item, idx) => (
@@ -3810,11 +3744,12 @@ export default function AgentsPage() {
           )}
         </div>
       </div>
+      )}
 
       {/* ======================================================================= */}
       {/* PUBLISH CONFIRMATION MODAL                                              */}
       {/* ======================================================================= */}
-      {publishModalOpen && (
+      {publishModalOpen && selectedAgent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-100">
           <div className="relative w-full max-w-md bg-white rounded-[28px] border border-black/[0.08] shadow-2xl overflow-hidden text-xs text-[#1A1A1A] p-6 space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-[#FFD9A0]/50 text-[#8C4A00] flex items-center justify-center">
@@ -3900,7 +3835,7 @@ export default function AgentsPage() {
                     </span>
                   </h3>
                   <p className="text-[11px] text-black/60 mt-0.5">
-                    Test the exact conversation script below with {selectedAgent.name.split("—")[0].trim()} on your physical mobile handset.
+                    Test the exact conversation script below with {selectedAgent ? selectedAgent.name.split("—")[0].trim() : "your agent"} on your physical mobile handset.
                   </p>
                 </div>
               </div>
@@ -3925,7 +3860,7 @@ export default function AgentsPage() {
                       </div>
                       <div>
                         <strong className="text-xs font-black text-[#1A1A1A] block">
-                          Persona: {selectedAgent.name}
+                          Persona: {selectedAgent ? selectedAgent.name : "Voice Agent"}
                         </strong>
                         <span className="text-[11px] text-black/60">
                           Mode: {callSimulationMode === "inbound" ? "Inbound Routing (Caller dials Agent)" : "Outbound Campaign (Agent dials You)"}

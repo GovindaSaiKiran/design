@@ -56,7 +56,10 @@ export default function AppSidebar({
   const [createAgentOpen, setCreateAgentOpen] = useState(false);
   const [topUpOpen, setTopUpOpen] = useState(false);
   const [userName, setUserName] = useState("Govinda T.");
-  const [workspaceName, setWorkspaceName] = useState("Apex Global");
+  const [workspaceName, setWorkspaceName] = useState("Enterprise Workspace");
+  const [voiceSquad, setVoiceSquad] = useState<
+    Array<{ name: string; role: string; initial: string; status: string }>
+  >([]);
 
   useEffect(() => {
     try {
@@ -65,6 +68,21 @@ export default function AppSidebar({
         const u = JSON.parse(stored);
         if (u.name || u.fullName) setUserName(u.name || u.fullName);
         if (u.workspaceName) setWorkspaceName(u.workspaceName);
+      }
+      const rawAgents = localStorage.getItem("swaram_agents");
+      if (rawAgents) {
+        const parsed = JSON.parse(rawAgents);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const clean = parsed
+            .filter((a: any) => a && a.name && !a.name.includes("Admissions") && !a.name.includes("Tuition"))
+            .map((a: any) => ({
+              name: a.name,
+              role: `${a.primaryLanguage || a.languages?.[0] || "English"} • ${a.latencyMs || 136}ms`,
+              initial: (a.name || "A").charAt(0).toUpperCase(),
+              status: a.status === "on-call" ? "On Call" : "Idle",
+            }));
+          setVoiceSquad(clean);
+        }
       }
     } catch {
       // Keep defaults
@@ -90,22 +108,18 @@ export default function AppSidebar({
       label: "AI Agents",
       href: "/dashboard/agents",
       icon: Bot,
-      badge: "3 Live",
+      badge: voiceSquad.length > 0 ? `${voiceSquad.length} Active` : undefined,
       badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
     },
     {
       label: "Live Calling",
       href: "/dashboard/calls",
       icon: Radio,
-      badge: "2 Live",
-      badgeColor: "bg-rose-50 text-rose-700 border-rose-200/60 animate-pulse",
     },
     {
       label: "Call History & Transcripts",
       href: "/dashboard/call-history",
       icon: History,
-      badge: "6 Logs",
-      badgeColor: "bg-indigo-50 text-indigo-700 border-indigo-200/60",
     },
     {
       label: "Outbound Scheduler",
@@ -159,33 +173,6 @@ export default function AppSidebar({
       label: "Settings & Keys",
       href: "/dashboard/settings",
       icon: Settings,
-    },
-  ];
-
-  const voiceMembers = [
-    {
-      name: "Maya (Admissions)",
-      role: "Hindi + English • 136ms",
-      initial: "M",
-      status: "Idle",
-    },
-    {
-      name: "Priya (Tuition & Aid)",
-      role: "Telugu + English • 142ms",
-      initial: "P",
-      status: "On Call",
-    },
-    {
-      name: "Arjun (Outreach)",
-      role: "Campaign Lead • 148ms",
-      initial: "A",
-      status: "Idle",
-    },
-    {
-      name: "Rajesh (Supervisor)",
-      role: "Escalation Desk • 120ms",
-      initial: "R",
-      status: "Standby",
     },
   ];
 
@@ -382,21 +369,23 @@ export default function AppSidebar({
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
-                <div className="space-y-1.5">
-                  {voiceMembers.map((member, i) => (
-                    <div
-                      key={i}
-                      onClick={() => router.push("/dashboard/agents")}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center mx-auto relative cursor-pointer bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors text-[11px] font-semibold text-slate-700"
-                      title={`${member.name} • ${member.role} [${member.status}]`}
-                    >
-                      {member.initial}
-                      <span className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ring-2 ring-white ${
-                        member.status === "On Call" ? "bg-rose-500" : "bg-emerald-500"
-                      }`} />
-                    </div>
-                  ))}
-                </div>
+                {voiceSquad.length > 0 && (
+                  <div className="space-y-1.5">
+                    {voiceSquad.map((member, i) => (
+                      <div
+                        key={i}
+                        onClick={() => router.push("/dashboard/agents")}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center mx-auto relative cursor-pointer bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-colors text-[11px] font-semibold text-slate-700"
+                        title={`${member.name} • ${member.role} [${member.status}]`}
+                      >
+                        {member.initial}
+                        <span className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ring-2 ring-white ${
+                          member.status === "On Call" ? "bg-rose-500" : "bg-emerald-500"
+                        }`} />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </>
             ) : (
               <>
@@ -418,39 +407,57 @@ export default function AppSidebar({
                   </button>
                 </div>
 
-                <div className="space-y-0.5">
-                  {voiceMembers.map((member, i) => (
-                    <div
-                      key={i}
-                      onClick={() => router.push("/dashboard/agents")}
-                      className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100/90 transition-colors cursor-pointer group"
+                {voiceSquad.length === 0 ? (
+                  <div className="p-3 rounded-xl bg-slate-50/90 border border-slate-200/70 text-center my-1">
+                    <p className="text-[11.5px] font-semibold text-slate-700">No active agents</p>
+                    <p className="text-[10px] text-slate-500 mt-0.5 leading-tight">
+                      Deploy voice agents to handle live telephony queues
+                    </p>
+                    <button
+                      onClick={() => {
+                        try { soundSynth.play("click"); } catch {}
+                        setCreateAgentOpen(true);
+                      }}
+                      className="mt-2 w-full py-1 text-[11px] font-semibold text-white bg-slate-900 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
                     >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-6 h-6 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center font-semibold text-[11px] text-slate-700 shrink-0">
-                          {member.initial}
-                        </div>
-                        <div className="min-w-0">
-                          <span className="font-medium text-[12px] text-slate-700 block truncate group-hover:text-slate-900 leading-tight">
-                            {member.name}
-                          </span>
-                          <span className="text-[10.5px] text-slate-600 block truncate leading-none mt-0.5">
-                            {member.role}
-                          </span>
-                        </div>
-                      </div>
-
-                      <span
-                        className={`text-[9.5px] font-medium px-1.5 py-0.5 rounded leading-none shrink-0 ${
-                          member.status === "On Call"
-                            ? "bg-rose-50 text-rose-600 border border-rose-200/50"
-                            : "bg-emerald-50 text-emerald-600 border border-emerald-200/50"
-                        }`}
+                      + Deploy Agent
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-0.5">
+                    {voiceSquad.map((member, i) => (
+                      <div
+                        key={i}
+                        onClick={() => router.push("/dashboard/agents")}
+                        className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-100/90 transition-colors cursor-pointer group"
                       >
-                        {member.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="w-6 h-6 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center font-semibold text-[11px] text-slate-700 shrink-0">
+                            {member.initial}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-medium text-[12px] text-slate-700 block truncate group-hover:text-slate-900 leading-tight">
+                              {member.name}
+                            </span>
+                            <span className="text-[10.5px] text-slate-600 block truncate leading-none mt-0.5">
+                              {member.role}
+                            </span>
+                          </div>
+                        </div>
+
+                        <span
+                          className={`text-[9.5px] font-medium px-1.5 py-0.5 rounded leading-none shrink-0 ${
+                            member.status === "On Call"
+                              ? "bg-rose-50 text-rose-600 border border-rose-200/50"
+                              : "bg-emerald-50 text-emerald-600 border border-emerald-200/50"
+                          }`}
+                        >
+                          {member.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </>
             )}
           </div>

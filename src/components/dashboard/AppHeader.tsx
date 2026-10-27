@@ -50,8 +50,8 @@ export default function AppHeader({
 
   const searchPrompts = [
     "Search calls, ask Swara AI, or jump anywhere...",
-    "Filter calls by 'fee inquiry', 'positive sentiment'...",
-    "Lookup Maya's transcripts, student leads, or SIP trunks...",
+    "Filter calls by 'billing inquiry', 'positive sentiment'...",
+    "Lookup call transcripts, contact records, or SIP trunks...",
     "Search voice workforce, campaign queues, or dial a contact...",
   ];
   const [promptIndex, setPromptIndex] = useState(0);
@@ -60,44 +60,7 @@ export default function AppHeader({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notificationsList, setNotificationsList] = useState<NotificationItem[]>(() => {
     const callbackNotifs = getHumanActionCallbacks(initialCallbacks).map(callbackToNotification);
-    const baseNotifs: NotificationItem[] = [
-      {
-        id: "notif-001",
-        type: "campaign",
-        title: "Outbound Batch Milestone",
-        message: "Batch 'Round 2 Entrance Follow-up' reached 100% resolution with 63% conversion.",
-        timestamp: "10 mins ago",
-        read: false,
-        severity: "info",
-      },
-      {
-        id: "notif-002",
-        type: "handoff",
-        title: "Warm Transfer Escalated",
-        message: "Agent Maya escalated student Rahul Sharma (+91 98401 22345) to Senior Admissions Desk.",
-        timestamp: "25 mins ago",
-        read: false,
-        severity: "warning",
-      },
-      {
-        id: "notif-003",
-        type: "knowledge",
-        title: "SIP Carrier SLA Optimal",
-        message: "TRK-91-AIRTEL-PRI operating at 136ms SLA (Opus HD codec verified).",
-        timestamp: "1 hr ago",
-        read: true,
-        severity: "info",
-      },
-      {
-        id: "notif-004",
-        type: "usage",
-        title: "Sandbox Balance Quota",
-        message: "14.0 minutes remaining in Free Sandbox tier. Auto-recharge standby.",
-        timestamp: "2 hrs ago",
-        read: true,
-        severity: "info",
-      },
-    ];
+    const baseNotifs: NotificationItem[] = [];
     return [...callbackNotifs, ...baseNotifs];
   });
   const unreadCount = notificationsList.filter((n) => !n.read).length;

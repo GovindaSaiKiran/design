@@ -242,7 +242,14 @@ export default function UsageCostsTab({
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E9E1D4]">
-              {usageRecords.map((item) => {
+              {usageRecords.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-xs text-[#707684]">
+                    No telecommunications usage recorded in this billing cycle.
+                  </td>
+                </tr>
+              ) : (
+                usageRecords.map((item) => {
                 return (
                   <tr key={item.numberId} className="hover:bg-[#FAF5E9]/30 transition-colors">
                     {/* Number & Label */}
@@ -289,7 +296,7 @@ export default function UsageCostsTab({
                     </td>
                   </tr>
                 );
-              })}
+              }))}
             </tbody>
             <tfoot>
               <tr className="border-t-2 border-[#E9E1D4] bg-[#FAF5E9]/70 font-semibold text-xs text-[#283A50]">

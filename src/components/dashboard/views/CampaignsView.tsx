@@ -27,10 +27,10 @@ export default function CampaignsView({
   const aggregatePct = totalContactsAcross > 0 ? Math.round((totalCompletedAcross / totalContactsAcross) * 100) : 0;
 
   const goalDelegationSteps = [
-    { title: "Query Candidate Registry", desc: "Select 1,240 applicants scoring 85%+ in 12th PCM / Board exams", status: "completed" },
-    { title: "Calculate Merit Scholarship Tier", desc: "Dynamically assign 35% - 50% tuition waiver grants per candidate profile", status: "completed" },
-    { title: "Synthesize Bulbul V3 Neural Voice", desc: "Dispatch real-time interactive phone calls in Hindi, Telugu, and English", status: "in-progress" },
-    { title: "Dispatch WhatsApp Confirmation Passes", desc: "Instant counseling slot QR code passes delivered to parents upon call completion", status: "queued" },
+    { title: "Query Contact Registry", desc: "Filter and validate target recipient phone numbers and attributes", status: "completed" },
+    { title: "Ground Knowledge Base", desc: "Embed service guides, pricing matrices, and FAQ manuals into RAG index", status: "completed" },
+    { title: "Synthesize Neural Voice", desc: "Dispatch real-time interactive phone calls across Indic languages and English", status: campaigns.length > 0 ? "in-progress" : "queued" },
+    { title: "Dispatch WhatsApp Collateral", desc: "Instant confirmation passes and brochures delivered upon call completion", status: "queued" },
   ];
 
   return (
@@ -47,7 +47,7 @@ export default function CampaignsView({
               Set the outcome. Delegate the process.
             </h1>
             <p className="text-xs sm:text-sm text-black/60 leading-relaxed font-sans">
-              Describe the admissions goal and connect candidate registers with the institutional knowledge base. Work Agents execute the calling pipeline autonomously and return qualified student enrollment results.
+              Describe the outreach goal and connect contact registers with the enterprise knowledge base. Work Agents execute the calling pipeline autonomously and return qualified conversation results.
             </p>
           </div>
 
@@ -58,6 +58,7 @@ export default function CampaignsView({
               <span className="text-black/20">•</span>
               <span className="font-semibold text-[#1A1A1A]">{aggregatePct}% Overall Progress</span>
             </div>
+
             <button
               onClick={onStartCampaign}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-2xs transition-all duration-200 cursor-pointer active:scale-95"
@@ -72,7 +73,7 @@ export default function CampaignsView({
         <div className="mt-6 pt-6 border-t border-black/[0.06]">
           <div className="text-xs font-semibold text-black/50 uppercase tracking-wider mb-4 flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-[#5B21B6]" />
-            <span>Active Goal Execution Pipeline: September High-Rank Engineering Outreach</span>
+            <span>Active Goal Execution Pipeline: Autonomous Telephony Cadence</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -116,16 +117,37 @@ export default function CampaignsView({
       </div>
 
       {/* 2. Campaigns Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {campaigns.map((camp) => (
-          <CampaignProgress
-            key={camp.id}
-            campaign={camp}
-            onNewCampaign={onStartCampaign}
-            onExportResults={onExportResults}
-          />
-        ))}
-      </div>
+      {campaigns.length === 0 ? (
+        <div className="bg-white rounded-[26px] border border-black/[0.06] p-12 text-center shadow-2xs space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#FAF3E4] border border-black/[0.06] flex items-center justify-center mx-auto text-black/40">
+            <Sparkles className="w-7 h-7 text-[#5B21B6]" />
+          </div>
+          <div className="space-y-1 max-w-md mx-auto">
+            <h3 className="text-base font-bold text-[#1A1A1A]">No active campaigns scheduled</h3>
+            <p className="text-xs text-black/55 leading-relaxed">
+              Launch your first outbound voice campaign to automate customer outreach, qualification surveys, or reminder calls.
+            </p>
+          </div>
+          <button
+            onClick={onStartCampaign}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Launch Outreach Campaign</span>
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {campaigns.map((camp) => (
+            <CampaignProgress
+              key={camp.id}
+              campaign={camp}
+              onNewCampaign={onStartCampaign}
+              onExportResults={onExportResults}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

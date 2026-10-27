@@ -106,7 +106,7 @@ export default function LeadSegmentationHub({
   };
 
   const handleQuickDownloadCSV = () => {
-    const headers = ["ID", "Candidate Name", "Phone", "Target Program", "Category", "Merit / Score", "Language", "Voice Agent", "Duration", "AI Summary", "Action Taken"];
+    const headers = ["ID", "Contact Name", "Phone", "Topic / Program", "Category", "Outcome Details", "Language", "Voice Agent", "Duration", "AI Summary", "Action Taken"];
     const rows = filteredLeads.map((l) => [
       l.id,
       `"${l.name}"`,
@@ -222,121 +222,121 @@ export default function LeadSegmentationHub({
 
       {/* Main Leads Table */}
       <div className="overflow-x-auto border border-black/[0.06] rounded-[20px] shadow-2xs bg-white mt-4">
-        <table className="w-full text-left text-xs whitespace-nowrap">
-          <thead className="bg-[#FAF3E4]/70 text-black/50 font-semibold border-b border-black/[0.06] uppercase tracking-wider text-[11px]">
-            <tr>
-              <th className="py-3.5 px-4">Candidate Prospect</th>
-              <th className="py-3.5 px-4">Program & Dialect</th>
-              <th className="py-3.5 px-4">
-                {activeTab === "interested" ? "Merit / Score" : activeTab === "call_later" ? "Callback Scheduled" : activeTab === "not_interested" ? "Opt-Out Reason" : "Intent Status"}
-              </th>
-              <th className="py-3.5 px-4">AI Synthesis & Transcript</th>
-              <th className="py-3.5 px-4">Duration</th>
-              <th className="py-3.5 px-4">Action Taken</th>
-              <th className="py-3.5 px-4 text-right">Indic Audio</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-black/[0.04] bg-white font-medium text-black/80">
-            {filteredLeads.map((lead) => (
-              <tr
-                key={lead.id}
-                onClick={() => onInspectCall?.(lead)}
-                className="hover:bg-[#FAF3E4]/40 transition-all duration-150 cursor-pointer group"
-              >
-                {/* Student */}
-                <td className="py-3.5 px-4">
-                  <div className="font-semibold text-[#1A1A1A] group-hover:text-black transition-colors text-xs sm:text-sm flex items-center gap-1.5">
-                    {lead.name}
-                  </div>
-                  <div className="text-[11px] font-mono text-black/50 flex items-center gap-1 font-medium mt-0.5">
-                    <PhoneCall className="w-3 h-3 text-black/40" />
-                    {lead.phone}
-                  </div>
-                </td>
-
-                {/* Course & Dialect */}
-                <td className="py-3.5 px-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#FAF3E4] text-[#1A1A1A] border border-black/[0.06]">
-                    <GraduationCap className="w-3.5 h-3.5 text-black/40" />
-                    {lead.course}
-                  </span>
-                  {lead.lang && (
-                    <div className="text-[10px] font-medium text-black/50 flex items-center gap-1 mt-1">
-                      <Globe className="w-3 h-3 text-[#4A72B2]" />
-                      <span>{lead.lang}</span>
-                    </div>
-                  )}
-                </td>
-
-                {/* Status / Detail Column */}
-                <td className="py-3.5 px-4">
-                  {lead.category === "interested" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#C1F2D5] text-[#16856B]">
-                      <CheckCircle2 className="w-3 h-3 text-[#16856B]" />
-                      {lead.meritScore}
-                    </span>
-                  )}
-                  {lead.category === "call_later" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#FFD9A0] text-[#7A4B00]">
-                      <Clock className="w-3 h-3 text-[#7A4B00]" />
-                      {lead.callbackTime}
-                    </span>
-                  )}
-                  {lead.category === "not_interested" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#BCD0F5] text-[#1B365D]">
-                      <XCircle className="w-3 h-3 text-[#1B365D]" />
-                      {lead.disqualifiedReason}
-                    </span>
-                  )}
-                  {lead.category === "inbound_inquiry" && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#D9C2FA] text-[#5B21B6]">
-                      <PhoneIncoming className="w-3 h-3 text-[#5B21B6]" />
-                      Inbound Query
-                    </span>
-                  )}
-                </td>
-
-                {/* Summary */}
-                <td className="py-3.5 px-4 min-w-[250px] whitespace-normal">
-                  <p className="line-clamp-2 text-xs text-black/70 font-normal leading-relaxed group-hover:text-black transition-colors">
-                    {lead.summary}
-                  </p>
-                </td>
-
-                {/* Duration & Time */}
-                <td className="py-3.5 px-4 whitespace-nowrap">
-                  <div className="font-mono font-semibold text-[#1A1A1A] text-xs">
-                    {lead.callDuration}
-                  </div>
-                  <div className="text-[10px] text-black/40 font-medium">
-                    {lead.timeAgo} ({lead.agentName.split(" ")[0]})
-                  </div>
-                </td>
-
-                {/* Action Taken */}
-                <td className="py-3.5 px-4 max-w-[190px]">
-                  <span className="text-[11px] font-medium text-black/70 bg-[#FAF3E4] px-2.5 py-1 rounded-full border border-black/[0.06] block truncate">
-                    {lead.actionTaken}
-                  </span>
-                </td>
-
-                {/* Audio Button */}
-                <td className="py-3.5 px-4 text-right">
-                  <button
-                    onClick={(e) => handleOpenAudio(lead, e)}
-                    className="px-3.5 py-1.5 rounded-full bg-[#FAF3E4] hover:bg-[#111111] hover:text-white text-[#1A1A1A] text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all active:scale-95"
-                    title="Play Indic AI audio recording & transcript"
-                  >
-                    <Play className="w-3 h-3 fill-current" />
-                    <span>Play</span>
-                  </button>
-                </td>
+        {filteredLeads.length > 0 ? (
+          <table className="w-full text-left text-xs whitespace-nowrap">
+            <thead className="bg-[#FAF3E4]/70 text-black/50 font-semibold border-b border-black/[0.06] uppercase tracking-wider text-[11px]">
+              <tr>
+                <th className="py-3.5 px-4">Contact Prospect</th>
+                <th className="py-3.5 px-4">Campaign Topic & Dialect</th>
+                <th className="py-3.5 px-4">
+                  {activeTab === "interested" ? "Intent / Priority" : activeTab === "call_later" ? "Callback Scheduled" : activeTab === "not_interested" ? "Opt-Out Reason" : "Disposition Status"}
+                </th>
+                <th className="py-3.5 px-4">AI Synthesis & Transcript</th>
+                <th className="py-3.5 px-4">Duration</th>
+                <th className="py-3.5 px-4">Action Taken</th>
+                <th className="py-3.5 px-4 text-right">Indic Audio</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-black/[0.04] bg-white font-medium text-black/80">
+              {filteredLeads.map((lead) => (
+                <tr
+                  key={lead.id}
+                  onClick={() => onInspectCall?.(lead)}
+                  className="hover:bg-[#FAF3E4]/40 transition-all duration-150 cursor-pointer group"
+                >
+                  {/* Contact */}
+                  <td className="py-3.5 px-4">
+                    <div className="font-semibold text-[#1A1A1A] group-hover:text-black transition-colors text-xs sm:text-sm flex items-center gap-1.5">
+                      {lead.name}
+                    </div>
+                    <div className="text-[11px] font-mono text-black/50 flex items-center gap-1 font-medium mt-0.5">
+                      <PhoneCall className="w-3 h-3 text-black/40" />
+                      {lead.phone}
+                    </div>
+                  </td>
 
-        {filteredLeads.length === 0 && (
+                  {/* Topic & Dialect */}
+                  <td className="py-3.5 px-4">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#FAF3E4] text-[#1A1A1A] border border-black/[0.06]">
+                      <GraduationCap className="w-3.5 h-3.5 text-black/40" />
+                      {lead.course}
+                    </span>
+                    {lead.lang && (
+                      <div className="text-[10px] font-medium text-black/50 flex items-center gap-1 mt-1">
+                        <Globe className="w-3 h-3 text-[#4A72B2]" />
+                        <span>{lead.lang}</span>
+                      </div>
+                    )}
+                  </td>
+
+                  {/* Status / Detail Column */}
+                  <td className="py-3.5 px-4">
+                    {lead.category === "interested" && (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#C1F2D5] text-[#16856B]">
+                        <CheckCircle2 className="w-3 h-3 text-[#16856B]" />
+                        {lead.meritScore}
+                      </span>
+                    )}
+                    {lead.category === "call_later" && (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#FFD9A0] text-[#7A4B00]">
+                        <Clock className="w-3 h-3 text-[#7A4B00]" />
+                        {lead.callbackTime}
+                      </span>
+                    )}
+                    {lead.category === "not_interested" && (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#BCD0F5] text-[#1B365D]">
+                        <XCircle className="w-3 h-3 text-[#1B365D]" />
+                        {lead.disqualifiedReason}
+                      </span>
+                    )}
+                    {lead.category === "inbound_inquiry" && (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#D9C2FA] text-[#5B21B6]">
+                        <PhoneIncoming className="w-3 h-3 text-[#5B21B6]" />
+                        Inbound Query
+                      </span>
+                    )}
+                  </td>
+
+                  {/* Summary */}
+                  <td className="py-3.5 px-4 min-w-[250px] whitespace-normal">
+                    <p className="line-clamp-2 text-xs text-black/70 font-normal leading-relaxed group-hover:text-black transition-colors">
+                      {lead.summary}
+                    </p>
+                  </td>
+
+                  {/* Duration & Time */}
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <div className="font-mono font-semibold text-[#1A1A1A] text-xs">
+                      {lead.callDuration}
+                    </div>
+                    <div className="text-[10px] text-black/40 font-medium">
+                      {lead.timeAgo} ({lead.agentName.split(" ")[0]})
+                    </div>
+                  </td>
+
+                  {/* Action Taken */}
+                  <td className="py-3.5 px-4 max-w-[190px]">
+                    <span className="text-[11px] font-medium text-black/70 bg-[#FAF3E4] px-2.5 py-1 rounded-full border border-black/[0.06] block truncate">
+                      {lead.actionTaken}
+                    </span>
+                  </td>
+
+                  {/* Audio Button */}
+                  <td className="py-3.5 px-4 text-right">
+                    <button
+                      onClick={(e) => handleOpenAudio(lead, e)}
+                      className="px-3.5 py-1.5 rounded-full bg-[#FAF3E4] hover:bg-[#111111] hover:text-white text-[#1A1A1A] text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all active:scale-95"
+                      title="Play Indic AI audio recording & transcript"
+                    >
+                      <Play className="w-3 h-3 fill-current" />
+                      <span>Play</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
           <div className="text-center py-16 px-4">
             <div className="w-12 h-12 rounded-2xl bg-[#FAF3E4] flex items-center justify-center mx-auto mb-3 text-black/40">
               <PhoneCall className="w-6 h-6 stroke-[1.5]" />

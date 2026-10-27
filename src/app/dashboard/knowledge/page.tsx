@@ -45,10 +45,10 @@ export default function KnowledgePage() {
     setTimeout(() => {
       setTestResult({
         query: testQuery,
-        matchedDoc: "B.Tech Fee Structure, TFW & Merit Scholarships 2026.xlsx",
+        matchedDoc: documents[0]?.title || "Enterprise Service Level Agreement & Carrier Runbook.pdf",
         score: 0.942,
         chunkText:
-          "Article 4.2 (Chancellor Merit Waiver): Candidates securing 90.0% to 94.9% in 12th PCM receive a 50% tuition waiver for the first academic year. Candidates securing 95.0% and above qualify for a 100% full tuition waiver across all four years subject to maintaining CGPA >= 8.5.",
+          "Section 3.1 (High-Availability Voice SLA): All inbound and outbound SIP trunk endpoints maintain 99.99% uptime with automated carrier failover within 120ms. Audio streams are encrypted via TLS 1.3 and SRTP.",
       });
       setSearching(false);
     }, 250);
@@ -153,55 +153,43 @@ export default function KnowledgePage() {
       {/* 4 Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <WorkspaceCard
-          name="Fee & Scholarship Grounding"
+          name="Institutional Knowledge"
           icon={FileSpreadsheet}
-          description="Tuition matrices, hostel options, and merit waivers."
-          metric="142 chunks"
-          metricLabel="1 active document"
-          status="Indexed"
-          statusType="ready"
+          description="Vectorized documents grounding agent replies."
+          metric={`${documents.length} documents`}
+          metricLabel={documents.length > 0 ? `${totalChunks} total vector chunks` : "No documents indexed"}
+          status={documents.length > 0 ? "Indexed" : "Standby"}
+          statusType={documents.length > 0 ? "ready" : "neutral"}
           actionLabel="View vector chunks →"
-          onClick={() => {
-            setTestQuery("fee structure and scholarships");
-            handleTestSearch({ preventDefault: () => {} } as any);
-          }}
         />
 
         <WorkspaceCard
-          name="Admissions & Eligibility"
+          name="Vector Index Chunks"
           icon={BookOpen}
-          description="Cutoffs, entrance counseling, and campus tour FAQs."
-          metric="88 chunks"
-          metricLabel="Auto-synced with Maya"
-          status="Ready"
-          statusType="ready"
+          description="512-token chunks with 50-token semantic overlap."
+          metric={`${totalChunks} chunks`}
+          metricLabel={totalChunks > 0 ? "Semantic search active" : "No vector embeddings"}
+          status={totalChunks > 0 ? "Ready" : "Standby"}
+          statusType={totalChunks > 0 ? "ready" : "neutral"}
           actionLabel="Inspect queries →"
-          onClick={() => {
-            setTestQuery("campus tour schedule");
-            handleTestSearch({ preventDefault: () => {} } as any);
-          }}
         />
 
         <WorkspaceCard
-          name="Hostel & Facilities"
+          name="Retrieval Pipeline"
           icon={Layers}
-          description="AC vs non-AC room plans, dining policies, and security."
-          metric="64 chunks"
-          metricLabel="Verified ground truth"
+          description="Cosine similarity threshold: 0.75 for verified facts."
+          metric="Gemini Text"
+          metricLabel="text-embedding-004 model"
           status="Active"
           statusType="ready"
-          actionLabel="Search facilities →"
-          onClick={() => {
-            setTestQuery("hostel fee twin sharing AC");
-            handleTestSearch({ preventDefault: () => {} } as any);
-          }}
+          actionLabel="Test retrieval →"
         />
 
         <WorkspaceCard
           name="Compliance & Guardrails"
           icon={ShieldCheck}
           description="Strict fallback rules preventing out-of-scope hallucination."
-          metric="99.8% yield"
+          metric="Strict Fallback"
           metricLabel="Zero hallucination verified"
           status="Guarded"
           statusType="live"
@@ -231,7 +219,7 @@ export default function KnowledgePage() {
             <Search className="w-3.5 h-3.5 text-black/40 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="e.g. What is the fee waiver for an applicant with 94% in PCM?"
+              placeholder="e.g. What is the SLA guarantee for high-concurrency SIP trunking?"
               value={testQuery}
               onChange={(e) => setTestQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2.5 text-xs bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-black/10 transition-all placeholder:text-black/40"
@@ -281,7 +269,7 @@ export default function KnowledgePage() {
         <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-black/[0.06]">
           <div className="flex items-center gap-2.5">
             <span className="text-xs font-bold text-[#1A1A1A]">
-              Indexed Institutional Files
+              Indexed Knowledge Documents
             </span>
             <span className="text-xs text-black/45 font-medium">
               ({documents.length} sources • {totalChunks} chunks)

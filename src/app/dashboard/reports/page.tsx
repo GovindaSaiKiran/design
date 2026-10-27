@@ -31,48 +31,7 @@ interface ReportItem {
   recordsCount: number;
 }
 
-const initialReportsList: ReportItem[] = [
-  {
-    id: "rep-01",
-    name: "Daily_Telephony_Call_Logs_Oct18_2026.csv",
-    category: "Telephony Logs",
-    dateRange: "Oct 18, 2026",
-    format: "CSV",
-    size: "48 KB",
-    generatedAt: "10 mins ago",
-    recordsCount: 24,
-  },
-  {
-    id: "rep-02",
-    name: "BTech_Admissions_Counseling_Triage.xlsx",
-    category: "Admissions Triage",
-    dateRange: "Oct 10 - Oct 18, 2026",
-    format: "XLSX",
-    size: "1.2 MB",
-    generatedAt: "2 hrs ago",
-    recordsCount: 142,
-  },
-  {
-    id: "rep-03",
-    name: "Structured_Data_Vault_Extraction_Audit.csv",
-    category: "Compliance & Vault",
-    dateRange: "Oct 01 - Oct 18, 2026",
-    format: "CSV",
-    size: "64 KB",
-    generatedAt: "Yesterday",
-    recordsCount: 38,
-  },
-  {
-    id: "rep-04",
-    name: "Carrier_CDR_Minutes_Statement_Oct2026.pdf",
-    category: "Carrier Billing",
-    dateRange: "Current Cycle",
-    format: "PDF",
-    size: "240 KB",
-    generatedAt: "3 days ago",
-    recordsCount: 86,
-  },
-];
+const initialReportsList: ReportItem[] = [];
 
 export default function ReportsPage() {
   const [reports, setReports] = useState<ReportItem[]>(initialReportsList);
@@ -152,8 +111,8 @@ export default function ReportsPage() {
           name="Admissions Triage"
           icon={FileText}
           description="Applicants filtered by qualifications, course choices, and intent."
-          metric="142 applicants"
-          metricLabel="Cutoff scores verified"
+          metric="0 applicants"
+          metricLabel="No triage data"
           status="Indexed"
           statusType="ready"
           actionLabel="Generate Excel →"
@@ -164,8 +123,8 @@ export default function ReportsPage() {
           name="Staff Escalation Log"
           icon={Clock}
           description="Transfers directed to admissions counselors with full verbatim context."
-          metric="2 handoffs"
-          metricLabel="Resolved successfully"
+          metric="0 handoffs"
+          metricLabel="No handoffs"
           status="Clean"
           statusType="ready"
           actionLabel="Generate PDF →"
@@ -176,8 +135,8 @@ export default function ReportsPage() {
           name="Carrier SIP Billing"
           icon={Calendar}
           description="Talk time, minute consumption, and concurrent channel telemetry."
-          metric="2.2 mins used"
-          metricLabel="14.0 mins available"
+          metric="0.0 mins used"
+          metricLabel="0.0 mins available"
           status="Active Cycle"
           statusType="neutral"
           actionLabel="Generate statement →"
@@ -217,7 +176,16 @@ export default function ReportsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.06]">
-              {reports.map((rep) => (
+              {reports.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-black/45">
+                    <FileSpreadsheet className="w-8 h-8 text-black/30 mx-auto mb-2" />
+                    <p className="font-semibold text-xs text-[#1A1A1A]">No generated reports archived yet</p>
+                    <p className="text-[11px] text-black/50 mt-0.5">Use the "Generate Custom Report" button above to export analytics, call logs, or transcripts.</p>
+                  </td>
+                </tr>
+              ) : (
+                reports.map((rep) => (
                 <tr
                   key={rep.id}
                   className="hover:bg-[#FBF7ED]/50 transition-colors group text-[#1A1A1A]"
@@ -270,7 +238,7 @@ export default function ReportsPage() {
                     </button>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

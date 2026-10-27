@@ -58,12 +58,12 @@ export default function LiveCallingOperationsHub({
   const connectedCount = 1073;
   const totalDialed = 1240;
 
-  // Course distribution data
+  // Solution distribution data
   const courseDemand = [
-    { name: "B.Tech Computer Science & AI", count: 168, pct: 39, color: "bg-emerald-500", key: "computer science" },
-    { name: "MBA FinTech & Analytics", count: 114, pct: 27, color: "bg-blue-500", key: "fintech" },
-    { name: "B.Tech Electronics & VLSI", count: 84, pct: 20, color: "bg-indigo-500", key: "electronics" },
-    { name: "B.Des Product & UX Design", count: 62, pct: 14, color: "bg-amber-500", key: "design" }
+    { name: "Enterprise SIP Trunking & Peering", count: 168, pct: 39, color: "bg-emerald-500", key: "sip trunking" },
+    { name: "AI Inbound Helpline & IVR", count: 114, pct: 27, color: "bg-blue-500", key: "ivr" },
+    { name: "Outbound Lead Dialing Cadence", count: 84, pct: 20, color: "bg-indigo-500", key: "outbound" },
+    { name: "WhatsApp & Omnichannel Handoff", count: 62, pct: 14, color: "bg-amber-500", key: "whatsapp" }
   ];
 
   const currentActiveLead = mockStudentLeads[0] || {
@@ -180,7 +180,7 @@ export default function LiveCallingOperationsHub({
                 <span>Maya (Speaking right now):</span>
               </div>
               <p className="font-medium text-white/90 leading-relaxed text-xs">
-                &ldquo;Rahul, for 94% in CBSE, your 35% Chancellor Merit Scholarship is pre-approved for B.Tech CSE. Would you like me to book your campus visit pass for this Saturday?&rdquo;
+                &ldquo;Based on your monthly call profile, our Enterprise Voice tier is provisioned with dedicated SIP trunks and sub-140ms latency. Would you like me to schedule a technical walkthrough for your team?&rdquo;
               </p>
             </div>
           </div>
@@ -253,17 +253,17 @@ export default function LiveCallingOperationsHub({
                 <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
                   <span className="text-[#16856B] flex items-center gap-2 font-bold">
                     <CheckCircle2 className="w-4 h-4 text-[#16856B] stroke-[2.5]" />
-                    Interested in Institute &amp; Target Courses
+                    Interested in Solutions &amp; Platform Capabilities
                   </span>
                   <span className="text-[#16856B] font-bold text-sm">
-                    {interestedCount} Students (39.8% Yield)
+                    {interestedCount} Contacts (39.8% Yield)
                   </span>
                 </div>
                 <div className="w-full h-2.5 bg-[#C1F2D5]/50 rounded-full overflow-hidden mb-1.5">
                   <div style={{ width: "39.8%" }} className="h-full bg-[#16856B] rounded-full" />
                 </div>
                 <div className="flex items-center justify-between text-xs font-medium text-[#16856B]">
-                  <span>Campus tours scheduled • Token fee offers sent</span>
+                  <span>Product walkthroughs scheduled • SLA terms sent</span>
                   <span className="font-bold underline flex items-center gap-1">
                     View List <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
                   </span>
@@ -281,14 +281,14 @@ export default function LiveCallingOperationsHub({
                     Callbacks &amp; Follow-ups Scheduled
                   </span>
                   <span className="text-[#9A5B00] font-bold text-sm">
-                    {callbackCount} Students (18.1%)
+                    {callbackCount} Contacts (18.1%)
                   </span>
                 </div>
                 <div className="w-full h-2.5 bg-[#FFD9A0]/50 rounded-full overflow-hidden mb-1.5">
                   <div style={{ width: "18.1%" }} className="h-full bg-[#9A5B00] rounded-full" />
                 </div>
                 <div className="flex items-center justify-between text-xs font-medium text-[#9A5B00]">
-                  <span>Parents at office • Queued for auto-dialer retry</span>
+                  <span>Stakeholders in meeting • Queued for auto-dialer retry</span>
                   <span className="font-bold underline flex items-center gap-1">
                     View Callbacks <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
                   </span>
@@ -314,14 +314,14 @@ export default function LiveCallingOperationsHub({
             </div>
           </div>
 
-          {/* Course Demand Breakdown */}
+          {/* Solution Demand Breakdown */}
           <div className="pt-4 border-t border-black/[0.05]">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider flex items-center gap-1.5">
                 <BarChart3 className="w-4 h-4 text-[#553C9A] stroke-[2.5]" />
-                Interested Students by Academic Program
+                Interested Contacts by Solution Category
               </span>
-              <span className="text-xs font-medium text-black/45">Click any program to filter leads</span>
+              <span className="text-xs font-medium text-black/45">Click any category to filter leads</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

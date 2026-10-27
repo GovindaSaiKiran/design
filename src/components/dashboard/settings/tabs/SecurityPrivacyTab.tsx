@@ -404,7 +404,7 @@ export default function SecurityPrivacyTab({
       <ConfirmationModal
         isOpen={isDeleteWorkspaceModalOpen}
         title="Permanently Delete Workspace?"
-        description="WARNING: This will permanently delete Apex Global Institutions, terminate all active PRI phone trunks, and permanently delete all call recordings and candidate history. This action CANNOT be undone."
+        description="WARNING: This will permanently delete your workspace tenant, terminate all active PRI phone trunks, and permanently delete all call recordings and contact history. This action CANNOT be undone."
         confirmLabel="Yes, Permanently Delete"
         isDestructive={true}
         onConfirm={() => alert("Workspace deletion protection active. Please contact support@swaram.ai for manual offboarding verification.")}

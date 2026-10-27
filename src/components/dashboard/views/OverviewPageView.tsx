@@ -40,12 +40,12 @@ import TopUpCreditsModal from "../modals/TopUpCreditsModal";
 import CreateAgentModal from "../modals/CreateAgentModal";
 import StartCampaignModal from "../modals/StartCampaignModal";
 import CallDrawer from "./CallDrawer";
-import { RecentCallRecord, CallOutcome } from "@/types/dashboard";
+import { RecentCallRecord, CallOutcome, DashboardAgent } from "@/types/dashboard";
 import { soundSynth } from "@/lib/audio-synth";
 import BuildAIEmployeeBanner from "../components/BuildAIEmployeeBanner";
 import TelephonyActivityHeatmap from "../components/TelephonyActivityHeatmap";
 import { usePalette } from "@/context/PaletteContext";
-import { ENTERPRISE_CALL_CENTER_METRICS } from "@/lib/contactsHistory";
+import { getUnifiedContacts } from "@/lib/contactsHistory";
 
 interface CallRecord {
   id: string;
@@ -81,101 +81,14 @@ export default function OverviewPageView() {
   const [scheduleCallOpen, setScheduleCallOpen] = useState(false);
   const [testCallOpen, setTestCallOpen] = useState(false);
 
-
-
   // Context & Quotas
-  const [workspaceName, setWorkspaceName] = useState("Apex Institute of Technology");
-  const [availableMinutes, setAvailableMinutes] = useState(18420.0);
+  const [workspaceName, setWorkspaceName] = useState("My Workspace");
+  const [availableMinutes, setAvailableMinutes] = useState(0.0);
+  const [totalContactsCount, setTotalContactsCount] = useState(0);
+  const [agentList, setAgentList] = useState<DashboardAgent[]>([]);
 
-  // Seed telephony calls
-  const initialCalls: CallRecord[] = [
-    {
-      id: "call_01",
-      phoneNumber: "+91 98401 22345",
-      callerName: "Rahul Sharma",
-      agentName: "Maya (Admissions)",
-      direction: "inbound",
-      durationSeconds: 144,
-      timestamp: "10 mins ago",
-      status: "completed",
-      sentiment: "positive",
-      outcome: "B.Tech CSE Fee & Campus Tour Confirmed",
-      latencyMs: 136,
-      extractedTags: ["Admissions", "High Intent"],
-    },
-    {
-      id: "call_02",
-      phoneNumber: "+91 94401 88319",
-      callerName: "Ananya Iyer",
-      agentName: "Priya (Tuition & Aid)",
-      direction: "inbound",
-      durationSeconds: 108,
-      timestamp: "28 mins ago",
-      status: "completed",
-      sentiment: "positive",
-      outcome: "Merit Scholarship Criteria & WhatsApp Brochure",
-      latencyMs: 142,
-      extractedTags: ["Scholarship", "WhatsApp Sent"],
-    },
-    {
-      id: "call_03",
-      phoneNumber: "+91 99880 44120",
-      callerName: "Vikramaditya Rao",
-      agentName: "Arjun (Outreach)",
-      direction: "outbound",
-      durationSeconds: 75,
-      timestamp: "45 mins ago",
-      status: "completed",
-      sentiment: "neutral",
-      outcome: "Entrance Registration Verified for Sunday Slot",
-      latencyMs: 148,
-      extractedTags: ["Outreach", "Sunday Slot"],
-    },
-    {
-      id: "call_04",
-      phoneNumber: "+91 98210 55678",
-      callerName: "Meera Krishnan",
-      agentName: "Maya (Admissions)",
-      direction: "inbound",
-      durationSeconds: 185,
-      timestamp: "1 hr ago",
-      status: "completed",
-      sentiment: "positive",
-      outcome: "Sports Quota Inquiry Escalated to Senior Desk",
-      latencyMs: 140,
-      extractedTags: ["Sports Quota", "Escalated"],
-    },
-    {
-      id: "call_05",
-      phoneNumber: "+91 97123 45678",
-      callerName: "Kavita Rao",
-      agentName: "Maya (Admissions)",
-      direction: "inbound",
-      durationSeconds: 94,
-      timestamp: "2 hrs ago",
-      status: "completed",
-      sentiment: "positive",
-      outcome: "Campus Hostel Accommodation & Mess Fee",
-      latencyMs: 132,
-      extractedTags: ["Hostel", "AC Shared"],
-    },
-    {
-      id: "call_06",
-      phoneNumber: "+91 99120 77881",
-      callerName: "Nitin Varma",
-      agentName: "Arjun (Outreach)",
-      direction: "outbound",
-      durationSeconds: 120,
-      timestamp: "3 hrs ago",
-      status: "completed",
-      sentiment: "positive",
-      outcome: "Direct PRI SIP Trunk Connectivity Confirmed",
-      latencyMs: 138,
-      extractedTags: ["SIP Trunk", "SLA Confirmed"],
-    },
-  ];
-
-  const [callsList, setCallsList] = useState<CallRecord[]>(initialCalls);
+  // Telephony calls ledger (starts clean with zero mock calls)
+  const [callsList, setCallsList] = useState<CallRecord[]>([]);
 
   useEffect(() => {
     try {
@@ -183,20 +96,80 @@ export default function OverviewPageView() {
       if (storedUser) {
         const u = JSON.parse(storedUser);
         if (u.workspaceName) setWorkspaceName(u.workspaceName);
+        if (u.organizationName) setWorkspaceName(u.organizationName);
+        if (typeof u.availableMinutes === "number") setAvailableMinutes(u.availableMinutes);
       }
       const storedCalls = localStorage.getItem("swaram_calls");
       if (storedCalls) {
-        const parsed = JSON.parse(storedCalls);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setCallsList(parsed);
+        try {
+          const parsed = JSON.parse(storedCalls);
+          if (Array.isArray(parsed)) {
+            // Keep only real calls if any, purge all legacy mock calls
+            const realCalls = parsed.filter(
+              (c: any) =>
+                c &&
+                c.id &&
+                !c.id.startsWith("mock") &&
+                !c.id.startsWith("call_") &&
+                !c.id.startsWith("CALL-") &&
+                !c.id.startsWith("init_") &&
+                c.callerName !== "Rahul Sharma" &&
+                c.callerName !== "Ananya Iyer" &&
+                c.callerName !== "Vikram Singhania" &&
+                c.callerName !== "Sunita Roy" &&
+                c.callerName !== "Kavita Rao" &&
+                c.callerName !== "Aditya Joshi" &&
+                !c.outcome?.toLowerCase().includes("b.tech") &&
+                !c.outcome?.toLowerCase().includes("hostel") &&
+                !c.outcome?.toLowerCase().includes("chancellor") &&
+                !c.outcome?.toLowerCase().includes("campus tour")
+            );
+            if (realCalls.length !== parsed.length) {
+              if (realCalls.length === 0) {
+                localStorage.removeItem("swaram_calls");
+              } else {
+                localStorage.setItem("swaram_calls", JSON.stringify(realCalls));
+              }
+            }
+            setCallsList(realCalls);
+          }
+        } catch {
+          localStorage.removeItem("swaram_calls");
+          setCallsList([]);
         }
       }
+      const storedAgents = localStorage.getItem("swaram_agents");
+      if (storedAgents) {
+        try {
+          const parsed = JSON.parse(storedAgents);
+          if (Array.isArray(parsed)) {
+            const cleanAgents = parsed.filter(
+              (a: any) =>
+                a &&
+                a.name &&
+                !a.name.includes("Admissions") &&
+                !a.name.includes("Tuition & Aid")
+            );
+            if (cleanAgents.length !== parsed.length) {
+              if (cleanAgents.length === 0) {
+                localStorage.removeItem("swaram_agents");
+              } else {
+                localStorage.setItem("swaram_agents", JSON.stringify(cleanAgents));
+              }
+            }
+            setAgentList(cleanAgents);
+          }
+        } catch {
+          localStorage.removeItem("swaram_agents");
+          setAgentList([]);
+        }
+      }
+      const contacts = getUnifiedContacts();
+      setTotalContactsCount(contacts.length);
     } catch {
       // Retain defaults
     }
   }, []);
-
-
 
   // Telephony Metrics Calculations
   const totalCalls = callsList.length;
@@ -204,9 +177,9 @@ export default function OverviewPageView() {
   const outboundCallsCount = callsList.filter((c) => c.direction === "outbound").length;
   const totalDurationSec = callsList.reduce((acc, c) => acc + (c.durationSeconds || 0), 0);
   const minutesUsedToday = (totalDurationSec / 60).toFixed(1);
-  const avgLatency = Math.round(
-    callsList.reduce((acc, c) => acc + (c.latencyMs || 136), 0) / (callsList.length || 1)
-  );
+  const avgLatency = totalCalls > 0
+    ? Math.round(callsList.reduce((acc, c) => acc + (c.latencyMs || 136), 0) / totalCalls)
+    : 0;
 
 
 
@@ -266,12 +239,12 @@ export default function OverviewPageView() {
 
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
               <Users className="w-3 h-3" />
-              <span>{ENTERPRISE_CALL_CENTER_METRICS.totalDirectoryContacts.toLocaleString()} Leads in Directory</span>
+              <span>{totalContactsCount.toLocaleString()} Leads in Directory</span>
             </span>
 
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
               <Radio className="w-3 h-3 animate-pulse" />
-              <span>100 PRI / SIP Channels Live</span>
+              <span>{totalCalls > 0 ? "SIP Channels Active" : "0 Channels Active"}</span>
             </span>
           </div>
 
@@ -375,7 +348,7 @@ export default function OverviewPageView() {
               }}
               className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
             >
-              100,000m SLA
+              {availableMinutes > 0 ? `${availableMinutes.toLocaleString()}m SLA` : "0m SLA"}
             </span>
           </div>
 
@@ -390,12 +363,14 @@ export default function OverviewPageView() {
 
             {/* Stepped Progress Bar */}
             <div className="w-full bg-black/15 h-2 rounded-full mt-3 overflow-hidden flex p-0.5 border border-black/10">
-              <div className="bg-current h-full w-[82%] rounded-full opacity-90" />
-              <div className="bg-transparent h-full w-[18%]" />
+              <div
+                className="bg-current h-full rounded-full opacity-90 transition-all duration-300"
+                style={{ width: `${Math.min(100, (availableMinutes / 1000) * 100)}%` }}
+              />
             </div>
 
             <div className="flex items-center justify-between pt-2.5 text-[11px]">
-              <span className="opacity-80 font-bold">Enterprise Tier • 100 Trunks</span>
+              <span className="opacity-80 font-bold">{availableMinutes > 0 ? "Active Plan" : "No Minutes Balance"}</span>
               <span className="font-black group-hover:underline">
                 + Top Up &rarr;
               </span>
@@ -456,7 +431,7 @@ export default function OverviewPageView() {
               }}
               className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
             >
-              100 PRI TRUNKS
+              {totalCalls > 0 ? "ACTIVE TRAFFIC" : "STANDBY"}
             </span>
           </div>
 
@@ -464,22 +439,22 @@ export default function OverviewPageView() {
           <div className="relative z-10 pt-2">
             <div className="flex items-baseline gap-2">
               <span className="text-[36px] sm:text-[42px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard2.text }}>
-                {(ENTERPRISE_CALL_CENTER_METRICS.inboundCallsHandled + ENTERPRISE_CALL_CENTER_METRICS.outboundCallsHandled).toLocaleString()}
+                {totalCalls.toLocaleString()}
               </span>
               <span className="text-xs font-bold opacity-80">calls today</span>
             </div>
 
             <div className="flex items-center gap-2 mt-2.5 text-xs font-bold flex-wrap">
               <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                <PhoneIncoming className="w-3 h-3" /> {ENTERPRISE_CALL_CENTER_METRICS.inboundCallsHandled.toLocaleString()} In
+                <PhoneIncoming className="w-3 h-3" /> {inboundCallsCount.toLocaleString()} In
               </span>
               <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-md backdrop-blur-xs">
-                <PhoneOutgoing className="w-3 h-3" /> {ENTERPRISE_CALL_CENTER_METRICS.outboundCallsHandled.toLocaleString()} Out
+                <PhoneOutgoing className="w-3 h-3" /> {outboundCallsCount.toLocaleString()} Out
               </span>
             </div>
 
             <div className="flex items-center justify-between pt-2.5 text-[11px]">
-              <span className="opacity-80 font-bold">21,500 min consumed</span>
+              <span className="opacity-80 font-bold">{minutesUsedToday} min consumed</span>
               <span
                 style={{
                   backgroundColor: palette.colors.metricCard2.badgeBg,
@@ -487,7 +462,9 @@ export default function OverviewPageView() {
                 }}
                 className="px-2 py-0.5 rounded-full font-black text-[10px] border border-white/20"
               >
-                93.4% PICKUP
+                {totalCalls > 0
+                  ? `${Math.round((callsList.filter((c) => c.status === "completed").length / totalCalls) * 100)}% PICKUP`
+                  : "0% PICKUP"}
               </span>
             </div>
           </div>
@@ -546,7 +523,7 @@ export default function OverviewPageView() {
               }}
               className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider leading-none flex items-center text-center whitespace-nowrap shadow-xs border"
             >
-              100 TRUNKS POOLED
+              {agentList.length > 0 ? `${agentList.length} ACTIVE` : "READY"}
             </span>
           </div>
 
@@ -554,17 +531,19 @@ export default function OverviewPageView() {
           <div className="relative z-10 pt-2">
             <div className="flex items-baseline gap-2">
               <span className="text-[36px] sm:text-[42px] font-black tracking-tight leading-none" style={{ color: palette.colors.metricCard3.text }}>
-                3
+                {agentList.length}
               </span>
-              <span className="text-xs font-bold opacity-80">agent pools (1,200/hr)</span>
+              <span className="text-xs font-bold opacity-80">agent personas</span>
             </div>
 
             <p className="text-[11px] font-bold mt-2 truncate opacity-90">
-              Maya (Admissions) &bull; Priya (Finance) &bull; Arjun (Outreach)
+              {agentList.length > 0
+                ? agentList.map((a) => a.name.split(" — ")[0]).join(" • ")
+                : "No agents provisioned yet"}
             </p>
 
             <div className="flex items-center justify-between pt-2.5 text-[11px]">
-              <span className="opacity-80 font-semibold">Hindi + Telugu + English</span>
+              <span className="opacity-80 font-semibold">{agentList.length > 0 ? "Multi-lingual Voice" : "Deploy voice agent"}</span>
               <button
                 type="button"
                 onClick={(e) => {

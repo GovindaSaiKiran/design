@@ -20,7 +20,7 @@ interface TeamMember {
   id: string;
   name: string;
   email: string;
-  role: "Institutional Admin" | "Senior Counselor" | "Admissions Staff" | "Viewer";
+  role: "Workspace Admin" | "Telephony Lead" | "Operations Specialist" | "Viewer";
   department: string;
   status: "active" | "invited";
   lastActive: string;
@@ -29,28 +29,28 @@ interface TeamMember {
 const initialTeamList: TeamMember[] = [
   {
     id: "tm-owner",
-    name: "Dr. Vikram Varma",
-    email: "admissions.director@apex.edu.in",
-    role: "Institutional Admin",
-    department: "Admissions Directorate",
+    name: "Operations Admin",
+    email: "admin@enterprise.ai",
+    role: "Workspace Admin",
+    department: "Voice Operations",
     status: "active",
     lastActive: "Active now",
   },
   {
     id: "tm-02",
-    name: "Sneha Mukherjee",
-    email: "s.mukherjee@apex.edu.in",
-    role: "Senior Counselor",
-    department: "Student Counseling Desk",
+    name: "Telephony Lead",
+    email: "telephony@enterprise.ai",
+    role: "Telephony Lead",
+    department: "Engineering & PRI Trunks",
     status: "active",
     lastActive: "15 mins ago",
   },
   {
     id: "tm-03",
-    name: "Rajesh Kannan",
-    email: "r.kannan@apex.edu.in",
-    role: "Admissions Staff",
-    department: "Verification & Aid Desk",
+    name: "Outreach Specialist",
+    email: "outreach@enterprise.ai",
+    role: "Operations Specialist",
+    department: "Customer Experience",
     status: "active",
     lastActive: "1 hr ago",
   },
@@ -60,7 +60,7 @@ export default function TeamPage() {
   const [team, setTeam] = useState<TeamMember[]>(initialTeamList);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<TeamMember["role"]>("Senior Counselor");
+  const [inviteRole, setInviteRole] = useState<TeamMember["role"]>("Operations Specialist");
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
 
   const handleInvite = (e: React.FormEvent) => {
@@ -72,7 +72,7 @@ export default function TeamPage() {
       name: inviteEmail.split("@")[0].replace(".", " "),
       email: inviteEmail,
       role: inviteRole,
-      department: "Counseling & Operations",
+      department: "Voice Operations",
       status: "invited",
       lastActive: "Invitation pending",
     };
@@ -190,7 +190,7 @@ export default function TeamPage() {
             </span>
           </div>
           <span className="text-xs text-black/50 hidden sm:inline">
-            Apex Global Institutions Tenant
+            Enterprise Voice Tenant
           </span>
         </div>
 
@@ -200,7 +200,7 @@ export default function TeamPage() {
             <thead>
               <tr className="bg-[#FBF7ED] border-b border-black/[0.06] text-black/45 font-semibold text-[11px]">
                 <th className="py-3.5 px-6">Staff Member</th>
-                <th className="py-3.5 px-4">Institutional Role</th>
+                <th className="py-3.5 px-4">Workspace Role</th>
                 <th className="py-3.5 px-4">Department</th>
                 <th className="py-3.5 px-4">Status</th>
                 <th className="py-3.5 px-4">Last Active</th>
@@ -298,7 +298,7 @@ export default function TeamPage() {
                 <input
                   type="email"
                   required
-                  placeholder="e.g. counselor@apex.edu.in"
+                  placeholder="e.g. member@enterprise.ai"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all font-medium placeholder:text-black/35"
@@ -307,17 +307,17 @@ export default function TeamPage() {
 
               <div>
                 <label className="text-xs text-[#1A1A1A] font-semibold block mb-1.5">
-                  Institutional Platform Role
+                  Platform Role
                 </label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as any)}
                   className="w-full text-xs px-4 py-2.5 bg-[#FBF7ED] border border-black/[0.06] rounded-full text-[#1A1A1A] focus:outline-none focus:border-black/30 transition-all cursor-pointer font-medium"
                 >
-                  <option value="Senior Counselor">Senior Counselor (Warm Call Handoffs)</option>
-                  <option value="Admissions Staff">Admissions Staff (View &amp; Call)</option>
-                  <option value="Institutional Admin">Institutional Admin (Full Access)</option>
-                  <option value="Viewer">Viewer (Read-only Transcripts)</option>
+                  <option value="Operations Specialist">Operations Specialist (Warm Call Handoffs)</option>
+                  <option value="Telephony Lead">Telephony Lead (Manage Trunks &amp; Campaigns)</option>
+                  <option value="Workspace Admin">Workspace Admin (Full Administrative Access)</option>
+                  <option value="Viewer">Viewer (Read-only Analytics &amp; Transcripts)</option>
                 </select>
               </div>
 

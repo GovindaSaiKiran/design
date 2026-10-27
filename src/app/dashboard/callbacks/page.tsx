@@ -122,9 +122,9 @@ function CallbacksContent() {
   const [newCallbackModalOpen, setNewCallbackModalOpen] = useState(false);
   const [newContactName, setNewContactName] = useState("");
   const [newContactPhone, setNewContactPhone] = useState("");
-  const [newTopicName, setNewTopicName] = useState("B.Tech CSE Admissions & 35% Chancellor Waiver");
-  const [newDatasetTitle, setNewDatasetTitle] = useState("All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)");
-  const [newAgentSelection, setNewAgentSelection] = useState("Maya (Admissions AI)");
+  const [newTopicName, setNewTopicName] = useState("Enterprise Voice SLA & Multi-Region Peering");
+  const [newDatasetTitle, setNewDatasetTitle] = useState("Direct Leads");
+  const [newAgentSelection, setNewAgentSelection] = useState("Maya (Voice Operations)");
   const [newScheduledTime, setNewScheduledTime] = useState("Today, 06:00 PM");
   const [newWhyQueued, setNewWhyQueued] = useState("");
   const [newHumanToggle, setNewHumanToggle] = useState(false);
@@ -234,9 +234,11 @@ function CallbacksContent() {
 
   const handleOpenSourceCall = (callId: string) => {
     try { soundSynth.play("click"); } catch {}
-    const match = mockRecentCalls.find((c) => c.id === callId) || mockRecentCalls[0];
-    setSelectedCallRecord(match);
-    setCallDrawerOpen(true);
+    const match = mockRecentCalls.find((c) => c.id === callId);
+    if (match) {
+      setSelectedCallRecord(match);
+      setCallDrawerOpen(true);
+    }
   };
 
   const handlePromptDial = (cb: CallbackItem) => {
@@ -309,23 +311,23 @@ function CallbacksContent() {
       contactName: newContactName.trim(),
       phone: newContactPhone.trim(),
       city: "Hyderabad, TS",
-      course: "B.Tech Computer Science",
+      course: "Enterprise Solutions",
       agentId: newAgentSelection.includes("Maya")
         ? "agent-maya"
         : newAgentSelection.includes("Priya")
         ? "agent-priya"
         : newAgentSelection.includes("Arjun")
         ? "agent-arjun"
-        : "agent-counselor-desk",
+        : "agent-specialist-desk",
       agentName: newAgentSelection,
       agentAvatar: newAgentSelection.charAt(0),
       agentRole: newAgentSelection.includes("Maya")
-        ? "Admissions Concierge"
+        ? "Voice Operations Concierge"
         : newAgentSelection.includes("Priya")
-        ? "Finance Specialist"
+        ? "Finance & Accounts Specialist"
         : newAgentSelection.includes("Arjun")
         ? "Outreach Specialist"
-        : "Senior Counselor",
+        : "Senior Specialist",
       agentBadgeColor: newAgentSelection.includes("Maya")
         ? "bg-orange-50 text-orange-700 border-orange-200"
         : newAgentSelection.includes("Priya")
@@ -333,18 +335,18 @@ function CallbacksContent() {
         : "bg-blue-50 text-blue-700 border-blue-200",
       topicId: "topic-custom",
       topicName: newTopicName,
-      topicCategory: "Admissions",
+      topicCategory: "Operations",
       datasetBatchId: "batch-outbound-01",
       datasetBatchTitle: newDatasetTitle,
       scheduledWindow: newScheduledTime,
       scheduledExactTime: newScheduledTime,
       countdownLabel: "Scheduled",
       isOverdue: false,
-      whyQueued: newWhyQueued.trim() || "Manual appointment scheduled by admissions coordinator.",
-      queuedTrigger: "Candidate Requested",
+      whyQueued: newWhyQueued.trim() || "Manual appointment scheduled by account coordinator.",
+      queuedTrigger: "Customer Requested",
       humanInteractionNeeded: newHumanToggle,
       humanInteractionReason: newHumanToggle ? newHumanNotes : undefined,
-      humanAssignee: newHumanToggle ? "Senior Counselor Desk" : undefined,
+      humanAssignee: newHumanToggle ? "Senior Account Executive Desk" : undefined,
       priority: newHumanToggle ? "High" : "Normal",
       status: "Pending",
       sourceCallId: "call-001",
@@ -588,9 +590,9 @@ function CallbacksContent() {
           icon={Clock}
           description="Candidates awaiting scheduled follow-up outreach."
           metric={`${pendingCount} Pending`}
-          metricLabel="Earliest: In 10 mins (Kavita Deshmukh)"
-          status="Active"
-          statusType="warning"
+          metricLabel={pendingCount > 0 ? "Queued for outreach" : "No pending callbacks"}
+          status={pendingCount > 0 ? "Active" : "Idle"}
+          statusType={pendingCount > 0 ? "warning" : "ready"}
           actionLabel="View all pending →"
           onClick={() => setStatusFilter("pending")}
         />
@@ -600,9 +602,9 @@ function CallbacksContent() {
           icon={AlertTriangle}
           description="Complex appeals, fee exceptions, or special quota requests."
           metric={`${humanNeededCount} Handoffs`}
-          metricLabel="Senior Counselor / Dean intervention"
-          status="High Priority"
-          statusType="warning"
+          metricLabel={humanNeededCount > 0 ? "Counselor intervention needed" : "Zero handoffs pending"}
+          status={humanNeededCount > 0 ? "High Priority" : "Clear"}
+          statusType={humanNeededCount > 0 ? "warning" : "ready"}
           actionLabel="Inspect human desk →"
           onClick={() => setStatusFilter("human")}
         />
@@ -612,8 +614,8 @@ function CallbacksContent() {
           icon={Bot}
           description="Autonomous AI agent callbacks dialed with full turn-by-turn memory."
           metric={`${autonomousCount} Autonomous`}
-          metricLabel="Maya, Priya & Arjun pool"
-          status="Operational"
+          metricLabel={autonomousCount > 0 ? "Autonomous dialer active" : "No active automations"}
+          status={autonomousCount > 0 ? "Operational" : "Idle"}
           statusType="ready"
           actionLabel="View autonomous →"
           onClick={() => setStatusFilter("autonomous")}
@@ -624,8 +626,8 @@ function CallbacksContent() {
           icon={CheckCircle2}
           description="Follow-ups successfully connected and admissions verified."
           metric={`${completedTodayCount} Completed`}
-          metricLabel="Sub-140ms voice latency SLA"
-          status="100% Connect"
+          metricLabel={completedTodayCount > 0 ? "Sub-140ms voice latency SLA" : "No callbacks completed today"}
+          status={completedTodayCount > 0 ? "100% Connect" : "Ready"}
           statusType="ready"
           actionLabel="View completed →"
           onClick={() => setStatusFilter("completed")}
@@ -1526,12 +1528,12 @@ function CallbacksContent() {
                   onChange={(e) => setNewTopicName(e.target.value)}
                   className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
                 >
-                  <option value="B.Tech CSE Admissions & 35% Chancellor Waiver">B.Tech CSE Admissions &amp; 35% Chancellor Waiver</option>
-                  <option value="Tuition Fee 3-Part Installment & WhatsApp Matrix">Tuition Fee 3-Part Installment &amp; WhatsApp Matrix</option>
-                  <option value="AC Twin Hostel Allotment & Dining Package">AC Twin Hostel Allotment &amp; Dining Package</option>
-                  <option value="DigiLocker Marksheet Verification Sync Issue">DigiLocker Marksheet Verification Sync Issue</option>
-                  <option value="Sports Quota 25% Fee Concession Appeal">Sports Quota 25% Fee Concession Appeal</option>
-                  <option value="Campus Lab Tour Booking Confirmation">Campus Lab Tour Booking Confirmation</option>
+                  <option value="Enterprise Voice SLA & Multi-Region Peering">Enterprise Voice SLA &amp; Multi-Region Peering</option>
+                  <option value="Invoicing, Payment Terms & Usage Credits">Invoicing, Payment Terms &amp; Usage Credits</option>
+                  <option value="SIP Trunk Interconnect & PBX Integration">SIP Trunk Interconnect &amp; PBX Integration</option>
+                  <option value="Webhook Event Signature Verification">Webhook Event Signature Verification</option>
+                  <option value="Volume Tier Discount & Custom Rate Card">Volume Tier Discount &amp; Custom Rate Card</option>
+                  <option value="Live Telephony Demonstration Booking">Live Telephony Demonstration Booking</option>
                 </select>
               </div>
 
@@ -1545,11 +1547,10 @@ function CallbacksContent() {
                   onChange={(e) => setNewDatasetTitle(e.target.value)}
                   className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-600/20"
                 >
-                  <option value="All-India JoSAA & State CET Qualified Applicants 2026 (Batch OUT-01)">All-India JoSAA &amp; State CET Qualified Applicants 2026 (Batch OUT-01)</option>
-                  <option value="Pending Tuition Fee Installments (Batch CSV-MBA)">Pending Tuition Fee Installments (Batch CSV-MBA)</option>
-                  <option value="Hostel Accommodation Allotment Queue (Batch HOSTEL-01)">Hostel Accommodation Allotment Queue (Batch HOSTEL-01)</option>
-                  <option value="National Entrance Test CET Rankers Verification (Batch OUT-02)">National Entrance Test CET Rankers Verification (Batch OUT-02)</option>
-                  <option value="Web Portal & Social Inbound Inquiries">Web Portal &amp; Social Inbound Inquiries</option>
+                  <option value="Direct Leads (Batch OUT-01)">Direct Leads (Batch OUT-01)</option>
+                  <option value="Inbound Website Inquiries">Inbound Website Inquiries</option>
+                  <option value="Priority Account Escalations">Priority Account Escalations</option>
+                  <option value="Scheduled Follow-ups">Scheduled Follow-ups</option>
                 </select>
               </div>
 

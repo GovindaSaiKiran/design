@@ -154,7 +154,7 @@ export default function PersonalProfileTab({
                 value={profile.fullName}
                 onChange={(e) => setProfile({ ...profile, fullName: e.target.value })}
                 className="w-full text-xs pl-9 pr-3 py-2.5 bg-[#FAF5E9]/60 border border-[#E9E1D4] rounded-xl text-[#283A50] focus:outline-none focus:border-[#283A50] font-medium transition-all"
-                placeholder="Dr. Arisara Sharma"
+                placeholder="Operations Administrator"
                 required
               />
             </div>
@@ -171,7 +171,7 @@ export default function PersonalProfileTab({
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                 className="w-full text-xs pl-9 pr-3 py-2.5 bg-[#FAF5E9]/60 border border-[#E9E1D4] rounded-xl text-[#283A50] focus:outline-none focus:border-[#283A50] font-medium transition-all"
-                placeholder="admissions.director@apex.edu.in"
+                placeholder="operations@enterprise.ai"
                 required
               />
             </div>
@@ -207,7 +207,7 @@ export default function PersonalProfileTab({
                 value={profile.jobTitle || ""}
                 onChange={(e) => setProfile({ ...profile, jobTitle: e.target.value })}
                 className="w-full text-xs pl-9 pr-3 py-2.5 bg-[#FAF5E9]/60 border border-[#E9E1D4] rounded-xl text-[#283A50] focus:outline-none focus:border-[#283A50] font-medium transition-all"
-                placeholder="Director of Admissions & Outreach"
+                placeholder="Head of Voice Operations & Telephony"
               />
             </div>
           </div>

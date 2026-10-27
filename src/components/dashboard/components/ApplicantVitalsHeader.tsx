@@ -32,36 +32,36 @@ export interface CallerProfile {
 const callersList: CallerProfile[] = [
   {
     id: "caller-1",
-    name: "Rahul Sharma",
+    name: "Enterprise Account Executive",
     avatar: "/images/woman-portrait.jpg",
-    meta: "Applicant • CBSE 94% • B.Tech CSE '28",
-    intent: "Chancellor Scholarship (35% Waiver)",
+    meta: "Corporate Client • PRI Trunk Tier • Priority SLA",
+    intent: "SIP Capacity Upgrade & Concurrency Expansion",
     tempo: "142 wpm",
-    latency: "382/64 ms",
+    latency: "135/64 ms",
     confidence: "98%",
     sentiment: "+92 High",
     direction: "inbound"
   },
   {
     id: "caller-2",
-    name: "Ananya Iyer",
+    name: "Operations Director",
     avatar: "/images/woman-portrait.jpg",
-    meta: "Applicant • CAT 98.2%ile • MBA FinTech",
-    intent: "Hostel AC Rooms & Counseling Slabs",
+    meta: "Strategic Partner • Multi-lingual CRM Sync",
+    intent: "Webhook Event Stream Verification",
     tempo: "138 wpm",
-    latency: "360/58 ms",
+    latency: "128/58 ms",
     confidence: "99%",
     sentiment: "+96 High",
     direction: "outbound"
   },
   {
     id: "caller-3",
-    name: "Vikramaditya Rao",
+    name: "Lead Systems Architect",
     avatar: "/images/woman-portrait.jpg",
-    meta: "Applicant • JEE 96%ile • B.Tech AI/ML",
-    intent: "Direct Human Counselor Transfer",
+    meta: "Direct Client • Custom LLM RAG Pipeline",
+    intent: "Zero-Hallucination Grounding Audit",
     tempo: "148 wpm",
-    latency: "395/72 ms",
+    latency: "140/72 ms",
     confidence: "95%",
     sentiment: "+88 Warm",
     direction: "inbound"
@@ -81,12 +81,12 @@ export default function ApplicantVitalsHeader({
   const [activeFilter, setActiveFilter] = useState<string>("all-inquiries");
 
   const filterPills = [
-    { id: "all-inquiries", label: "All Inquiries", icon: GraduationCap },
-    { id: "scholarships", label: "Scholarship Slabs", icon: Award },
-    { id: "prospectus", label: "Prospectus RAG", icon: FileText },
-    { id: "fees", label: "Fee Slabs (₹7.98L)", icon: CreditCard },
-    { id: "hostel", label: "Hostel Allocation", icon: Home },
-    { id: "escalations", label: "Counselor Handoff", icon: UserCheck }
+    { id: "all-inquiries", label: "All Telephony", icon: GraduationCap },
+    { id: "sla", label: "Carrier SLA (99.99%)", icon: Award },
+    { id: "runbook", label: "Documentation RAG", icon: FileText },
+    { id: "pricing", label: "Volume Rate Cards", icon: CreditCard },
+    { id: "sip", label: "SIP Trunk Peering", icon: Home },
+    { id: "escalations", label: "Operator Handoff", icon: UserCheck }
   ];
 
   const handleCallerSwitch = () => {
@@ -101,7 +101,6 @@ export default function ApplicantVitalsHeader({
     onFilterChange?.(id);
   };
 
-  return (
   return (
     <div className="w-full mb-6 select-none font-sans">
       {/* Top Row: Active Caller Profile Card + Admissions & Telephony Vitals */}
