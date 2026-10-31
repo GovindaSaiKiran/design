@@ -351,7 +351,7 @@ export default function AgentsPage() {
   const [callSimulationMode, setCallSimulationMode] = useState<"inbound" | "outbound">("inbound");
   const [simInput, setSimInput] = useState("");
 
-  const getInboundTurns = () => [
+  const getInboundTurns = (): Array<{ id: string; speaker: "agent" | "caller"; text: string; time: string }> => [
     {
       id: "in-1",
       speaker: "caller",
@@ -378,7 +378,7 @@ export default function AgentsPage() {
     },
   ];
 
-  const getOutboundTurns = () => [
+  const getOutboundTurns = (): Array<{ id: string; speaker: "agent" | "caller"; text: string; time: string }> => [
     {
       id: "out-1",
       speaker: "agent",
@@ -548,8 +548,8 @@ export default function AgentsPage() {
 
         const practicalSession: StoredConversation = {
           id: `real-tel-${Date.now()}`,
-          agentId: selectedAgent.id,
-          agentName: selectedAgent.name.split("—")[0].trim(),
+          agentId: selectedAgent?.id || "default",
+          agentName: selectedAgent ? selectedAgent.name.split("—")[0].trim() : "Voice Agent",
           direction: callSimulationMode,
           contactName: "Practical Phone Call",
           contactNumber: `${phoneCountryCode} ${cleanNumber}`,
@@ -772,7 +772,7 @@ export default function AgentsPage() {
     } catch {}
     const userTurn = {
       id: String(Date.now()),
-      speaker: "caller",
+      speaker: "caller" as const,
       text: textToSend,
       time: "00:38",
     };
@@ -813,7 +813,7 @@ export default function AgentsPage() {
 
       const agentResponse = {
         id: String(Date.now() + 1),
-        speaker: "agent",
+        speaker: "agent" as const,
         text: responseText,
         time: "00:44",
       };
@@ -2322,11 +2322,11 @@ export default function AgentsPage() {
                       </label>
                       <select
                         value={cloneSpeakerGender}
-                        onChange={(e) => setCloneSpeakerGender(e.target.value as "female" | "male")}
+                        onChange={(e) => setCloneSpeakerGender(e.target.value as "Female" | "Male")}
                         className="w-full text-xs px-3.5 py-2.5 bg-white border border-black/[0.08] rounded-xl text-[#1A1A1A] font-semibold focus:outline-none focus:border-purple-600 shadow-2xs cursor-pointer"
                       >
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
                       </select>
                     </div>
 
@@ -2377,7 +2377,7 @@ export default function AgentsPage() {
                           try {
                             soundSynth.speak(cloneTestSentence, {
                               rate: 1.0,
-                              pitch: cloneSpeakerGender === "female" ? 1.05 : 0.95,
+                              pitch: cloneSpeakerGender === "Female" ? 1.05 : 0.95,
                             });
                           } catch {}
                         }}
@@ -2428,7 +2428,7 @@ export default function AgentsPage() {
                             try {
                               soundSynth.speak(cloneTestSentence, {
                                 rate: 1.0,
-                                pitch: cloneSpeakerGender === "female" ? 1.05 : 0.95,
+                                pitch: cloneSpeakerGender === "Female" ? 1.05 : 0.95,
                               });
                             } catch {}
                           }}
@@ -4003,7 +4003,7 @@ export default function AgentsPage() {
                           :{(livePhoneCallSeconds % 60).toString().padStart(2, "0")}
                         </h4>
                         <p className="text-xs text-black/65 mt-1 font-medium">
-                          Speaking with {selectedAgent.name.split("—")[0].trim()} on your handset • Real Speech Synthesis Active
+                          Speaking with {selectedAgent ? selectedAgent.name.split("—")[0].trim() : "Voice Agent"} on your handset • Real Speech Synthesis Active
                         </p>
                       </div>
 

@@ -54,7 +54,7 @@ export default function CallDrawer({ call, isOpen, onClose }: CallDrawerProps) {
     {
       id: 2,
       speaker: "caller",
-      text: `Yes, speaking. I had requested information regarding your ${call.topic || "telephony platform"}.`,
+      text: `Yes, speaking. I had requested information regarding your ${(call as any).topic || "telephony platform"}.`,
       time: "00:08",
     },
     {
@@ -93,10 +93,10 @@ export default function CallDrawer({ call, isOpen, onClose }: CallDrawerProps) {
     { label: "Contact Name", value: call.contactName || "Direct Contact", confidence: "100%", vaultId: "DV-091" },
     { label: "Phone Number", value: call.contactNumber, confidence: "100%", vaultId: "DV-092" },
     { label: "Contact Email", value: `${(call.contactName || "contact").toLowerCase().replace(/[^a-z0-9]/g, ".")}@enterprise.ai`, confidence: "99%", vaultId: "DV-093" },
-    { label: "Discussion Topic", value: call.topic || "Voice Infrastructure & PRI Trunks", confidence: "99%", vaultId: "DV-094" },
+    { label: "Discussion Topic", value: (call as any).topic || "Voice Infrastructure & PRI Trunks", confidence: "99%", vaultId: "DV-094" },
     { label: "Qualification Level", value: call.qualification || "Enterprise Priority Account", confidence: "99%", vaultId: "DV-095" },
     { label: "Service Line", value: call.groundedDocTitle || "Enterprise Voice Operations", confidence: "98%", vaultId: "DV-096" },
-    { label: "Call Sentiment", value: call.sentiment || "Positive", confidence: "96%", vaultId: "DV-097" },
+    { label: "Call Sentiment", value: (call as any).sentiment || "Positive", confidence: "96%", vaultId: "DV-097" },
     { label: "Action Confirmed", value: "Technical Consultation Scheduled", confidence: "99%", vaultId: "DV-098" },
     { label: "Lead Temperature", value: "High Intent", confidence: "95%", vaultId: "DV-099" },
   ];

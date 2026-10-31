@@ -118,7 +118,7 @@ export function Shape({
   );
 }
 
-export interface BlobProps extends React.SVGProps<SVGSVGElement> {
+export interface BlobProps extends Omit<React.SVGProps<SVGSVGElement>, "points"> {
   size?: number | string;
   seed?: number;
   variance?: number;

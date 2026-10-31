@@ -1229,7 +1229,7 @@ function CallsPageContent() {
                 <div className="flex items-center justify-center gap-2 pt-2">
                   <button
                     type="button"
-                    onClick={() => setCampaignModalOpen(true)}
+                    onClick={() => setStartCampaignModalOpen(true)}
                     className="inline-flex items-center gap-2 bg-[#111111] hover:bg-black text-white text-xs font-bold px-5 py-2.5 rounded-full transition-all cursor-pointer shadow-md"
                   >
                     <Plus className="w-3.5 h-3.5 text-white" />

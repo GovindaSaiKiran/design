@@ -3,7 +3,12 @@
 import React from "react";
 import Link from "next/link";
 
-export default function Footer() {
+interface FooterProps {
+  onOpenLogin?: () => void;
+  onOpenSignUp?: () => void;
+}
+
+export default function Footer({ onOpenLogin, onOpenSignUp }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -51,13 +56,25 @@ export default function Footer() {
           </div>
 
           {/* Secondary / Action Links */}
-          <div className="flex items-center gap-5 sm:gap-6 shrink-0 whitespace-nowrap">
-            <a
-              href="#contact"
-              className="hover:text-[#111111] transition-colors duration-150"
-            >
-              Contact
-            </a>
+          <div className="flex items-center gap-4 sm:gap-6 shrink-0 whitespace-nowrap">
+            {onOpenLogin && (
+              <button
+                type="button"
+                onClick={onOpenLogin}
+                className="hover:text-[#111111] transition-colors duration-150 cursor-pointer"
+              >
+                Log In
+              </button>
+            )}
+            {onOpenSignUp && (
+              <button
+                type="button"
+                onClick={onOpenSignUp}
+                className="font-bold text-slate-900 hover:text-black transition-colors duration-150 cursor-pointer"
+              >
+                Sign Up
+              </button>
+            )}
             <Link
               href="/dashboard"
               className="font-semibold text-[#111111] hover:opacity-75 transition-opacity duration-150 inline-flex items-center gap-1.5 whitespace-nowrap"
@@ -98,40 +115,36 @@ export default function Footer() {
           {/* Left: Brand Identification & Copyright */}
           <div className="flex items-center gap-2.5">
             <span className="font-bold text-[#111111] tracking-tight">Swaram</span>
-            <span className="text-[#888888]" aria-hidden="true">
-              &bull;
-            </span>
-            <span className="font-normal">
-              &copy; {currentYear} Swaram. All rights reserved.
-            </span>
+            <span className="text-[#888888]">&bull;</span>
+            <span>&copy; {currentYear} Swaram Inc. All rights reserved.</span>
           </div>
 
-          {/* Right: Essential Legal & Info Links */}
-          <div className="flex items-center gap-6 sm:gap-8 font-medium">
-            <a
-              href="#about"
-              className="hover:text-[#111111] transition-colors duration-150"
-            >
-              About
-            </a>
+          {/* Right: Regulatory and Legal Links */}
+          <div className="flex items-center gap-4 sm:gap-6 flex-wrap justify-center sm:justify-end">
             <Link
-              href="/dashboard/settings"
+              href="/dashboard"
               className="hover:text-[#111111] transition-colors duration-150"
             >
-              Privacy
+              Privacy Policy
             </Link>
-            <a
-              href="#pricing"
+            <Link
+              href="/dashboard"
               className="hover:text-[#111111] transition-colors duration-150"
             >
-              Terms
-            </a>
-            <a
-              href="#contact"
+              Terms of Service
+            </Link>
+            <Link
+              href="/dashboard"
               className="hover:text-[#111111] transition-colors duration-150"
             >
-              Contact
-            </a>
+              DPDP Compliance
+            </Link>
+            <Link
+              href="/dashboard"
+              className="hover:text-[#111111] transition-colors duration-150"
+            >
+              Security
+            </Link>
           </div>
         </div>
       </div>

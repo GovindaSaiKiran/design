@@ -84,6 +84,15 @@ export default function BillingView() {
 
   useEffect(() => {
     fetchUsageData();
+    if (typeof window !== "undefined") {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const tabParam = params.get("tab");
+        if (tabParam === "capacity" || tabParam === "simulator" || tabParam === "costs") {
+          setActiveTab(tabParam);
+        }
+      } catch {}
+    }
   }, []);
 
   // Save Guardrails handler

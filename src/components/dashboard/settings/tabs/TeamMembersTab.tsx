@@ -303,7 +303,7 @@ export default function TeamMembersTab({ initialTeam, onSaveTeam }: TeamMembersT
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  placeholder="colleague@apex.edu.in"
+                  placeholder="colleague@enterprise.ai"
                   required
                   className="w-full px-3 py-2.5 rounded-xl bg-[#FAF5E9]/60 border border-[#E9E1D4] text-[#283A50] focus:outline-none"
                 />

@@ -216,6 +216,7 @@ export default function CallActivityChart() {
             </g>
           ))}
         </svg>
+        )}
 
         {/* Hovered Tooltip */}
         {hoveredPoint !== null && (

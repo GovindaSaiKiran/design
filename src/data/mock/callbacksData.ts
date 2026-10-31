@@ -18,7 +18,7 @@ export interface CallbackItem {
   // 2. Which Topic
   topicId: string;
   topicName: string;
-  topicCategory: "Admissions" | "Finance & Fees" | "Hostel & Facilities" | "Verification & Portal";
+  topicCategory: "Admissions" | "Finance & Fees" | "Hostel & Facilities" | "Verification & Portal" | "Operations";
   
   // 3. Same Group / Dataset / Cohort
   datasetBatchId: string;
@@ -39,7 +39,7 @@ export interface CallbackItem {
   
   // 5. Why Queued
   whyQueued: string;
-  queuedTrigger: "Candidate Requested" | "Automated Retry (Busy Line)" | "Post-WhatsApp Followup" | "Special Exception Escalation" | "Doc Verification Sync Issue";
+  queuedTrigger: "Candidate Requested" | "Customer Requested" | "Automated Retry (Busy Line)" | "Post-WhatsApp Followup" | "Special Exception Escalation" | "Doc Verification Sync Issue";
   
   // 6. Any Human Interaction Needed
   humanInteractionNeeded: boolean;

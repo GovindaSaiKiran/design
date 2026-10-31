@@ -6,14 +6,19 @@ const defaultAgent: DashboardAgent = {
   id: "agent-default",
   name: "Default Voice Agent",
   role: "Voice Concierge",
+  department: "Customer Operations",
   language: "English",
-  avatar: "A",
-  voiceModel: "Gemini Live",
-  latencyMs: 120,
-  description: "Default voice assistant",
-  status: "ready",
-  capabilities: [],
-  callsHandled: 0,
+  status: "active",
+  voice: {
+    name: "Bulbul Indic",
+    gender: "Female",
+    accent: "Pan-Indian Bilingual",
+  },
+  callsToday: 0,
+  accuracy: 99,
+  assignedNumber: "+91 (Trunk)",
+  systemPromptPreview: "Default voice assistant",
+  activeLiveCount: 0,
 };
 
 export const agentsApi = {

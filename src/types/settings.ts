@@ -1,13 +1,17 @@
 export type SettingsTabKey =
-  // ACCOUNT
+  // ACCOUNT SETTINGS
   | "profile"
-  | "workspace"
+  | "security"
+  | "notifications"
+  // WORKSPACE SETTINGS
+  | "organization"
+  | "workspace" // Alias for organization
+  | "swaram-preferences"
+  | "preferences" // Alias for swaram-preferences
+  | "campaign-defaults"
   | "team"
   | "billing"
-  | "notifications"
-  | "security"
-  | "preferences"
-  // CONNECTIONS
+  // SYSTEM CONNECTIONS
   | "ai-services"
   | "phone-calling"
   | "whatsapp"
@@ -20,22 +24,40 @@ export interface PersonalProfile {
   email: string;
   phone: string;
   jobTitle?: string;
+  displayLanguage?: string;
+  timezone?: string;
+  dateFormat?: "DD/MM/YYYY" | "MM/DD/YYYY" | "YYYY-MM-DD";
+  timeFormat?: "12h" | "24h";
   lastLogin?: string;
 }
 
+export interface WorkspaceItem {
+  id: string;
+  name: string;
+  role: TeamRole;
+  isCurrent: boolean;
+  industry?: string;
+}
+
 export interface WorkspaceProfile {
-  businessName: string;
+  businessName: string; // Organization Name
+  organizationName?: string;
   logoUrl: string;
   industry: string;
+  organizationType?: string; // Hospital, E-commerce, Higher Ed, Enterprise, Government, etc.
   website: string;
+  businessAddress?: string;
   country: string;
   timezone: string;
+  teamSize?: string;
+  businessDescription?: string;
   defaultLanguage: string;
   businessHoursStart: string;
   businessHoursEnd: string;
   callingHoursStart: string;
   callingHoursEnd: string;
   callingDays: string[];
+  workspaces?: WorkspaceItem[];
 }
 
 export type TeamRole = "Owner" | "Admin" | "Member" | "Viewer";
@@ -61,6 +83,15 @@ export interface InvoiceRecord {
   pdfUrl?: string;
 }
 
+export interface PurchasedPhoneNumber {
+  id: string;
+  phoneNumber: string;
+  label: string;
+  monthlyFee: string;
+  channelType: string;
+  renewalDate: string;
+}
+
 export interface BillingPlanInfo {
   planName: string;
   planBadge: string;
@@ -82,23 +113,43 @@ export interface BillingPlanInfo {
   gstinTaxId: string;
   usageAlertsEnabled: boolean;
   spendingLimitMonthly: number;
+  purchasedNumbers?: PurchasedPhoneNumber[];
   invoices: InvoiceRecord[];
 }
 
+export interface NotificationChannelSetting {
+  inApp: boolean;
+  email: boolean;
+}
+
 export interface NotificationPreferences {
-  campaignCompletedEmail: boolean;
-  campaignCompletedInApp: boolean;
-  campaignFailedEmail: boolean;
-  campaignFailedInApp: boolean;
-  callingUsageAlertsEmail: boolean;
-  callingUsageAlertsInApp: boolean;
-  lowMinutesBalanceEmail: boolean;
-  lowMinutesBalanceInApp: boolean;
-  serviceDisconnectedEmail: boolean;
-  serviceDisconnectedInApp: boolean;
-  dailySummaryEmail: boolean;
-  weeklySummaryEmail: boolean;
-  summaryTime: string;
+  // Individual 11 required event controls
+  campaignStarted: NotificationChannelSetting;
+  campaignCompleted: NotificationChannelSetting;
+  campaignFailed: NotificationChannelSetting;
+  scheduledReminders: NotificationChannelSetting;
+  failedCalls: NotificationChannelSetting;
+  callbackRequests: NotificationChannelSetting;
+  lowMinutesBalance: NotificationChannelSetting;
+  usageLimits: NotificationChannelSetting;
+  telephonyIssues: NotificationChannelSetting;
+  weeklyReports: NotificationChannelSetting;
+  securityAlerts: NotificationChannelSetting;
+
+  // Legacy compatibility fields
+  campaignCompletedEmail?: boolean;
+  campaignCompletedInApp?: boolean;
+  campaignFailedEmail?: boolean;
+  campaignFailedInApp?: boolean;
+  callingUsageAlertsEmail?: boolean;
+  callingUsageAlertsInApp?: boolean;
+  lowMinutesBalanceEmail?: boolean;
+  lowMinutesBalanceInApp?: boolean;
+  serviceDisconnectedEmail?: boolean;
+  serviceDisconnectedInApp?: boolean;
+  dailySummaryEmail?: boolean;
+  weeklySummaryEmail?: boolean;
+  summaryTime?: string;
 }
 
 export interface ActiveSession {
@@ -136,6 +187,85 @@ export interface AppPreferences {
   timeFormat: "12h" | "24h";
   defaultDashboard: string;
   tableDensity: "comfortable" | "compact";
+}
+
+// ==========================================
+// MY SWARAM PREFERENCES (Personalization)
+// ==========================================
+
+export type SwaramPrimaryGoal =
+  | "customer_support"
+  | "bulk_voice"
+  | "public_announcements"
+  | "weather_service_alerts"
+  | "awareness_campaigns"
+  | "business_promotions"
+  | "customer_notifications"
+  | "admissions_enquiry"
+  | "appointment_reminders"
+  | "feedback_collection"
+  | "whatsapp_automation"
+  | "custom_communication";
+
+export interface MySwaramPreferences {
+  primaryGoals: SwaramPrimaryGoal[];
+  customGoalText?: string;
+  industry?: string;
+  mainAudience?: string;
+  preferredLanguages?: string[];
+  preferredChannels?: string[];
+  typicalCampaignFrequency?: "daily" | "weekly" | "monthly" | "ad_hoc";
+  preferredCallingMode?: "ai_autonomous" | "interactive_ivr" | "agent_assisted" | "hybrid";
+  technicalExperienceLevel?: "beginner" | "intermediate" | "advanced";
+  mainBusinessObjective?: string;
+  lastUpdated?: string;
+}
+
+// ==========================================
+// DEFAULT CAMPAIGN PREFERENCES
+// ==========================================
+
+export interface CampaignDefaultPreferences {
+  preferredAgentId: string;
+  preferredAgentName: string;
+  defaultVoice: string;
+  defaultLanguage: string;
+  defaultKnowledgeBaseId?: string;
+  defaultKnowledgeBaseName?: string;
+  defaultCallingMode: "autonomous" | "conversational_survey" | "alert_broadcast" | "interactive_ivr";
+  defaultContactListId?: string;
+  defaultContactListName?: string;
+  defaultConcurrencyLimit: number;
+  preferredCallingHoursStart: string;
+  preferredCallingHoursEnd: string;
+  defaultReportingOptions: {
+    sendEmailSummary: boolean;
+    sendWhatsappReport: boolean;
+    includeCallRecordings: boolean;
+    detailedTranscriptAnalysis: boolean;
+  };
+  safetyDisclaimerAcknowledged: boolean;
+}
+
+// ==========================================
+// ONBOARDING PROGRESS CHECKLIST
+// ==========================================
+
+export type OnboardingStepId =
+  | "complete_profile"
+  | "set_organization"
+  | "choose_goals"
+  | "configure_agent"
+  | "add_knowledge"
+  | "connect_phone"
+  | "import_contacts"
+  | "test_call"
+  | "launch_campaign";
+
+export interface OnboardingChecklist {
+  completedSteps: OnboardingStepId[];
+  isDismissed: boolean;
+  lastUpdated: string;
 }
 
 // ==========================================
@@ -228,6 +358,9 @@ export interface AdvancedConnectionSettings {
 export interface CompleteSwaramSettings {
   profile: PersonalProfile;
   workspace: WorkspaceProfile;
+  myPreferences: MySwaramPreferences;
+  campaignDefaults: CampaignDefaultPreferences;
+  onboarding: OnboardingChecklist;
   team: TeamMember[];
   billing: BillingPlanInfo;
   notifications: NotificationPreferences;

@@ -209,6 +209,69 @@ export default function PlanBillingTab({ initialBilling, onSaveBilling }: PlanBi
         </div>
       </div>
 
+      {/* Purchased Numbers and Associated Charges */}
+      <div className="bg-white rounded-2xl border border-[#E9E1D4] overflow-hidden shadow-2xs">
+        <div className="px-6 py-4 bg-[#FAF5E9]/50 border-b border-[#E9E1D4] flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-[#283A50] block">
+              Purchased Phone Numbers &amp; Carrier Trunks
+            </span>
+            <span className="text-[11px] text-[#707684]">
+              Dedicated inbound lines and outbound caller IDs reserved for this workspace
+            </span>
+          </div>
+          <span className="text-[11px] font-semibold text-[#283A50] bg-[#FAF5E9] px-2.5 py-1 rounded-lg border border-[#E9E1D4]">
+            {billing.purchasedNumbers?.length || 2} Lines Active
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="border-b border-[#E9E1D4] text-[#707684] font-semibold text-[11px] uppercase tracking-wider bg-white">
+                <th className="py-3 px-5">Phone Number</th>
+                <th className="py-3 px-5">Label / Desk</th>
+                <th className="py-3 px-5">Channel Type</th>
+                <th className="py-3 px-5">Monthly Charge</th>
+                <th className="py-3 px-5 text-right">Renewal Date</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#E9E1D4]/60">
+              {(
+                billing.purchasedNumbers || [
+                  {
+                    id: "num-1",
+                    phoneNumber: "+91 40 4821 9900",
+                    label: "Primary Inbound Line",
+                    channelType: "PRI SIP Trunk",
+                    monthlyFee: "₹1,200",
+                    renewalDate: "15 Nov 2026",
+                  },
+                  {
+                    id: "num-2",
+                    phoneNumber: "+91 40 4821 9901",
+                    label: "Outbound Automated Desk",
+                    channelType: "High-Throughput Trunk",
+                    monthlyFee: "₹1,200",
+                    renewalDate: "15 Nov 2026",
+                  },
+                ]
+              ).map((num) => (
+                <tr key={num.id} className="hover:bg-[#FAF5E9]/30 transition-colors">
+                  <td className="py-3.5 px-5 font-mono font-bold text-[#283A50]">
+                    {num.phoneNumber}
+                  </td>
+                  <td className="py-3.5 px-5 text-[#283A50] font-medium">{num.label}</td>
+                  <td className="py-3.5 px-5 text-[#707684]">{num.channelType}</td>
+                  <td className="py-3.5 px-5 font-bold text-[#283A50]">{num.monthlyFee}/mo</td>
+                  <td className="py-3.5 px-5 text-right text-[#707684]">{num.renewalDate}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Tax Invoices History */}
       <div className="bg-white rounded-2xl border border-[#E9E1D4] overflow-hidden shadow-2xs">
         <div className="px-6 py-4 bg-[#FAF5E9]/50 border-b border-[#E9E1D4] flex items-center justify-between">

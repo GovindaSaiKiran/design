@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Hero from "@/components/aeline/Hero";
 import LogoMarquee from "@/components/aeline/LogoMarquee";
 import IndicVoiceSection from "@/components/aeline/IndicVoiceSection";
@@ -14,22 +14,36 @@ import FinalCTA from "@/components/aeline/FinalCTA";
 import Footer from "@/components/aeline/Footer";
 import LiveVoiceSimulatorModal from "@/components/aeline/LiveVoiceSimulatorModal";
 import InstitutionalDemoModal from "@/components/aeline/InstitutionalDemoModal";
-import AuthOnboardingModal from "@/components/aeline/AuthOnboardingModal";
+import AuthOnboardingModal, { AuthMode } from "@/components/aeline/AuthOnboardingModal";
 
 export default function EduVoicePage() {
   const [simulatorOpen, setSimulatorOpen] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<"login" | "get-started">("get-started");
+  const [authMode, setAuthMode] = useState<AuthMode>("signup");
   const [selectedPlan, setSelectedPlan] = useState("Collegiate Growth Plan");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const auth = params.get("auth");
+      if (auth === "signup" || auth === "register") {
+        setAuthMode("signup");
+        setAuthModalOpen(true);
+      } else if (auth === "login" || auth === "signin") {
+        setAuthMode("login");
+        setAuthModalOpen(true);
+      }
+    }
+  }, []);
 
   const handleOpenLogin = () => {
     setAuthMode("login");
     setAuthModalOpen(true);
   };
 
-  const handleOpenGetStarted = () => {
-    setAuthMode("get-started");
+  const handleOpenSignUp = () => {
+    setAuthMode("signup");
     setAuthModalOpen(true);
   };
 
@@ -45,10 +59,11 @@ export default function EduVoicePage() {
         onOpenDemo={() => setDemoOpen(true)}
         onOpenSimulator={() => setSimulatorOpen(true)}
         onOpenLogin={handleOpenLogin}
-        onOpenGetStarted={handleOpenGetStarted}
+        onOpenGetStarted={handleOpenSignUp}
+        onOpenSignUp={handleOpenSignUp}
       />
 
-      {/* 2. University Partner Logo Marquee */}
+      {/* 2. Swaram Capabilities Marquee Strip */}
       <LogoMarquee />
 
       {/* 3. Indic Text to Speech Playground (Natural Voices Across India's Languages) */}
@@ -79,10 +94,10 @@ export default function EduVoicePage() {
       <BlogSection />
 
       {/* 9. Final CTA with Campus Pilot Registration */}
-      <FinalCTA onOpenDemo={handleOpenGetStarted} />
+      <FinalCTA onOpenDemo={handleOpenSignUp} />
 
       {/* 10. Global Higher Ed Compliance Footer */}
-      <Footer />
+      <Footer onOpenLogin={handleOpenLogin} onOpenSignUp={handleOpenSignUp} />
 
       {/* Interactive Modals */}
       <LiveVoiceSimulatorModal

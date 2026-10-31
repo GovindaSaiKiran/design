@@ -172,7 +172,7 @@ export default function ContactsPage() {
       assignedAgent: "Maya (Admissions)",
       priorityScore: 85,
       source: "user_manual",
-      lastCallOutcome: "New Contact",
+      lastCallOutcome: "Interested",
       lastContacted: "Just added",
     });
 
@@ -206,16 +206,16 @@ export default function ContactsPage() {
       priorityScore: 90,
       source: "user_csv",
       addedAt: "Just now",
-      lastCallOutcome: "Queued for Outreach",
+      lastCallOutcome: "Interested",
       lastContacted: "Imported today",
     }));
 
-    saveUserContactBatch(
-      `Imported: ${fileName || "Contacts_List.csv"} (${count} leads)`,
-      sampleImportedContacts,
-      "csv_upload",
-      "Maya AI"
-    );
+    saveUserContactBatch({
+      title: `Imported: ${fileName || "Contacts_List.csv"} (${count} leads)`,
+      contacts: sampleImportedContacts,
+      source: "csv_upload",
+      agentAssigned: "Maya AI",
+    });
 
     setToastMessage(`Successfully imported ${count} contacts and logged to user history!`);
     reloadContacts();

@@ -187,11 +187,20 @@ export default function DataVaultPage() {
   const [extractionFields, setExtractionFields] = useState<ExtractionField[]>(initialExtractionFields);
   const [pendingCallbacksCount, setPendingCallbacksCount] = useState(0);
 
-  // Sync dynamic extracted records and callbacks
+  // Sync dynamic extracted records, callbacks, and URL tab/hash
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     try {
+      // URL tab parameter check
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab");
+      if (tabParam === "schema" || window.location.hash.includes("schema")) {
+        setVaultTab("schema");
+      } else if (tabParam === "records" || window.location.hash.includes("records")) {
+        setVaultTab("records");
+      }
+
       // 1. Check custom vault records
       const customRaw = localStorage.getItem("swaram_vault_records");
       if (customRaw) {
@@ -774,7 +783,7 @@ export default function DataVaultPage() {
       {/* VIEW 1: EXTRACTED RECORDS VAULT TABLE                                   */}
       {/* ======================================================================= */}
       {vaultTab === "records" && (
-        <div className="space-y-4 animate-in fade-in duration-200">
+        <div id="records-vault" className="space-y-4 animate-in fade-in duration-200 scroll-mt-24">
           {/* SEARCH & FILTERS BAR */}
           <div className="p-4 rounded-[26px] bg-white border border-black/[0.06] shadow-2xs space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -983,7 +992,7 @@ export default function DataVaultPage() {
       {/* VIEW 2: STRUCTURED EXTRACTION SCHEMA & RULES (SHIFTED FROM AI AGENTS)   */}
       {/* ======================================================================= */}
       {vaultTab === "schema" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
+        <div id="schema-engine" className="space-y-6 animate-in fade-in duration-200 scroll-mt-24">
           {/* Schema Controls & Summary Banner */}
           <div className="p-6 rounded-[28px] bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/60 border-2 border-indigo-200/80 shadow-xs space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1244,7 +1253,7 @@ export default function DataVaultPage() {
           {/* =================================================================== */}
           {/* LIVE EXTRACTION ENGINE SANDBOX & SIMULATOR                          */}
           {/* =================================================================== */}
-          <div className="p-6 rounded-[28px] border-2 border-indigo-200/80 bg-white space-y-4 shadow-xs">
+          <div id="extraction-sandbox" className="p-6 rounded-[28px] border-2 border-indigo-200/80 bg-white space-y-4 shadow-xs scroll-mt-24">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-xs">

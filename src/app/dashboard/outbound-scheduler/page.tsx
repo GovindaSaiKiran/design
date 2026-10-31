@@ -57,6 +57,12 @@ import {
 import { soundSynth } from "@/lib/audio-synth";
 import { mockAgents, mockKnowledgeBase } from "@/data/mock/dashboardData";
 import { INITIAL_UNIFIED_CONTACTS, saveUserContactBatch, getUnifiedContacts } from "@/lib/contactsHistory";
+import {
+  CallingMode,
+  StructuredCallingPurpose,
+  ScheduledCampaign,
+  KnowledgeSourceReference,
+} from "@/types/schedule";
 
 // Subcomponents for Outbound Scheduler
 import CallingModeSelector from "@/components/dashboard/outbound-scheduler/CallingModeSelector";
@@ -244,6 +250,33 @@ function OutboundSchedulerPageContent() {
       }
     }
   }, [simContactsParam, simAgentParam, cohortParam]);
+
+  // Load Saved Campaign Defaults from Personalization Settings
+  const [defaultsNotice, setDefaultsNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("swaram_campaign_defaults");
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.preferredAgentId) setSelectedAgentId(d.preferredAgentId);
+        if (d.defaultConcurrencyLimit) setConcurrencyLimit(d.defaultConcurrencyLimit);
+        setDefaultsNotice("Applied preferred agent & concurrency from your Campaign Defaults.");
+      } else {
+        fetch("/api/settings")
+          .then((res) => res.json())
+          .then((json) => {
+            if (json.success && json.settings?.campaignDefaults) {
+              const d = json.settings.campaignDefaults;
+              if (d.preferredAgentId) setSelectedAgentId(d.preferredAgentId);
+              if (d.defaultConcurrencyLimit) setConcurrencyLimit(d.defaultConcurrencyLimit);
+              setDefaultsNotice("Applied preferred agent & concurrency from Settings.");
+            }
+          })
+          .catch(() => {});
+      }
+    } catch {}
+  }, []);
 
   // Fetch real schedules from backend API
   const fetchSchedules = useCallback(async () => {
@@ -511,23 +544,25 @@ function OutboundSchedulerPageContent() {
       try { soundSynth.playSuccess(); } catch {}
 
       // Save contacts into user contacts history
-      saveUserContactBatch(
-        `Outbound: ${campaignName}`,
-        resolvedContacts.map((c, i) => ({
-          id: `out-hist-${Date.now()}-${i}`,
+      saveUserContactBatch({
+        title: `Outbound: ${campaignName}`,
+        source: "outbound_cadence",
+        agentAssigned: selectedAgent.name,
+        contacts: resolvedContacts.map((c) => ({
           name: c.name,
           phone: c.phone,
-          email: c.email,
+          email: c.email || "",
           category: "High Intent",
-          organization: c.organization,
+          organization: c.organization || "",
           city: "Pan-India",
-          source: "outbound_scheduler",
-          addedAt: "Just now",
+          notes: "Scheduled via Outbound Telephony Scheduler",
           assignedAgent: selectedAgent.name,
+          priorityScore: 85,
+          source: "user_csv",
+          lastCallOutcome: "Callback Requested",
+          lastContacted: "Scheduled",
         })),
-        "outbound_cadence",
-        selectedAgent.name
-      );
+      });
 
       setIsReviewModalOpen(false);
       setToast({
@@ -701,7 +736,20 @@ function OutboundSchedulerPageContent() {
           VIEW 1: CAMPAIGN DISPATCHER WIZARD
       ========================================================================= */}
       {activeTab === "dispatch" && (
-        <div className="space-y-8 animate-in fade-in duration-200">
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Personalized Defaults Applied Notice */}
+          {defaultsNotice && (
+            <div className="p-3.5 rounded-2xl bg-[#FAF5E9] border border-[#E9E1D4] flex items-center justify-between text-xs text-[#283A50] shadow-2xs">
+              <div className="flex items-center gap-2.5">
+                <Sparkles className="w-4 h-4 text-[#283A50]" />
+                <span className="font-medium">{defaultsNotice}</span>
+              </div>
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white text-[#283A50] border border-[#E9E1D4]">
+                Campaign Defaults Applied (Editable)
+              </span>
+            </div>
+          )}
+
           {/* Campaign Name Field */}
           <div className="bg-white rounded-2xl border border-[#E9E1D4] p-5 shadow-xs space-y-2">
             <label className="text-xs font-bold uppercase tracking-wider text-[#707684]">
@@ -1275,7 +1323,7 @@ function OutboundSchedulerPageContent() {
             <div className="space-y-2 text-xs">
               <span className="font-bold text-[#283A50] block">Recipients Call Dispatches:</span>
               <div className="border border-[#E9E1D4] rounded-xl overflow-hidden divide-y divide-[#E9E1D4] max-h-56 overflow-y-auto">
-                {selectedScheduleDetail.contacts.map((c) => (
+                {selectedScheduleDetail.contacts.map((c: any) => (
                   <div key={c.id} className="p-3 flex items-center justify-between">
                     <div>
                       <span className="font-bold text-[#283A50]">{c.name}</span>
@@ -1313,7 +1361,7 @@ function OutboundSchedulerPageContent() {
             <div className="space-y-2 text-xs">
               <span className="font-bold text-[#283A50] block">Durable Execution Logs:</span>
               <div className="bg-[#FAF5E9]/40 border border-[#E9E1D4] rounded-xl p-3 max-h-36 overflow-y-auto font-mono text-[11px] space-y-1">
-                {selectedScheduleDetail.logs.map((log) => (
+                {selectedScheduleDetail.logs.map((log: any) => (
                   <div key={log.id} className="flex items-start gap-2">
                     <span className="text-[#707684] shrink-0">
                       {new Date(log.timestamp).toLocaleTimeString()}

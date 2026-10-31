@@ -35,6 +35,13 @@ import {
   CornerDownLeft,
   ChevronRight,
   Layers,
+  Database,
+  Gauge,
+  FolderKanban,
+  ShieldCheck,
+  Download,
+  AlertTriangle,
+  FileText,
 } from "lucide-react";
 import {
   DASHBOARD_SEARCH_INDEX,
@@ -70,6 +77,15 @@ const getSearchIcon = (iconName: string) => {
     case "PhoneCall": return PhoneCall;
     case "Filter": return Filter;
     case "PanelLeftClose": return PanelLeftClose;
+    case "Database": return Database;
+    case "FolderKanban": return FolderKanban;
+    case "Gauge": return Gauge;
+    case "ShieldCheck": return ShieldCheck;
+    case "Download": return Download;
+    case "AlertTriangle": return AlertTriangle;
+    case "FileText": return FileText;
+    case "History": return History;
+    case "Zap": return Zap;
     default: return Layers;
   }
 };
@@ -86,6 +102,72 @@ interface ColorTheme {
 }
 
 const getItemTheming = (item: SearchItem): ColorTheme => {
+  // WhatsApp Workspace
+  if (item.section.includes("WhatsApp") || item.id.includes("whatsapp") || item.iconName === "MessageSquare") {
+    return {
+      iconBg: "bg-emerald-500/10 border-emerald-500/25 text-emerald-700",
+      iconColor: "text-emerald-700",
+      badgeBg: "bg-emerald-50",
+      badgeText: "text-emerald-800",
+      badgeBorder: "border-emerald-200/80",
+      actionBg: "bg-emerald-50 text-emerald-800 border-emerald-200",
+      actionText: "text-emerald-800",
+      actionBorder: "border-emerald-200",
+    };
+  }
+  // Data Vault & Schema Engine
+  if (item.section.includes("Data Vault") || item.id.includes("vault") || item.id.includes("schema") || item.iconName === "Database") {
+    return {
+      iconBg: "bg-indigo-500/10 border-indigo-500/25 text-indigo-700",
+      iconColor: "text-indigo-700",
+      badgeBg: "bg-indigo-50",
+      badgeText: "text-indigo-800",
+      badgeBorder: "border-indigo-200/80",
+      actionBg: "bg-indigo-50 text-indigo-800 border-indigo-200",
+      actionText: "text-indigo-800",
+      actionBorder: "border-indigo-200",
+    };
+  }
+  // Usage Controls & Telephony Billing
+  if (item.section.includes("Usage") || item.id.includes("capacity") || item.id.includes("simulator") || item.iconName === "Gauge") {
+    return {
+      iconBg: "bg-amber-500/10 border-amber-500/25 text-amber-700",
+      iconColor: "text-amber-700",
+      badgeBg: "bg-amber-50",
+      badgeText: "text-amber-800",
+      badgeBorder: "border-amber-200/80",
+      actionBg: "bg-amber-50 text-amber-800 border-amber-200",
+      actionText: "text-amber-800",
+      actionBorder: "border-amber-200",
+    };
+  }
+  // Phone Numbers & SIP Gateways
+  if (item.section.includes("Phone Numbers") || item.id.includes("phone-number") || item.iconName === "PhoneCall") {
+    return {
+      iconBg: "bg-sky-500/10 border-sky-500/25 text-sky-700",
+      iconColor: "text-sky-700",
+      badgeBg: "bg-sky-50",
+      badgeText: "text-sky-800",
+      badgeBorder: "border-sky-200/80",
+      actionBg: "bg-sky-50 text-sky-800 border-sky-200",
+      actionText: "text-sky-800",
+      actionBorder: "border-sky-200",
+    };
+  }
+  // Call History & Transcripts
+  if (item.section.includes("Call History") || item.iconName === "History") {
+    return {
+      iconBg: "bg-rose-500/10 border-rose-500/25 text-rose-700",
+      iconColor: "text-rose-700",
+      badgeBg: "bg-rose-50",
+      badgeText: "text-rose-800",
+      badgeBorder: "border-rose-200/80",
+      actionBg: "bg-rose-50 text-rose-800 border-rose-200",
+      actionText: "text-rose-800",
+      actionBorder: "border-rose-200",
+    };
+  }
+  // Telephony Activity Heatmap
   if (item.id.includes("heatmap") || item.id.includes("matrix")) {
     return {
       iconBg: "bg-emerald-500/10 border-emerald-500/25 text-emerald-700",
@@ -114,8 +196,8 @@ const getItemTheming = (item: SearchItem): ColorTheme => {
     item.category === "Agent" ||
     item.id.includes("agent") ||
     item.id.includes("maya") ||
-    item.id.includes("priya") ||
-    item.id.includes("arjun")
+    item.id.includes("karan") ||
+    item.id.includes("swara")
   ) {
     return {
       iconBg: "bg-purple-500/10 border-purple-500/25 text-purple-700",
@@ -161,7 +243,7 @@ const getItemTheming = (item: SearchItem): ColorTheme => {
       actionBorder: "border-rose-200",
     };
   }
-  if (item.id.includes("campaign") || item.iconName === "Megaphone") {
+  if (item.id.includes("campaign") || item.iconName === "Megaphone" || item.iconName === "PhoneOutgoing") {
     return {
       iconBg: "bg-indigo-500/10 border-indigo-500/25 text-indigo-700",
       iconColor: "text-indigo-700",
@@ -560,7 +642,7 @@ export default function DashboardLayoutClient({
                       No dashboard components or sections found
                     </p>
                     <p className="text-xs text-black/50 mt-1.5 max-w-sm mx-auto">
-                      Try searching for &ldquo;heatmap&rdquo;, &ldquo;recent calls&rdquo;, &ldquo;schedule&rdquo;, &ldquo;drawer&rdquo;, &ldquo;maya&rdquo;, or &ldquo;roi&rdquo;.
+                      Try searching for &ldquo;data vault&rdquo;, &ldquo;whatsapp&rdquo;, &ldquo;callbacks&rdquo;, &ldquo;outbound scheduler&rdquo;, &ldquo;telephony matrix&rdquo;, or &ldquo;maya&rdquo;.
                     </p>
                   </div>
                 ) : (

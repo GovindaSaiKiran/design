@@ -222,9 +222,9 @@ export default function ScheduleCallModal({
   }, []);
 
   const [scheduledDate, setScheduledDate] = useState(
-    duplicateFrom?.scheduledDate || defaultTomorrow
+    (duplicateFrom as any)?.scheduledDate || defaultTomorrow
   );
-  const [scheduledTime, setScheduledTime] = useState(duplicateFrom?.scheduledTime || "10:30");
+  const [scheduledTime, setScheduledTime] = useState((duplicateFrom as any)?.scheduledTime || "10:30");
   const [concurrencyLines, setConcurrencyLines] = useState(
     duplicateFrom?.callingWindow?.concurrencyLimit || 20
   );
@@ -237,6 +237,37 @@ export default function ScheduleCallModal({
   const [consentAcknowledged, setConsentAcknowledged] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [defaultsAppliedNotice, setDefaultsAppliedNotice] = useState<string | null>(null);
+
+  // Load Saved Campaign Defaults from Personalization Settings
+  useEffect(() => {
+    if (!isOpen || duplicateFrom) return;
+    try {
+      const raw = localStorage.getItem("swaram_campaign_defaults");
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.preferredAgentId) setSelectedAgentId(d.preferredAgentId);
+        if (d.defaultLanguage) setSelectedLanguage(d.defaultLanguage);
+        if (d.defaultKnowledgeBaseId) setSelectedKnowledgeBaseId(d.defaultKnowledgeBaseId);
+        if (d.defaultConcurrencyLimit) setConcurrencyLines(d.defaultConcurrencyLimit);
+        setDefaultsAppliedNotice("Preferred agent, language & concurrency loaded from your saved Campaign Defaults.");
+      } else {
+        fetch("/api/settings")
+          .then((res) => res.json())
+          .then((json) => {
+            if (json.success && json.settings?.campaignDefaults) {
+              const d = json.settings.campaignDefaults;
+              if (d.preferredAgentId) setSelectedAgentId(d.preferredAgentId);
+              if (d.defaultLanguage) setSelectedLanguage(d.defaultLanguage);
+              if (d.defaultKnowledgeBaseId) setSelectedKnowledgeBaseId(d.defaultKnowledgeBaseId);
+              if (d.defaultConcurrencyLimit) setConcurrencyLines(d.defaultConcurrencyLimit);
+              setDefaultsAppliedNotice("Preferred agent, language & concurrency applied from Settings.");
+            }
+          })
+          .catch(() => {});
+      }
+    } catch {}
+  }, [isOpen, duplicateFrom]);
 
   // Update language when agent changes
   useEffect(() => {
@@ -532,7 +563,7 @@ export default function ScheduleCallModal({
         </div>
 
         {/* 4-Step Progress Indicator */}
-        <div className="grid grid-cols-4 gap-2 pt-3 pb-4 border-b border-black/[0.04] text-[11px] font-semibold shrink-0">
+        <div className="grid grid-cols-4 gap-2 pt-3 pb-3 border-b border-black/[0.04] text-[11px] font-semibold shrink-0">
           {[
             { num: 1, label: "Contacts" },
             { num: 2, label: "AI Config" },
@@ -561,6 +592,19 @@ export default function ScheduleCallModal({
           ))}
         </div>
 
+        {/* Personalized Defaults Applied Notice */}
+        {defaultsAppliedNotice && (
+          <div className="mt-2.5 px-3 py-2 rounded-xl bg-[#FAF5E9] border border-[#E9E1D4] flex items-center justify-between text-xs text-[#283A50] shrink-0 animate-in fade-in duration-150">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#283A50]" />
+              <span className="text-[11px] font-medium">{defaultsAppliedNotice}</span>
+            </div>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-[#283A50] border border-[#E9E1D4]">
+              Defaults Applied (Editable)
+            </span>
+          </div>
+        )}
+
         {/* Scrollable Content Body */}
         <div className="overflow-y-auto py-4 flex-1 space-y-4 text-xs pr-1">
           {/* STEP 1: CONTACTS */}
@@ -575,7 +619,7 @@ export default function ScheduleCallModal({
                   type="text"
                   value={campaignName}
                   onChange={(e) => setCampaignName(e.target.value)}
-                  placeholder="e.g. Merit Verification Round 1"
+                  placeholder="e.g. Customer Priority Outreach Batch 1"
                   className="w-full px-4 py-2.5 rounded-full bg-[#FBF7ED] border border-black/[0.06] text-[#1A1A1A] focus:outline-none focus:border-black/30 font-medium"
                 />
               </div>

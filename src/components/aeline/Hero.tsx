@@ -16,6 +16,7 @@ interface HeroProps {
   onOpenSimulator?: () => void;
   onOpenLogin?: () => void;
   onOpenGetStarted?: () => void;
+  onOpenSignUp?: () => void;
 }
 
 export default function Hero({
@@ -23,7 +24,10 @@ export default function Hero({
   onOpenSimulator,
   onOpenLogin,
   onOpenGetStarted,
+  onOpenSignUp,
 }: HeroProps) {
+  const handleSignUpClick = onOpenSignUp || onOpenGetStarted;
+
   return (
     <section className="w-full p-2 sm:p-4 lg:p-6 bg-[#ffffff]">
       {/* Framed Rounded Hero Canvas matching uploaded screenshot */}
@@ -35,7 +39,8 @@ export default function Hero({
             onOpenDemo={onOpenDemo}
             onOpenSimulator={onOpenSimulator}
             onOpenLogin={onOpenLogin}
-            onOpenGetStarted={onOpenGetStarted}
+            onOpenGetStarted={handleSignUpClick}
+            onOpenSignUp={handleSignUpClick}
           />
         </div>
 
@@ -76,12 +81,12 @@ export default function Hero({
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 mb-8 sm:mb-9">
-            {/* Get Started For Free Primary Button */}
+            {/* Sign Up / Get Started Primary Button */}
             <button
-              onClick={onOpenGetStarted}
+              onClick={handleSignUpClick}
               className="relative bg-[#cdfb56] hover:bg-[#bef03f] active:scale-95 text-slate-950 border border-[#bef03f] px-7 sm:px-8 py-3.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-[0_4px_20px_rgba(205,251,86,0.4)] hover:shadow-[0_0_36px_10px_rgba(205,251,86,0.65)] hover:scale-[1.02] cursor-pointer flex items-center gap-2 group"
             >
-              <span>GET STARTED FOR FREE</span>
+              <span>SIGN UP FOR FREE</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-slate-950 stroke-[2.5] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:scale-110" />
             </button>
 

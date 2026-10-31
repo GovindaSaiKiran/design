@@ -51,7 +51,7 @@ export const initialCostBreakdown: CostIntelligenceBreakdown = {
   totalEstimatedCurrentCharges: 0,
   lastClosedInvoiceAmount: 0,
   lastClosedInvoiceDate: "â€”",
-  billingStatus: "Active",
+  billingStatus: "Autopay Active",
 };
 
 export const initialDailyUsageTrend: DailyUsageDataPoint[] = [];

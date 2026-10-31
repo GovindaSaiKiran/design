@@ -98,6 +98,15 @@ export default function PhoneNumbersPage() {
 
   useEffect(() => {
     fetchPhoneNumbersData();
+    if (typeof window !== "undefined") {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const tabParam = params.get("tab");
+        if (tabParam === "buy" || tabParam === "my-numbers" || tabParam === "usage") {
+          setActiveTab(tabParam);
+        }
+      } catch {}
+    }
   }, []);
 
   // Handle Buy Number

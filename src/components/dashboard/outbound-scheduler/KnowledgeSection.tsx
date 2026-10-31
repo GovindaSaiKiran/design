@@ -123,19 +123,17 @@ export default function KnowledgeSection({
 
     // Simulate upload -> processing -> ready progression
     setTimeout(() => {
-      onChangeUploadedFiles((prev) =>
-        prev.map((f) => (f.id === newFileId ? { ...f, status: "processing", progress: 75 } : f))
-      );
+      onChangeUploadedFiles([
+        ...uploadedFiles,
+        { ...initialItem, status: "processing", progress: 75 },
+      ]);
     }, 900);
 
     setTimeout(() => {
-      onChangeUploadedFiles((prev) =>
-        prev.map((f) =>
-          f.id === newFileId
-            ? { ...f, status: "ready", progress: 100, chunks: Math.floor(18 + Math.random() * 35) }
-            : f
-        )
-      );
+      onChangeUploadedFiles([
+        ...uploadedFiles,
+        { ...initialItem, status: "ready", progress: 100, chunks: 32 },
+      ]);
       try { soundSynth.playSuccess(); } catch {}
     }, 2000);
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import {
   MessageSquare,
@@ -125,6 +125,19 @@ const initialTemplates: MessageTemplate[] = [];
 
 export default function WhatsAppWorkspaceView() {
   const [activeTab, setActiveTab] = useState<WhatsAppTab>("overview");
+
+  // Synchronize active tab from URL query params (e.g. ?tab=inbox)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab") as WhatsAppTab | null;
+      const validTabs: WhatsAppTab[] = ["overview", "inbox", "automations", "templates", "settings"];
+      if (tabParam && validTabs.includes(tabParam)) {
+        setActiveTab(tabParam);
+      }
+    } catch {}
+  }, []);
 
   // Notifications / Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);

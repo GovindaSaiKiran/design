@@ -259,7 +259,7 @@ export default function SecurityPrivacyTab({
               onChange={(e) => handleRetentionChange(Number(e.target.value))}
               className="text-xs px-3 py-1.5 rounded-lg bg-white border border-[#E9E1D4] text-[#283A50] font-semibold focus:outline-none"
             >
-              <option value={90}>90 Days (Standard University Policy)</option>
+              <option value={90}>90 Days (Standard Enterprise / Clinic Policy)</option>
               <option value={180}>180 Days (Half-Yearly Audit)</option>
               <option value={365}>1 Year (365 Days)</option>
               <option value={0}>Indefinite Retention (Manual Delete Only)</option>
@@ -271,7 +271,7 @@ export default function SecurityPrivacyTab({
               Complete Data Export Archive
             </strong>
             <p className="text-[#707684] text-[11px] leading-relaxed">
-              Download all conversation transcripts, candidate contact lists, agent prompts, and billing receipts as a secure ZIP.
+              Download all conversation transcripts, customer contact lists, agent prompts, and billing receipts as a secure ZIP.
             </p>
             <button
               type="button"
@@ -296,13 +296,13 @@ export default function SecurityPrivacyTab({
               Delete Workspace &amp; Voice Assets
             </strong>
             <p className="text-xs text-rose-700/80 mt-0.5">
-              Permanently delete this workspace, all trained voice agents, phone trunks, candidate logs, and recordings. This action cannot be reversed.
+              Permanently delete this workspace, all trained voice agents, phone trunks, customer logs, and recordings. This action cannot be reversed.
             </p>
           </div>
           <button
             type="button"
             onClick={() => setIsDeleteWorkspaceModalOpen(true)}
-            className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white shrink-0 shadow-xs"
+            className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white shrink-0 shadow-xs cursor-pointer"
           >
             Delete Workspace
           </button>

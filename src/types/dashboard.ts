@@ -139,7 +139,7 @@ export interface ContactItem {
 export interface KnowledgeDocument {
   id: string;
   title: string;
-  category: "Academic & Course Info" | "Fees & Scholarships" | "Campus & Hostel" | "Admissions Policy" | "College Policies" | "General Info";
+  category: "Academic & Course Info" | "Fees & Scholarships" | "Campus & Hostel" | "Admissions Policy" | "College Policies" | "General Info" | string;
   fileSize: string;
   uploadedAt: string;
   status: "ready" | "processing" | "failed";

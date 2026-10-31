@@ -18,6 +18,8 @@ import PlanBillingTab from "@/components/dashboard/settings/tabs/PlanBillingTab"
 import NotificationsTab from "@/components/dashboard/settings/tabs/NotificationsTab";
 import SecurityPrivacyTab from "@/components/dashboard/settings/tabs/SecurityPrivacyTab";
 import AppPreferencesTab from "@/components/dashboard/settings/tabs/AppPreferencesTab";
+import MySwaramPreferencesTab from "@/components/dashboard/settings/tabs/MySwaramPreferencesTab";
+import CampaignDefaultsTab from "@/components/dashboard/settings/tabs/CampaignDefaultsTab";
 import AIServicesTab from "@/components/dashboard/settings/tabs/AIServicesTab";
 import PhoneCallingTab from "@/components/dashboard/settings/tabs/PhoneCallingTab";
 import WhatsAppTab from "@/components/dashboard/settings/tabs/WhatsAppTab";
@@ -33,6 +35,8 @@ import {
   NotificationPreferences,
   SecuritySettings,
   AppPreferences,
+  MySwaramPreferences,
+  CampaignDefaultPreferences,
   AIServiceConnection,
   PhoneCallingConnection,
   WhatsAppConnection,
@@ -210,6 +214,44 @@ function SettingsPageContent() {
     }
   };
 
+  const handleSaveMyPreferences = async (updated: MySwaramPreferences): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "myPreferences", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, myPreferences: updated } : prev));
+        showGlobalNotice("My Swaram preferences saved.");
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSaveCampaignDefaults = async (updated: CampaignDefaultPreferences): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "campaignDefaults", data: updated }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setSettings((prev) => (prev ? { ...prev, campaignDefaults: updated } : prev));
+        showGlobalNotice("Campaign defaults saved.");
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
   const handleSaveAiServices = async (updated: AIServiceConnection[]): Promise<boolean> => {
     try {
       const res = await fetch("/api/settings", {
@@ -378,7 +420,7 @@ function SettingsPageContent() {
 
         <div className="flex items-center gap-2 text-xs">
           <span className="font-mono text-[11px] font-semibold text-[#707684] bg-[#FAF5E9] px-3 py-1.5 rounded-xl border border-[#E9E1D4]">
-            Workspace ID: org-apex-01
+            Workspace ID: ws-enterprise-01
           </span>
         </div>
       </div>
@@ -402,7 +444,7 @@ function SettingsPageContent() {
 
         {/* Right Column: Tab View */}
         <div className="lg:col-span-3 min-w-0">
-          {/* ACCOUNT GROUP */}
+          {/* 1. PERSONAL INFORMATION */}
           {activeTab === "profile" && (
             <PersonalProfileTab
               initialProfile={settings.profile}
@@ -411,34 +453,7 @@ function SettingsPageContent() {
             />
           )}
 
-          {activeTab === "workspace" && (
-            <BusinessWorkspaceTab
-              initialWorkspace={settings.workspace}
-              onSave={handleSaveWorkspace}
-            />
-          )}
-
-          {activeTab === "team" && (
-            <TeamMembersTab
-              initialTeam={settings.team}
-              onSaveTeam={handleSaveTeam}
-            />
-          )}
-
-          {activeTab === "billing" && (
-            <PlanBillingTab
-              initialBilling={settings.billing}
-              onSaveBilling={handleSaveBilling}
-            />
-          )}
-
-          {activeTab === "notifications" && (
-            <NotificationsTab
-              initialNotifications={settings.notifications}
-              onSaveNotifications={handleSaveNotifications}
-            />
-          )}
-
+          {/* 2. SECURITY & PRIVACY */}
           {activeTab === "security" && (
             <SecurityPrivacyTab
               initialSecurity={settings.security}
@@ -446,14 +461,55 @@ function SettingsPageContent() {
             />
           )}
 
-          {activeTab === "preferences" && (
-            <AppPreferencesTab
-              initialPreferences={settings.preferences}
-              onSavePreferences={handleSavePreferences}
+          {/* 3. NOTIFICATION SETTINGS */}
+          {activeTab === "notifications" && (
+            <NotificationsTab
+              initialNotifications={settings.notifications}
+              onSaveNotifications={handleSaveNotifications}
             />
           )}
 
-          {/* CONNECTIONS GROUP */}
+          {/* 4. ORGANIZATION PROFILE */}
+          {(activeTab === "organization" || activeTab === "workspace") && (
+            <BusinessWorkspaceTab
+              initialWorkspace={settings.workspace}
+              onSave={handleSaveWorkspace}
+            />
+          )}
+
+          {/* 5. MY SWARAM PREFERENCES */}
+          {(activeTab === "swaram-preferences" || activeTab === "preferences") && (
+            <MySwaramPreferencesTab
+              initialPreferences={settings.myPreferences}
+              onSave={handleSaveMyPreferences}
+            />
+          )}
+
+          {/* 6. COMMUNICATION & CAMPAIGN DEFAULTS */}
+          {activeTab === "campaign-defaults" && (
+            <CampaignDefaultsTab
+              initialDefaults={settings.campaignDefaults}
+              onSave={handleSaveCampaignDefaults}
+            />
+          )}
+
+          {/* 7. TEAM & ACCESS */}
+          {activeTab === "team" && (
+            <TeamMembersTab
+              initialTeam={settings.team}
+              onSaveTeam={handleSaveTeam}
+            />
+          )}
+
+          {/* 8. SUBSCRIPTION & BILLING */}
+          {activeTab === "billing" && (
+            <PlanBillingTab
+              initialBilling={settings.billing}
+              onSaveBilling={handleSaveBilling}
+            />
+          )}
+
+          {/* SYSTEM CONNECTIONS */}
           {activeTab === "ai-services" && (
             <AIServicesTab
               initialServices={settings.aiServices}
@@ -477,7 +533,7 @@ function SettingsPageContent() {
             />
           )}
 
-          {activeTab === "otherApps" || activeTab === "other-apps" ? (
+          {activeTab === "other-apps" ? (
             <OtherAppsTab
               initialApps={settings.otherApps}
               onSaveApps={handleSaveOtherApps}

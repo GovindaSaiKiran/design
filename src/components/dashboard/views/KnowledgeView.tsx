@@ -205,7 +205,7 @@ export default function KnowledgeView({
                 </p>
               </div>
               <button
-                onClick={onUploadDocument}
+                onClick={onUploadDoc}
                 className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#111111] hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
               >
                 <Upload className="w-3.5 h-3.5" />

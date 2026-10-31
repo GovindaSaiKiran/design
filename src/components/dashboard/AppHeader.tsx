@@ -14,6 +14,12 @@ import {
   Bell,
   PanelLeftClose,
   PanelLeftOpen,
+  Building2,
+  Sparkles,
+  PhoneForwarded,
+  Users,
+  ShieldCheck,
+  ChevronRight,
 } from "lucide-react";
 import TopUpCreditsModal from "./modals/TopUpCreditsModal";
 import NotificationsPanel from "./components/NotificationsPanel";
@@ -50,9 +56,10 @@ export default function AppHeader({
 
   const searchPrompts = [
     "Search calls, ask Swara AI, or jump anywhere...",
-    "Filter calls by 'billing inquiry', 'positive sentiment'...",
-    "Lookup call transcripts, contact records, or SIP trunks...",
-    "Search voice workforce, campaign queues, or dial a contact...",
+    "Jump to Data Vault, Universal Schema, or Extraction Sandbox...",
+    "Open WhatsApp Workspace, Live Inbox, or Post-Call Triggers...",
+    "Lookup Callbacks Queue, Outbound Scheduler, or SIP Trunks...",
+    "Search AI voice workforce, speech telemetry, or dial a contact...",
   ];
   const [promptIndex, setPromptIndex] = useState(0);
   const [isMac, setIsMac] = useState(false);
@@ -246,36 +253,144 @@ export default function AppHeader({
               </button>
 
               {profileOpen && (
-                <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-black/[0.08] shadow-xl py-2 z-50 animate-in fade-in duration-100 text-xs text-[#1A1A1A]">
-                  <div className="px-4 py-2 border-b border-black/[0.06] bg-[#FAF3E4]/50 rounded-t-2xl">
-                    <p className="font-semibold text-[#1A1A1A] text-xs">{userName}</p>
-                    <p className="text-[11px] text-black/50 truncate">{userEmail}</p>
+                <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl border border-[#E9E1D4] shadow-2xl py-2 z-50 animate-in fade-in duration-150 text-xs text-[#283A50]">
+                  {/* User Profile Header */}
+                  <div className="px-4 py-3 border-b border-[#E9E1D4]/70 bg-[#FAF5E9]/60 rounded-t-2xl">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-[#C9A7F5] text-[#3B0764] font-bold text-xs flex items-center justify-center shrink-0 border border-black/10">
+                        {userName.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-[#283A50] text-xs truncate">{userName}</p>
+                        <p className="text-[11px] text-[#707684] truncate">{userEmail}</p>
+                      </div>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between text-[10px] text-[#707684]">
+                      <span className="font-semibold text-[#283A50] bg-white px-2 py-0.5 rounded-md border border-[#E9E1D4]">
+                        Enterprise Workspace
+                      </span>
+                      <span>Role: Owner</span>
+                    </div>
                   </div>
-                  <div className="py-1">
+
+                  {/* Section: Account Settings */}
+                  <div className="py-1.5 border-b border-[#E9E1D4]/60">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#707684] px-4 py-1 block">
+                      Account Settings
+                    </span>
                     <Link
-                      href="/dashboard/agents"
+                      href="/dashboard/settings?tab=profile"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 text-black/70 hover:text-black hover:bg-[#FAF3E4]/60 transition-colors"
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
                     >
-                      <User className="w-3.5 h-3.5 text-black/50" />
-                      <span>Manage Voice Agents</span>
+                      <div className="flex items-center gap-2">
+                        <User className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>Personal Information</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
                     </Link>
                     <Link
-                      href="/dashboard/billing"
+                      href="/dashboard/settings?tab=security"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 text-black/70 hover:text-black hover:bg-[#FAF3E4]/60 transition-colors"
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
                     >
-                      <CreditCard className="w-3.5 h-3.5 text-black/50" />
-                      <span>Usage &amp; Controls</span>
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>Security &amp; Privacy</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
                     </Link>
                     <Link
-                      href="/dashboard/settings"
+                      href="/dashboard/settings?tab=notifications"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 text-black/70 hover:text-black hover:bg-[#FAF3E4]/60 transition-colors"
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
                     >
-                      <Settings className="w-3.5 h-3.5 text-black/50" />
-                      <span>Workspace Settings</span>
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>Notification Settings</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
                     </Link>
+                  </div>
+
+                  {/* Section: Workspace Settings */}
+                  <div className="py-1.5 border-b border-[#E9E1D4]/60">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#707684] px-4 py-1 block">
+                      Workspace &amp; Telephony
+                    </span>
+                    <Link
+                      href="/dashboard/settings?tab=organization"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>Organization Profile</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
+                    </Link>
+                    <Link
+                      href="/dashboard/settings?tab=swaram-preferences"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>My Swaram Preferences</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
+                    </Link>
+                    <Link
+                      href="/dashboard/settings?tab=campaign-defaults"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <PhoneForwarded className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>Communication Preferences</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
+                    </Link>
+                    <Link
+                      href="/dashboard/settings?tab=team"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Users className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>Team &amp; Access</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
+                    </Link>
+                    <Link
+                      href="/dashboard/settings?tab=billing"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center justify-between px-4 py-1.5 text-[#283A50] hover:bg-[#FAF5E9] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <CreditCard className="w-3.5 h-3.5 text-[#707684]" />
+                        <span>Subscription &amp; Billing</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 text-[#707684]" />
+                    </Link>
+                  </div>
+
+                  {/* Sign Out */}
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileOpen(false);
+                        try {
+                          localStorage.removeItem("swaram_user");
+                        } catch {}
+                        router.push("/login");
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-rose-600 hover:bg-rose-50 text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Sign Out</span>
+                    </button>
                   </div>
                 </div>
               )}

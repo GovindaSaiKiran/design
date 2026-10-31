@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { LiveCallItem } from "@/types/dashboard";
-import { Eye, Volume2, ShieldCheck, MessageSquareQuote } from "lucide-react";
+import { Eye, Volume2, ShieldCheck, MessageSquareQuote, PhoneCall } from "lucide-react";
 
 interface LiveCallsFeedProps {
   liveCalls: LiveCallItem[];
@@ -130,7 +130,8 @@ export default function LiveCallsFeed({ liveCalls, onViewCall }: LiveCallsFeedPr
               </div>
             </div>
           );
-        })}
+        })
+        )}
       </div>
 
       {/* Bottom Telemetry */}

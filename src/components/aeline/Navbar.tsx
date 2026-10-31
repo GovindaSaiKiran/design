@@ -33,6 +33,7 @@ interface NavbarProps {
   onOpenSimulator?: () => void;
   onOpenLogin?: () => void;
   onOpenGetStarted?: () => void;
+  onOpenSignUp?: () => void;
 }
 
 interface NavItem {
@@ -47,6 +48,7 @@ export default function Navbar({
   onOpenSimulator,
   onOpenLogin,
   onOpenGetStarted,
+  onOpenSignUp,
 }: NavbarProps) {
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
@@ -638,13 +640,13 @@ export default function Navbar({
             <span>LOG IN</span>
           </button>
 
-          {/* Get Started For Free CTA */}
+          {/* Sign Up For Free CTA */}
           <button
-            onClick={onOpenGetStarted}
+            onClick={onOpenSignUp || onOpenGetStarted}
             className="text-[10px] xl:text-[10.5px] font-black uppercase tracking-wider px-3 xl:px-3.5 py-1.5 rounded-full bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border border-[#bef03f] shadow-[0_2px_10px_rgba(205,251,86,0.35)] hover:shadow-[0_4px_16px_rgba(205,251,86,0.5)] hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 active:scale-95 group"
             title="Start with 100 free voice minutes"
           >
-            <span>GET STARTED FREE</span>
+            <span>SIGN UP FREE</span>
             <ArrowUpRight className="w-3 h-3 xl:w-3.5 xl:h-3.5 stroke-[2.5] shrink-0 text-slate-950 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
           </button>
 
@@ -748,11 +750,11 @@ export default function Navbar({
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
-                      onOpenGetStarted?.();
+                      (onOpenSignUp || onOpenGetStarted)?.();
                     }}
                     className="w-full font-black py-2.5 rounded-full text-center transition-all flex items-center justify-center gap-1 border text-xs uppercase tracking-wider bg-[#cdfb56] hover:bg-[#bef03f] text-slate-950 border-[#bef03f] shadow-xs cursor-pointer active:scale-95"
                   >
-                    <span>GET STARTED</span>
+                    <span>SIGN UP</span>
                     <ArrowUpRight className="w-3.5 h-3.5 text-slate-950" />
                   </button>
                 </div>

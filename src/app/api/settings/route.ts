@@ -9,21 +9,71 @@ let globalSettingsStore: CompleteSwaramSettings = {
     email: "admin@enterprise.ai",
     phone: "+91 98401 22345",
     jobTitle: "Head of Voice Telephony Operations",
+    displayLanguage: "English (India)",
+    timezone: "Asia/Kolkata (IST • UTC+05:30)",
+    dateFormat: "DD/MM/YYYY",
+    timeFormat: "12h",
     lastLogin: "Today, 09:14 AM IST",
   },
   workspace: {
     businessName: "Enterprise Voice Workspace",
+    organizationName: "Enterprise Voice Workspace",
     logoUrl: "",
     industry: "Automated Voice Operations & Customer Experience",
+    organizationType: "Hospital & Healthcare",
     website: "https://swaram.ai",
+    businessAddress: "Suite 400, HITEC City Main Rd, Hyderabad, TG 500081",
     country: "India",
     timezone: "Asia/Kolkata (IST • UTC+05:30)",
+    teamSize: "51-200",
+    businessDescription: "AI voice agent call center operations providing autonomous caller interaction, follow-ups, and notifications.",
     defaultLanguage: "English + Hindi (Pan-India Bilingual)",
     businessHoursStart: "09:00",
     businessHoursEnd: "19:00",
     callingHoursStart: "10:00",
     callingHoursEnd: "18:30",
     callingDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    workspaces: [
+      { id: "ws-primary", name: "Enterprise Voice Workspace (Primary)", role: "Owner", isCurrent: true, industry: "Healthcare" },
+      { id: "ws-branch", name: "Regional Patient Outreach Desk", role: "Admin", isCurrent: false, industry: "Outreach" },
+    ],
+  },
+  myPreferences: {
+    primaryGoals: ["customer_support", "customer_notifications", "appointment_reminders"],
+    customGoalText: "",
+    industry: "Healthcare & Clinic Services",
+    mainAudience: "Patients & Inquiring Customers",
+    preferredLanguages: ["English", "Hindi", "Telugu"],
+    preferredChannels: ["Voice Call", "WhatsApp Automation"],
+    typicalCampaignFrequency: "daily",
+    preferredCallingMode: "ai_autonomous",
+    technicalExperienceLevel: "intermediate",
+    mainBusinessObjective: "Automate patient follow-ups, appointment reminders, and inquiry support with zero wait time.",
+    lastUpdated: "Just now",
+  },
+  campaignDefaults: {
+    preferredAgentId: "agent-default",
+    preferredAgentName: "Primary Voice Agent",
+    defaultVoice: "Bulbul Indic (Female)",
+    defaultLanguage: "English",
+    defaultKnowledgeBaseId: "all",
+    defaultKnowledgeBaseName: "Complete Enterprise Knowledge Library",
+    defaultCallingMode: "autonomous",
+    defaultConcurrencyLimit: 15,
+    preferredCallingHoursStart: "10:00",
+    preferredCallingHoursEnd: "18:30",
+    defaultReportingOptions: {
+      sendEmailSummary: true,
+      sendWhatsappReport: true,
+      includeCallRecordings: true,
+      detailedTranscriptAnalysis: true,
+    },
+    safetyDisclaimerAcknowledged: true,
+  },
+  onboarding: {
+    completedSteps: ["complete_profile", "set_organization", "choose_goals", "configure_agent", "connect_phone"],
+    isDismissed: false,
+    lastUpdated: "2026-10-31T09:00:00Z",
   },
   team: [
     {
@@ -75,6 +125,24 @@ let globalSettingsStore: CompleteSwaramSettings = {
     gstinTaxId: "36AAACA0000A1Z5",
     usageAlertsEnabled: true,
     spendingLimitMonthly: 25000,
+    purchasedNumbers: [
+      {
+        id: "num-1",
+        phoneNumber: "+91 40 4821 9900",
+        label: "Direct Inbound Helpline",
+        monthlyFee: "₹1,200",
+        channelType: "PRI SIP Trunk",
+        renewalDate: "15 Nov 2026",
+      },
+      {
+        id: "num-2",
+        phoneNumber: "+91 40 4821 9901",
+        label: "Outbound Automated Desk",
+        monthlyFee: "₹1,200",
+        channelType: "High-Throughput Trunk",
+        renewalDate: "15 Nov 2026",
+      },
+    ],
     invoices: [
       {
         id: "inv-2026-10",
@@ -100,6 +168,20 @@ let globalSettingsStore: CompleteSwaramSettings = {
     ],
   },
   notifications: {
+    // 11 distinct event notification preferences
+    campaignStarted: { inApp: true, email: false },
+    campaignCompleted: { inApp: true, email: true },
+    campaignFailed: { inApp: true, email: true },
+    scheduledReminders: { inApp: true, email: true },
+    failedCalls: { inApp: true, email: false },
+    callbackRequests: { inApp: true, email: true },
+    lowMinutesBalance: { inApp: true, email: true },
+    usageLimits: { inApp: true, email: true },
+    telephonyIssues: { inApp: true, email: true },
+    weeklyReports: { inApp: false, email: true },
+    securityAlerts: { inApp: true, email: true },
+
+    // Legacy backward compatibility
     campaignCompletedEmail: true,
     campaignCompletedInApp: true,
     campaignFailedEmail: true,
@@ -413,12 +495,65 @@ export async function POST(request: Request) {
       });
     }
 
+    if (action === "invite-member") {
+      const { email, role, name } = data || {};
+      if (!email || !role) {
+        return NextResponse.json({ success: false, message: "Email and role are required." }, { status: 400 });
+      }
+      const existing = globalSettingsStore.team.find((m) => m.email.toLowerCase() === email.toLowerCase());
+      if (existing) {
+        return NextResponse.json({ success: false, message: "A team member with this email already exists." }, { status: 400 });
+      }
+      const newMember = {
+        id: `team-${Date.now()}`,
+        name: name || email.split("@")[0],
+        email,
+        role,
+        status: "Pending Invitation" as const,
+        addedDate: "Today",
+        lastActive: "Never",
+      };
+      globalSettingsStore.team = [newMember, ...globalSettingsStore.team];
+      return NextResponse.json({
+        success: true,
+        message: `Invitation email sent to ${email} with role ${role}.`,
+        team: globalSettingsStore.team,
+      });
+    }
+
+    if (action === "remove-member") {
+      const { memberId } = data || {};
+      const target = globalSettingsStore.team.find((m) => m.id === memberId);
+      if (target?.role === "Owner") {
+        return NextResponse.json({ success: false, message: "Workspace Owner cannot be removed." }, { status: 403 });
+      }
+      globalSettingsStore.team = globalSettingsStore.team.filter((m) => m.id !== memberId);
+      return NextResponse.json({
+        success: true,
+        message: "Member access revoked successfully.",
+        team: globalSettingsStore.team,
+      });
+    }
+
+    if (action === "request-account-deletion") {
+      return NextResponse.json({
+        success: true,
+        message: "Account deletion request submitted. An administrative verification link has been dispatched to your registered email.",
+      });
+    }
+
     // Handle section updates
     if (section && data) {
       if (section === "profile") {
         globalSettingsStore.profile = { ...globalSettingsStore.profile, ...data };
-      } else if (section === "workspace") {
+      } else if (section === "workspace" || section === "organization") {
         globalSettingsStore.workspace = { ...globalSettingsStore.workspace, ...data };
+      } else if (section === "myPreferences" || section === "swaram-preferences" || section === "preferences") {
+        globalSettingsStore.myPreferences = { ...globalSettingsStore.myPreferences, ...data };
+      } else if (section === "campaignDefaults" || section === "campaign-defaults") {
+        globalSettingsStore.campaignDefaults = { ...globalSettingsStore.campaignDefaults, ...data };
+      } else if (section === "onboarding") {
+        globalSettingsStore.onboarding = { ...globalSettingsStore.onboarding, ...data };
       } else if (section === "team") {
         globalSettingsStore.team = data;
       } else if (section === "billing") {
@@ -427,7 +562,7 @@ export async function POST(request: Request) {
         globalSettingsStore.notifications = { ...globalSettingsStore.notifications, ...data };
       } else if (section === "security") {
         globalSettingsStore.security = { ...globalSettingsStore.security, ...data };
-      } else if (section === "preferences") {
+      } else if (section === "appPreferences") {
         globalSettingsStore.preferences = { ...globalSettingsStore.preferences, ...data };
       } else if (section === "aiServices") {
         globalSettingsStore.aiServices = data;

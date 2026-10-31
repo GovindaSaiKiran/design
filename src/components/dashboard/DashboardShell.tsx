@@ -41,6 +41,7 @@ import {
   DashboardAgent,
   OrganizationInfo,
   NotificationItem,
+  KnowledgeDocument,
 } from "@/types/dashboard";
 
 export default function DashboardShell() {
